@@ -1,0 +1,67 @@
+sharding:
+  enabled: true
+  work-id: 300
+  show-sql: true
+  acm:
+    datasource:
+      data-id: scfs.xml.datasource.encrypt
+      group: SIJIBAO_ORDER_CENTER_GROUP
+    dimenstion:
+      data-id: scfs.xml.dimension
+      group: SIJIBAO_ORDER_CENTER_GROUP
+    table:
+      data-id: scfs.xml.table
+      group: SIJIBAO_ORDER_CENTER_GROUP
+    nacosLocalSnapshotPath: /wyyt/etc/acm/test
+    nacosLogPath: /wyyt/logs/tomcat/test/
+    acmConfigPath: acmConfig.properties
+
+elasticsearch:
+  enabled: true
+  hostnames: 192.168.6.165:9900,192.168.6.166:9900,192.168.6.167:9900
+  username: finance
+  password: finance
+  max-conn-total: 100
+  max-conn-per-route: 20
+
+spring:
+  kafka:
+    bootstrap-servers: 192.168.6.164:9092,192.168.6.165:9092,192.168.6.166:9092
+    listener:
+      missing-topics-fatal: false
+    producer:
+      retries: 3
+      batch-size: 1024
+      buffer-memory: 33554432
+      acks: all
+      compression-type: lz4
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: rescfs-consumer-group
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      auto-commit-interval: 1000
+      isolation-level: read_committed
+      max-poll-records: 2048
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  redis:
+    host: 192.168.6.167
+    port: 6379
+    password: zhangningpegasus
+    timeout: 2000
+    database: 3
+    jedis:
+      pool:
+        max-idle: 1000
+        max-wait: -1
+        min-idle: 0
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true

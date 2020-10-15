@@ -1,0 +1,79 @@
+acm:
+  data-id: scfs-refactoring-db2es
+  group: SIJIBAO_SCFS
+  acmConfigPath: acmConfig.properties
+  nacosLocalSnapshotPath: /wyyt/etc/acm/db2es/
+  nacosLogPath: /wyyt/logs/sql_tool/
+
+sharding:
+  enabled: false
+  work-id: 100
+  show-sql: false
+  acm:
+    datasource:
+      data-id: scfs.xml.datasource.encrypt
+      group: SIJIBAO_ORDER_CENTER_GROUP
+    dimenstion:
+      data-id: scfs.xml.dimension
+      group: SIJIBAO_ORDER_CENTER_GROUP
+    table:
+      data-id: scfs.xml.table
+      group: SIJIBAO_ORDER_CENTER_GROUP
+    acmConfigPath: acmConfig.properties
+    nacosLocalSnapshotPath: /wyyt/etc/acm/sql_tool
+    nacosLogPath: /wyyt/logs/tomcat/sql_tool/
+
+server:
+  port: ${db2es.admin.port:10088}
+  tomcat:
+    uri-encoding: UTF-8
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json,application/xml
+  servlet:
+    session:
+      timeout: 180m
+      tracking-modes: cookie
+      cookie:
+        http-only: true
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: db2es-admin
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  aop:
+    proxy-target-class: true
+  jmx:
+    default-domain: ${spring.application.name}
+  freemarker:
+    allow-session-override: true
+    check-template-location: true
+    suffix: .ftl
+    content-type: text/html
+    enabled: true
+    cache: false
+    template-loader-path: classpath:/templates/
+    charset: UTF-8
+    expose-request-attributes: true
+    expose-session-attributes: true
+    expose-spring-macro-helpers: true
+    request-context-attribute: request
+    settings:
+      auto_import: common/spring.ftl as spring
+      number_format: '0.##'
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
