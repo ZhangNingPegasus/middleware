@@ -1,7 +1,7 @@
 package org.wyyt.db2es.core.exception;
 
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.wyyt.tool.exception.ExceptionTool;
 
 /**
  * the business exception of db2es
@@ -17,13 +17,11 @@ public final class Db2EsException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    public Db2EsException(Throwable e) {
+        super(ExceptionTool.getRootCauseMessage(e), e);
+    }
+
     public Db2EsException(final String errMsg) {
         super(errMsg);
     }
-
-    @Override
-    public final String toString() {
-        return ReflectionToStringBuilder.toString(this);
-    }
-
 }

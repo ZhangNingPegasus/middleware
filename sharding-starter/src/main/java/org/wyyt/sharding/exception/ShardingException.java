@@ -1,6 +1,6 @@
 package org.wyyt.sharding.exception;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.wyyt.tool.exception.ExceptionTool;
 
 /**
  * The exception of ShardingSphere
@@ -16,13 +16,11 @@ public final class ShardingException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    public ShardingException(Throwable e) {
+        super(ExceptionTool.getRootCauseMessage(e), e);
+    }
+
     public ShardingException(final String errMsg) {
         super(errMsg);
     }
-
-    @Override
-    public final String toString() {
-        return ReflectionToStringBuilder.toString(this);
-    }
-
 }

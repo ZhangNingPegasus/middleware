@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         1/1/2020        Initialize  *
+ * Ning.Zhang       Initialize        10/1/2020        Initialize  *
  * *****************************************************************
  */
 @RestController("topic")

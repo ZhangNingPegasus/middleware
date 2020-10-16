@@ -1,6 +1,6 @@
 package org.wyyt.elasticsearch.exception;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * The exception of ElasticSearch
@@ -16,12 +16,11 @@ public final class ElasticSearchException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public ElasticSearchException(final String errMsg) {
-        super(errMsg);
+    public ElasticSearchException(Throwable e) {
+        super(ExceptionUtils.getRootCauseMessage(e), e);
     }
 
-    @Override
-    public final String toString() {
-        return ReflectionToStringBuilder.toString(this);
+    public ElasticSearchException(final String errMsg) {
+        super(errMsg);
     }
 }

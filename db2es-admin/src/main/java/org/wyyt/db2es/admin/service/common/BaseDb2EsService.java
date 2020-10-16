@@ -160,6 +160,10 @@ public abstract class BaseDb2EsService {
 
         final String responseText = this.httpService.post(url, params, headers);
 
+        if (StringUtils.isEmpty(responseText)) {
+            throw new Db2EsException(String.format("接口[%s]无法响应, 请检查该主机上db2es-client的运行状态", url));
+        }
+
         final Result respondResult = OBJECT_MAPPER.readValue(responseText, new TypeReference<Result>() {
         });
 

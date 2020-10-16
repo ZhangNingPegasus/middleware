@@ -24,7 +24,7 @@ public final class MathsTool {
      * 则：每个库的表数量是 P = N / M
      * <p>
      * 分库算法 :   (X / P) % M
-     * 分表算法 ：X % N
+     * 分表算法 :   X % N
      *
      * @param shardingValue    拆分键的值
      * @param tableCount       表的总个数

@@ -14,6 +14,7 @@ import org.wyyt.db2es.client.zookeeper.ZooKeeperWrapper;
 import org.wyyt.db2es.core.entity.domain.Config;
 import org.wyyt.db2es.core.entity.persistent.Property;
 import org.wyyt.db2es.core.entity.persistent.Topic;
+import org.wyyt.db2es.core.exception.Db2EsException;
 import org.wyyt.db2es.core.util.CommonUtils;
 import org.wyyt.db2es.core.util.kafka.KafkaUtils;
 import org.wyyt.tool.resource.ResourceTool;
@@ -59,6 +60,11 @@ public final class Context implements Closeable {
 
     public Context(final Config config) throws Exception {
         this.config = config;
+
+        if (CommonUtils.isLocalPortUsing(this.config.getDb2EsPort())) {
+            throw new Db2EsException(String.format("端口[%s]已被占用", this.config.getDb2EsPort()));
+        }
+
         this.zooKeeperWrapper = new ZooKeeperWrapper(this);
 
         log.info(String.format("%s is trying to get leader [db2es.id = %s]", Utils.getLocalIpInfo(this), config.getDb2EsId()));
