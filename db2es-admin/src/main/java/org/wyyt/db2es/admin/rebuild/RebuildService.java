@@ -107,6 +107,7 @@ public class RebuildService {
         this.completableFuture = CompletableFuture.supplyAsync(() -> {
             ElasticSearchBulk elasticSearchBulk = null;
             Map<Integer, IndexName> rebuildIndexMap = null;
+            final Topic dbTopic = this.topicService.getByName(topic.getName());
             boolean initialization = false;
             try {
                 final Set<IndexName> buffer = this.esService.getIndexNameByAlias(topic.getName());
@@ -126,10 +127,12 @@ public class RebuildService {
                 calendar.add(Calendar.YEAR, -topic.getAliasOfYears() + 1);
                 final int minYear = calendar.get(Calendar.YEAR);
                 final Date fromDate = DateTool.parse(String.format("%s-01-01 00:00:00", minYear));
-                final Date toDate = getDbCurrentTime();
-                this.rebuildStatus.addMessage(String.format("开始从数据库向Elastic-Search同步全量数据(时间: 从<b>%s</b>同步到<b>%s</b>)", CommonUtils.formatMs(fromDate), CommonUtils.formatMs(toDate)));
+                final Map<DataSourceVo, Long> dbDateMap = this.getDbCurrentTime();
+                final List<Date> dbDateList = new HashSet<>(dbDateMap.values()).stream().map(Date::new).sorted(Date::compareTo).collect(Collectors.toList());
+
+                this.rebuildStatus.addMessage(String.format("开始从数据库向Elastic-Search同步全量数据(时间: 从<b>%s</b>同步到<b>%s</b>)", CommonUtils.formatMs(fromDate), CommonUtils.formatMs(dbDateList.get(0))));
                 start = System.currentTimeMillis();
-                final List<Exception> populateExceptionList = populate(elasticSearchBulk, topic, tableSourceMap, rebuildIndexMap, fromDate, toDate);
+                final List<Exception> populateExceptionList = this.populate(elasticSearchBulk, topic, tableSourceMap, rebuildIndexMap, fromDate, dbDateMap);
                 if (!populateExceptionList.isEmpty()) {
                     System.err.printf("2. 数据库同步发生异常, 原因: %s%n", populateExceptionList.get(0).getMessage());
                     throw populateExceptionList.get(0);
@@ -143,13 +146,15 @@ public class RebuildService {
                 this.rebuildStatus.addProgress(40);
 
                 start = System.currentTimeMillis();
-                KafkaResult kafkaResult = startKafkaConsume(elasticSearchBulk, topic, toDate, rebuildIndexMap);
+
+
+                KafkaResult kafkaResult = this.startKafkaConsume(elasticSearchBulk, topic, dbDateList, rebuildIndexMap);
                 duringSeconds = calcDuringSeconds(start);
                 this.rebuildStatus.setKafkaTps((int) (this.rebuildStatus.getKafkaCount() / duringSeconds));
                 if (this.rebuildStatus.getKafkaTps() == 0) {
                     this.rebuildStatus.setKafkaTps((int) this.rebuildStatus.getKafkaCount());
                 }
-                this.rebuildStatus.addMessage(String.format("已成功从Kafka同步完增量数据(时间: 从<b>%s</b>到<b>%s</b>, 共同步<b>%s</b>条, 每秒平均同步%s条)。共耗时:%.3f秒<br/>", CommonUtils.formatMs(toDate), CommonUtils.formatMs(new Date(kafkaResult.getEndTime())), this.rebuildStatus.getKafkaCount(), this.rebuildStatus.getKafkaTps(), duringSeconds));
+                this.rebuildStatus.addMessage(String.format("已成功从Kafka同步完增量数据(时间: 从<b>%s</b>到<b>%s</b>, 共同步<b>%s</b>条, 每秒平均同步%s条)。共耗时:%.3f秒<br/>", CommonUtils.formatMs(dbDateList.get(0)), CommonUtils.formatMs(new Date(kafkaResult.getEndTime())), this.rebuildStatus.getKafkaCount(), this.rebuildStatus.getKafkaTps(), duringSeconds));
                 this.rebuildStatus.addProgress(40);
 
                 this.checkTerminated(exceptionCallback.getException());
@@ -204,14 +209,13 @@ public class RebuildService {
                         e = null;
                     }
                 }
-
                 if (null != e) {
                     this.rebuildStatus.addErrorMesssage(String.format("<span style='color:red'>%s</span>", e.getMessage()));
                     this.rebuildStatus.addErrorMesssage(String.format("<span style='color:red'>索引[%s]重建失败, 所有操作成功回滚</span>", topic.getName()));
                     log.error(ExceptionTool.getRootCauseMessage(e), e);
                 }
 
-                Set<String> deleteIndexNames = new HashSet<>();
+                final Set<String> deleteIndexNames = new HashSet<>();
                 if (null != rebuildIndexMap && !rebuildIndexMap.isEmpty()) {
                     deleteIndexNames.addAll(rebuildIndexMap.values().stream().map(IndexName::toString).collect(Collectors.toSet()));
                 }
@@ -231,6 +235,12 @@ public class RebuildService {
                     } catch (final IOException exc) {
                         log.error(ExceptionTool.getRootCauseMessage(exc), exc);
                     }
+                }
+
+                if (null == dbTopic) {
+                    this.topicService.removeById(topic.getId());
+                } else {
+                    this.topicService.updateById(dbTopic);
                 }
 
                 return false;
@@ -375,7 +385,7 @@ public class RebuildService {
                                      final Map<DataSourceVo, Set<String>> tableSourceMap,
                                      final Map<Integer, IndexName> rebuildIndexMap,
                                      final Date fromDate,
-                                     final Date toDate) throws Exception {
+                                     final Map<DataSourceVo, Long> toDateMap) throws Exception {
         final List<Exception> result = new ArrayList<>();
         int tableCount = 0;
         for (final Set<String> value : tableSourceMap.values()) {
@@ -398,7 +408,7 @@ public class RebuildService {
                             this.config,
                             rebuildIndexMap,
                             fromDate,
-                            toDate,
+                            new Date(toDateMap.get(pair.getKey())),
                             this.terminated));
                 }
             }
@@ -426,7 +436,7 @@ public class RebuildService {
 
     private KafkaResult startKafkaConsume(final ElasticSearchBulk elasticSearchBulk,
                                           final Topic topic,
-                                          final Date startDate,
+                                          final List<Date> startDateList,
                                           final Map<Integer, IndexName> rebuildIndexMap) throws Exception {
         final KafkaResult kafkaResult = new KafkaResult();
         kafkaResult.setEndTime(System.currentTimeMillis());
@@ -456,13 +466,22 @@ public class RebuildService {
 
             kafkaAdminClient = (KafkaAdminClient) AdminClient.create(properties);
             long maxOffset = KafkaUtils.getMaxOffset(kafkaAdminClient, topicPartition);
-            final Map<TopicPartition, OffsetAndTimestamp> topicPartitionOffsetAndTimestampMap = consumer.offsetsForTimes(Collections.singletonMap(topicPartition, startDate.getTime()));
-            OffsetAndTimestamp offsetAndTimestamp = topicPartitionOffsetAndTimestampMap.get(topicPartition);
+
+            OffsetAndTimestamp offsetAndTimestamp = null;
+
+            for (Date startDate : startDateList) {
+                final Map<TopicPartition, OffsetAndTimestamp> topicPartitionOffsetAndTimestampMap = consumer.offsetsForTimes(Collections.singletonMap(topicPartition, startDate.getTime()));
+                offsetAndTimestamp = topicPartitionOffsetAndTimestampMap.get(topicPartition);
+                if (null != offsetAndTimestamp) {
+                    break;
+                }
+            }
+
             if (null == offsetAndTimestamp) {
                 offsetAndTimestamp = new OffsetAndTimestamp(maxOffset, 1L);
             }
 
-            this.rebuildStatus.addMessage(String.format("开始从Kafka拉取增量数据并同步到Elastic-Search中(时间: 从<b>%s</b>开始拉取, 位点: <b>%s</b>)", CommonUtils.formatMs(startDate), offsetAndTimestamp.offset()));
+            this.rebuildStatus.addMessage(String.format("开始从Kafka拉取增量数据并同步到Elastic-Search中(时间: 从<b>%s</b>开始拉取, 位点: <b>%s</b>)", CommonUtils.formatMs(startDateList.get(0)), offsetAndTimestamp.offset()));
 
             consumer.seek(topicPartition, offsetAndTimestamp.offset());
             final List<FlatMsg> flatMessageList = new ArrayList<>(KAFKA_BATCH_SIZE);
@@ -691,8 +710,8 @@ public class RebuildService {
         this.dataSourceMap.clear();
     }
 
-    private Date getDbCurrentTime() throws Exception {
-        final List<Long> result = new ArrayList<>();
+    private Map<DataSourceVo, Long> getDbCurrentTime() throws Exception {
+        final Map<DataSourceVo, Long> result = new HashMap<>();
         final List<Exception> exceptionList = new ArrayList<>();
 
         final CountDownLatch cdl = new CountDownLatch(this.dataSourceMap.size());
@@ -706,7 +725,7 @@ public class RebuildService {
                     statement = conn.createStatement();
                     rs = statement.executeQuery("SELECT REPLACE(unix_timestamp(current_timestamp(3)),'.','')");
                     while (rs.next()) {
-                        result.add(rs.getLong(1));
+                        result.put(pair.getKey(), rs.getLong(1));
                     }
                 } catch (final Exception exception) {
                     exceptionList.add(exception);
@@ -723,9 +742,7 @@ public class RebuildService {
         if (!exceptionList.isEmpty()) {
             throw exceptionList.get(0);
         }
-
-        final Optional<Long> min = result.stream().min(Long::compareTo);
-        return min.map(Date::new).orElse(null);
+        return result;
     }
 
     private void checkTerminated(final Exception exception) throws CanalException {

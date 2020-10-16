@@ -193,7 +193,7 @@ public class ServerController {
     public Result<List<SettingVo>> listSetting(@RequestParam(value = "topicName") final String topicName) throws Exception {
         final List<SettingVo> setting = this.db2EsHttpService.getSetting(topicName);
         final NodeVo leaderNodeVo = this.db2EsHttpService.getNodeVoByTopicName(topicName);
-        String slaveIp = "无备用节点";
+        String slaveIp = "<span class=\"layui-badge layui-bg-orange\">无备用节点</span>";
 
         if (null != leaderNodeVo.getSlaveList() && !leaderNodeVo.getSlaveList().isEmpty()) {
             slaveIp = StringUtils.join(leaderNodeVo.getSlaveList().stream().map(NodeVo::getIp).collect(Collectors.toSet()), ", ");

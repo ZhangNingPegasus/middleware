@@ -72,7 +72,7 @@
         <maven-deploy-plugin>2.8.2</maven-deploy-plugin>
         <mockito-core>3.5.13</mockito-core>
         <dubbo-spring-boot-starter>2.7.8</dubbo-spring-boot-starter>
-        <spring-context-support>1.0.10</spring-context-support>
+        <spring-context-support>1.0.11</spring-context-support>
         <acm-sdk>1.0.9</acm-sdk>
         <nacos-api>1.3.3</nacos-api>
         <apm-toolkit-trace>8.1.0</apm-toolkit-trace>
