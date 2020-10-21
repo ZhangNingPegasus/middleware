@@ -48,6 +48,7 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -98,29 +99,30 @@ public class RebuildService {
         this.clearThreadFlushShards();
         this.clearDataSource();
         this.rebuildStatus.clear(topic.getName());
-        ExceptionCallbackImpl exceptionCallback = new ExceptionCallbackImpl(exception -> terminated.set(true));
+        final ExceptionCallbackImpl exceptionCallback = new ExceptionCallbackImpl(exception -> terminated.set(true));
         this.dbStatus = new DbStatus(topic.getName(), this.terminated);
         this.kafkaStatus = new KafkaStatus(topic.getName(), this.terminated);
         this.rebuildStatus.setDbStatus(this.dbStatus);
         this.rebuildStatus.setKafkaStatus(this.kafkaStatus);
+        final Topic dbTopic = this.topicService.getByName(topic.getName());
 
         this.completableFuture = CompletableFuture.supplyAsync(() -> {
             ElasticSearchBulk elasticSearchBulk = null;
             Map<Integer, IndexName> rebuildIndexMap = null;
-            final Topic dbTopic = this.topicService.getByName(topic.getName());
             boolean initialization = false;
             try {
+                long allStart = System.currentTimeMillis();
+
                 final Set<IndexName> buffer = this.esService.getIndexNameByAlias(topic.getName());
-                initialization = (buffer == null || buffer.isEmpty());
+                initialization = (null == buffer || buffer.isEmpty());
                 this.createDataSource(tableSourceMap);
 
-                long allStart = System.currentTimeMillis();
-                long start = System.currentTimeMillis();
+                long start = allStart;
                 this.rebuildStatus.addMessage(String.format("开始根据新的Elastic-Search的MAPPING设定，为逻辑表[<b>%s</b>]创建新的索引", topic.getName()));
                 rebuildIndexMap = createRebuildIndex(topic);
                 this.rebuildStatus.setRebuildIndexNames(rebuildIndexMap.values().stream().map(IndexName::toString).collect(Collectors.toSet()));
-                this.rebuildStatus.addMessage(String.format("已成功创建完新的索引。耗时:%.3f秒<br/>", calcDuringSeconds(start)));
                 this.rebuildStatus.addProgress(10);
+                this.rebuildStatus.addMessage(String.format("已成功创建新的索引。耗时:%.3f秒<br/>", calcDuringSeconds(start)));
 
                 elasticSearchBulk = new ElasticSearchBulk(this.esService, exceptionCallback);
                 final Calendar calendar = Calendar.getInstance();
@@ -128,34 +130,31 @@ public class RebuildService {
                 final int minYear = calendar.get(Calendar.YEAR);
                 final Date fromDate = DateTool.parse(String.format("%s-01-01 00:00:00", minYear));
                 final Map<DataSourceVo, Long> dbDateMap = this.getDbCurrentTime();
-                final List<Date> dbDateList = new HashSet<>(dbDateMap.values()).stream().map(Date::new).sorted(Date::compareTo).collect(Collectors.toList());
-
+                final List<Date> dbDateList = dbDateMap.values().stream().map(Date::new).sorted(Date::compareTo).collect(Collectors.toList());
                 this.rebuildStatus.addMessage(String.format("开始从数据库向Elastic-Search同步全量数据(时间: 从<b>%s</b>同步到<b>%s</b>)", CommonUtils.formatMs(fromDate), CommonUtils.formatMs(dbDateList.get(0))));
                 start = System.currentTimeMillis();
                 final List<Exception> populateExceptionList = this.populate(elasticSearchBulk, topic, tableSourceMap, rebuildIndexMap, fromDate, dbDateMap);
                 if (!populateExceptionList.isEmpty()) {
-                    System.err.printf("2. 数据库同步发生异常, 原因: %s%n", populateExceptionList.get(0).getMessage());
+                    System.err.printf("2. 数据库同步发生异常, 原因: %s%n", ExceptionTool.getRootCauseMessage(populateExceptionList.get(0)));
                     throw populateExceptionList.get(0);
                 }
                 double duringSeconds = calcDuringSeconds(start);
                 this.rebuildStatus.setDbTps((int) (this.rebuildStatus.getDbCount() / duringSeconds));
-                if (this.rebuildStatus.getDbTps() == 0) {
+                if (this.rebuildStatus.getDbTps() <= 0) {
                     this.rebuildStatus.setKafkaTps((int) this.rebuildStatus.getDbCount());
                 }
-                this.rebuildStatus.addMessage(String.format("已成功从数据库同步完全量数据(共同步<b>%s</b>条, 每秒平均同步%s条)。耗时:%.3f秒<br/>", this.rebuildStatus.getDbCount(), this.rebuildStatus.getDbTps(), duringSeconds));
                 this.rebuildStatus.addProgress(40);
+                this.rebuildStatus.addMessage(String.format("已成功从数据库同步完全量数据(共同步<b>%s</b>条, 每秒平均同步%s条)。耗时:%.3f秒<br/>", this.rebuildStatus.getDbCount(), this.rebuildStatus.getDbTps(), duringSeconds));
 
                 start = System.currentTimeMillis();
-
-
                 KafkaResult kafkaResult = this.startKafkaConsume(elasticSearchBulk, topic, dbDateList, rebuildIndexMap);
                 duringSeconds = calcDuringSeconds(start);
                 this.rebuildStatus.setKafkaTps((int) (this.rebuildStatus.getKafkaCount() / duringSeconds));
-                if (this.rebuildStatus.getKafkaTps() == 0) {
+                if (this.rebuildStatus.getKafkaTps() <= 0) {
                     this.rebuildStatus.setKafkaTps((int) this.rebuildStatus.getKafkaCount());
                 }
-                this.rebuildStatus.addMessage(String.format("已成功从Kafka同步完增量数据(时间: 从<b>%s</b>到<b>%s</b>, 共同步<b>%s</b>条, 每秒平均同步%s条)。共耗时:%.3f秒<br/>", CommonUtils.formatMs(dbDateList.get(0)), CommonUtils.formatMs(new Date(kafkaResult.getEndTime())), this.rebuildStatus.getKafkaCount(), this.rebuildStatus.getKafkaTps(), duringSeconds));
                 this.rebuildStatus.addProgress(40);
+                this.rebuildStatus.addMessage(String.format("已成功从Kafka同步完增量数据(时间: 从<b>%s</b>到<b>%s</b>, 共同步<b>%s</b>条, 每秒平均同步%s条)。共耗时:%.3f秒<br/>", CommonUtils.formatMs(dbDateList.get(0)), CommonUtils.formatMs(new Date(kafkaResult.getEndTime())), this.rebuildStatus.getKafkaCount(), this.rebuildStatus.getKafkaTps(), duringSeconds));
 
                 this.checkTerminated(exceptionCallback.getException());
                 this.rebuildStatus.addMessage(String.format("开始处理索引[<b>%s</b>]数据在ElasticSearch中的刷盘事项", topic.getName()));
@@ -164,30 +163,28 @@ public class RebuildService {
                 elasticSearchBulk.close();
                 elasticSearchBulk = null;
                 this.checkTerminated(exceptionCallback.getException());
-
                 if (null != exceptionCallback.getException()) {
                     throw exceptionCallback.getException();
                 } else {
                     this.rebuildStatus.addMessage(String.format("已成功完成了数据刷盘。耗时:%.3f秒", calcDuringSeconds(start)));
                 }
 
-                this.rebuildStatus.addMessage(String.format("开始将旧索引从别名[<b>%s</b>]上移除，并绑定新的索引", topic.getName()));
                 start = System.currentTimeMillis();
+                this.rebuildStatus.addMessage(String.format("开始将旧索引从别名[<b>%s</b>]上移除，并绑定新的索引", topic.getName()));
                 this.checkTerminated(exceptionCallback.getException());
-
                 this.cannotCanal.set(true);
                 this.topicService.insertOrUpdate(topic);
                 final Set<IndexName> indexNames = rebindAlias(topic.getName(), rebuildIndexMap);
                 this.rebuildStatus.addMessage(String.format("已成功切换索引别名，并已投入使用。耗时:%.3f秒<br/>", calcDuringSeconds(start)));
+
                 try {
+                    start = System.currentTimeMillis();
                     final NodeVo nodeVo = this.db2EsHttpService.getNodeByTopicName(topic.getName());
                     if (null != nodeVo) {
                         this.rebuildStatus.addMessage(String.format("正在向DB2ES(<b>id=%s</b>)服务(<b>%s</b>&nbsp;-&nbsp;<b>%s</b>)发送开启主题[<b>%s</b>]消费的通知", nodeVo.getId(), nodeVo.getIp(), nodeVo.getPort(), topic.getName()));
-                        start = System.currentTimeMillis();
                         this.db2EsHttpService.restart(topic.getName(), kafkaResult.getOffset().toString(), null);
                         this.rebuildStatus.addMessage(String.format("已成功开启主题的消费。耗时:%.3f秒", calcDuringSeconds(start)));
                     }
-
                     for (final IndexName indexName : indexNames) {
                         this.esService.deleteIndex(indexName.toString());
                     }
@@ -711,7 +708,7 @@ public class RebuildService {
     }
 
     private Map<DataSourceVo, Long> getDbCurrentTime() throws Exception {
-        final Map<DataSourceVo, Long> result = new HashMap<>();
+        final Map<DataSourceVo, Long> result = new ConcurrentHashMap<>();
         final List<Exception> exceptionList = new ArrayList<>();
 
         final CountDownLatch cdl = new CountDownLatch(this.dataSourceMap.size());
@@ -737,6 +734,7 @@ public class RebuildService {
                 }
             }).start();
         }
+
         cdl.await();
 
         if (!exceptionList.isEmpty()) {

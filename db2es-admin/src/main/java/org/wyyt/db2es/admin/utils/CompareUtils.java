@@ -1,5 +1,6 @@
 package org.wyyt.db2es.admin.utils;
 
+import cn.hutool.core.date.DateTime;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.wyyt.db2es.admin.common.Utils;
@@ -36,7 +37,7 @@ public class CompareUtils {
                 }
                 final LinkedHashMap<String, Object> buffer = new LinkedHashMap<>();
                 for (final Map.Entry<String, Object> pair : map.entrySet()) {
-                    if (pair.getValue().getClass().isAssignableFrom(Date.class)) {
+                    if (pair.getValue().getClass().isAssignableFrom(Date.class) || pair.getValue().getClass().isAssignableFrom(DateTime.class)) {
                         datetimeColumns.add(pair.getKey());
                         pair.setValue(CommonUtils.formatMs((Date) pair.getValue()));
                     }

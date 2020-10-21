@@ -143,6 +143,9 @@
                 if (theTime3 > 0) {
                     result = ("" + parseInt(theTime3)).padStart(2, '0') + "天" + result;
                 }
+                if (result === '') {
+                    return '0秒';
+                }
                 return result;
             }
 
