@@ -65,3 +65,18 @@ mybatis-plus:
       id-type: auto
   configuration:
     map-underscore-to-camel-case: true
+
+seata:
+  enabled: true
+  application-id: example
+  service:
+    vgroup-mapping:
+      scfs-service-group: default
+  tx-service-group: scfs-service-group
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 192.168.6.167:8848
+      namespace: df20d66b-7340-466c-a661-70bd68c51bd3
+      group: SEATA_GROUP
+  enable-auto-data-source-proxy: true

@@ -1,6 +1,5 @@
 package org.wyyt.sharding.aop;
 
-import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.apache.shardingsphere.transaction.core.TransactionTypeHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -22,7 +21,7 @@ public class XATransactionAop {
     @Around(value = "@annotation(tranSave)")
     public Object aroundCacheMethod(final ProceedingJoinPoint point,
                                     final TranSave tranSave) throws Throwable {
-        TransactionTypeHolder.set(TransactionType.XA);
+        TransactionTypeHolder.set(tranSave.transactionType());
         try {
             return point.proceed();
         } finally {

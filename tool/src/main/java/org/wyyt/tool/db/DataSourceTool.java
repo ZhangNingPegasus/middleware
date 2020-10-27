@@ -23,7 +23,7 @@ import java.util.Collections;
  */
 @Slf4j
 public final class DataSourceTool {
-    private static final String DATA_BASE_URL = "jdbc:mysql://%s:%s/%s?allowPublicKeyRetrieval=true&serverTimezone=GMT%%2B8&characterEncoding=utf8&useUnicode=true&autoReconnect=true&allowMultiQueries=true&useSSL=false&rewriteBatchedStatements=true&zeroDateTimeBehavior=CONVERT_TO_NULL";
+    private static final String DATA_BASE_URL = "jdbc:mysql://%s:%s/%s?allowPublicKeyRetrieval=true&serverTimezone=GMT%%2B8&characterEncoding=UTF-8&useUnicode=true&autoReconnect=true&allowMultiQueries=true&useSSL=false&rewriteBatchedStatements=true&zeroDateTimeBehavior=CONVERT_TO_NULL";
     private static final String CONNECTION_TEST_QUERY = "SELECT 1";
     private static final String CONNECTION_INIT_SQL = "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci";
 

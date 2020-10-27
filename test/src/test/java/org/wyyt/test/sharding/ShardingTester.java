@@ -1,5 +1,6 @@
 package org.wyyt.test.sharding;
 
+import io.seata.rm.datasource.sql.struct.TableMetaCache;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.wyyt.test.TestApplication;
 import org.wyyt.test.service.FinAcOutFundChgService;
+
+import java.util.ServiceLoader;
 
 /**
  * the test of Sharding
@@ -30,7 +33,7 @@ public class ShardingTester {
     private FinAcOutFundChgService finAcOutFundChgService;
 
     @Test
-    public void save() throws Exception {
+    public void save() {
         this.finAcOutFundChgService.save();
     }
 }

@@ -3,6 +3,7 @@ package org.wyyt.test.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.Date;
@@ -18,8 +19,9 @@ import java.util.Date;
  * *****************************************************************
  */
 @Data
+@TableName(value = "`fin_ac_out_fund_chg`")
 public final class FinAcOutFundChg {
-    @TableId(value = "`id`", type = IdType.AUTO)
+    @TableId(value = "`id`", type = IdType.INPUT)
     private Long id;
 
     @TableField(value = "`row_create_time`")
@@ -30,4 +32,7 @@ public final class FinAcOutFundChg {
 
     @TableField(value = "`acc_no`")
     private String accNo;
+
+    @TableField(value = "`trade_name`")
+    private String tradeName;
 }

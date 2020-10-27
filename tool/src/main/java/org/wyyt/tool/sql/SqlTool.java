@@ -1,6 +1,7 @@
 package org.wyyt.tool.sql;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
@@ -53,7 +54,7 @@ public final class SqlTool {
 
     public static List<SQLStatement> analyseMySql(final String sql) {
         try {
-            return SQLUtils.parseStatements(sql, "mysql");
+            return SQLUtils.parseStatements(sql, DbType.mysql, false);
         } catch (Exception e) {
             throw new RuntimeException(ExceptionTool.getRootCauseMessage(e));
         }

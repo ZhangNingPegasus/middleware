@@ -1,12 +1,13 @@
 package org.wyyt.test.service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenerator;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wyyt.kafka.service.KafkaService;
-import org.wyyt.kafka.tran.anno.TranKafka;
-import org.wyyt.sharding.anno.TranSave;
 import org.wyyt.test.entity.FinAcOutFundChg;
 import org.wyyt.test.mapper.FinAcOutFundChgMapper;
 
@@ -29,20 +30,23 @@ public class FinAcOutFundChgService extends ServiceImpl<FinAcOutFundChgMapper, F
     @Autowired
     private FinAcOutFundChgService finAcOutFundChgService;
 
-    @TranSave
-    @TranKafka
-    public void save() throws Exception {
+    //    @TranSave
+    @GlobalTransactional(timeoutMills = 10000, name = "scfs-service-group", rollbackFor = Exception.class)
+    @ShardingTransactionType(TransactionType.BASE)
+    public void save() {
         FinAcOutFundChg finAcOutFundChg1 = new FinAcOutFundChg();
         finAcOutFundChg1.setId(Long.parseLong(snowflakeShardingKeyGenerator.generateKey().toString()));
         finAcOutFundChg1.setAccNo("1");
+        finAcOutFundChg1.setTradeName("武汉");
 
         FinAcOutFundChg finAcOutFundChg2 = new FinAcOutFundChg();
         finAcOutFundChg2.setId(Long.parseLong(snowflakeShardingKeyGenerator.generateKey().toString()));
         finAcOutFundChg2.setAccNo("2");
+        finAcOutFundChg1.setTradeName("上海");
 
         this.finAcOutFundChgService.save(finAcOutFundChg1);
         this.finAcOutFundChgService.save(finAcOutFundChg2);
 
-        this.kafkaService.send("A", "A", String.valueOf(System.currentTimeMillis()));
+        System.out.println(1 / 0);
     }
 }

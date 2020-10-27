@@ -197,7 +197,7 @@ public class ShardingAutoConfig implements DisposableBean {
             shardingRuleConfiguration.getBroadcastTables().add(broadcastTable);
         }
 
-        final Map<String, DataSource> dsMap = new HashMap<>((int) (this.dataSourceMap.size() / 0.75));
+        final Map<String, DataSource> dsMap = new HashMap<>();
         for (final Map.Entry<DbInfo, DataSource> pair : this.dataSourceMap.entrySet()) {
             dsMap.put(pair.getKey().getName(), pair.getValue());
         }

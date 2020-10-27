@@ -38,7 +38,7 @@
         <skipTests>true</skipTests>
 
         <springboot>2.3.4.RELEASE</springboot>
-        <mysql-connector-java>8.0.22</mysql-connector-java>
+        <mysql-connector-java>8.0.21</mysql-connector-java>
         <lombok>1.18.16</lombok>
         <hutool-all>5.4.5</hutool-all>
         <fastjson>1.2.74</fastjson>
@@ -219,6 +219,12 @@
                         <groupId>com.google.guava</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>sharding-transaction-base-seata-at</artifactId>
+                <version>${sharding-sphere}</version>
             </dependency>
 
             <dependency>

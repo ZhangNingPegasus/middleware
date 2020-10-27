@@ -1,5 +1,6 @@
 package org.wyyt.sharding.anno;
 
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.annotation.*;
@@ -19,4 +20,5 @@ import java.lang.annotation.*;
 @Inherited
 @Transactional(rollbackFor = Exception.class, timeout = 30)
 public @interface TranSave {
+    TransactionType transactionType() default TransactionType.LOCAL;
 }

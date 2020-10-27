@@ -1,5 +1,6 @@
 package org.wyyt.test;
 
+import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.apache.shardingsphere.shardingjdbc.spring.boot.SpringBootConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * *****************************************************************
  */
 @Configuration
-@SpringBootApplication(exclude = {SpringBootConfiguration.class})
+@SpringBootApplication(exclude = {SpringBootConfiguration.class, DruidDataSourceAutoConfigure.class})
 @EnableTransactionManagement(proxyTargetClass = true)
 public class TestApplication {
     public static void main(String[] args) {

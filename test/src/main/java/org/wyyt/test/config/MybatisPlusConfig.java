@@ -32,7 +32,7 @@ public class MybatisPlusConfig {
         return interceptor;
     }
 
-    @Bean
+    @Bean("dataSource")
     public DataSource dataSource() {
         return this.shardingDataSource;
     }
