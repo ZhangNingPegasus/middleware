@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutionException;
 @RestController("topic")
 public final class TopicHandler extends BaseHandler {
     @PostMapping("list")
-    public final Result<List<TopicVo>> list(final Param param) throws Exception {
+    public final Result<List<TopicVo>> list(final Param param) {
         final String searchTopicName = param.getPostString("topicName");
 
         final Set<String> topicNames = this.context.getConfig().getTopicMap().keySet();
@@ -44,29 +44,32 @@ public final class TopicHandler extends BaseHandler {
                 topicPartitionList.add(new TopicPartition(topicName, 0));
             }
         }
-
-        final Map<TopicPartition, TopicOffset> offsetMap = this.context.getKafkaAdminClientWrapper().listOffset(topicPartitionList);
-
         final List<TopicVo> result = new ArrayList<>(topicNames.size());
-        for (final Map.Entry<TopicPartition, TopicOffset> pair : offsetMap.entrySet()) {
-            final TopicVo topicVo = new TopicVo();
-            topicVo.setTopicName(pair.getKey().topic());
-            topicVo.setTopicOffset(pair.getValue());
 
-            final Processor processor = this.context.getProcessorWrapper().getByTopicPartition(pair.getKey());
-            if (null != processor) {
-                topicVo.setIsActive(true);
-                topicVo.setTps(processor.getTps());
-                topicVo.setErrorMsg(ExceptionTool.getRootCauseMessage(processor.getException()));
-            } else {
-                topicVo.setTps(0);
-                topicVo.setIsActive(false);
+        try {
+            final Map<TopicPartition, TopicOffset> offsetMap = this.context.getKafkaAdminClientWrapper().listOffset(topicPartitionList);
+            for (final Map.Entry<TopicPartition, TopicOffset> pair : offsetMap.entrySet()) {
+                final TopicVo topicVo = new TopicVo();
+                topicVo.setTopicName(pair.getKey().topic());
+                topicVo.setTopicOffset(pair.getValue());
+
+                final Processor processor = this.context.getProcessorWrapper().getByTopicPartition(pair.getKey());
+                if (null != processor) {
+                    topicVo.setIsActive(true);
+                    topicVo.setTps(processor.getTps());
+                    topicVo.setErrorMsg(ExceptionTool.getRootCauseMessage(processor.getException()));
+                } else {
+                    topicVo.setTps(0);
+                    topicVo.setIsActive(false);
+                }
+                topicVo.setVersion(CommonUtils.getVersion());
+                result.add(topicVo);
             }
-            topicVo.setVersion(CommonUtils.getVersion());
-            result.add(topicVo);
+            result.sort(Comparator.comparing(TopicVo::getTopicName));
+            return Result.success(result);
+        } catch (Exception exception) {
+            return Result.success(result);
         }
-        result.sort(Comparator.comparing(TopicVo::getTopicName));
-        return Result.success(result);
     }
 
     @PostMapping("startTopic")

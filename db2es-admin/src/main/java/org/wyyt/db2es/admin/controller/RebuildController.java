@@ -218,7 +218,7 @@ public class RebuildController {
             final int end = start + countPerDb - 1;
             final List<String> tableList = new ArrayList<>(countPerDb);
             for (int i = start; i <= end; i++) {
-                tableList.add(String.format("%s_%s", logicTableName, i));
+                tableList.add(String.format(tableDimensionInfo.getTableNameFormat(), i));
             }
             dataSourceVo.setTableNames(StringUtils.join(tableList.toArray(new String[]{}), ','));
         }
