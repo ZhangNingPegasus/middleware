@@ -10,6 +10,7 @@ import org.elasticsearch.index.VersionType;
 import org.springframework.util.Assert;
 import org.wyyt.db2es.core.entity.domain.Config;
 import org.wyyt.db2es.core.entity.domain.IndexName;
+import org.wyyt.db2es.core.entity.domain.TableInfo;
 import org.wyyt.db2es.core.exception.Db2EsException;
 import org.wyyt.db2es.core.util.CommonUtils;
 import org.wyyt.tool.date.DateTool;
@@ -40,9 +41,9 @@ public final class PopulateRunner implements Runnable, Closeable {
     private final AtomicBoolean terminated;
     private final CountDownLatch countDownLatch;
     private final DataSource dataSource;
+    private final TableInfo tableInfo;
     @Getter
     private final String tableName;
-    private final Config config;
     private final Map<Integer, IndexName> rebuildIndexMap;
     private final ElasticSearchBulk elasticSearchBulk;
     private final String sql;
@@ -65,16 +66,17 @@ public final class PopulateRunner implements Runnable, Closeable {
         this.countDownLatch = countDownLatch;
         this.dataSource = dataSource;
         this.tableName = tableName;
-        this.config = config;
         this.rebuildIndexMap = rebuildIndexMap;
         this.terminated = terminated;
+        this.tableInfo = config.getTableMap().getByFactTableName(tableName);
+
         this.sql = String.format("SELECT * FROM `%s` WHERE `%s` >= '%s' AND `%s` <= '%s' ORDER BY `%s` ASC",
                 SqlTool.removeMySqlQualifier(tableName),
-                this.config.getRowCreateTime(),
+                this.tableInfo.getRowCreateTimeFieldName(),
                 CommonUtils.formatMs(minDate),
-                this.config.getRowCreateTime(),
+                this.tableInfo.getRowCreateTimeFieldName(),
                 CommonUtils.formatMs(maxDate),
-                this.config.getPrimaryKey());
+                this.tableInfo.getPrimaryKeyFieldName());
     }
 
     @SneakyThrows
@@ -95,9 +97,9 @@ public final class PopulateRunner implements Runnable, Closeable {
                 if (null == columns) {
                     columns = getColumnType(rs.getMetaData());
                 }
-                final String id = rs.getString(this.config.getPrimaryKey());
-                final Date rowUpdateTime = DateTool.parse(rs.getString(this.config.getRowUpdateTime()));
-                Assert.notNull(rowUpdateTime, String.format("在表[%s]中,主键为[%s]的数据缺少字段[%s]的值", this.tableName, id, this.config.getRowUpdateTime()));
+                final String id = rs.getString(this.tableInfo.getPrimaryKeyFieldName());
+                final Date rowUpdateTime = DateTool.parse(rs.getString(this.tableInfo.getRowUpdateTimeFieldName()));
+                Assert.notNull(rowUpdateTime, String.format("在表[%s]中,主键为[%s]的数据缺少字段[%s]的值", this.tableName, id, this.tableInfo.getRowUpdateTimeFieldName()));
 
                 final Map<String, String> datum = new HashMap<>();
                 for (Map.Entry<String, String> pair : columns.entrySet()) {
@@ -121,9 +123,9 @@ public final class PopulateRunner implements Runnable, Closeable {
     }
 
     private String getIndexName(final ResultSet rs) throws SQLException {
-        final long id = rs.getLong(this.config.getPrimaryKey());
-        final Date rowCreateTime = DateTool.parse(rs.getString(this.config.getRowCreateTime()));
-        Assert.notNull(rowCreateTime, String.format("在表[%s]中,主键为[%s]的数据缺少字段[%s]的值", this.tableName, id, this.config.getRowCreateTime()));
+        final long id = rs.getLong(this.tableInfo.getPrimaryKeyFieldName());
+        final Date rowCreateTime = DateTool.parse(rs.getString(this.tableInfo.getRowCreateTimeFieldName()));
+        Assert.notNull(rowCreateTime, String.format("在表[%s]中,主键为[%s]的数据缺少字段[%s]的值", this.tableName, id, this.tableInfo.getRowCreateTimeFieldName()));
         final String result = Tool.getIndexName(this.rebuildIndexMap, rowCreateTime);
         if (StringUtils.isEmpty(result)) {
             throw new Db2EsException(String.format("在表%s中, 主键是[%s]的记录无法定位到对应的索引", this.tableName, id));

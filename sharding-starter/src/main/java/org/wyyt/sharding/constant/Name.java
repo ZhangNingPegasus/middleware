@@ -27,6 +27,8 @@ public final class Name {
     public static final String DESCRIPTION = "description";
     public static final String REF = "ref";
     public static final String PK_NAME = "pkName";
+    public static final String ROW_CREATE_TIME = "rowCreateTime";
+    public static final String ROW_UPDATE_TIME = "rowUpdateTime";
     public static final String BINDING_GROUP_NAME = "bindingGroupName";
     public static final String BROADCAST = "broadcast";
     public static final String TABLE_COUNT_NUM = "tableCountNum";

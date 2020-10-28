@@ -92,15 +92,23 @@ public abstract class BaseMybatisInterceptorAdapter implements MybatisIntercepto
                 break;
             case DELETE:
                 for (final SQLStatement sqlStatement : sqlStatementList) {
-                    //获取表名
-                    final MySqlDeleteStatement mySqlDeleteStatement = (MySqlDeleteStatement) sqlStatement;
-                    final String logicTableName = SqlTool.removeMySqlQualifier(mySqlDeleteStatement.getTableName().getSimpleName());
-                    tableNameList.add(logicTableName.trim());
+                    if (sqlStatement instanceof MySqlDeleteStatement) {
+                        //获取表名
+                        final MySqlDeleteStatement mySqlDeleteStatement = (MySqlDeleteStatement) sqlStatement;
+                        final String logicTableName = SqlTool.removeMySqlQualifier(mySqlDeleteStatement.getTableName().getSimpleName());
+                        tableNameList.add(logicTableName.trim());
 
-                    //获取WHERE条件
-                    final CaseInsensitiveMap<String, List<Object>> whereMap = new CaseInsensitiveMap<>();
-                    SqlTool.getWhereFieldAndValue(mySqlDeleteStatement.getWhere(), whereMap);
-                    whereValueMapList.add(whereMap);
+                        //获取WHERE条件
+                        final CaseInsensitiveMap<String, List<Object>> whereMap = new CaseInsensitiveMap<>();
+                        SqlTool.getWhereFieldAndValue(mySqlDeleteStatement.getWhere(), whereMap);
+                        whereValueMapList.add(whereMap);
+                    } else if (sqlStatement instanceof SQLTruncateStatement) {
+                        //获取表名
+                        final SQLTruncateStatement sqlTruncateStatement = (SQLTruncateStatement) sqlStatement;
+                        for (SQLExprTableSource tableSource : sqlTruncateStatement.getTableSources()) {
+                            tableNameList.add(SqlTool.removeMySqlQualifier(tableSource.getName().getSimpleName()));
+                        }
+                    }
                 }
                 break;
             case UPDATE:

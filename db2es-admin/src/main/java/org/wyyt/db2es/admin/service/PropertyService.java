@@ -23,15 +23,18 @@ import org.wyyt.sharding.anno.TranSave;
 @Service
 public class PropertyService extends ServiceImpl<PropertyMapper, Property> {
     private final Db2EsHttpService db2EsHttpService;
+    private final TableService tableService;
 
-    public PropertyService(final Db2EsHttpService db2EsHttpService) {
+    public PropertyService(final Db2EsHttpService db2EsHttpService,
+                           TableService tableService) {
         this.db2EsHttpService = db2EsHttpService;
+        this.tableService = tableService;
     }
 
     @TranRead
     public Config getConfig() {
         final Config result = new Config();
-        CommonUtils.fillConfig(this.list(), result);
+        CommonUtils.fillConfig(this.list(), this.tableService.get(), result);
         return result;
     }
 

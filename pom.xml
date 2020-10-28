@@ -38,9 +38,9 @@
         <skipTests>true</skipTests>
 
         <springboot>2.3.4.RELEASE</springboot>
-        <mysql-connector-java>8.0.21</mysql-connector-java>
+        <mysql-connector-java>8.0.22</mysql-connector-java>
         <lombok>1.18.16</lombok>
-        <hutool-all>5.4.5</hutool-all>
+        <hutool-all>5.4.6</hutool-all>
         <fastjson>1.2.74</fastjson>
         <json>20200518</json>
         <jackson-databind>2.11.3</jackson-databind>
@@ -59,7 +59,7 @@
         <reflections>0.9.12</reflections>
         <commons-beanutils>1.9.4</commons-beanutils>
         <maven-assembly-plugin>3.3.0</maven-assembly-plugin>
-        <elasticsearch.version>7.9.2</elasticsearch.version>
+        <elasticsearch.version>7.9.3</elasticsearch.version>
         <kafka-clients>2.6.0</kafka-clients>
         <slf4j-api>1.7.30</slf4j-api>
         <curator-recipes>5.1.0</curator-recipes>
@@ -70,12 +70,12 @@
         <log4j-over-slf4j>1.7.30</log4j-over-slf4j>
         <maven-source-plugin>3.2.1</maven-source-plugin>
         <maven-deploy-plugin>2.8.2</maven-deploy-plugin>
-        <mockito-core>3.5.15</mockito-core>
+        <mockito-core>3.6.0</mockito-core>
         <dubbo-spring-boot-starter>2.7.8</dubbo-spring-boot-starter>
         <spring-context-support>1.0.11</spring-context-support>
         <acm-sdk>1.0.9</acm-sdk>
         <nacos-api>1.3.3</nacos-api>
-        <apm-toolkit-trace>8.1.0</apm-toolkit-trace>
+        <apm-toolkit-trace>8.2.0</apm-toolkit-trace>
         <validation-api>2.0.1.Final</validation-api>
         <hibernate-validator>6.1.6.Final</hibernate-validator>
         <logstash-logback-encoder>6.4</logstash-logback-encoder>

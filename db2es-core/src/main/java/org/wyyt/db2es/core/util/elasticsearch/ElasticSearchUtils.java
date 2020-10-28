@@ -164,15 +164,17 @@ public final class ElasticSearchUtils {
                                                      final boolean checkInMemory) throws Exception {
         final List<IndexRequest> result = new ArrayList<>(flatMsg.getData().size());
 
+        TableInfo tableInfo = config.getTableMap().getByFactTableName(flatMsg.getTable());
+
         for (final CaseInsensitiveMap<String, String> datum : flatMsg.getData()) {
-            final String primaryValue = datum.get(config.getPrimaryKey());
-            final String strRowCreateTime = datum.get(config.getRowCreateTime());
+            final String primaryValue = datum.get(tableInfo.getPrimaryKeyFieldName());
+            final String strRowCreateTime = datum.get(tableInfo.getRowCreateTimeFieldName());
 
             if (StringUtils.isEmpty(primaryValue)) {
-                throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), config.getPrimaryKey()));
+                throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), tableInfo.getPrimaryKeyFieldName()));
             }
             if (StringUtils.isEmpty(strRowCreateTime)) {
-                throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), config.getRowCreateTime()));
+                throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), tableInfo.getRowCreateTimeFieldName()));
             }
 
             final Date rowCreateTime = DateTool.parse(strRowCreateTime);
@@ -194,15 +196,17 @@ public final class ElasticSearchUtils {
                                                       final boolean checkInMemory) throws Exception {
         final List<DeleteRequest> result = new ArrayList<>(flatMsg.getData().size());
 
+        TableInfo tableInfo = config.getTableMap().getByFactTableName(flatMsg.getTable());
+
         for (final CaseInsensitiveMap<String, String> datum : flatMsg.getData()) {
-            final String primaryValue = datum.get(config.getPrimaryKey());
-            final String strRowCreateTime = datum.get(config.getRowCreateTime());
+            final String primaryValue = datum.get(tableInfo.getPrimaryKeyFieldName());
+            final String strRowCreateTime = datum.get(tableInfo.getRowCreateTimeFieldName());
 
             if (StringUtils.isEmpty(primaryValue)) {
-                throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), config.getPrimaryKey()));
+                throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), tableInfo.getPrimaryKeyFieldName()));
             }
             if (StringUtils.isEmpty(strRowCreateTime)) {
-                throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), config.getRowCreateTime()));
+                throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), tableInfo.getRowCreateTimeFieldName()));
             }
 
             final Date rowCreateTime = DateTool.parse(strRowCreateTime);
@@ -225,17 +229,19 @@ public final class ElasticSearchUtils {
         }
         final List<DocWriteRequest> result = new ArrayList<>(flatMsg.getData().size());
 
+        TableInfo tableInfo = config.getTableMap().getByFactTableName(flatMsg.getTable());
+
         for (int i = 0; i < flatMsg.getOld().size(); i++) {
             final CaseInsensitiveMap<String, String> oldMap = flatMsg.getOld().get(i);
             final CaseInsensitiveMap<String, String> newMap = flatMsg.getData().get(i);
-            final String primaryValue = newMap.get(config.getPrimaryKey());
-            final String strRowCreateTime = newMap.get(config.getRowCreateTime());
+            final String primaryValue = newMap.get(tableInfo.getPrimaryKeyFieldName());
+            final String strRowCreateTime = newMap.get(tableInfo.getRowCreateTimeFieldName());
 
             if (StringUtils.isEmpty(primaryValue)) {
-                throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), config.getPrimaryKey()));
+                throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), tableInfo.getPrimaryKeyFieldName()));
             }
             if (StringUtils.isEmpty(strRowCreateTime)) {
-                throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), config.getRowCreateTime()));
+                throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), tableInfo.getRowCreateTimeFieldName()));
             }
 
             final Date rowCreateTime = DateTool.parse(strRowCreateTime);

@@ -9,6 +9,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.springframework.util.Assert;
 import org.wyyt.db2es.client.entity.FlatMessge;
 import org.wyyt.db2es.core.entity.domain.Checkpoint;
+import org.wyyt.db2es.core.entity.domain.TableInfo;
 import org.wyyt.tool.date.DateTool;
 
 import java.util.Date;
@@ -50,7 +51,10 @@ public final class CheckpointExt extends Checkpoint {
 
     public static long getTimestamp(final Context context,
                                     final FlatMessge flatMessage) {
-        final String rowUpdateTimeField = context.getConfig().getRowUpdateTime();
+
+        TableInfo tableInfo = context.getConfig().getTableMap().getByFactTableName(flatMessage.getTable());
+
+        final String rowUpdateTimeField = tableInfo.getRowUpdateTimeFieldName();
         Long timestamp = null;
 
         if (null != flatMessage.getData()) {

@@ -11,6 +11,7 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.Invocation;
 import org.wyyt.sharding.entity.AnalyseResult;
 import org.wyyt.sharding.exception.ShardingException;
@@ -46,6 +47,7 @@ public final class CheckSqlInterceptor extends BaseMybatisInterceptorAdapter {
     public final Object[] before(final Invocation invocation,
                                  final Object[] variables) throws Exception {
         final AnalyseResult result = this.analyseSql(invocation);
+
         final String tableName = result.getTableNameList().get(0);
         //不需要分库分表的数据表不需要检查
         if (!this.shardingService.needSharding(tableName)) {

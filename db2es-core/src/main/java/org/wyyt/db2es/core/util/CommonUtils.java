@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.wyyt.db2es.core.entity.domain.Config;
+import org.wyyt.db2es.core.entity.domain.TableMap;
 import org.wyyt.db2es.core.entity.persistent.Property;
 
 import java.net.InetAddress;
@@ -49,19 +50,16 @@ public final class CommonUtils {
         return DateUtil.format(value, "yyyy-MM-dd HH:mm:ss.SSS");
     }
 
-    public static void fillConfig(final List<Property> properties, final Config config) {
+    public static void fillConfig(final List<Property> properties,
+                                  final TableMap tableMap,
+                                  final Config config) {
+        config.setTableMap(tableMap);
         if (null == properties || properties.isEmpty()) {
             return;
         }
         for (final Property property : properties) {
             final String value = property.getValue();
-            if (FIELD_PRIMAY_KEY.equals(property.getName())) {
-                config.setPrimaryKey(value);
-            } else if (FIELD_ROW_CREATE_TIME.equals(property.getName())) {
-                config.setRowCreateTime(value);
-            } else if (FIELD_ROW_UPDATE_TIME.equals(property.getName())) {
-                config.setRowUpdateTime(value);
-            } else if (DB2ES_ADMIN_HOST.equals(property.getName())) {
+            if (DB2ES_ADMIN_HOST.equals(property.getName())) {
                 config.setDb2esAdminHost(value);
             } else if (DB2ES_ADMIN_PORT.equals(property.getName())) {
                 config.setDb2esAdminPort(Integer.parseInt(value));

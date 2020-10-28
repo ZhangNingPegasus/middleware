@@ -35,7 +35,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.wyyt.sharding.algorithm.impl.DatabaseComplexShardingAlgorithm;
 import org.wyyt.sharding.algorithm.impl.TableComplexShardingAlgorithm;
-import org.wyyt.sharding.aop.XATransactionAop;
+import org.wyyt.sharding.aop.TransactionAop;
 import org.wyyt.sharding.auto.config.XmlConfig;
 import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.auto.property.DimensionProperty;
@@ -151,8 +151,8 @@ public class ShardingAutoConfig implements DisposableBean {
     @Bean
     @Primary
     @ConditionalOnMissingBean
-    public XATransactionAop xaTransactionAop() {
-        return new XATransactionAop();
+    public TransactionAop transactionAop() {
+        return new TransactionAop();
     }
 
     @Bean
@@ -414,6 +414,8 @@ public class ShardingAutoConfig implements DisposableBean {
 
                 property.setName(SqlTool.removeMySqlQualifier(element.attributeValue(Name.NAME).trim()));
                 property.setPkName(SqlTool.removeMySqlQualifier(isAttributeEmpty(element, Name.PK_NAME) ? Name.FIELD_PRIMARY_KEY : element.attributeValue(Name.PK_NAME).trim()));
+                property.setRowCreateTime(SqlTool.removeMySqlQualifier(isAttributeEmpty(element, Name.ROW_CREATE_TIME) ? Name.FIELD_ROW_CREATE_TIME : element.attributeValue(Name.ROW_CREATE_TIME).trim()));
+                property.setRowUpdateTime(SqlTool.removeMySqlQualifier(isAttributeEmpty(element, Name.ROW_UPDATE_TIME) ? Name.FIELD_ROW_UPDATE_TIME : element.attributeValue(Name.ROW_UPDATE_TIME).trim()));
                 property.setBindingGroupName(isAttributeEmpty(element, Name.BINDING_GROUP_NAME) ? "" : element.attributeValue(Name.BINDING_GROUP_NAME).trim());
                 property.setBroadcast(!isAttributeEmpty(element, Name.BROADCAST) && Boolean.parseBoolean(element.attributeValue(Name.BROADCAST).trim()));
 

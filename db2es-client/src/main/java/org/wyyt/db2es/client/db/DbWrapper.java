@@ -1,5 +1,6 @@
 package org.wyyt.db2es.client.db;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,9 @@ import org.apache.commons.lang.StringUtils;
 import org.reflections.ReflectionUtils;
 import org.wyyt.db2es.client.entity.Db2EsLog;
 import org.wyyt.db2es.core.entity.domain.Config;
+import org.wyyt.db2es.core.entity.domain.TableMap;
 import org.wyyt.db2es.core.entity.persistent.Property;
+import org.wyyt.db2es.core.entity.persistent.Table;
 import org.wyyt.db2es.core.entity.persistent.Topic;
 import org.wyyt.db2es.core.exception.Db2EsException;
 import org.wyyt.tool.date.DateTool;
@@ -52,6 +55,14 @@ public final class DbWrapper implements Closeable {
 
     public final List<Property> listProperty() throws Exception {
         return this.select(Property.class, "SELECT * FROM `t_property`");
+    }
+
+    public final TableMap listTableMap() throws Exception {
+        List<Table> tableList = this.select(Table.class, "SELECT * FROM `t_table`");
+        for (Table table : tableList) {
+            return JSON.parseObject(table.getInfo(), TableMap.class);
+        }
+        return null;
     }
 
     public final Set<Topic> listTopics(final Integer db2EsId) throws Exception {

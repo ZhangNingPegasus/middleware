@@ -28,6 +28,16 @@ public final class TableProperty {
     private String pkName;
 
     /**
+     * 记录创建时间字段(时间精确到毫秒)
+     */
+    private String rowCreateTime;
+
+    /**
+     * 记录最后一次修改时间字段(时间精确到毫秒)
+     */
+    private String rowUpdateTime;
+
+    /**
      * 具有相同绑定名称的表为一组绑定表。可以为空, 为空表示不和任何表组成绑定表
      */
     private String bindingGroupName;

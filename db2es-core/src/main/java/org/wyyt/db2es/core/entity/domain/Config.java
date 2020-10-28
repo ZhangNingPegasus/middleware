@@ -79,18 +79,6 @@ public final class Config {
      */
     private String initialCheckpoint;
     /**
-     * 业务表的主键字段名
-     */
-    private String primaryKey;
-    /**
-     * 业务表的记录创建时间的字段名
-     */
-    private String rowCreateTime;
-    /**
-     * 业务表的记录最后一次修改时间的字段名
-     */
-    private String rowUpdateTime;
-    /**
      * db2es_admin的ip地址
      */
     private String db2esAdminHost;
@@ -134,4 +122,9 @@ public final class Config {
      * ACM配置
      */
     private String acmNacosLogPath;
+
+    /**
+     * 各个表的关键字段信息(如主键字段名等)
+     */
+    private TableMap tableMap;
 }

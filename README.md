@@ -184,11 +184,18 @@ scfs.xml.table数据表配置信息如下:<br/>
     &lt;!--
         name: 数据表的逻辑名称，必须唯一。不允许为空
         pkName: 主键。 可以为空，为空默认为id
+        rowCreateTime: 记录创建时间字段(时间精确到毫秒)，为空默认为row_create_time
+        rowUpdateTime: 记录最后一次修改时间字段(时间精确到毫秒)，为空默认为row_update_time
         bindingName: 具有相同绑定名称的表为一组绑定表, 为空表示不和任何表组成绑定表
         broadcast: 是否是广播表(true: 是广播表; false: 不是)。为空表示false
-        tableNameFormat: 逻辑表与物理表之间的映射关系表达式, 为空默认是:{逻辑名称}_%s
     --&gt;
     &lt;table name="fin_pay_fund_flow_out_fund" pkName="id"&gt;
+        &lt;!--
+            ref: 维度信息xml配置中的维度名称name
+            tableCountNum: 逻辑表在该维度下的分表总个数
+            shardingColumn: 逻辑表在该维度下的拆分键字段
+            tableNameFormat: 逻辑表与物理表之间的映射关系表达式, 为空默认是:{逻辑名称}_%s
+        --&gt;
         &lt;dimension ref="order-no" tableCountNum="64" shardingColumn="order_no"/&gt;
     &lt;/table&gt;
 

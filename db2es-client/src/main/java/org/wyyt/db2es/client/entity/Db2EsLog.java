@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.wyyt.db2es.client.common.Context;
+import org.wyyt.db2es.core.entity.domain.TableInfo;
 
 /**
  * the entity used for logging error inforamtion.
@@ -55,7 +56,8 @@ public final class Db2EsLog {
             if (null != flatMessage.getPkNames() && !flatMessage.getPkNames().isEmpty()) {
                 pkName = flatMessage.getPkNames().iterator().next();
             } else {
-                pkName = context.getConfig().getPrimaryKey();
+                TableInfo tableInfo = context.getConfig().getTableMap().getByFactTableName(this.tableName);
+                pkName = tableInfo.getPrimaryKeyFieldName();
             }
             this.primaryKeyValue = flatMessage.getData().get(0).get(pkName);
         }

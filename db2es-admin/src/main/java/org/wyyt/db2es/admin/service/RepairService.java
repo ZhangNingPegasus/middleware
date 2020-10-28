@@ -7,6 +7,7 @@ import org.wyyt.db2es.admin.service.common.EsService;
 import org.wyyt.db2es.admin.service.common.ShardingDbService;
 import org.wyyt.db2es.core.entity.domain.Config;
 import org.wyyt.db2es.core.entity.domain.IndexName;
+import org.wyyt.db2es.core.entity.domain.TableInfo;
 import org.wyyt.db2es.core.entity.persistent.Topic;
 import org.wyyt.db2es.core.exception.Db2EsException;
 import org.wyyt.db2es.core.util.CommonUtils;
@@ -48,15 +49,16 @@ public class RepairService {
                        final String indexAliasName,
                        final String id) throws Exception {
         final Config config = this.propertyService.getConfig();
+        TableInfo tableInfo = config.getTableMap().getByFactTableName(tableName);
 
         this.shardingDbService.getByIdInTransaction(kvs -> {
             if (null != kvs && !kvs.isEmpty()) {
                 if (1 == kvs.size()) {
                     final Map<String, Object> dataMap = kvs.get(0);
                     long version;
-                    final String pkValue = dataMap.get(config.getPrimaryKey()).toString();
-                    final Date rowUpdateTime = (Date) dataMap.get(config.getRowUpdateTime());
-                    final Date rowCreateTime = (Date) dataMap.get(config.getRowCreateTime());
+                    final String pkValue = dataMap.get(tableInfo.getPrimaryKeyFieldName()).toString();
+                    final Date rowUpdateTime = (Date) dataMap.get(tableInfo.getRowUpdateTimeFieldName());
+                    final Date rowCreateTime = (Date) dataMap.get(tableInfo.getRowCreateTimeFieldName());
 
                     final ElasticSearchService.EsResult esResult = this.esService.getElasticSearchService().getDetailById(indexAliasName, pkValue);
 

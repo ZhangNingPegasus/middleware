@@ -151,22 +151,16 @@ CREATE TABLE IF NOT EXISTS `t_property`
     UNIQUE INDEX `idx_name` (`name`) USING BTREE
 ) ENGINE = INNODB COMMENT ='db2es的配置项信息';
 INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
-VALUES (1, 'primary_key', 'id', '业务表的主键字段名');
+VALUES (1, 'db2es_admin_host', '127.0.0.1', 'db2es_admin的ip地址');
 INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
-VALUES (2, 'row_create_time', 'row_create_time', '业务表的记录创建时间的字段名');
+VALUES (2, 'db2es_admin_port', '80', 'db2es_admin的端口');
 INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
-VALUES (3, 'row_update_time', 'row_update_time', '业务表的记录最后一次修改时间的字段名');
-INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
-VALUES (4, 'db2es_admin_host', '127.0.0.1', 'db2es_admin的ip地址');
-INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
-VALUES (5, 'db2es_admin_port', '80', 'db2es_admin的端口');
-INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
-VALUES (6, 'ding_access_token', 'daeff0d6c93786fecdaab1443195310bf42ed4e2ddd31d3172fc12cff9b3793c',
+VALUES (3, 'ding_access_token', 'daeff0d6c93786fecdaab1443195310bf42ed4e2ddd31d3172fc12cff9b3793c',
         '钉钉机器人的access_token');
 INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
-VALUES (7, 'ding_secret', 'SECc0ba4dc9a6d0b2b5b7d7e814ead2d767f7f39cceee8439298135a937384154f4', '钉钉机器人的加签秘钥');
+VALUES (4, 'ding_secret', 'SECc0ba4dc9a6d0b2b5b7d7e814ead2d767f7f39cceee8439298135a937384154f4', '钉钉机器人的加签秘钥');
 INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
-VALUES (8, 'ding_mobiles', '', '钉钉机器人发送的对象(手机号), 如果有多个用逗号分隔(例如:18XXXXXXXXX,18XXXXXXXXX), 如果为空, 则发送全体成员');
+VALUES (5, 'ding_mobiles', '', '钉钉机器人发送的对象(手机号), 如果有多个用逗号分隔(例如:18XXXXXXXXX,18XXXXXXXXX), 如果为空, 则发送全体成员');
 
 
 
@@ -199,3 +193,15 @@ CREATE TABLE IF NOT EXISTS `t_topic_db2es`
     UNIQUE INDEX `idx_topic_id` (`topic_id`) USING BTREE,
     INDEX `idx_db2es_id` (`db2es_id`) USING BTREE
 ) ENGINE = InnoDB COMMENT = 'db2es_server与主题之间的关系';
+
+
+
+
+CREATE TABLE IF NOT EXISTS `t_table`
+(
+  `id`                  BIGINT(20) UNSIGNED     NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `info`                text                    NOT NULL COMMENT '表信息',
+  `row_create_time`     datetime(3)             NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
+  `row_update_time`     datetime(3)             NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB COMMENT = '缓存用户配置在ACM中的表信息';

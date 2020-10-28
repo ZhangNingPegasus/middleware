@@ -28,14 +28,6 @@ public final class Names {
      */
     public static final String CONTINUE_ON_ERROR = "db2es.continueOnError";
     /**
-     * 业务表的主键
-     */
-    public static final String FIELD_PRIMAY_KEY = "primary_key";
-    /**
-     * 业务表的记录创建时间
-     */
-    public static final String FIELD_ROW_CREATE_TIME = "row_create_time";
-    /**
      * db2es_admin的ip地址
      */
     public static final String DB2ES_ADMIN_HOST = "db2es_admin_host";
@@ -55,10 +47,6 @@ public final class Names {
      * 钉钉机器人发送的对象(手机号), 如果有多个用逗号分隔, 如果为空, 则发送全体成员
      */
     public static final String DING_MOBILES = "ding_mobiles";
-    /**
-     * 业务表的记录最后一次修改时间
-     */
-    public static final String FIELD_ROW_UPDATE_TIME = "row_update_time";
     /**
      * 指定某个具体topic的消费位点, 优先级高于db2es.checkpoint。格式:db2es.{topic_name}-{partition}.checkpoint
      */

@@ -17,7 +17,7 @@ import org.wyyt.sharding.anno.TranSave;
  * *****************************************************************
  */
 @Aspect
-public class XATransactionAop {
+public class TransactionAop {
     @Around(value = "@annotation(tranSave)")
     public Object aroundCacheMethod(final ProceedingJoinPoint point,
                                     final TranSave tranSave) throws Throwable {

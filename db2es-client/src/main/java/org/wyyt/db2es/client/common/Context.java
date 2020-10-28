@@ -12,6 +12,7 @@ import org.wyyt.db2es.client.kafka.KafkaAdminClientWrapper;
 import org.wyyt.db2es.client.processor.ProcessorWrapper;
 import org.wyyt.db2es.client.zookeeper.ZooKeeperWrapper;
 import org.wyyt.db2es.core.entity.domain.Config;
+import org.wyyt.db2es.core.entity.domain.TableMap;
 import org.wyyt.db2es.core.entity.persistent.Property;
 import org.wyyt.db2es.core.entity.persistent.Topic;
 import org.wyyt.db2es.core.exception.Db2EsException;
@@ -85,7 +86,8 @@ public final class Context implements Closeable {
 
     public final void refreshExtraConfig() throws Exception {
         final List<Property> properties = this.dbWrapper.listProperty();
-        CommonUtils.fillConfig(properties, this.config);
+        final TableMap tableMap = this.dbWrapper.listTableMap();
+        CommonUtils.fillConfig(properties, tableMap, this.config);
         log.info("All configuration from database loaded with successfully");
     }
 

@@ -4,6 +4,8 @@ import com.sijibao.nacos.spring.util.NacosRsaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
+import org.wyyt.db2es.admin.service.PropertyService;
+import org.wyyt.db2es.core.entity.domain.TableInfo;
 import org.wyyt.db2es.core.exception.Db2EsException;
 import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.entity.DbInfo;
@@ -32,6 +34,7 @@ import java.util.Map;
 public class ShardingDbService implements DisposableBean {
     private final Map<DbInfo, CrudService> dataSourceMap;
     private final ShardingService shardingService;
+    private final PropertyService propertyService;
 
     public Map<String, Object> getByIdValue(final String logicTableName,
                                             final String shardingValue,
@@ -64,7 +67,8 @@ public class ShardingDbService implements DisposableBean {
             throw new Db2EsException(String.format("不存在名为[%s]的数据源", databaseName));
         }
 
-        crudService.queryInTransaction(handle, String.format("SELECT * FROM `%s` WHERE `id`=? FOR UPDATE", tableName), id);
+        TableInfo tableInfo = this.propertyService.getConfig().getTableMap().getByFactTableName(tableName);
+        crudService.queryInTransaction(handle, String.format("SELECT * FROM `%s` WHERE `%s`=? FOR UPDATE", tableName, tableInfo.getPrimaryKeyFieldName()), id);
     }
 
     public List<Map<String, Object>> getByColumnValue(final String databaseName,
@@ -121,11 +125,14 @@ public class ShardingDbService implements DisposableBean {
         if (null == crudService) {
             throw new Db2EsException(String.format("不存在名为[%s]的数据源", databaseName));
         }
-        return crudService.selectOne(String.format("SELECT * FROM `%s` WHERE `id`=?", tableName), id);
+        TableInfo tableInfo = this.propertyService.getConfig().getTableMap().getByFactTableName(tableName);
+        return crudService.selectOne(String.format("SELECT * FROM `%s` WHERE `%s`=?", tableName, tableInfo.getPrimaryKeyFieldName()), id);
     }
 
-    public ShardingDbService(final ShardingService shardingService) {
+    public ShardingDbService(final ShardingService shardingService,
+                             final PropertyService propertyService) {
         this.shardingService = shardingService;
+        this.propertyService = propertyService;
         this.dataSourceMap = new HashMap<>();
         this.createDataSourceMap();
     }
