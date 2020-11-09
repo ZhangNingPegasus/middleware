@@ -15,6 +15,7 @@ import org.wyyt.db2es.client.common.Utils;
 import org.wyyt.db2es.core.entity.domain.Common;
 import org.wyyt.db2es.core.entity.domain.TopicOffset;
 import org.wyyt.tool.exception.ExceptionTool;
+import org.wyyt.tool.resource.ResourceTool;
 
 import java.io.Closeable;
 import java.time.Duration;
@@ -87,9 +88,7 @@ public final class KafkaConsumerWrapper implements Closeable {
 
     @Override
     public void close() {
-        if (null != this.kafkaConsumer) {
-            this.kafkaConsumer.close();
-        }
+        ResourceTool.closeQuietly(this.kafkaConsumer);
     }
 
     private void setConsumerPositionByOffset(final TopicPartition topicPartition,

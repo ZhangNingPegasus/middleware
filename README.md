@@ -53,31 +53,6 @@ db2es-client: 以异步的方式，将mysql数据库中的增量数据同步到e
 </li>
 
 <li>
-springboot项目中指定父工程:<br/>
-<pre>
-&lt;parent&gt;
-    &lt;groupId&gt;org.wyyt&lt;/groupId&gt;
-    &lt;artifactId&gt;middleware&lt;/artifactId&gt;
-    &lt;version&gt;${lastest_version}&lt;/version&gt;
-    &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
-&lt;/parent&gt;
-</pre>
-
-在dependencyManagement中添加springboot官方父工程:<br/>
-<pre>
-&lt;dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-            &lt;version&gt;${springboot}&lt;/version&gt;
-            &lt;type&gt;pom&lt;/type&gt;
-            &lt;scope&gt;import&lt;/scope&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/dependencyManagement&gt;
-</pre>
-
 springboot项目引用jar包: <br/>
 <pre>
 &lt;dependency&gt;
@@ -315,31 +290,6 @@ db.dbName=scfs_sql_developer
 <h3>redis-starter</h3>
 
 <li>
-springboot项目中指定父工程:<br/>
-<pre>
-&lt;parent&gt;
-    &lt;groupId&gt;org.wyyt&lt;/groupId&gt;
-    &lt;artifactId&gt;middleware&lt;/artifactId&gt;
-    &lt;version&gt;${lastest_version}&lt;/version&gt;
-    &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
-&lt;/parent&gt;
-</pre>
-
-在dependencyManagement中添加springboot官方父工程:<br/>
-<pre>
-&lt;dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-            &lt;version&gt;${springboot}&lt;/version&gt;
-            &lt;type&gt;pom&lt;/type&gt;
-            &lt;scope&gt;import&lt;/scope&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/dependencyManagement&gt;
-</pre>
-
 springboot项目引用jar包: <br/>
 <pre>
 &lt;dependency&gt;
@@ -397,30 +347,6 @@ public void lock() {
 <hr/>
 <h3>kafka-starter</h3>
 <li>
-springboot项目中指定父工程:<br/>
-<pre>
-&lt;parent&gt;
-    &lt;groupId&gt;org.wyyt&lt;/groupId&gt;
-    &lt;artifactId&gt;middleware&lt;/artifactId&gt;
-    &lt;version&gt;${lastest_version}&lt;/version&gt;
-    &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
-&lt;/parent&gt;
-</pre>
-
-在dependencyManagement中添加springboot官方父工程:<br/>
-<pre>
-&lt;dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-            &lt;version&gt;${springboot}&lt;/version&gt;
-            &lt;type&gt;pom&lt;/type&gt;
-            &lt;scope&gt;import&lt;/scope&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/dependencyManagement&gt;
-</pre>
 springboot项目引用jar包: <br/>
 <pre>
 &lt;dependency&gt;
@@ -482,30 +408,6 @@ public void sendTranAsync() {
 <hr/>
 <h3>elasticsearch-starter</h3>
 <li>
-springboot项目中指定父工程:<br/>
-<pre>
-&lt;parent&gt;
-    &lt;groupId&gt;org.wyyt&lt;/groupId&gt;
-    &lt;artifactId&gt;middleware&lt;/artifactId&gt;
-    &lt;version&gt;${lastest_version}&lt;/version&gt;
-    &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
-&lt;/parent&gt;
-</pre>
-
-在dependencyManagement中添加springboot官方父工程:<br/>
-<pre>
-&lt;dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-            &lt;version&gt;${springboot}&lt;/version&gt;
-            &lt;type&gt;pom&lt;/type&gt;
-            &lt;scope&gt;import&lt;/scope&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/dependencyManagement&gt;
-</pre>
 springboot项目引用jar包: <br/>
 <pre>
 &lt;dependency&gt;

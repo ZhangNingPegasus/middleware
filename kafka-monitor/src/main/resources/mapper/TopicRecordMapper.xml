@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.wyyt.kafka.monitor.mapper.TopicRecordMapper">
+    <select id="listRecords" resultType="org.wyyt.kafka.monitor.entity.dto.TopicRecord">
+        SELECT
+        *
+        FROM `${recordTableName}`
+        WHERE 1 = 1
+        <if test="partitionId != null and partitionId >= 0">
+            AND `partition_id` = #{partitionId}
+        </if>
+        <if test="offset != null and offset >= 0">
+            AND `offset` = #{offset}
+        </if>
+        <if test="key != null and key != ''">
+            AND `key` = #{key}
+        </if>
+        <if test="from != null and to !=null">
+            AND `timestamp` &gt;= #{from}
+            AND `timestamp` &lt;= #{to}
+        </if>
+        ORDER BY `timestamp` DESC, `offset` DESC
+    </select>
+
+    <select id="listMaxOffset" resultType="org.wyyt.kafka.monitor.entity.po.MaxOffset">
+    SELECT
+    `partition_id`,
+    MAX(`offset`) AS `offset`
+    FROM `${recordTableName}`
+    WHERE `partition_id` = #{partitionId}
+    </select>
+
+    <select id="getRecordDetailValue" resultType="java.lang.String">
+        SELECT
+        `value`
+        FROM `${recordDetailTableName}`
+        WHERE `partition_id` = #{partitionId}
+        AND   `offset` = #{offset}
+    </select>
+
+    <insert id="createTableIfNotExists">
+        <foreach collection="sysTableNameList" item="item">
+            CREATE TABLE IF NOT EXISTS `${item.recordTableName}` (
+            `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+            `partition_id` INT(11) UNSIGNED NOT NULL COMMENT '分区号',
+            `offset` BIGINT(20) UNSIGNED NOT NULL COMMENT '消息在该分区号下的偏移量',
+            `key` VARCHAR(128) NOT NULL DEFAULT '' COMMENT '消息键值',
+            `value` VARCHAR(128) NOT NULL DEFAULT '' COMMENT '消息体的缩微样本',
+            `timestamp` DATETIME(3) NOT NULL COMMENT '消息时间',
+            `row_create_time` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
+            `row_update_time` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)
+            COMMENT'更新时间',
+            PRIMARY KEY (`id`) USING BTREE,
+            UNIQUE INDEX `idx_partition_id_offset`(`partition_id`, `offset`) USING BTREE,
+            INDEX `idx_offset`(`offset`) USING BTREE,
+            INDEX `idx_key`(`key`) USING BTREE,
+            INDEX `idx_timestamp`(`timestamp`) USING BTREE,
+            INDEX `idx_row_create_time`(`row_create_time`) USING BTREE
+            ) ENGINE = InnoDB COMMENT ='topic消息';
+
+            CREATE TABLE IF NOT EXISTS `${item.recordDetailTableName}` (
+            `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+            `partition_id` INT(11) UNSIGNED NOT NULL COMMENT '分区id号',
+            `offset` BIGINT(20) UNSIGNED NOT NULL COMMENT '消息偏移量',
+            `value` TEXT NOT NULL COMMENT '消息体',
+            `row_create_time` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
+            `row_update_time` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)
+            COMMENT'更新时间',
+            PRIMARY KEY (`id`) USING BTREE,
+            UNIQUE INDEX `idx_partition_id_offset`(`partition_id`, `offset`) USING BTREE,
+            INDEX `idx_row_create_time`(`row_create_time`) USING BTREE
+            ) ENGINE = InnoDB COMMENT ='topic消息主体';
+        </foreach>
+    </insert>
+
+    <delete id="deleteExpired">
+        DELETE FROM `${recordTableName}` WHERE `id` &lt;
+        (
+        SELECT `id`
+        FROM
+        (
+        SELECT MAX(`id`) `id` FROM `${recordTableName}` WHERE `row_create_time` &lt; #{dateTime}
+        ) a
+        );
+
+        DELETE FROM `${recordDetailTableName}` WHERE `id` &lt;
+        (
+        SELECT `id`
+        FROM
+        (
+        SELECT MAX(`id`) `id` FROM `${recordDetailTableName}` WHERE `row_create_time` &lt; #{dateTime}
+        ) a
+        );
+    </delete>
+
+    <delete id="dropTable">
+        DROP TABLE IF EXISTS `${recordTableName}`;
+        DROP TABLE IF EXISTS `${recordDetailTableName}`;
+    </delete>
+
+    <delete id="truncateTable">
+        TRUNCATE TABLE `${recordTableName}`;
+        TRUNCATE TABLE `${recordDetailTableName}`;
+    </delete>
+</mapper>

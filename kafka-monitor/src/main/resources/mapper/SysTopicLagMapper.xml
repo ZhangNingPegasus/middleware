@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.wyyt.kafka.monitor.mapper.SysTopicLagMapper">
+
+    <select id="listTopLag" resultType="org.wyyt.kafka.monitor.entity.dto.SysTopicLag">
+    SELECT
+    DISTINCT
+    `a`.`group_id`,
+    `a`.`lag`
+    FROM `sys_topic_lag` AS `a`
+    INNER JOIN
+    (
+        SELECT
+        `group_id`,
+        MAX(`row_create_time`) AS `row_create_time`
+        FROM `sys_topic_lag`
+        GROUP BY `group_id`
+        LIMIT ${top}
+    ) AS `b` ON `a`.`group_id` = `b`.`group_id` AND `a`.`row_create_time` = `b`.`row_create_time`
+    ORDER BY `a`.`lag` DESC
+    </select>
+</mapper>

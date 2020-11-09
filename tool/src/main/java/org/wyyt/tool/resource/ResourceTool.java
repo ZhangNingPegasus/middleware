@@ -16,12 +16,12 @@ import org.wyyt.tool.exception.ExceptionTool;
 @Slf4j
 public final class ResourceTool {
     public static void closeQuietly(final AutoCloseable target) {
-        try {
-            if (null != target) {
+        if (null != target) {
+            try {
                 target.close();
+            } catch (Exception e) {
+                log.error(ExceptionTool.getRootCauseMessage(e), e);
             }
-        } catch (Exception e) {
-            log.error(ExceptionTool.getRootCauseMessage(e), e);
         }
     }
 }

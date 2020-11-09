@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.sql.tool.entity.vo.AdminVo;
+import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.web.Result;
 
 import java.util.Calendar;
@@ -51,7 +52,7 @@ public final class IndexController {
             subject.login(usernamePasswordToken);
             return Result.success();
         } catch (Exception e) {
-            return Result.error(String.format("账号或密码错误, %s", e.getMessage()));
+            return Result.error(String.format("账号或密码错误. 原因:%s", ExceptionTool.getRootCauseMessage(e)));
         }
     }
 

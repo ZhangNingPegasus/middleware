@@ -58,11 +58,11 @@
                     }, function () {
                         location.href = '${ctx}/index';
                     });
-                }, function (res) {
-                    layer.msg(res.error, {
+                }, function (d) {
+                    layer.msg(d.error, {
                         offset: '15px',
                         icon: 2,
-                        time: 1000
+                        time: 3000
                     }, function () {
                         $("#password").val('');
                         $("#username").focus();

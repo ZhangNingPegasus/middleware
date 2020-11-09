@@ -70,8 +70,7 @@ public class TopicController {
         model.addAttribute("topic", topic);
         return String.format("%s/%s", PREFIX, "detail");
     }
-
-
+    
     @PostMapping("list")
     @ResponseBody
     public Result<List<Topic>> list(@RequestParam(value = "name", required = false) final String name) {

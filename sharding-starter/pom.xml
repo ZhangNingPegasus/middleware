@@ -2,13 +2,29 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <groupId>org.wyyt</groupId>
-        <artifactId>middleware</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
+    <version>0.0.1-SNAPSHOT</version>
+    <groupId>org.wyyt</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sharding-starter</artifactId>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <resource.delimiter>@</resource.delimiter>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <skipTests>true</skipTests>
+
+        <springboot>2.3.5.RELEASE</springboot>
+        <mybatis-plus-boot-starter>3.4.0</mybatis-plus-boot-starter>
+        <sharding-jdbc-spring-boot-starter>4.1.1</sharding-jdbc-spring-boot-starter>
+        <guava>30.0-jre</guava>
+        <dom4j>2.1.3</dom4j>
+        <ehcache>3.9.0</ehcache>
+        <nacos-spring-config-ex>1.1.9</nacos-spring-config-ex>
+        <maven-source-plugin>3.2.1</maven-source-plugin>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -20,54 +36,88 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+            <version>${springboot}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${springboot}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${springboot}</version>
         </dependency>
 
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus-boot-starter}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+            <version>${sharding-jdbc-spring-boot-starter}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+            <version>${guava}</version>
         </dependency>
 
         <dependency>
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
+            <version>${dom4j}</version>
         </dependency>
 
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
+            <version>${ehcache}</version>
         </dependency>
 
         <dependency>
             <groupId>com.sijibao.nacos</groupId>
             <artifactId>nacos-spring-config-ex</artifactId>
+            <version>${nacos-spring-config-ex}</version>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <url>
+                http://nexus.sijibao.co/repository/maven-releases/
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>
+                http://nexus.sijibao.co/repository/maven-snapshots/
+            </url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <developers>
+        <developer>
+            <name>Ning.Zhang(Pegasus)</name>
+            <email>zhangning@sijibao.com</email>
+            <organization>WYYT</organization>
+            <organizationUrl>https://www.sijibao.com/</organizationUrl>
+        </developer>
+    </developers>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin}</version>
             </plugin>
         </plugins>
     </build>

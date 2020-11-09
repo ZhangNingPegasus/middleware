@@ -7,10 +7,10 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.TopicPartition;
 import org.wyyt.db2es.client.common.CheckpointExt;
 import org.wyyt.db2es.client.common.Context;
-import org.wyyt.db2es.client.ding.WarningLevel;
 import org.wyyt.db2es.client.entity.Processor;
 import org.wyyt.db2es.client.kafka.KafkaConsumerWrapper;
 import org.wyyt.db2es.client.kafka.KafkaConsumerWrapperFactory;
+import org.wyyt.tool.dingtalk.WarningLevel;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.resource.ResourceTool;
 

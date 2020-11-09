@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.wyyt.kafka.monitor.mapper.SysTableNameMapper">
+    <select id="listMap" resultType="org.wyyt.kafka.monitor.entity.dto.SysTableName">
+        SELECT
+        *
+        FROM `sys_table_name`
+    </select>
+</mapper>

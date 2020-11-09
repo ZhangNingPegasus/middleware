@@ -123,8 +123,9 @@ public final class PopulateRunner implements Runnable, Closeable {
     }
 
     private String getIndexName(final ResultSet rs) throws SQLException {
-        final long id = rs.getLong(this.tableInfo.getPrimaryKeyFieldName());
+        final String id = rs.getString(this.tableInfo.getPrimaryKeyFieldName());
         final Date rowCreateTime = DateTool.parse(rs.getString(this.tableInfo.getRowCreateTimeFieldName()));
+        Assert.notNull(id, String.format("在表[%s]中,缺少主键为[%s]的数据", this.tableName, this.tableInfo.getPrimaryKeyFieldName()));
         Assert.notNull(rowCreateTime, String.format("在表[%s]中,主键为[%s]的数据缺少字段[%s]的值", this.tableName, id, this.tableInfo.getRowCreateTimeFieldName()));
         final String result = Tool.getIndexName(this.rebuildIndexMap, rowCreateTime);
         if (StringUtils.isEmpty(result)) {

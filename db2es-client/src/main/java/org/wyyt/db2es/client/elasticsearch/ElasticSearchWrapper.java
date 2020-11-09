@@ -27,7 +27,6 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.wyyt.db2es.client.common.Constant;
 import org.wyyt.db2es.client.common.Context;
-import org.wyyt.db2es.client.ding.WarningLevel;
 import org.wyyt.db2es.client.entity.Db2EsLog;
 import org.wyyt.db2es.client.entity.FlatMessge;
 import org.wyyt.db2es.core.entity.domain.EsException;
@@ -38,6 +37,7 @@ import org.wyyt.db2es.core.exception.Db2EsException;
 import org.wyyt.db2es.core.util.elasticsearch.ElasticSearchUtils;
 import org.wyyt.db2es.core.util.flatmsg.FlatMsgUtils;
 import org.wyyt.db2es.core.util.flatmsg.Operation;
+import org.wyyt.tool.dingtalk.WarningLevel;
 import org.wyyt.tool.exception.ExceptionTool;
 
 import java.io.Closeable;

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.db2es.admin.entity.vo.AdminVo;
 import org.wyyt.db2es.core.util.CommonUtils;
+import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.web.Result;
 
 import java.util.Calendar;
@@ -51,7 +52,7 @@ public class IndexController {
             subject.login(usernamePasswordToken);
             return Result.success();
         } catch (final Exception e) {
-            return Result.error("账号或密码错误");
+            return Result.error(String.format("账号或密码错误. 原因:%s", ExceptionTool.getRootCauseMessage(e)));
         }
     }
 
@@ -61,7 +62,7 @@ public class IndexController {
     public Result<?> quit() {
         final Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
-            subject.logout(); //session会销毁, 在SessionListener监听session销毁，清理权限缓存
+            subject.logout();
         }
         return Result.success();
     }

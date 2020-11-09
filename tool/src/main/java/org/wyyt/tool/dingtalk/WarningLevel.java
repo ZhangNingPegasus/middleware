@@ -1,4 +1,4 @@
-package org.wyyt.db2es.client.ding;
+package org.wyyt.tool.dingtalk;
 
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ import lombok.Getter;
  */
 @Getter
 public enum WarningLevel {
-    NORMAL(0, "轻微"),
+    NORMAL(0, "正常"),
     MINOR(1, "轻微"),
     WARNING(2, "警告"),
     CRITICAL(3, "严重"),

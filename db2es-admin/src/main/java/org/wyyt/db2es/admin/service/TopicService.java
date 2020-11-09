@@ -55,7 +55,6 @@ public class TopicService extends ServiceImpl<TopicMapper, Topic> {
         return this.list(queryWrapper);
     }
 
-
     @TranRead
     public Topic getByName(final String topicName) {
         final QueryWrapper<Topic> queryWrapper = new QueryWrapper<>();

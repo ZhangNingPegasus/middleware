@@ -42,7 +42,7 @@ public final class WorkerThread<T extends Runnable & AutoCloseable> {
         }
         try {
             this.worker.join(10000, 0);
-        } catch (InterruptedException exception) {
+        } catch (final InterruptedException exception) {
             log.info(String.format("%s - WorkerThread: join the thread meet error with %s", this.threadName, ExceptionTool.getRootCauseMessage(exception)), exception);
             Thread.currentThread().interrupt();
         }

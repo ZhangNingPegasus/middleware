@@ -2,25 +2,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modules>
-        <module>tool</module>
-        <module>redis-starter</module>
         <module>elasticsearch-starter</module>
-        <module>sharding-starter</module>
         <module>kafka-starter</module>
+        <module>redis-starter</module>
+        <module>sharding-starter</module>
+        <module>tool</module>
         <module>test</module>
         <module>sql-tool</module>
         <module>db2es-core</module>
         <module>db2es-client</module>
         <module>db2es-admin</module>
+        <module>kafka-monitor</module>
     </modules>
-
-    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
+        <version>2.3.5.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <modelVersion>4.0.0</modelVersion>
     <groupId>org.wyyt</groupId>
     <artifactId>middleware</artifactId>
     <packaging>pom</packaging>
@@ -37,11 +37,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot>2.3.4.RELEASE</springboot>
+        <springboot>2.3.5.RELEASE</springboot>
         <mysql-connector-java>8.0.22</mysql-connector-java>
         <lombok>1.18.16</lombok>
-        <hutool-all>5.4.6</hutool-all>
-        <fastjson>1.2.74</fastjson>
+        <hutool-all>5.4.7</hutool-all>
+        <fastjson>1.2.75</fastjson>
         <json>20200518</json>
         <jackson-databind>2.11.3</jackson-databind>
         <commons-lang3>3.11</commons-lang3>
@@ -53,9 +53,9 @@
         <ehcache>3.9.0</ehcache>
         <mybatis-plus>3.4.0</mybatis-plus>
         <mybatis>3.5.6</mybatis>
-        <druid-spring-boot-starter>1.2.1</druid-spring-boot-starter>
+        <druid-spring-boot-starter>1.2.3</druid-spring-boot-starter>
         <HikariCP>3.4.5</HikariCP>
-        <shiro>1.6.0</shiro>
+        <shiro>1.7.0</shiro>
         <reflections>0.9.12</reflections>
         <commons-beanutils>1.9.4</commons-beanutils>
         <maven-assembly-plugin>3.3.0</maven-assembly-plugin>
@@ -74,7 +74,7 @@
         <dubbo-spring-boot-starter>2.7.8</dubbo-spring-boot-starter>
         <spring-context-support>1.0.11</spring-context-support>
         <acm-sdk>1.0.9</acm-sdk>
-        <nacos-api>1.3.3</nacos-api>
+        <nacos-api>1.4.0</nacos-api>
         <apm-toolkit-trace>8.2.0</apm-toolkit-trace>
         <validation-api>2.0.1.Final</validation-api>
         <hibernate-validator>6.1.6.Final</hibernate-validator>
@@ -83,7 +83,9 @@
         <jacoco-maven-plugin>0.8.6</jacoco-maven-plugin>
         <jackson-module-jaxb-annotations>2.11.3</jackson-module-jaxb-annotations>
         <xstream>1.4.13</xstream>
-        <mail>1.4.7</mail>
+        <javax.mail-api>1.6.2</javax.mail-api>
+        <commons-codec>1.15</commons-codec>
+        <httpclient>4.5.13</httpclient>
 
         <nacos-spring-config-ex>1.1.9</nacos-spring-config-ex>
         <logstash-logback-encoder-ex>6.4</logstash-logback-encoder-ex>
@@ -475,8 +477,20 @@
 
             <dependency>
                 <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
-                <version>${mail}</version>
+                <artifactId>javax.mail-api</artifactId>
+                <version>${javax.mail-api}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

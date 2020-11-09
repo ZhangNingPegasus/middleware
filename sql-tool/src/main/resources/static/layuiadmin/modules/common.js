@@ -13,6 +13,31 @@
     admin.DEL_QUESTION = '确定要删除所选项吗?';
     admin.DEL_SUCCESS = '所选项已全部成功删除';
 
+    admin.postQuiet = function (url, data, success, error) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            cache: false,
+            complete: function (xhr) {
+                if (xhr.responseText.indexOf("<div class=\"layadmin-user-login-main\">") > -1) {
+                    admin.toLogin();
+                } else {
+                    const result = xhr.responseJSON;
+                    if (result.success) {
+                        if (success) success(result);
+                    } else {
+                        if (error) {
+                            error(result);
+                        } else {
+                            admin.error('系统错误', result.error);
+                        }
+                    }
+                }
+            }
+        });
+    };
+
     admin.post = function (url, data, success, error) {
         layer.load();
         $.ajax({

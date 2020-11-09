@@ -1,8 +1,9 @@
-package org.wyyt.db2es.client.ding;
+package org.wyyt.tool.dingtalk;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * Ning.Zhang       Initialize        10/1/2020        Initialize  *
  * *****************************************************************
  */
+@ToString
 @Data
 public final class Message {
     private String msgtype;
@@ -25,6 +27,7 @@ public final class Message {
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
+    @ToString
     public final static class Text {
         private String content;
     }
@@ -32,6 +35,7 @@ public final class Message {
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
+    @ToString
     public final static class At {
         private List<String> atMobiles;
         private Boolean isAtAll;

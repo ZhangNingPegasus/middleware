@@ -59,7 +59,7 @@ public final class ConsumerRunner extends BaseRunner {
                 this.toProcessRecords.drainTo(toProcessList, Constant.CAPACITY);
                 while (!this.terminated && toProcessList.isEmpty()) {
                     processor.setTps(0);
-                    sleepInterval(5);
+                    sleepInterval(500);
                     this.toProcessRecords.drainTo(toProcessList, Constant.CAPACITY);
                 }
                 for (final ConsumerRecord consumerRecord : toProcessList) {
