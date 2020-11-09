@@ -87,7 +87,5 @@ public class PropertyConfig implements InitializingBean {
             }
             this.blackListTopicSet.add(topicName.trim());
         }
-
-        this.dbName = this.dbName + "_temp";
     }
 }
