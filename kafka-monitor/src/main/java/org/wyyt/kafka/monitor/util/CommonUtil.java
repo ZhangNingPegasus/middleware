@@ -1,5 +1,6 @@
 package org.wyyt.kafka.monitor.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.StringUtils;
 import org.wyyt.kafka.monitor.entity.po.TimeRange;
 import org.wyyt.tool.date.DateTool;
@@ -13,6 +14,8 @@ import org.wyyt.tool.date.DateTool;
  * *****************************************************************
  */
 public class CommonUtil {
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     public static TimeRange splitTime(String timeRange) {
         if (null == timeRange) {
             return null;

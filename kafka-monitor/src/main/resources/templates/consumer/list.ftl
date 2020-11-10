@@ -121,7 +121,6 @@
                     content: 'todetail?groupId=' + groupId
                 });
             }
-
         });
     </script>
 

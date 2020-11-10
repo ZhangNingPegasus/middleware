@@ -1,5 +1,6 @@
 package org.wyyt.kafka.monitor.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,11 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import org.wyyt.kafka.monitor.common.Constants;
 import org.wyyt.kafka.monitor.entity.echarts.Style;
 import org.wyyt.kafka.monitor.entity.echarts.TreeInfo;
+import org.wyyt.kafka.monitor.entity.po.Offset;
 import org.wyyt.kafka.monitor.entity.vo.KafkaConsumerVo;
 import org.wyyt.kafka.monitor.entity.vo.OffsetVo;
 import org.wyyt.kafka.monitor.entity.vo.TopicVo;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.dto.TopicRecordService;
+import org.wyyt.kafka.monitor.util.CommonUtil;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.web.Result;
 
@@ -56,6 +59,16 @@ public class ConsumerController {
         return String.format("%s/detail", PREFIX);
     }
 
+    @GetMapping("toeditoffset")
+    public String toEditOffset(final Model model,
+                               @RequestParam(name = "groupId") final String groupId,
+                               @RequestParam(name = "topicName") final String topicName) {
+        model.addAttribute("groupId", groupId.trim());
+        model.addAttribute("topicName", topicName.trim());
+        return String.format("%s/editoffset", PREFIX);
+    }
+
+
     @PostMapping("list")
     @ResponseBody
     public Result<List<KafkaConsumerVo>> list(final HttpSession httpSession,
@@ -70,7 +83,6 @@ public class ConsumerController {
                     .limit(pageSize)
                     .sorted(Comparator.comparing(KafkaConsumerVo::getGroupId))
                     .collect(Collectors.toList());
-
             httpSession.setAttribute(Constants.SESSION_KAFKA_CONSUMER_INFO, currentPage);
             return Result.success(currentPage, kafkaConsumerVoList.size());
         } catch (final Exception e) {
@@ -181,10 +193,27 @@ public class ConsumerController {
         }
     }
 
+
+    @PostMapping("editOffset")
+    @ResponseBody
+    public Result<?> editOffset(@RequestParam(name = "groupId") final String groupId,
+                                @RequestParam(name = "offsets") final String offsets) throws Exception {
+        final List<Offset> offsetList = CommonUtil.OBJECT_MAPPER.readValue(offsets, new TypeReference<List<Offset>>() {
+        });
+        try {
+            this.kafkaService.alterOffset(groupId, offsetList);
+        } catch (final Exception exception) {
+            return Result.error(String.format("偏移量修改失败, 原因:%s", ExceptionTool.getRootCauseMessage(exception)));
+        }
+        return Result.success();
+    }
+
     @PostMapping("del")
     @ResponseBody
     public Result<?> del(@RequestParam(name = "consumerGroupId") final String consumerGroupId) throws Exception {
         this.topicRecordService.deleteConsumer(Collections.singletonList(consumerGroupId));
         return Result.success();
     }
+
+
 }

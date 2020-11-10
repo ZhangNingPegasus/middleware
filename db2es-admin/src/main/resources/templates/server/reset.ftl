@@ -21,7 +21,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">偏移量</label>
             <div class="layui-input-inline" style="width:700px">
-                <input type="number" id="offset" name="offset" placeholder="请填写消息的偏移量" autocomplete="off"
+                <input type="number" id="offset" name="offset" placeholder="请填写偏移量" autocomplete="off"
                        class="layui-input">
             </div>
         </div>

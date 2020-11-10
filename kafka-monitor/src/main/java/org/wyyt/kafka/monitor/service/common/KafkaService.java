@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.wyyt.kafka.monitor.common.Constants;
 import org.wyyt.kafka.monitor.common.JMX;
 import org.wyyt.kafka.monitor.entity.dto.SysKpi;
+import org.wyyt.kafka.monitor.entity.po.Offset;
 import org.wyyt.kafka.monitor.entity.vo.*;
 import org.wyyt.kafka.monitor.exception.BusinessException;
 import org.wyyt.tool.common.CommonTool;
@@ -137,7 +138,27 @@ public class KafkaService implements InitializingBean, DisposableBean {
                 result.add(offsetVo);
             }
         }
+
+        result.sort(Comparator.comparing(OffsetVo::getPartitionId));
         return result;
+    }
+
+    public void alterOffset(final String groupId,
+                            final List<Offset> offsetList) throws Exception {
+        if (StringUtils.isEmpty(groupId) || null == offsetList || offsetList.isEmpty()) {
+            return;
+        }
+        final Map<TopicPartition, OffsetAndMetadata> offsetsMap = new HashMap<>();
+        for (Offset offset : offsetList) {
+            OffsetAndMetadata offsetAndMetadata;
+            if (StringUtils.isEmpty(offset.getMetadata())) {
+                offsetAndMetadata = new OffsetAndMetadata(offset.getOffset());
+            } else {
+                offsetAndMetadata = new OffsetAndMetadata(offset.getOffset(), offset.getMetadata());
+            }
+            offsetsMap.put(new TopicPartition(offset.getTopicName(), offset.getPartitionId()), offsetAndMetadata);
+        }
+        this.kafkaAdminClient.alterConsumerGroupOffsets(groupId, offsetsMap).all().get();
     }
 
     public Map<TopicPartition, Long> getTopicLogSize(final KafkaAdminClient kafkaAdminClient,
