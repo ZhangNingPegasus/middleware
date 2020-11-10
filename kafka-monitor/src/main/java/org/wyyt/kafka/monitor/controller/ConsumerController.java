@@ -2,6 +2,7 @@ package org.wyyt.kafka.monitor.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,7 @@ import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.web.Result;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -210,10 +208,12 @@ public class ConsumerController {
 
     @PostMapping("del")
     @ResponseBody
-    public Result<?> del(@RequestParam(name = "consumerGroupId") final String consumerGroupId) throws Exception {
-        this.topicRecordService.deleteConsumer(Collections.singletonList(consumerGroupId));
-        return Result.success();
+    public Result<?> del(@RequestParam(name = "consumerGroupIds") final String consumerGroupIds) {
+        String errMsg = this.topicRecordService.deleteConsumer(new HashSet<>(Arrays.asList(consumerGroupIds.split(","))));
+        if (StringUtils.isEmpty(errMsg)) {
+            return Result.success();
+        } else {
+            return Result.error(String.format("部分消费者删除失败, 原因: %s", errMsg));
+        }
     }
-
-
 }

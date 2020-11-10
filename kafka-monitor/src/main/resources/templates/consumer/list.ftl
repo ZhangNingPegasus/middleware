@@ -27,6 +27,17 @@
 
             <div class="layui-card-body">
                 <table id="grid" lay-filter="grid"></table>
+
+                <script type="text/html" id="grid-toolbar">
+                    <div class="layui-btn-container">
+                        <@delete>
+                            <button class="layui-btn layui-btn-sm" lay-event="del">
+                                <i class="layui-icon layui-icon-search layui-icon-delete"></i>删除
+                            </button>
+                        </@delete>
+                    </div>
+                </script>
+
                 <script type="text/html" id="grid-bar">
                     <@select>
                         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="getDetail"><i
@@ -53,9 +64,11 @@
 
                 <script type="text/html" id="activeTopicCount">
                     {{#  if(d.activeTopicCount == d.topicCount){ }}
-                    <span class="layui-badge layui-bg-green" title="{{ d.activeTopicNames }}">{{ d.activeTopicCount }}</span>
+                    <span class="layui-badge layui-bg-green"
+                          title="{{ d.activeTopicNames }}">{{ d.activeTopicCount }}</span>
                     {{#  } else { }}
-                    <span class="layui-badge layui-bg-orange" title="{{ d.activeTopicNames }}">{{ d.activeTopicCount }}</span>
+                    <span class="layui-badge layui-bg-orange"
+                          title="{{ d.activeTopicNames }}">{{ d.activeTopicCount }}</span>
                     {{#  } }}
                 </script>
             </div>
@@ -73,6 +86,7 @@
             table.render({
                 elem: '#grid',
                 url: 'list',
+                toolbar: '#grid-toolbar',
                 method: 'post',
                 cellMinWidth: 80,
                 page: true,
@@ -83,6 +97,7 @@
                     none: '暂无相关数据'
                 },
                 cols: [[
+                    {type: 'checkbox', width: 50},
                     {type: 'numbers', title: '序号', width: 50},
                     {field: 'groupId', title: '组名称', templet: "#colGroupId"},
                     {field: 'node', title: '消费组所在节点', width: 250},
@@ -101,13 +116,44 @@
                 const data = obj.data;
                 if (obj.event === 'del') {
                     layer.confirm(admin.DEL_QUESTION, function (index) {
-                        admin.post("del", {'consumerGroupId': data.groupId}, function () {
+                        admin.post("del", {'consumerGroupIds': data.groupId}, function () {
                             table.reload('grid');
                             layer.close(index);
                         });
                     });
                 } else if (obj.event === 'getDetail') {
                     showDetail(data.groupId);
+                }
+            });
+
+            table.on('toolbar(grid)', function (obj) {
+                if (obj.event === 'del') {
+                    const checkData = table.checkStatus(obj.config.id).data;
+                    const deleted = [];
+                    $.each(checkData, function (index, item) {
+                        deleted.push(item.groupId);
+                    });
+
+                    if (deleted.length < 1) {
+                        admin.error('系统提醒', '当前没有选择任何的消费者');
+                    }
+                    layer.confirm(admin.DEL_QUESTION, function (index) {
+                        admin.post("del", {'consumerGroupIds': deleted.join(',')}, function () {
+                            if (table.cache.grid.length < 2) {
+                                const skip = $(".layui-laypage-skip");
+                                const curPage = skip.find("input").val();
+                                let page = parseInt(curPage) - 1;
+                                if (page < 1) {
+                                    page = 1;
+                                }
+                                skip.find("input").val(page);
+                                $(".layui-laypage-btn").click();
+                            } else {
+                                table.reload('grid');
+                            }
+                            layer.close(index);
+                        });
+                    });
                 }
             });
 

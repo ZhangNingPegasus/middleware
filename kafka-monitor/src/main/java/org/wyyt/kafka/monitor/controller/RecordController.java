@@ -20,6 +20,7 @@ import org.wyyt.kafka.monitor.entity.vo.RecordVo;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.dto.TopicRecordService;
 import org.wyyt.kafka.monitor.util.CommonUtil;
+import org.wyyt.tool.compress.GZipTool;
 import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.web.Result;
@@ -44,37 +45,37 @@ public class RecordController {
     private final KafkaService kafkaService;
     private final PropertyConfig propertyConfig;
 
-    public RecordController(TopicRecordService topicRecordService,
-                            KafkaService kafkaService,
-                            PropertyConfig propertyConfig) {
+    public RecordController(final TopicRecordService topicRecordService,
+                            final KafkaService kafkaService,
+                            final PropertyConfig propertyConfig) {
         this.topicRecordService = topicRecordService;
         this.kafkaService = kafkaService;
         this.propertyConfig = propertyConfig;
     }
 
     @GetMapping("tolist")
-    public String toList(Model model) throws Exception {
+    public String toList(final Model model) throws Exception {
         model.addAttribute("topics", kafkaService.listTopicNames());
         model.addAttribute("savingDays", this.propertyConfig.getRetentionDays());
         return String.format("%s/list", PREFIX);
     }
 
     @GetMapping("tomsgdetail")
-    public String toMsgDetail(Model model,
+    public String toMsgDetail(final Model model,
                               @RequestParam(value = "topicName") final String topicName,
                               @RequestParam(value = "partitionId") final Integer partitionId,
                               @RequestParam(value = "offset") final Long offset,
                               @RequestParam(value = "key") final String key,
-                              @RequestParam(value = "createTime") final Date createTime) {
-        final String recordValue = this.topicRecordService.getRecordDetailValue(topicName, partitionId, offset);
+                              @RequestParam(value = "createTime") final Date createTime) throws Exception {
+        final String recordValue = GZipTool.uncompress(this.topicRecordService.getRecordDetailValue(topicName, partitionId, offset));
         model.addAttribute("topicName", topicName);
         model.addAttribute("partitionId", partitionId);
         model.addAttribute("offset", offset);
         model.addAttribute("key", key);
         model.addAttribute("createTime", DateTool.format(createTime));
         try {
-            JSONObject object = JSONObject.parseObject(recordValue);
-            String jsonValue = JSON.toJSONString(object,
+            final Object object = JSONObject.parse(recordValue);
+            final String jsonValue = JSON.toJSONString(object,
                     SerializerFeature.PrettyFormat,
                     SerializerFeature.WriteMapNullValue,
                     SerializerFeature.WriteDateUseDateFormat,
@@ -88,10 +89,10 @@ public class RecordController {
     }
 
     @GetMapping("toconsumerdetail")
-    public String toConsumerDetail(Model model,
-                                   @RequestParam(name = "topicName", defaultValue = "") String topicName,
-                                   @RequestParam(name = "partitionId", required = false) Integer partitionId,
-                                   @RequestParam(name = "offset", required = false, defaultValue = "") Long offset) {
+    public String toConsumerDetail(final Model model,
+                                   @RequestParam(name = "topicName", defaultValue = "") final String topicName,
+                                   @RequestParam(name = "partitionId", required = false) final Integer partitionId,
+                                   @RequestParam(name = "offset", required = false, defaultValue = "") final Long offset) {
         model.addAttribute("topicName", topicName.trim());
         model.addAttribute("partitionId", partitionId);
         model.addAttribute("offset", offset);
@@ -100,9 +101,8 @@ public class RecordController {
 
     @PostMapping("listTopicPartitions")
     @ResponseBody
-    public Result<Set<Integer>> listTopicPartitions(@RequestParam(name = "topicName") String topicName) throws Exception {
-        Set<Integer> partitionIds = kafkaService.listPartitionIds(topicName);
-        return Result.success(partitionIds);
+    public Result<Set<Integer>> listTopicPartitions(@RequestParam(name = "topicName") final String topicName) throws Exception {
+        return Result.success(kafkaService.listPartitionIds(topicName));
     }
 
     @PostMapping("list")
@@ -151,9 +151,9 @@ public class RecordController {
 
     @PostMapping("listTopicConsumers")
     @ResponseBody
-    public Result<List<RecordConsumeVo>> listTopicConsumers(@RequestParam(name = "topicName", defaultValue = "") String topicName,
-                                                            @RequestParam(name = "partitionId", required = false) Integer partitionId,
-                                                            @RequestParam(name = "offset", required = false, defaultValue = "") Long offset) throws Exception {
+    public Result<List<RecordConsumeVo>> listTopicConsumers(@RequestParam(name = "topicName", defaultValue = "") final String topicName,
+                                                            @RequestParam(name = "partitionId", required = false) final Integer partitionId,
+                                                            @RequestParam(name = "offset", required = false, defaultValue = "") final Long offset) throws Exception {
         final List<KafkaConsumerVo> allConsumers = this.kafkaService.listKafkaConsumers(null);
         final List<KafkaConsumerVo> kafkaConsumerVoList = allConsumers.stream().filter(p -> p.getTopicNames().contains(topicName)).collect(Collectors.toList());
 

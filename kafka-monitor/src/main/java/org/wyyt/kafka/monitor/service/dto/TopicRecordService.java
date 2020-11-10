@@ -22,6 +22,7 @@ import org.wyyt.kafka.monitor.entity.vo.TopicVo;
 import org.wyyt.kafka.monitor.mapper.TopicRecordMapper;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.core.ProcessorService;
+import org.wyyt.tool.compress.GZipTool;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.resource.ResourceTool;
 
@@ -270,7 +271,7 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
                         for (final TopicRecord topicRecord : pair.getValue()) {
                             preparedStatement.setInt(1, topicRecord.getPartitionId());
                             preparedStatement.setLong(2, topicRecord.getOffset());
-                            preparedStatement.setString(3, topicRecord.getValue());
+                            preparedStatement.setString(3, GZipTool.compress(topicRecord.getValue()));
                             preparedStatement.addBatch();
                         }
                         preparedStatement.executeBatch();
@@ -323,18 +324,20 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
     }
 
     @TranSave
-    public void deleteConsumer(final List<String> groupdIdList) throws Exception {
-        final Set<String> groupdIdSet = new HashSet<>();
+    public String deleteConsumer(final Set<String> groupdIdList) {
+        String result = "";
         for (final String groupId : groupdIdList) {
-            if (StringUtils.isEmpty(groupId)) {
+            if (null == groupId || StringUtils.isEmpty(groupId.trim())) {
                 continue;
             }
-            groupdIdSet.add(groupId.trim());
+            try {
+                this.kafkaService.deleteConsumer(Collections.singletonList(groupId));
+                this.sysTopicLagService.deleteConsumer(groupId);
+                this.sysAlertConsumerService.deleteConsumer(groupId);
+            } catch (final Exception exception) {
+                result = ExceptionTool.getRootCauseMessage(exception);
+            }
         }
-        this.kafkaService.deleteConsumer(new ArrayList<>(groupdIdSet));
-        for (final String groupId : groupdIdSet) {
-            this.sysTopicLagService.deleteConsumer(groupId);
-            this.sysAlertConsumerService.deleteConsumer(groupId);
-        }
+        return result;
     }
 }
