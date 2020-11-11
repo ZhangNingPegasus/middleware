@@ -196,7 +196,6 @@ public class RebuildController {
         return Result.success();
     }
 
-
     private List<DataSourceVo> getAcmDataSource(final String logicTableName) {
         final List<DataSourceVo> dataSourceVoList = new ArrayList<>();
         final DimensionProperty dimensionProperty = this.shardingService.getPrimaryDimensionProperty(logicTableName);
@@ -212,9 +211,8 @@ public class RebuildController {
             final TableProperty.DimensionInfo tableDimensionInfo = this.shardingService.getTableDimensionInfo(logicTableName, dimensionProperty.getName());
             final int dbCount = dimensionProperty.getDataSourceProperties().size();
             final int lastIndexOf = value.getDatabaseName().lastIndexOf("_");
-            final int index = Integer.parseInt(value.getDatabaseName().substring(lastIndexOf + 1));
             final int countPerDb = tableDimensionInfo.getTableCountNum() / dbCount;
-            final int start = index * countPerDb;
+            final int start = value.getIndex() * countPerDb;
             final int end = start + countPerDb - 1;
             final List<String> tableList = new ArrayList<>(countPerDb);
             for (int i = start; i <= end; i++) {

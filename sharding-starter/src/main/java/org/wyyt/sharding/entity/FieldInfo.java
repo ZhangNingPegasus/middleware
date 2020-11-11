@@ -17,8 +17,8 @@ import java.io.Serializable;
 @Data
 public final class FieldInfo implements Serializable {
     private static final long serialVersionUID = 1L;
-
     private String name;
+    private String dataType;
     private String typeDesc;
     private String type;
     private Integer size;

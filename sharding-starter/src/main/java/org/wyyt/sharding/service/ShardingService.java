@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
-import org.wyyt.sharding.cache.anno.EhCache;
-import org.wyyt.sharding.entity.DbInfo;
 import org.wyyt.sharding.algorithm.MathsTool;
 import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.auto.property.DimensionProperty;
 import org.wyyt.sharding.auto.property.ShardingProperty;
 import org.wyyt.sharding.auto.property.TableProperty;
+import org.wyyt.sharding.cache.anno.EhCache;
+import org.wyyt.sharding.entity.DbInfo;
 import org.wyyt.sharding.entity.FieldInfo;
 import org.wyyt.sharding.entity.IndexInfo;
 import org.wyyt.sharding.entity.ShardingResult;
@@ -436,6 +436,7 @@ public class ShardingService {
                         FieldType fieldType = analyseFieldType(kv.get("COLUMN_TYPE").toString().trim());
                         FieldInfo fieldInfo = new FieldInfo();
                         fieldInfo.setName(kv.get("COLUMN_NAME").toString());
+                        fieldInfo.setDataType(kv.get("DATA_TYPE").toString());
                         fieldInfo.setTypeDesc(kv.get("COLUMN_TYPE").toString());
                         fieldInfo.setType(fieldType.getType());
                         fieldInfo.setSize(fieldType.getLength());
@@ -451,7 +452,7 @@ public class ShardingService {
                         result.add(fieldInfo);
                     }
                 }, dataSource,
-                "SELECT IFNULL(`COLUMN_NAME`,'') AS `COLUMN_NAME`,IFNULL(`COLUMN_TYPE`,'') AS `COLUMN_TYPE`,IFNULL(`COLUMN_DEFAULT`,'') AS `COLUMN_DEFAULT`,IFNULL(`IS_NULLABLE`,'') AS `IS_NULLABLE`,IFNULL(`COLUMN_KEY`,'') AS `COLUMN_KEY`, IFNULL(`CHARACTER_SET_NAME`,'') AS CHARACTER_SET_NAME,IFNULL(`COLLATION_NAME`,'') AS COLLATION_NAME,IFNULL(`EXTRA`,'') AS EXTRA,IFNULL(`COLUMN_COMMENT`,'') AS `COLUMN_COMMENT` FROM `information_schema`.`COLUMNS` WHERE `TABLE_NAME`=? ORDER BY `ORDINAL_POSITION` ASC",
+                "SELECT IFNULL(`COLUMN_NAME`,'') AS `COLUMN_NAME`,IFNULL(`DATA_TYPE`, '') AS `DATA_TYPE`,IFNULL(`COLUMN_TYPE`,'') AS `COLUMN_TYPE`,IFNULL(`COLUMN_DEFAULT`,'') AS `COLUMN_DEFAULT`,IFNULL(`IS_NULLABLE`,'') AS `IS_NULLABLE`,IFNULL(`COLUMN_KEY`,'') AS `COLUMN_KEY`, IFNULL(`CHARACTER_SET_NAME`,'') AS CHARACTER_SET_NAME,IFNULL(`COLLATION_NAME`,'') AS COLLATION_NAME,IFNULL(`EXTRA`,'') AS EXTRA,IFNULL(`COLUMN_COMMENT`,'') AS `COLUMN_COMMENT` FROM `information_schema`.`COLUMNS` WHERE `TABLE_NAME`=? ORDER BY `ORDINAL_POSITION` ASC",
                 factTable);
         return result;
     }

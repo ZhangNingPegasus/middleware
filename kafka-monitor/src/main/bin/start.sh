@@ -1,7 +1,7 @@
 #!/bin/bash
 JAR_NAME="kafka-monitor"
-Xms=4G
-Xmx=4G
+Xms=3G
+Xmx=3G
 Xmn=1G
 COMMON_LOG_DIR="/wyyt/logs/dubbo/$JAR_NAME"
 if [ ! -d $COMMON_LOG_DIR ]; then

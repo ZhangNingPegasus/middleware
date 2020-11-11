@@ -20,6 +20,11 @@ public final class DataSourceProperty {
     private String name;
 
     /**
+     * 数据库的索引(分库时使用), 从0开始, 默认为0
+     */
+    private Integer index;
+
+    /**
      * 数据库IP地址
      */
     private String host;

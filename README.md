@@ -94,7 +94,8 @@ sharding:
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;datasources&gt;
     &lt;!-- name: 数据库的逻辑名称. 必填项, 必须唯一 --&gt;
-    &lt;datasource name="finance_center_main_0"&gt;
+    &lt;!-- index: 数据库的索引(分库时使用), 从0开始, 默认为0 --&gt;
+    &lt;datasource name="finance_center_main_0" index="0"&gt;
         &lt;!-- 数据库IP地址. 必填项 --&gt;
         &lt;host&gt;192.168.0.197&lt;/host&gt;
         &lt;!-- 数据库端口. 必填项 --&gt;
@@ -111,7 +112,7 @@ sharding:
         &lt;maxActive&gt;20&lt;/maxActive&gt;
     &lt;/datasource&gt;
 
-    &lt;datasource name="finance_center_main_1"&gt;
+    &lt;datasource name="finance_center_main_1" index="1"&gt;
         &lt;host&gt;192.168.0.197&lt;/host&gt;
         &lt;port&gt;6612&lt;/port&gt;
         &lt;databaseName&gt;finance_center_main_1&lt;/databaseName&gt;
@@ -167,9 +168,9 @@ scfs.xml.table数据表配置信息如下:<br/>
     &lt;table name="fin_pay_fund_flow_out_fund" pkName="id"&gt;
         &lt;!--
             ref: 维度信息xml配置中的维度名称name
-            tableCountNum: 逻辑表在该维度下的分表总个数
-            shardingColumn: 逻辑表在该维度下的拆分键字段
-            tableNameFormat: 逻辑表与物理表之间的映射关系表达式, 为空默认是:{逻辑名称}_%s
+            tableCountNum: 逻辑表在该维度下的分表总个数, 默认为1
+            shardingColumn: 逻辑表在该维度下的拆分键字段, 默认为id
+            tableNameFormat: 逻辑表与物理表之间的映射关系表达式, 为空默认是{逻辑名称}  (也可以是: {逻辑名称}_%s, 其中, %s为下标索引, 从0开始到{tableCountNum-1})
         --&gt;
         &lt;dimension ref="order-no" tableCountNum="64" shardingColumn="order_no"/&gt;
     &lt;/table&gt;

@@ -317,6 +317,8 @@ public class ShardingAutoConfig implements DisposableBean {
                 assertElementNotEmpty(element, Name.MAX_ACTIVE, xml);
 
                 property.setName(element.attributeValue(Name.NAME).trim());
+                property.setIndex(isAttributeEmpty(element, Name.INDEX) ? 0 : Integer.parseInt(element.attributeValue(Name.INDEX).trim()));
+
                 property.setHost(element.elements(Name.HOST).get(0).getTextTrim());
                 property.setPort(Integer.parseInt(element.elements(Name.PORT).get(0).getTextTrim()));
                 property.setDatabaseName(element.elements(Name.DATA_BASE_NAME).get(0).getTextTrim());
@@ -425,8 +427,6 @@ public class ShardingAutoConfig implements DisposableBean {
                     final Element dimension = itDimension.next();
 
                     assertAttributeNotEmpty(dimension, Name.REF, xml);
-                    assertAttributeNotEmpty(dimension, Name.TABLE_COUNT_NUM, xml);
-                    assertAttributeNotEmpty(dimension, Name.SHARDING_COLUMN, xml);
 
                     final String dimensionName = dimension.attributeValue(Name.REF).trim();
                     final DimensionProperty value = shardingProperty.getDimensionProperties().get(dimensionName);
@@ -435,9 +435,11 @@ public class ShardingAutoConfig implements DisposableBean {
                     }
 
                     dimensionInfo.setDimensionProperty(value);
-                    dimensionInfo.setTableCountNum(Integer.parseInt(dimension.attributeValue(Name.TABLE_COUNT_NUM).trim()));
-                    dimensionInfo.setShardingColumn(dimension.attributeValue(Name.SHARDING_COLUMN).trim());
-                    dimensionInfo.setTableNameFormat(isAttributeEmpty(dimension, Name.TABLE_NAME_FORMAT) ? String.format("%s_%%s", property.getName()) : dimension.attributeValue(Name.TABLE_NAME_FORMAT).trim());
+
+                    dimensionInfo.setTableCountNum(isAttributeEmpty(dimension, Name.TABLE_COUNT_NUM) ? 1 : Integer.parseInt(dimension.attributeValue(Name.TABLE_COUNT_NUM).trim()));
+                    dimensionInfo.setShardingColumn(isAttributeEmpty(dimension, Name.TABLE_COUNT_NUM) ? Name.FIELD_PRIMARY_KEY : dimension.attributeValue(Name.SHARDING_COLUMN).trim());
+                    dimensionInfo.setTableNameFormat(isAttributeEmpty(dimension, Name.TABLE_NAME_FORMAT) ? property.getName() : dimension.attributeValue(Name.TABLE_NAME_FORMAT).trim());
+
                     dimensionInfoList.put(dimensionName, dimensionInfo);
                 }
                 property.setDimensionInfos(dimensionInfoList);

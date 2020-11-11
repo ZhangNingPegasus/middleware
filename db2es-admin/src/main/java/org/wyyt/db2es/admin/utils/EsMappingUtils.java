@@ -24,8 +24,7 @@ public class EsMappingUtils {
             final String name = fieldInfo.getName();
             String type;
             String format = "";
-
-            switch (fieldInfo.getType().toLowerCase()) {
+            switch (fieldInfo.getDataType().toLowerCase()) {
                 case "bigint":
                     type = "long";
                     break;
@@ -42,6 +41,7 @@ public class EsMappingUtils {
                     break;
                 case "float":
                 case "double":
+                case "decimal":
                     type = "double";
                     break;
                 default:

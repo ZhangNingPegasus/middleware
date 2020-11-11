@@ -15,6 +15,7 @@ public final class Name {
     public static final String FIELD_ROW_CREATE_TIME = "row_create_time";
     public static final String FIELD_ROW_UPDATE_TIME = "row_update_time";
     public static final String NAME = "name";
+    public static final String INDEX = "index";
     public static final String HOST = "host";
     public static final String PORT = "port";
     public static final String DATA_BASE_NAME = "databaseName";
