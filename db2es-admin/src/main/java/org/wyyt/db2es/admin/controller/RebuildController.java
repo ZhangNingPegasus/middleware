@@ -232,7 +232,6 @@ public class RebuildController {
         return Result.success();
     }
 
-
     private List<DataSourceVo> getAcmDataSource(final String logicTableName) {
         final List<DataSourceVo> dataSourceVoList = new ArrayList<>();
         final DimensionProperty dimensionProperty = this.shardingService.getPrimaryDimensionProperty(logicTableName);

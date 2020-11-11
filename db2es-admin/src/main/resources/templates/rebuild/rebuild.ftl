@@ -232,11 +232,13 @@
                     data.pwd = $("input[name='pwd" + tag + "']").val();
                     data.databaseName = $("input[name='databaseName" + tag + "']").val();
                     data.tableNames = $("textarea[name='tableNames" + tag + "']").val();
-
+                    if (data.host === '' || data.port === '' || data.uid === '' || data.pwd === '' || data.databaseName === '') {
+                        admin.error("系统提示", "数据库信息请填写完整");
+                        return;
+                    }
                     admin.post("test", data, function () {
                         admin.success("系统提示", "连接成功");
                     });
-                    console.log(data);
                 });
             }
 
