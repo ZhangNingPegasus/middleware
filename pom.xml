@@ -84,6 +84,7 @@
         <jackson-module-jaxb-annotations>2.11.3</jackson-module-jaxb-annotations>
         <xstream>1.4.13</xstream>
         <javax.mail-api>1.6.2</javax.mail-api>
+        <javax.mail>1.6.2</javax.mail>
         <commons-codec>1.15</commons-codec>
         <httpclient>4.5.13</httpclient>
 
@@ -479,6 +480,12 @@
                 <groupId>javax.mail</groupId>
                 <artifactId>javax.mail-api</artifactId>
                 <version>${javax.mail-api}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${javax.mail}</version>
             </dependency>
 
             <dependency>

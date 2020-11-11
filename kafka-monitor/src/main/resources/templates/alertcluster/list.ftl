@@ -77,7 +77,7 @@
                 if (obj.event === 'add') {
                     layer.open({
                         type: 2,
-                        title: '创建消费组警告',
+                        title: '创建集群主机警告',
                         content: 'toadd',
                         area: ['880px', '350px'],
                         btn: admin.BUTTONS,

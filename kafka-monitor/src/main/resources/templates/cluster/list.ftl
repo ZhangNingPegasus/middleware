@@ -93,11 +93,11 @@
                     none: '暂无相关数据'
                 },
                 cols: [[
-                    {type: 'numbers', title: '序号', width: 50},
-                    {field: 'host', title: '地址'},
-                    {field: 'port', title: '端口', width: 250},
-                    {field: 'version', title: '版本', templet: '#colVersion', width: 250},
-                    {field: 'mode', title: '模式', templet: '#colMode', width: 250}
+                    {type: 'numbers', title: '序号', width: 51},
+                    {field: 'host', title: '地址', width: 750},
+                    {field: 'port', title: '端口', width: 300},
+                    {field: 'version', title: '版本', templet: '#colVersion', width: 258},
+                    {field: 'mode', title: '角色', templet: '#colMode', width: 258}
                 ]]
             });
 
