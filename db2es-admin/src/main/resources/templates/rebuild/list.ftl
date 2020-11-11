@@ -105,7 +105,7 @@
                     {field: 'refreshInterval', title: '刷盘间隔', width: 100},
                     {field: 'description', title: '描述信息'},
                     {field: 'rowUpdateTime', title: '最近一次重建索引时间', templet: '#colRowUpdateTime', width: 170},
-                    {fixed: 'right', fixed: 'right', title: '', toolbar: '#grid-bar', width: 110}
+                    {fixed: 'right', fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 110}
                 ]]
             });
 

@@ -27,14 +27,17 @@
                         <fieldset id="template__${datasource_index}" class="template layui-elem-field">
                             <legend><small>数据源配置</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div class="layui-btn-group">
-                                    <button type="button" class="btnAdd layui-btn layui-btn-sm"
-                                            tag="__${datasource_index}"
-                                            style="display: none">
+                                    <button type="button" class="btnAdd layui-btn layui-btn-sm" title="添加数据源"
+                                            tag="__${datasource_index}" style="display: none">
                                         <i class="layui-icon">&#xe654;</i>
                                     </button>
-                                    <button type="button" class="btnDelete layui-btn layui-btn-sm  layui-btn-warm"
-                                            tag="__${datasource_index}" style="display: none">
+                                    <button type="button" class="btnDelete layui-btn layui-btn-sm layui-btn-warm"
+                                            title="删除数据源" tag="__${datasource_index}" style="display: none">
                                         <i class="layui-icon">&#xe640;</i>
+                                    </button>
+                                    <button type="button" class="btnTest layui-btn layui-btn-sm layui-btn-normal"
+                                            title="检验数据源" tag="__${datasource_index}" style="display: none">
+                                        <i class="layui-icon">&#xe605;</i>
                                     </button>
                                 </div>
                             </legend>
@@ -219,22 +222,41 @@
                         $("#template" + i).remove();
                     }
                 });
+
+                $(".btnTest").click(function () {
+                    const data = {};
+                    const tag = $(this).attr("tag");
+                    data.host = $("input[name='host" + tag + "']").val();
+                    data.port = $("input[name='port" + tag + "']").val();
+                    data.uid = $("input[name='uid" + tag + "']").val();
+                    data.pwd = $("input[name='pwd" + tag + "']").val();
+                    data.databaseName = $("input[name='databaseName" + tag + "']").val();
+                    data.tableNames = $("textarea[name='tableNames" + tag + "']").val();
+
+                    admin.post("test", data, function () {
+                        admin.success("系统提示", "连接成功");
+                    });
+                    console.log(data);
+                });
             }
 
             function unbindEvent() {
                 $(".btnAdd").unbind("click");
                 $(".btnDelete").unbind("click");
+                $(".btnTest").unbind("click");
             }
 
             function disable() {
                 $(".btnAdd").hide();
                 $(".btnDelete").hide();
+                $(".btnTest").hide();
                 $(".ds").attr("readonly", "readonly");
             }
 
             function enable() {
                 $(".btnAdd").show();
                 $(".btnDelete").show();
+                $(".btnTest").show();
                 $(".ds").removeAttr("readonly");
             }
         });

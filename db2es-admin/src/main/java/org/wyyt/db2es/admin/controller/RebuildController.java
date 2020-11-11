@@ -21,9 +21,12 @@ import org.wyyt.sharding.auto.property.DimensionProperty;
 import org.wyyt.sharding.auto.property.TableProperty;
 import org.wyyt.sharding.entity.FieldInfo;
 import org.wyyt.sharding.service.ShardingService;
+import org.wyyt.tool.db.DataSourceTool;
 import org.wyyt.tool.web.Result;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.*;
 
 
@@ -195,6 +198,40 @@ public class RebuildController {
         this.rebuildService.clearRebuild();
         return Result.success();
     }
+
+    @PostMapping("test")
+    @ResponseBody
+    public Result<?> test(@RequestParam(value = "host") final String host,
+                          @RequestParam(value = "port") final String port,
+                          @RequestParam(value = "uid") final String uid,
+                          @RequestParam(value = "pwd") final String pwd,
+                          @RequestParam(value = "databaseName") final String databaseName,
+                          @RequestParam(value = "tableNames") final String tableNames) throws Exception {
+        final String[] all = tableNames.split(",");
+        final Set<String> tableNameSet = new HashSet<>(all.length);
+        for (final String tableName : all) {
+            if (null == tableName || StringUtils.isEmpty(tableName.trim())) {
+                continue;
+            }
+            tableNameSet.add(tableName);
+        }
+        DataSource dataSource = null;
+        Connection connection = null;
+        try {
+            dataSource = DataSourceTool.createHikariDataSource(host, port, databaseName, uid, pwd, 1, 1);
+            connection = dataSource.getConnection();
+            for (final String tableName : tableNameSet) {
+                final PreparedStatement preparedStatement = connection.prepareStatement(String.format("SELECT * FROM `%s` LIMIT 0", tableName));
+                preparedStatement.execute();
+                DataSourceTool.close(preparedStatement);
+            }
+        } finally {
+            DataSourceTool.close(connection);
+            DataSourceTool.close(dataSource);
+        }
+        return Result.success();
+    }
+
 
     private List<DataSourceVo> getAcmDataSource(final String logicTableName) {
         final List<DataSourceVo> dataSourceVoList = new ArrayList<>();
