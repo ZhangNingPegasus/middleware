@@ -3,11 +3,11 @@ package org.wyyt.db2es.client.zookeeper;
 import com.alibaba.fastjson.JSON;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.leader.LeaderLatch;
 import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.client.common.Constant;
 import org.wyyt.db2es.client.common.Context;
 import org.wyyt.db2es.client.common.Utils;
@@ -40,14 +40,14 @@ public class ZooKeeperWrapper implements Closeable {
 
     public ZooKeeperWrapper(final Context context) throws Exception {
         final String zookeeperServers = context.getConfig().getZkServers();
-        if (StringUtils.isEmpty(zookeeperServers)) {
+        if (ObjectUtils.isEmpty(zookeeperServers)) {
             throw new RuntimeException("kafka集群所使用的zookeeper集群地址不允许为空");
         }
         this.curatorFramework = ZooKeeperUtils.createCuratorFramework(zookeeperServers);
         this.curatorFramework.start();
 
         final String db2esId = context.getConfig().getDb2EsId().toString();
-        Assert.isTrue(!StringUtils.isEmpty(db2esId), String.format("the parameter[%s] is required in file[%s]", DB2ES_ID, Constant.PROPERTIES_FILE_NAME));
+        Assert.isTrue(!ObjectUtils.isEmpty(db2esId), String.format("the parameter[%s] is required in file[%s]", DB2ES_ID, Constant.PROPERTIES_FILE_NAME));
 
         final Utils.IP local = Utils.getLocalIp(context);
         final NodeVo leaderVo = new NodeVo(local.getLocalName(), local.getLocalIp(), context.getConfig().getDb2EsPort());

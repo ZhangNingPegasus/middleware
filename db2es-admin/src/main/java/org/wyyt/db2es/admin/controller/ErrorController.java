@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.db2es.admin.common.Utils;
 import org.wyyt.db2es.admin.entity.dto.ErrorLog;
@@ -82,10 +82,10 @@ public class ErrorController {
             final String topicName = errorLog.getTopicName();
             final String id = errorLog.getPrimaryKeyValue();
 
-            if (!StringUtils.isEmpty(databaseName) &&
-                    !StringUtils.isEmpty(tableName) &&
-                    !StringUtils.isEmpty(id) &&
-                    !StringUtils.isEmpty(topicName)) {
+            if (!ObjectUtils.isEmpty(databaseName) &&
+                    !ObjectUtils.isEmpty(tableName) &&
+                    !ObjectUtils.isEmpty(id) &&
+                    !ObjectUtils.isEmpty(topicName)) {
                 final Map<String, Object> dbDataMap = this.shardingDbService.getById(databaseName, tableName, id);
                 final Map<String, Object> esDataMap = this.esService.getElasticSearchService().getById(topicName, id);
 
@@ -113,7 +113,7 @@ public class ErrorController {
         final LambdaQueryWrapper<ErrorLog> lambdaQueryWrapper = queryWrapper.lambda()
                 .orderByDesc(ErrorLog::getRowCreateTime);
 
-        if (!StringUtils.isEmpty(primaryKeyValue)) {
+        if (!ObjectUtils.isEmpty(primaryKeyValue)) {
             lambdaQueryWrapper.eq(ErrorLog::getPrimaryKeyValue, primaryKeyValue);
         }
         if (null != isResolved) {
@@ -122,7 +122,7 @@ public class ErrorController {
         if (null != range) {
             lambdaQueryWrapper.between(ErrorLog::getRowCreateTime, range.getStart(), range.getEnd());
         }
-        if (!StringUtils.isEmpty(topicName)) {
+        if (!ObjectUtils.isEmpty(topicName)) {
             lambdaQueryWrapper.eq(ErrorLog::getTopicName, topicName);
         }
         if (null != partition) {

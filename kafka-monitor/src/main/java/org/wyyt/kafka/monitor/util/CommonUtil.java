@@ -1,7 +1,7 @@
 package org.wyyt.kafka.monitor.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.entity.po.TimeRange;
 import org.wyyt.tool.date.DateTool;
 
@@ -21,7 +21,7 @@ public class CommonUtil {
             return null;
         }
         timeRange = timeRange.trim();
-        if (StringUtils.isEmpty(timeRange)) {
+        if (ObjectUtils.isEmpty(timeRange)) {
             return null;
         }
         final TimeRange result = new TimeRange();

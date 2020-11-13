@@ -15,7 +15,7 @@ import java.util.Properties;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         11/7/2019      Initialize   *
+ * Ning.Zhang       Initialize         10/1/2020      Initialize   *
  * *****************************************************************
  */
 @Configuration

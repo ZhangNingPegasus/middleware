@@ -4,6 +4,7 @@ import com.sijibao.nacos.spring.util.NacosRsaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.service.PropertyService;
 import org.wyyt.db2es.core.entity.domain.TableInfo;
 import org.wyyt.db2es.core.exception.Db2EsException;
@@ -57,7 +58,7 @@ public class ShardingDbService implements DisposableBean {
                                      final String databaseName,
                                      final String tableName,
                                      final String id) throws Exception {
-        if (StringUtils.isEmpty(databaseName) || StringUtils.isEmpty(tableName) || StringUtils.isEmpty(id)) {
+        if (ObjectUtils.isEmpty(databaseName) || ObjectUtils.isEmpty(tableName) || ObjectUtils.isEmpty(id)) {
             throw new Db2EsException("数据库名、表名和主键值都不允许为空");
         }
 
@@ -75,7 +76,7 @@ public class ShardingDbService implements DisposableBean {
                                                       final String tableName,
                                                       final String[] columnNames,
                                                       final String[] columnValues) throws Exception {
-        if (StringUtils.isEmpty(databaseName) || StringUtils.isEmpty(tableName)) {
+        if (ObjectUtils.isEmpty(databaseName) || ObjectUtils.isEmpty(tableName)) {
             throw new Db2EsException("数据库名和表名不允许为空");
         }
 
@@ -118,7 +119,7 @@ public class ShardingDbService implements DisposableBean {
     public Map<String, Object> getById(final String databaseName,
                                        final String tableName,
                                        final String id) throws Exception {
-        if (StringUtils.isEmpty(databaseName) || StringUtils.isEmpty(tableName) || StringUtils.isEmpty(id)) {
+        if (ObjectUtils.isEmpty(databaseName) || ObjectUtils.isEmpty(tableName) || ObjectUtils.isEmpty(id)) {
             throw new Db2EsException("数据库名、表名和主键值都不允许为空");
         }
         final CrudService crudService = this.getByDatabaseName(databaseName);

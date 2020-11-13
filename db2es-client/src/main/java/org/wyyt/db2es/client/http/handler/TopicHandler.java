@@ -1,8 +1,8 @@
 package org.wyyt.db2es.client.http.handler;
 
 import cn.hutool.core.util.NumberUtil;
-import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.common.TopicPartition;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.client.common.CheckpointExt;
 import org.wyyt.db2es.client.core.RecordListenerImpl;
 import org.wyyt.db2es.client.entity.Processor;
@@ -40,7 +40,7 @@ public final class TopicHandler extends BaseHandler {
         final List<TopicPartition> topicPartitionList = new ArrayList<>(topicNames.size());
 
         for (final String topicName : topicNames) {
-            if (StringUtils.isEmpty(searchTopicName) || topicName.contains(searchTopicName)) {
+            if (ObjectUtils.isEmpty(searchTopicName) || topicName.contains(searchTopicName)) {
                 topicPartitionList.add(new TopicPartition(topicName, 0));
             }
         }
@@ -79,10 +79,10 @@ public final class TopicHandler extends BaseHandler {
         final String offset = param.getPostString("offset");
         final String timestamp = param.getPostString("timestamp");
 
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return Result.error("parameter[topicName] is required");
         }
-        if (StringUtils.isEmpty(partition)) {
+        if (ObjectUtils.isEmpty(partition)) {
             return Result.error("parameter[partition] is required");
         }
 
@@ -94,8 +94,8 @@ public final class TopicHandler extends BaseHandler {
 
         CheckpointExt checkpoint = new CheckpointExt(
                 topicPartition,
-                StringUtils.isEmpty(offset) ? -1L : Long.parseLong(offset),
-                StringUtils.isEmpty(timestamp) ? -1L : Long.parseLong(timestamp)
+                ObjectUtils.isEmpty(offset) ? -1L : Long.parseLong(offset),
+                ObjectUtils.isEmpty(timestamp) ? -1L : Long.parseLong(timestamp)
         );
 
         if (checkpoint.getOffset() < 0 && checkpoint.getTimestamp() < 0) {
@@ -110,7 +110,7 @@ public final class TopicHandler extends BaseHandler {
     public synchronized final Result<?> stopTopic(final Param param) throws InterruptedException {
         final String topicName = param.getPostString("topicName"); //required
         final String partition = param.getPostString("partition"); //required
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return Result.error("parameter[topicName] is required");
         }
         final TopicPartition topicPartition = new TopicPartition(topicName, Integer.parseInt(partition));
@@ -127,18 +127,18 @@ public final class TopicHandler extends BaseHandler {
         final String offset = param.getPostString("offset");
         final String timestamp = param.getPostString("timestamp");
 
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return Result.error("parameter[topicName] is required.");
         }
-        if (StringUtils.isEmpty(partition)) {
+        if (ObjectUtils.isEmpty(partition)) {
             return Result.error("parameter[partition] is required");
         }
-        if (StringUtils.isEmpty(offset) && StringUtils.isEmpty(timestamp)) {
+        if (ObjectUtils.isEmpty(offset) && ObjectUtils.isEmpty(timestamp)) {
             return Result.error("parameter[offset] and [timestamp] need at least one.");
         }
 
         TopicPartition topicPartition = new TopicPartition(topicName, Integer.parseInt(partition));
-        if (!StringUtils.isEmpty(timestamp)) {
+        if (!ObjectUtils.isEmpty(timestamp)) {
             checkTimestamp(topicPartition, Long.parseLong(timestamp));
         }
         if (this.context.getProcessorWrapper().containsTopic(topicPartition)) {
@@ -155,8 +155,8 @@ public final class TopicHandler extends BaseHandler {
 
         CheckpointExt checkpoint = new CheckpointExt(
                 null,
-                StringUtils.isEmpty(offset) ? -1L : Long.parseLong(offset),
-                StringUtils.isEmpty(timestamp) ? -1L : Long.parseLong(timestamp)
+                ObjectUtils.isEmpty(offset) ? -1L : Long.parseLong(offset),
+                ObjectUtils.isEmpty(timestamp) ? -1L : Long.parseLong(timestamp)
         );
 
         if (checkpoint.getOffset() < 0 && checkpoint.getTimestamp() < 0) {
@@ -179,10 +179,10 @@ public final class TopicHandler extends BaseHandler {
         final String partition = param.getPostString("partition"); //required
         final String timestamp = param.getPostString("timestamp"); //required
 
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return Result.error("parameter[topicName] is required.");
         }
-        if (StringUtils.isEmpty(timestamp)) {
+        if (ObjectUtils.isEmpty(timestamp)) {
             return Result.error("parameter[timestamp] is required");
         }
         if (!NumberUtil.isLong(timestamp)) {
@@ -196,7 +196,7 @@ public final class TopicHandler extends BaseHandler {
     @PostMapping("installTopic")
     public synchronized final Result<Boolean> installTopic(final Param param) throws Exception {
         final String topicId = param.getPostString("topicId"); //required
-        if (StringUtils.isEmpty(topicId)) {
+        if (ObjectUtils.isEmpty(topicId)) {
             return Result.error("parameter[topicId] is required");
         }
 
@@ -220,7 +220,7 @@ public final class TopicHandler extends BaseHandler {
     @PostMapping("uninstallTopic")
     public synchronized final Result<Boolean> uninstallTopic(final Param param) throws InterruptedException {
         final String topicName = param.getPostString("topicName"); //required
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return Result.error("parameter[topicName] is required");
         }
         final TopicPartition topicPartition = new TopicPartition(topicName, 0);

@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.mapper.TopicMapper;
 import org.wyyt.db2es.core.entity.persistent.Topic;
 import org.wyyt.sharding.anno.TranRead;
@@ -40,7 +40,7 @@ public class TopicService extends ServiceImpl<TopicMapper, Topic> {
     public List<Topic> listTopic(final String searchName) {
         final QueryWrapper<Topic> queryWrapper = new QueryWrapper<>();
         final LambdaQueryWrapper<Topic> lambda = queryWrapper.lambda();
-        if (!StringUtils.isEmpty(searchName)) {
+        if (!ObjectUtils.isEmpty(searchName)) {
             lambda.like(Topic::getName, searchName);
         }
         lambda.select(Topic::getId,

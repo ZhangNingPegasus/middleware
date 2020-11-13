@@ -1,9 +1,9 @@
 package org.wyyt.db2es.client.metastore;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.internals.KafkaFutureImpl;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.client.common.CheckpointExt;
 import org.wyyt.db2es.client.common.Context;
 import org.wyyt.db2es.client.zookeeper.ZooKeeperWrapper;
@@ -74,7 +74,7 @@ public final class ZooKeeperMetaStore implements MetaStore {
             final String path = String.format(ZOOKEEPER_PATH, Common.ZK_ROOT_PATH, groupName);
             if (this.zooKeeperWraper.exists(path)) {
                 final String json = this.zooKeeperWraper.getData(path);
-                if (!StringUtils.isEmpty(json)) {
+                if (!ObjectUtils.isEmpty(json)) {
                     final MetaStoreUtils.StoreElement storeElement = MetaStoreUtils.fromString(json);
                     if (!this.inMemoryStore.containsKey(groupName)) {
                         this.inMemoryStore.put(groupName, storeElement.getCheckpointMap());

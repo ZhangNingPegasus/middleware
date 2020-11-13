@@ -3,7 +3,7 @@ package org.wyyt.kafka.monitor.job;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.alert.AlertService;
 import org.wyyt.kafka.monitor.entity.po.Alert;
 import org.wyyt.kafka.monitor.service.common.MailService;
@@ -42,14 +42,14 @@ public class AlertSchedule {
             if (null == alert) {
                 continue;
             }
-            if (!StringUtils.isEmpty(alert.getEmail())) {
+            if (!ObjectUtils.isEmpty(alert.getEmail())) {
                 try {
                     this.mailService.send(alert.getEmail(), alert.getEmailTitle(), alert.getEmailContent());
                 } catch (final Exception exception) {
                     log.error(ExceptionTool.getRootCauseMessage(exception), exception);
                 }
             }
-            if (!StringUtils.isEmpty(alert.getDingContent())) {
+            if (!ObjectUtils.isEmpty(alert.getDingContent())) {
                 try {
                     Message message = new Message();
                     message.setMsgtype("text");

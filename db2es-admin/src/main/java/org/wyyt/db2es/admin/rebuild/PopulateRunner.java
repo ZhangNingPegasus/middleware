@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.index.VersionType;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.core.entity.domain.Config;
 import org.wyyt.db2es.core.entity.domain.IndexName;
 import org.wyyt.db2es.core.entity.domain.TableInfo;
@@ -128,7 +128,7 @@ public final class PopulateRunner implements Runnable, Closeable {
         Assert.notNull(id, String.format("在表[%s]中,缺少主键为[%s]的数据", this.tableName, this.tableInfo.getPrimaryKeyFieldName()));
         Assert.notNull(rowCreateTime, String.format("在表[%s]中,主键为[%s]的数据缺少字段[%s]的值", this.tableName, id, this.tableInfo.getRowCreateTimeFieldName()));
         final String result = Tool.getIndexName(this.rebuildIndexMap, rowCreateTime);
-        if (StringUtils.isEmpty(result)) {
+        if (ObjectUtils.isEmpty(result)) {
             throw new Db2EsException(String.format("在表%s中, 主键是[%s]的记录无法定位到对应的索引", this.tableName, id));
         }
         return result;

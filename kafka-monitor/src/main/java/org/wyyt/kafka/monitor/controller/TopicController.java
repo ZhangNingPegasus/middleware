@@ -3,7 +3,7 @@ package org.wyyt.kafka.monitor.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.kafka.monitor.common.Constants;
 import org.wyyt.kafka.monitor.config.PropertyConfig;
@@ -103,7 +103,7 @@ public class TopicController {
         pageNum = Math.min(pageNum, Constants.MAX_PAGE_NUM);
 
         List<String> topicNames = this.kafkaService.listTopicNames();
-        if (!StringUtils.isEmpty(searchTopicName)) {
+        if (!ObjectUtils.isEmpty(searchTopicName)) {
             topicNames = topicNames.stream().filter(p -> p.toLowerCase().contains(searchTopicName.toLowerCase())).collect(Collectors.toList());
         }
 

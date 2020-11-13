@@ -4,6 +4,7 @@ import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.db2es.admin.entity.vo.CompareJsonVo;
 import org.wyyt.db2es.admin.entity.vo.TopicDb2EsVo;
@@ -199,7 +200,7 @@ public class ServerController {
             slaveIp = StringUtils.join(leaderNodeVo.getSlaveList().stream().map(NodeVo::getIp).collect(Collectors.toSet()), ", ");
         }
 
-        if (!StringUtils.isEmpty(slaveIp)) {
+        if (!ObjectUtils.isEmpty(slaveIp)) {
             setting.add(0, new SettingVo("备用节点",
                     slaveIp,
                     String.format("id=%s的备用节点", leaderNodeVo.getId())));
@@ -242,7 +243,7 @@ public class ServerController {
     public Result<CompareDataResult> diffData(@RequestParam(value = "indexName") final String indexName,
                                               @RequestParam(value = "shardingValue") String shardingValue,
                                               @RequestParam(value = "pkValue") final String pkValue) throws Exception {
-        if (StringUtils.isEmpty(pkValue.trim())) {
+        if (ObjectUtils.isEmpty(pkValue.trim())) {
             throw new Db2EsException("主键值不允许为空");
         }
 
@@ -251,12 +252,12 @@ public class ServerController {
         Map<String, Object> esData;
         Map<String, Object> dbData = null;
 
-        if (StringUtils.isEmpty(shardingValue)) {
+        if (ObjectUtils.isEmpty(shardingValue)) {
             esData = this.esService.getElasticSearchService().getById(indexName, pkValue);
             if (null != esData) {
                 shardingValue = esData.get(shardingColumn).toString();
             }
-            if (!StringUtils.isEmpty(shardingValue)) {
+            if (!ObjectUtils.isEmpty(shardingValue)) {
                 dbData = this.shardingDbService.getByIdValue(indexName, shardingValue, pkValue);
             }
         } else {
@@ -277,7 +278,7 @@ public class ServerController {
                           @RequestParam(value = "pkValue") final String pkValue) throws Exception {
         final String shardingColumn = this.shardingService.listShardingColumns(indexName).iterator().next();
 
-        if (StringUtils.isEmpty(shardingValue)) {
+        if (ObjectUtils.isEmpty(shardingValue)) {
             final Map<String, Object> esData = this.esService.getElasticSearchService().getById(indexName, pkValue);
             if (null != esData) {
                 shardingValue = esData.get(shardingColumn).toString();
@@ -286,7 +287,7 @@ public class ServerController {
             }
         }
 
-        if (StringUtils.isEmpty(shardingValue)) {
+        if (ObjectUtils.isEmpty(shardingValue)) {
             throw new Db2EsException(String.format("缺少拆分键[%s]的值", shardingColumn));
         }
 

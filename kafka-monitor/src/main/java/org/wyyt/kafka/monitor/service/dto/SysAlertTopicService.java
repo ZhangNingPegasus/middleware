@@ -3,12 +3,11 @@ package org.wyyt.kafka.monitor.service.dto;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.anno.TranSave;
 import org.wyyt.kafka.monitor.entity.dto.SysAlertTopic;
-import org.wyyt.kafka.monitor.entity.dto.SysTableName;
 import org.wyyt.kafka.monitor.exception.BusinessException;
 import org.wyyt.kafka.monitor.mapper.SysAlertTopicMapper;
 
@@ -38,7 +37,7 @@ public class SysAlertTopicService extends ServiceImpl<SysAlertTopicMapper, SysAl
                         final String accessToken,
                         final String secret
     ) {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             throw new BusinessException("主题名称不允许为空");
         }
 
@@ -73,13 +72,13 @@ public class SysAlertTopicService extends ServiceImpl<SysAlertTopicMapper, SysAl
                           final String email,
                           final String accessToken,
                           final String secret) {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             throw new BusinessException("主题名称不允许为空");
         }
 
-        final SysAlertTopic orgiSysAlertTopic = getByTopicName(topicName);
+        final SysAlertTopic orgiSysAlertTopic = this.getByTopicName(topicName);
         if (null != orgiSysAlertTopic) {
-            if (!topicName.equals(topicName)) {
+            if (!topicName.equals(orgiSysAlertTopic.getTopicName())) {
                 throw new BusinessException(String.format("主题[%s]的TPS设置已存在", topicName));
             }
         }
@@ -110,7 +109,7 @@ public class SysAlertTopicService extends ServiceImpl<SysAlertTopicMapper, SysAl
 
     @TranRead
     public SysAlertTopic getByTopicName(final String topicName) {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return null;
         }
         final QueryWrapper<SysAlertTopic> queryWrapper = new QueryWrapper<>();
@@ -120,7 +119,7 @@ public class SysAlertTopicService extends ServiceImpl<SysAlertTopicMapper, SysAl
 
     @TranSave
     public void deleteTopic(String topicName) {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return;
         }
         final QueryWrapper<SysAlertTopic> queryWrapper = new QueryWrapper<>();

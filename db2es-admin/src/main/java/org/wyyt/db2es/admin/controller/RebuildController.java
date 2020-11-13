@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.db2es.admin.common.Utils;
 import org.wyyt.db2es.admin.entity.vo.DataSourceVo;
@@ -108,7 +109,7 @@ public class RebuildController {
         final List<RebuildVo> rebuildVoList = new ArrayList<>();
         boolean disableAll = false;
         for (final TableProperty tableProperty : tableProperties) {
-            if (!StringUtils.isEmpty(indexName) && !tableProperty.getName().equals(indexName)) {
+            if (!ObjectUtils.isEmpty(indexName) && !tableProperty.getName().equals(indexName)) {
                 continue;
             }
             final RebuildVo rebuildVo = new RebuildVo();
@@ -165,7 +166,7 @@ public class RebuildController {
             final Set<String> tableNameSet = new HashSet<>();
             final String[] tableNames = dataSourceVo.getTableNames().split(",");
             for (final String tableName : tableNames) {
-                if (null == tableName || StringUtils.isEmpty(tableName.trim())) {
+                if (null == tableName || ObjectUtils.isEmpty(tableName.trim())) {
                     continue;
                 }
                 tableNameSet.add(tableName.trim());
@@ -210,7 +211,7 @@ public class RebuildController {
         final String[] all = tableNames.split(",");
         final Set<String> tableNameSet = new HashSet<>(all.length);
         for (final String tableName : all) {
-            if (null == tableName || StringUtils.isEmpty(tableName.trim())) {
+            if (null == tableName || ObjectUtils.isEmpty(tableName.trim())) {
                 continue;
             }
             tableNameSet.add(tableName);

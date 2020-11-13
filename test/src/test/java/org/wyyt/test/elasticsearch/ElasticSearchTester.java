@@ -21,7 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.elasticsearch.page.IPage;
 import org.wyyt.elasticsearch.page.Page;
 import org.wyyt.elasticsearch.service.ElasticSearchService;
@@ -126,7 +126,7 @@ public class ElasticSearchTester {
         CommonTool.sleep(1000); //ES 操作数据并不能马上就能查到，需要等待ES刷盘（除非设置ES操作后立马刷盘，但这样会影响并发性能）
         String response = this.elasticSearchService.getById(INDEX_NAME, PRIMARY_KEY_VALUE, String.class);
         System.out.println(response);
-        Assert.isTrue(!StringUtils.isEmpty(response), "根据_id获取文档失败");
+        Assert.isTrue(!ObjectUtils.isEmpty(response), "根据_id获取文档失败");
     }
 
     @Test
@@ -171,7 +171,7 @@ public class ElasticSearchTester {
         searchRequest.source(searchSourceBuilder);
         String response = this.elasticSearchService.selectOne(searchRequest, String.class);
         System.out.println(response);
-        Assert.isTrue(!StringUtils.isEmpty(response), "根据条件查询单条文档失败");
+        Assert.isTrue(!ObjectUtils.isEmpty(response), "根据条件查询单条文档失败");
     }
 
     @Test

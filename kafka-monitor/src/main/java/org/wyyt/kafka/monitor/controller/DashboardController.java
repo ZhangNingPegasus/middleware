@@ -3,7 +3,7 @@ package org.wyyt.kafka.monitor.controller;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.config.PropertyConfig;
@@ -77,7 +77,7 @@ public class DashboardController {
     @ResponseBody
     public Result<LineInfo> getTopicSendChart(@RequestParam(name = "topicName") String topicName,
                                               @RequestParam(name = "createTimeRange") String createTimeRange) {
-        if (StringUtils.isEmpty(topicName.trim()) || StringUtils.isEmpty(createTimeRange.trim())) {
+        if (ObjectUtils.isEmpty(topicName.trim()) || ObjectUtils.isEmpty(createTimeRange.trim())) {
             return Result.success(new LineInfo(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }
 
@@ -89,7 +89,7 @@ public class DashboardController {
 
         topicName = topicName.trim();
         createTimeRange = createTimeRange.trim();
-        if (StringUtils.isEmpty(createTimeRange)) {
+        if (ObjectUtils.isEmpty(createTimeRange)) {
             return Result.success();
         }
         final LineInfo result = new LineInfo();
@@ -172,7 +172,7 @@ public class DashboardController {
         }
         groupId = groupId.trim();
         createTimeRange = createTimeRange.trim();
-        if (StringUtils.isEmpty(groupId) || StringUtils.isEmpty(createTimeRange)) {
+        if (ObjectUtils.isEmpty(groupId) || ObjectUtils.isEmpty(createTimeRange)) {
             return Result.success();
         }
         LineInfo result = new LineInfo();
@@ -224,7 +224,7 @@ public class DashboardController {
         }
         groupId = groupId.trim();
         createTimeRange = createTimeRange.trim();
-        if (StringUtils.isEmpty(groupId) || StringUtils.isEmpty(createTimeRange)) {
+        if (ObjectUtils.isEmpty(groupId) || ObjectUtils.isEmpty(createTimeRange)) {
             return Result.success();
         }
         LineInfo result = new LineInfo();
@@ -305,7 +305,7 @@ public class DashboardController {
             return Result.success(cache);
         }
         createTimeRange = createTimeRange.trim();
-        if (StringUtils.isEmpty(createTimeRange)) {
+        if (ObjectUtils.isEmpty(createTimeRange)) {
             return Result.success();
         }
         final TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
@@ -331,7 +331,7 @@ public class DashboardController {
     @TranRead
     public Result<LineInfo> getTopicHistoryChart(@RequestParam(name = "topicName") String topicName) {
         topicName = topicName.trim();
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return Result.success();
         }
 

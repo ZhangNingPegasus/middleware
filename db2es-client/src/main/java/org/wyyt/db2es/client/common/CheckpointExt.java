@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.client.entity.FlatMessge;
 import org.wyyt.db2es.core.entity.domain.Checkpoint;
 import org.wyyt.db2es.core.entity.domain.TableInfo;
@@ -60,7 +60,7 @@ public final class CheckpointExt extends Checkpoint {
         if (null != flatMessage.getData()) {
             for (final CaseInsensitiveMap<String, String> datum : flatMessage.getData()) {
                 final String rowUpdateTime = datum.get(rowUpdateTimeField);
-                if (StringUtils.isEmpty(rowUpdateTime)) {
+                if (ObjectUtils.isEmpty(rowUpdateTime)) {
                     continue;
                 }
                 final long rowUpdateTimeLong = getTimestamp(rowUpdateTime);
@@ -81,7 +81,7 @@ public final class CheckpointExt extends Checkpoint {
     }
 
     private static long getTimestamp(final String datetime) {
-        if (StringUtils.isEmpty(datetime)) {
+        if (ObjectUtils.isEmpty(datetime)) {
             return 0L;
         }
         final Date date = DateTool.parse(datetime);

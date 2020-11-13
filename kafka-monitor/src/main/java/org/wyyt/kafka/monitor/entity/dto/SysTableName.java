@@ -4,7 +4,6 @@ package org.wyyt.kafka.monitor.entity.dto;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.wyyt.kafka.monitor.entity.base.BaseDto;
 
 import java.util.Objects;
@@ -17,7 +16,6 @@ import java.util.Objects;
  * Ning.Zhang       Initialize         10/1/2020      Initialize   *
  * *****************************************************************
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName(value = "`sys_table_name`")
 public class SysTableName extends BaseDto {

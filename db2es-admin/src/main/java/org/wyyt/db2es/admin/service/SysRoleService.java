@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.entity.dto.SysRole;
 import org.wyyt.db2es.admin.mapper.SysRoleMapper;
 import org.wyyt.db2es.core.exception.Db2EsException;
@@ -37,13 +37,13 @@ public class SysRoleService extends ServiceImpl<SysRoleMapper, SysRole> {
     public IPage<SysRole> list(final Integer pageNum,
                                final Integer pageSize,
                                String name) {
-        if (!StringUtils.isEmpty(name)) {
+        if (!ObjectUtils.isEmpty(name)) {
             name = name.trim();
         }
         final QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
 
         final LambdaQueryWrapper<SysRole> lambda = queryWrapper.lambda();
-        if (!StringUtils.isEmpty(name)) {
+        if (!ObjectUtils.isEmpty(name)) {
             lambda.like(SysRole::getName, name);
         }
         lambda.orderByAsc(SysRole::getName);

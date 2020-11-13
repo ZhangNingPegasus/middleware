@@ -5,7 +5,7 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.config.PropertyConfig;
 import org.wyyt.db2es.core.exception.Db2EsException;
 import org.wyyt.db2es.core.util.zookeeper.ZooKeeperUtils;
@@ -27,7 +27,7 @@ public class ZooKeeperService implements DisposableBean {
     private final CuratorFramework curatorFramework;
 
     public ZooKeeperService(final PropertyConfig propertyConfig) {
-        if (StringUtils.isEmpty(propertyConfig.getZkServers())) {
+        if (ObjectUtils.isEmpty(propertyConfig.getZkServers())) {
             throw new Db2EsException("zookeeper的地址配置为空，请在application.yml中通过db2es.zookeeper.servers配置zookeeper的地址，多个地址用逗号分隔，例:192.168.182.128:2181,192.168.182.129:2181,192.168.182.130:2181");
         }
         this.curatorFramework = ZooKeeperUtils.createCuratorFramework(propertyConfig.getZkServers());

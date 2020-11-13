@@ -16,9 +16,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot>2.3.5.RELEASE</springboot>
+        <springboot>2.4.0</springboot>
         <lombok>1.18.16</lombok>
-        <spring-session-data-redis>2.3.1.RELEASE</spring-session-data-redis>
         <jackson-databind>2.11.3</jackson-databind>
         <maven-source-plugin>3.2.1</maven-source-plugin>
     </properties>
@@ -33,13 +32,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>${springboot}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
-            <version>${spring-session-data-redis}</version>
         </dependency>
 
         <dependency>
@@ -48,6 +45,18 @@
             <version>${jackson-databind}</version>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${springboot}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <distributionManagement>
         <repository>

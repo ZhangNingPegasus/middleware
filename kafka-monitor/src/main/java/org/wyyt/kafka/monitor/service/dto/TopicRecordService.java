@@ -9,7 +9,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.anno.TranSave;
 import org.wyyt.kafka.monitor.common.Constants;
@@ -90,7 +90,7 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
 
     @TranRead
     public void listRecords(IPage<RecordVo> page, String topicName, Integer partitionId, Long offset, String key, Date from, Date to) {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return;
         }
         final SysTableName sysTableName = this.sysTableNameService.getByTopicName(topicName.trim());
@@ -110,7 +110,7 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
     public String getRecordDetailValue(final String topicName,
                                        final Integer partitionId,
                                        final Long offset) {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return null;
         }
         final SysTableName sysTableName = this.sysTableNameService.getByTopicName(topicName.trim());
@@ -299,7 +299,7 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
     public void deleteTopic(final List<String> topicNameList) throws Exception {
         final Set<SysTableName> sysTableNameSet = new HashSet<>(topicNameList.size());
         for (String topicName : topicNameList) {
-            if (StringUtils.isEmpty(topicName.trim())) {
+            if (ObjectUtils.isEmpty(topicName.trim())) {
                 continue;
             }
             final SysTableName sysTableName = this.sysTableNameService.getByTopicName(topicName);
@@ -327,7 +327,7 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
     public String deleteConsumer(final Set<String> groupdIdList) {
         String result = "";
         for (final String groupId : groupdIdList) {
-            if (null == groupId || StringUtils.isEmpty(groupId.trim())) {
+            if (null == groupId || ObjectUtils.isEmpty(groupId.trim())) {
                 continue;
             }
             try {

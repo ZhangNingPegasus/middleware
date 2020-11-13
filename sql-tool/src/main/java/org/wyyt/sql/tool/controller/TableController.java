@@ -1,9 +1,9 @@
 package org.wyyt.sql.tool.controller;
 
 import com.alibaba.fastjson.JSON;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.auto.property.TableProperty;
@@ -110,7 +110,7 @@ public final class TableController {
             data = "";
         }
         model.addAttribute("names", names);
-        model.addAttribute("data", StringUtils.isEmpty(data) ? "[]" : data);
+        model.addAttribute("data", ObjectUtils.isEmpty(data) ? "[]" : data);
         return String.format("%s/%s", PREFIX, "index");
     }
 

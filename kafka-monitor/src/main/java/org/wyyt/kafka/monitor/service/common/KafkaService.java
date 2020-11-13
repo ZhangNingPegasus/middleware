@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.common.Constants;
 import org.wyyt.kafka.monitor.common.JMX;
 import org.wyyt.kafka.monitor.entity.dto.SysKpi;
@@ -145,13 +146,13 @@ public class KafkaService implements InitializingBean, DisposableBean {
 
     public void alterOffset(final String groupId,
                             final List<Offset> offsetList) throws Exception {
-        if (StringUtils.isEmpty(groupId) || null == offsetList || offsetList.isEmpty()) {
+        if (ObjectUtils.isEmpty(groupId) || null == offsetList || offsetList.isEmpty()) {
             return;
         }
         final Map<TopicPartition, OffsetAndMetadata> offsetsMap = new HashMap<>();
         for (Offset offset : offsetList) {
             OffsetAndMetadata offsetAndMetadata;
-            if (StringUtils.isEmpty(offset.getMetadata())) {
+            if (ObjectUtils.isEmpty(offset.getMetadata())) {
                 offsetAndMetadata = new OffsetAndMetadata(offset.getOffset());
             } else {
                 offsetAndMetadata = new OffsetAndMetadata(offset.getOffset(), offset.getMetadata());
@@ -370,7 +371,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
             final String groupId = consumerGroupListing.groupId();
             if (groupId.startsWith(Constants.KAFKA_MONITOR_PEGASUS_SYSTEM_PREFIX)) {
                 continue;
-            } else if (!StringUtils.isEmpty(searchGroupId) && !groupId.equals(searchGroupId)) {
+            } else if (!ObjectUtils.isEmpty(searchGroupId) && !groupId.equals(searchGroupId)) {
                 continue;
             }
             final KafkaConsumerVo kafkaConsumerVo = new KafkaConsumerVo();
@@ -430,7 +431,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
             for (final KafkaConsumerVo.Meta meta : kafkaConsumerVo.getMetaList()) {
                 for (final KafkaConsumerVo.TopicSubscriber topicSubscriber : meta.getTopicSubscriberList()) {
                     topicNameSet.add(topicSubscriber.getTopicName());
-                    if (!StringUtils.isEmpty(meta.getConsumerId()) || meta.getConsumerGroupState() == ConsumerGroupState.EMPTY) {
+                    if (!ObjectUtils.isEmpty(meta.getConsumerId()) || meta.getConsumerGroupState() == ConsumerGroupState.EMPTY) {
                         activeTopicSet.add(topicSubscriber.getTopicName());
                     }
                 }
@@ -450,7 +451,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
 
     public List<KafkaConsumerVo> listKafkaConsumersByTopicName(String topicName) throws Exception {
         final List<KafkaConsumerVo> result = new ArrayList<>();
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return result;
         }
         final List<KafkaConsumerVo> kafkaConsumerVoList = this.listKafkaConsumers(null);
@@ -587,7 +588,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
     public void createTopic(final String topicName,
                             final Integer partitionNumber,
                             final Integer replicationNumber) throws Exception {
-        if ((null == topicName || StringUtils.isEmpty(topicName.trim())) && null == partitionNumber && null == replicationNumber) {
+        if ((null == topicName || ObjectUtils.isEmpty(topicName.trim())) && null == partitionNumber && null == replicationNumber) {
             return;
         }
         final NewTopic newTopic = new NewTopic(topicName.trim(), partitionNumber, Short.parseShort(replicationNumber.toString()));
@@ -597,7 +598,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
     public void editTopic(String topicName,
                           @Nullable final Integer partitionCount,
                           @Nullable final Integer replicationCount) throws Exception {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return;
         }
         topicName = topicName.trim();
@@ -670,7 +671,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
         final List<KafkaBrokerVo> brokers = this.listBrokerInfos();
 
         for (final SysKpi.KAFKA_KPI kpi : SysKpi.KAFKA_KPI.values()) {
-            if (StringUtils.isEmpty(kpi.getName())) {
+            if (ObjectUtils.isEmpty(kpi.getName())) {
                 continue;
             }
             final SysKpi sysKpi = new SysKpi();

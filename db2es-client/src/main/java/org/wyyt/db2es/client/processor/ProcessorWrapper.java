@@ -2,8 +2,8 @@ package org.wyyt.db2es.client.processor;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.common.TopicPartition;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.client.common.CheckpointExt;
 import org.wyyt.db2es.client.common.Context;
 import org.wyyt.db2es.client.common.RecordListener;
@@ -186,17 +186,17 @@ public final class ProcessorWrapper implements Closeable {
     private CheckpointExt getCheckpointByProperties(final String topicName,
                                                     final int partition) {
         String checkpointExpr = this.context.getConfig().getTopicCheckpointMap().get(String.format(Names.TOPIC_CHECKPOINT_FORMAT, topicName, partition));
-        if (StringUtils.isEmpty(checkpointExpr)) {
+        if (ObjectUtils.isEmpty(checkpointExpr)) {
             checkpointExpr = this.context.getConfig().getInitialCheckpoint();
         }
-        if (StringUtils.isEmpty(checkpointExpr)) {
+        if (ObjectUtils.isEmpty(checkpointExpr)) {
             return null;
         }
         return parseCheckpoint(checkpointExpr);
     }
 
     private static CheckpointExt parseCheckpoint(final String checkpointExpr) {
-        if (StringUtils.isEmpty(checkpointExpr)) {
+        if (ObjectUtils.isEmpty(checkpointExpr)) {
             return null;
         }
         final String[] offsetAndTS = checkpointExpr.split("@");

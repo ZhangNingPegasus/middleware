@@ -3,7 +3,7 @@ package org.wyyt.db2es.admin.context;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.wyyt.db2es.admin.common.Constants;
 import org.wyyt.db2es.admin.entity.vo.AdminVo;
 import org.wyyt.tool.exception.ExceptionTool;
@@ -22,11 +22,11 @@ import javax.servlet.http.HttpServletResponse;
  * *****************************************************************
  */
 @Slf4j
-public class LoginInterceptor extends HandlerInterceptorAdapter {
+public class LoginInterceptor implements AsyncHandlerInterceptor {
     @Override
     public boolean preHandle(final HttpServletRequest request,
                              final HttpServletResponse response,
-                             final Object handler) throws Exception {
+                             final Object handler) {
         if (handler.getClass().isAssignableFrom(HandlerMethod.class)) {
             try {
                 final AdminVo adminVo = (AdminVo) SecurityUtils.getSubject().getPrincipal();
@@ -37,6 +37,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 log.error(ExceptionTool.getRootCauseMessage(e), e);
             }
         }
-        return super.preHandle(request, response, handler);
+        return true;
     }
 }

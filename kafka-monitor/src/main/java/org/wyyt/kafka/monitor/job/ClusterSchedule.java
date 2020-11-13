@@ -3,7 +3,7 @@ package org.wyyt.kafka.monitor.job;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.alert.AlertService;
 import org.wyyt.kafka.monitor.entity.dto.SysAlertCluster;
 import org.wyyt.kafka.monitor.entity.po.Alert;
@@ -55,7 +55,7 @@ public class ClusterSchedule {
             final int port = Integer.parseInt(split[1]);
 
             final ZooKeeperKpi zooKeeperKpi = ZooKeeperKpiUtil.listKpi(ip, port);
-            if (StringUtils.isEmpty(zooKeeperKpi.getZkNumAliveConnections())) {
+            if (ObjectUtils.isEmpty(zooKeeperKpi.getZkNumAliveConnections())) {
                 final Alert alert = new Alert();
                 alert.setEmail(zooKeeper.getEmail());
                 alert.setEmailTitle(String.format("ZOOKEEPER主机[%s]不可用, 请检查.", ip));

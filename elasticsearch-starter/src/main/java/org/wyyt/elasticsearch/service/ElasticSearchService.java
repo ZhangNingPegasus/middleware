@@ -48,7 +48,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.elasticsearch.auto.property.ElasticSearchProperty;
 import org.wyyt.elasticsearch.exception.ElasticSearchException;
 import org.wyyt.elasticsearch.page.IPage;
@@ -381,7 +381,7 @@ public final class ElasticSearchService implements InitializingBean, DisposableB
     }
 
     private Set<String> getIndexNameByAlias(final String alias) throws IOException {
-        if (StringUtils.isEmpty(alias)) {
+        if (ObjectUtils.isEmpty(alias)) {
             return null;
         }
         final Set<String> result = new HashSet<>();

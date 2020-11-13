@@ -20,7 +20,7 @@
         <hutool-all>5.4.7</hutool-all>
         <druid-spring-boot-starter>1.2.3</druid-spring-boot-starter>
         <HikariCP>3.4.5</HikariCP>
-        <mybatis-plus-annotation>3.4.0</mybatis-plus-annotation>
+        <mybatis-plus-annotation>3.4.1</mybatis-plus-annotation>
         <mysql-connector-java>8.0.22</mysql-connector-java>
         <mybatis>3.5.6</mybatis>
         <commons-beanutils>1.9.4</commons-beanutils>
@@ -111,6 +111,12 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${httpclient}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-codec</artifactId>
+                    <groupId>commons-codec</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

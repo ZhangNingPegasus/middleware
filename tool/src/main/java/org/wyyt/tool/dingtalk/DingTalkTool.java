@@ -12,7 +12,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.tool.date.DateTool;
 
 import javax.annotation.Nullable;
@@ -40,8 +40,8 @@ public final class DingTalkTool {
     public static void send(final Message message,
                             final String accessToken,
                             final String secret) throws Exception {
-        Assert.isTrue(!StringUtils.isEmpty(accessToken), "钉钉机器人的Access Token不允许为空");
-        Assert.isTrue(!StringUtils.isEmpty(secret), "钉钉机器人的secret不允许为空");
+        Assert.isTrue(!ObjectUtils.isEmpty(accessToken), "钉钉机器人的Access Token不允许为空");
+        Assert.isTrue(!ObjectUtils.isEmpty(secret), "钉钉机器人的secret不允许为空");
 
         final Long timestamp = System.currentTimeMillis();
         final String stringToSign = timestamp + "\n" + secret;
@@ -83,10 +83,10 @@ public final class DingTalkTool {
         message.setMsgtype("text");
 
         final StringBuilder stringBuilder = new StringBuilder();
-        if (!StringUtils.isEmpty(hostName)) {
+        if (!ObjectUtils.isEmpty(hostName)) {
             stringBuilder.append(String.format("告警主机：%s\n", hostName));
         }
-        if (!StringUtils.isEmpty(host)) {
+        if (!ObjectUtils.isEmpty(host)) {
             stringBuilder.append(String.format("主机地址：%s\n", host));
         }
         stringBuilder.append(String.format("告警等级：%s\n", warningLevel.getDescription()));

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.kafka.monitor.entity.dto.SysPage;
 import org.wyyt.kafka.monitor.entity.vo.PageVo;
@@ -102,7 +102,7 @@ public class PageController {
         final String[] idsArray = ids.split(",");
         final List<Long> idsList = new ArrayList<>(idsArray.length);
         for (final String id : idsArray) {
-            if (id != null && !StringUtils.isEmpty(id.trim())) {
+            if (id != null && !ObjectUtils.isEmpty(id.trim())) {
                 idsList.add(Long.parseLong(id));
             }
         }

@@ -51,15 +51,15 @@ public interface IPage<T> extends Serializable {
     /**
      * The relationship between the number of real pages and getTotal()
      *
-     * @return
+     * @return return the relation
      */
     TotalHits.Relation getRelation();
 
     /**
      * The relationship between the number of real pages and getTotal()
      *
-     * @param relation
-     * @return
+     * @param relation the relation
+     * @return return result
      */
     IPage<T> setRelation(TotalHits.Relation relation);
 

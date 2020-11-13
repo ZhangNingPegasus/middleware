@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.admin.AdminClient;
@@ -18,6 +17,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.entity.vo.DataSourceVo;
 import org.wyyt.db2es.admin.service.PropertyService;
 import org.wyyt.db2es.admin.service.TopicService;
@@ -647,7 +647,7 @@ public class RebuildService {
                 final List<IndexVo> indexVos = this.esService.listIndexVo(rebuildIndexName);
                 final Set<IndexVo> readyShards = indexVos.stream().filter(p -> "started".equalsIgnoreCase(p.getState())).collect(Collectors.toSet());
                 if (trytimes >= 10L) {
-                    final Set<IndexVo> avaiableShards = indexVos.stream().filter(p -> !StringUtils.isEmpty(p.getIp())).collect(Collectors.toSet());
+                    final Set<IndexVo> avaiableShards = indexVos.stream().filter(p -> !ObjectUtils.isEmpty(p.getIp())).collect(Collectors.toSet());
                     if (avaiableShards.size() == readyShards.size()) {
                         isShardsReady.set(true);
                         break;

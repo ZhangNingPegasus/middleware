@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.common.Constants;
 import org.wyyt.db2es.admin.common.Utils;
 import org.wyyt.db2es.admin.entity.dto.SysAdmin;
@@ -40,7 +40,7 @@ public class SysAdminService extends ServiceImpl<SysAdminMapper, SysAdmin> {
     public IPage<AdminVo> list(final Integer pageNum,
                                final Integer pageSize,
                                String name) {
-        if (!StringUtils.isEmpty(name)) {
+        if (!ObjectUtils.isEmpty(name)) {
             name = name.trim();
         }
         return this.baseMapper.list(new Page<>(pageNum, pageSize), name);

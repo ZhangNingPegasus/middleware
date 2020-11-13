@@ -2,6 +2,7 @@ package org.wyyt.sql.tool.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.sql.tool.entity.vo.FieldVo;
 import org.wyyt.sql.tool.entity.vo.IndexVo;
 import org.wyyt.tool.sql.SqlTool;
@@ -66,7 +67,7 @@ public class TableService {
                 strTable.append(String.format("%s%s%s%s%s COMMENT '%s',%s",
                         generateFieldType(fieldVo),
                         fieldVo.getNotNull() ? " NOT NULL" : " NULL",
-                        !StringUtils.isEmpty(defaultValue) ? " DEFAULT".concat(" ").concat(defaultValue) : fieldVo.getNotNull() ? "" : " DEFAULT NULL",
+                        !ObjectUtils.isEmpty(defaultValue) ? " DEFAULT".concat(" ").concat(defaultValue) : fieldVo.getNotNull() ? "" : " DEFAULT NULL",
                         fieldVo.getAutoIncrement() ? " AUTO_INCREMENT" : "",
                         fieldVo.getAutoUpdateByTimestampt() == null || !fieldVo.getAutoUpdateByTimestampt() ? "" : " ON UPDATE CURRENT_TIMESTAMP(0)",
                         fieldVo.getComment(),
@@ -115,7 +116,7 @@ public class TableService {
             length = String.format("%s, %s", length, fieldVo.getDecimal());
         }
 
-        if (StringUtils.isEmpty(length)) {
+        if (ObjectUtils.isEmpty(length)) {
             if ("BIGINT".equalsIgnoreCase(type)) {
                 length = "20";
             } else if ("INT".equalsIgnoreCase(type)) {

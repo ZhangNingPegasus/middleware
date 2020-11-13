@@ -2,10 +2,10 @@ package org.wyyt.kafka.monitor.config;
 
 import com.sijibao.nacos.spring.util.NacosNativeUtils;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ObjectUtils;
 
 import java.util.HashSet;
 import java.util.Properties;
@@ -82,7 +82,7 @@ public class PropertyConfig implements InitializingBean {
         this.blackListTopicSet = new HashSet<>();
         String blackListTopics = acmProperties.getProperty(TOPIC_BLACKLIST, "");
         for (String topicName : blackListTopics.split(",")) {
-            if (StringUtils.isEmpty(topicName) || StringUtils.isEmpty(topicName.trim())) {
+            if (ObjectUtils.isEmpty(topicName) || ObjectUtils.isEmpty(topicName.trim())) {
                 continue;
             }
             this.blackListTopicSet.add(topicName.trim());

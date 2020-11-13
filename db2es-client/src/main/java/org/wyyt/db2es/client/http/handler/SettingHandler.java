@@ -1,6 +1,6 @@
 package org.wyyt.db2es.client.http.handler;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.client.http.BaseHandler;
 import org.wyyt.db2es.client.http.Param;
 import org.wyyt.db2es.client.http.anno.PostMapping;
@@ -43,7 +43,7 @@ public final class SettingHandler extends BaseHandler {
         result.add(new SettingVo(ACM_NACOS_LOG_PATH, this.context.getConfig().getAcmNacosLogPath(), "ACM配置5"));
 
 
-        if (!StringUtils.isEmpty(this.context.getConfig().getInitialCheckpoint())) {
+        if (!ObjectUtils.isEmpty(this.context.getConfig().getInitialCheckpoint())) {
             result.add(new SettingVo(INITIAL_CHECKPOINT,
                     this.context.getConfig().getInitialCheckpoint(),
                     "指定所有Topic的消费位点, 优先级低于db2es.{topic_name}-{partition}.checkpoint。如果不指定,则会自动接着上次未消费的地方接着消费"));

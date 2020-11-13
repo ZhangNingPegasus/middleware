@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.sharding.algorithm.MathsTool;
 import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.auto.property.DimensionProperty;
@@ -111,7 +112,7 @@ public class ShardingService {
 
     @EhCache
     public DimensionProperty getDimensionByName(final String name) {
-        if (StringUtils.isEmpty(name)) {
+        if (ObjectUtils.isEmpty(name)) {
             return null;
         }
         return this.shardingProperty.getDimensionProperties().get(name);

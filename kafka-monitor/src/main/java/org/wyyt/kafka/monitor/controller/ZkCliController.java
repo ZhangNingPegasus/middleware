@@ -1,7 +1,7 @@
 package org.wyyt.kafka.monitor.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.kafka.monitor.entity.po.ZooKeeperKpi;
 import org.wyyt.kafka.monitor.entity.vo.ZooKeeperVo;
@@ -44,7 +44,7 @@ public class ZkCliController {
             if (!zooKeeperVoList.isEmpty()) {
                 final ZooKeeperVo zooKeeperInfo = zooKeeperVoList.get(0);
                 final ZooKeeperKpi zooKeeperKpi = ZooKeeperKpiUtil.listKpi(zooKeeperInfo.getHost(), Integer.parseInt(zooKeeperInfo.getPort()));
-                if (!StringUtils.isEmpty(zooKeeperKpi.getZkNumAliveConnections())) {
+                if (!ObjectUtils.isEmpty(zooKeeperKpi.getZkNumAliveConnections())) {
                     final List<String> result = zooKeeperVoList.stream().map(p -> String.format("%s:%s", p.getHost(), p.getPort())).collect(Collectors.toList());
                     return Result.success(result.toString());
                 }

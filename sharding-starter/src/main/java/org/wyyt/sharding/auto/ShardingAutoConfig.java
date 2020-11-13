@@ -33,6 +33,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.sharding.algorithm.impl.DatabaseComplexShardingAlgorithm;
 import org.wyyt.sharding.algorithm.impl.TableComplexShardingAlgorithm;
 import org.wyyt.sharding.aop.TransactionAop;
@@ -270,7 +271,7 @@ public class ShardingAutoConfig implements DisposableBean {
 
             tableRuleConfiguration.setDatabaseShardingStrategyConfig(new ComplexShardingStrategyConfiguration(shardingColumns, databaseComplexShardingAlgorithm));
             tableRuleConfiguration.setTableShardingStrategyConfig(new ComplexShardingStrategyConfiguration(shardingColumns, tableComplexShardingAlgorithm));
-            if (!StringUtils.isEmpty(tableProperty.getPkName())) {
+            if (!ObjectUtils.isEmpty(tableProperty.getPkName())) {
                 tableRuleConfiguration.setKeyGeneratorConfig(keyGeneratorConfiguration(tableProperty.getPkName()));
             }
             result.add(tableRuleConfiguration);

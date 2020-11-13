@@ -1,7 +1,7 @@
 package org.wyyt.sql.tool.service;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.auto.property.DimensionProperty;
 import org.wyyt.sharding.auto.property.TableProperty;
@@ -112,7 +112,7 @@ public class TreeService {
         for (final TableProperty tableProperty : tablePropertyList) {
             final String id = tableProperty.getName();
             String title;
-            if (StringUtils.isEmpty(ICON_TABLE)) {
+            if (ObjectUtils.isEmpty(ICON_TABLE)) {
                 title = tableProperty.getName();
             } else {
                 title = String.format("<i class=\"layui-icon %s\" style=\"color:green\"></i>&nbsp;%s", ICON_TABLE, tableProperty.getName());

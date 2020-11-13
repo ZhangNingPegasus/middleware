@@ -1,9 +1,9 @@
 package org.wyyt.sql.tool.controller;
 
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.sharding.service.ShardingService;
 import org.wyyt.sql.tool.database.Db;
@@ -119,7 +119,7 @@ public final class PermissionController {
         final String[] idsArray = ids.split(",");
         final List<Long> idsList = new ArrayList<>(idsArray.length);
         for (final String id : idsArray) {
-            if (null != id && !StringUtils.isEmpty(id.trim())) {
+            if (null != id && !ObjectUtils.isEmpty(id.trim())) {
                 idsList.add(Long.parseLong(id.trim()));
             }
         }

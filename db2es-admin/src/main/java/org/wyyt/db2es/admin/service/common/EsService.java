@@ -2,7 +2,6 @@ package org.wyyt.db2es.admin.service.common;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -24,6 +23,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.service.TopicService;
 import org.wyyt.db2es.core.entity.domain.IndexName;
 import org.wyyt.db2es.core.entity.domain.IndexSetting;
@@ -85,7 +85,7 @@ public class EsService {
             final Set<String> indexNameSet = aliasVos.stream().filter(p -> p.getAlias().equals(alias)).map(AliasVo::getIndex).collect(Collectors.toSet());
             final Set<IndexVo> indexVoSet = indexVos.stream().filter(p -> "p".equalsIgnoreCase(p.getPrirep()) && indexNameSet.contains(p.getIndex())).collect(Collectors.toSet());
             for (final IndexVo indexVo : indexVoSet) {
-                if (null == indexVo || StringUtils.isEmpty(indexVo.getDocs())) {
+                if (null == indexVo || ObjectUtils.isEmpty(indexVo.getDocs())) {
                     continue;
                 }
                 count += Long.parseLong(indexVo.getDocs());
@@ -126,7 +126,7 @@ public class EsService {
                             final String refreshInterval,
                             final String mapping) throws IOException {
         final CreateIndexRequest request = new CreateIndexRequest(indexName);
-        if (!StringUtils.isEmpty(alias)) {
+        if (!ObjectUtils.isEmpty(alias)) {
             request.alias(new Alias(alias));
         }
 

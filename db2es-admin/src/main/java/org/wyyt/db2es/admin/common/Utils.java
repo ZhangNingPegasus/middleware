@@ -8,7 +8,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.BeanUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.entity.vo.TimeRange;
 import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.exception.ExceptionTool;
@@ -94,7 +94,7 @@ public final class Utils {
             return null;
         }
         timeRange = timeRange.trim();
-        if (StringUtils.isEmpty(timeRange)) {
+        if (ObjectUtils.isEmpty(timeRange)) {
             return null;
         }
         final TimeRange result = new TimeRange();

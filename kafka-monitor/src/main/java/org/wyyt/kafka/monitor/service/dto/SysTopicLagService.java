@@ -3,7 +3,7 @@ package org.wyyt.kafka.monitor.service.dto;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.anno.TranSave;
 import org.wyyt.kafka.monitor.entity.dto.SysTopicLag;
@@ -25,7 +25,7 @@ public class SysTopicLagService extends ServiceImpl<SysTopicLagMapper, SysTopicL
 
     @TranSave
     public void deleteTopic(final String topicName) {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return;
         }
         final QueryWrapper<SysTopicLag> queryWrapper = new QueryWrapper<>();
@@ -35,7 +35,7 @@ public class SysTopicLagService extends ServiceImpl<SysTopicLagMapper, SysTopicL
 
     @TranSave
     public void deleteConsumer(final String groupId) {
-        if (StringUtils.isEmpty(groupId)) {
+        if (ObjectUtils.isEmpty(groupId)) {
             return;
         }
         final QueryWrapper<SysTopicLag> queryWrapper = new QueryWrapper<>();

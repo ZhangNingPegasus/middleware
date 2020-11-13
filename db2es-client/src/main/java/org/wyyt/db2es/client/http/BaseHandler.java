@@ -4,7 +4,6 @@ import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -18,6 +17,7 @@ import org.apache.http.nio.protocol.*;
 import org.apache.http.protocol.HttpContext;
 import org.apache.kafka.common.TopicPartition;
 import org.reflections.ReflectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.client.common.Context;
 import org.wyyt.db2es.core.entity.domain.Names;
 import org.wyyt.db2es.core.entity.domain.TopicOffset;
@@ -143,13 +143,13 @@ public abstract class BaseHandler implements HttpAsyncRequestHandler<HttpRequest
 
     private static Map<String, Object> formData2Map(final String formData) throws UnsupportedEncodingException {
         final Map<String, Object> result = new HashMap<>();
-        if (StringUtils.isEmpty(formData)) {
+        if (ObjectUtils.isEmpty(formData)) {
             return result;
         }
 
         final String[] items = formData.split("&");
         for (final String item : items) {
-            if (StringUtils.isEmpty(item)) {
+            if (ObjectUtils.isEmpty(item)) {
                 continue;
             }
 

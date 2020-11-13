@@ -1,9 +1,9 @@
 package org.wyyt.db2es.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.db2es.admin.service.PropertyService;
 import org.wyyt.db2es.core.entity.persistent.Property;
@@ -46,7 +46,7 @@ public class ParamsController {
     @ResponseBody
     public Result<List<Property>> list(@RequestParam(value = "name", required = false) final String name) {
         final QueryWrapper<Property> queryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(name)) {
+        if (!ObjectUtils.isEmpty(name)) {
             queryWrapper.lambda().like(Property::getName, name);
         }
         return Result.success(this.propertyService.list(queryWrapper));

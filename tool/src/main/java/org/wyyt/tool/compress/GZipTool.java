@@ -2,7 +2,7 @@ package org.wyyt.tool.compress;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,7 +25,7 @@ public final class GZipTool {
     private static final String SUFFIX = "H4sIAAA";
 
     public static String compress(final String value) throws Exception {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return value;
         } else if (value.length() <= 125) {
             return value;
@@ -39,7 +39,7 @@ public final class GZipTool {
     }
 
     public static String uncompress(String value) throws Exception {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return value;
         } else if (!value.startsWith(SUFFIX)) {
             return value;

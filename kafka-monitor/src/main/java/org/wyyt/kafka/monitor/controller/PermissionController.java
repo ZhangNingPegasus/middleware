@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.kafka.monitor.entity.dto.SysPage;
 import org.wyyt.kafka.monitor.entity.dto.SysPermission;
@@ -48,7 +48,7 @@ public class PermissionController {
     @GetMapping("tolist")
     public String toList(final Model model) {
         model.addAttribute("roles", this.sysRoleService.list(new QueryWrapper<SysRole>().lambda().eq(SysRole::getSuperAdmin, false).orderByAsc(SysRole::getRowCreateTime)));
-        model.addAttribute("pages", this.sysPageService.list().stream().filter(p -> !StringUtils.isEmpty(p.getUrl())).collect(Collectors.toList()));
+        model.addAttribute("pages", this.sysPageService.list().stream().filter(p -> !ObjectUtils.isEmpty(p.getUrl())).collect(Collectors.toList()));
         return String.format("%s/%s", PREFIX, "list");
     }
 
@@ -64,7 +64,7 @@ public class PermissionController {
         final List<SysPage> allPages = this.sysPageService.list();
         final List<SysPage> pages = this.sysPermissionService.getPermissionPagesByRoleId(sysRoleId);
         allPages.removeAll(pages);
-        return Result.success(allPages.stream().filter(p -> !StringUtils.isEmpty(p.getUrl())).collect(Collectors.toList()));
+        return Result.success(allPages.stream().filter(p -> !ObjectUtils.isEmpty(p.getUrl())).collect(Collectors.toList()));
     }
 
     @PostMapping("list")
@@ -129,7 +129,7 @@ public class PermissionController {
         final String[] idsArray = ids.split(",");
         final List<Long> idsList = new ArrayList<>(idsArray.length);
         for (final String id : idsArray) {
-            if (null != id && !StringUtils.isEmpty(id.trim())) {
+            if (null != id && !ObjectUtils.isEmpty(id.trim())) {
                 idsList.add(Long.parseLong(id));
             }
         }

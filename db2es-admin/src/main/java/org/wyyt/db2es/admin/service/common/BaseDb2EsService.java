@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.core.entity.domain.Common;
 import org.wyyt.db2es.core.entity.domain.Names;
 import org.wyyt.db2es.core.entity.view.NodeVo;
@@ -160,7 +160,7 @@ public abstract class BaseDb2EsService {
 
         final String responseText = this.httpService.post(url, params, headers);
 
-        if (StringUtils.isEmpty(responseText)) {
+        if (ObjectUtils.isEmpty(responseText)) {
             throw new Db2EsException(String.format("接口[%s]无法响应, 请检查该主机上db2es-client的运行状态", url));
         }
 
@@ -253,7 +253,7 @@ public abstract class BaseDb2EsService {
         String nodePath = null;
 
         for (final String node : nodes) {
-            if (StringUtils.isEmpty(node)) {
+            if (ObjectUtils.isEmpty(node)) {
                 continue;
             }
 
@@ -270,7 +270,7 @@ public abstract class BaseDb2EsService {
     }
 
     private Integer getId(final String idPath) {
-        if (StringUtils.isEmpty(idPath)) {
+        if (ObjectUtils.isEmpty(idPath)) {
             return null;
         }
 

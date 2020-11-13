@@ -8,7 +8,7 @@ import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.config.PropertyConfig;
 import org.wyyt.kafka.monitor.entity.dto.SysKpi;
 import org.wyyt.kafka.monitor.entity.po.ZkStatus;
@@ -111,7 +111,7 @@ public class KafkaZkService implements InitializingBean, DisposableBean {
         final List<SysKpi> result = new ArrayList<>(SysKpi.ZK_KPI.values().length);
         final List<ZooKeeperVo> zooKeeperVoList = this.listZooKeeperCluster();
         for (final SysKpi.ZK_KPI kpi : SysKpi.ZK_KPI.values()) {
-            if (StringUtils.isEmpty(kpi.getName())) {
+            if (ObjectUtils.isEmpty(kpi.getName())) {
                 continue;
             }
             final SysKpi sysKpi = new SysKpi();
@@ -151,7 +151,7 @@ public class KafkaZkService implements InitializingBean, DisposableBean {
 
     @Override
     public void afterPropertiesSet() {
-        if (StringUtils.isEmpty(propertyConfig.getZkServers())) {
+        if (ObjectUtils.isEmpty(propertyConfig.getZkServers())) {
             throw new BusinessException("zookeeper的地址配置为空");
         }
         this.curatorFramework = CuratorFrameworkFactory.builder()

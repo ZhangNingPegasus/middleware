@@ -523,7 +523,7 @@ encrypt.db.password=APgXwToHDGFNOz0=
 <hr/>
 
 <h3>db2es-client</h3>
-<li>下载最新的db2es-client包</li>
+<li>下载最新的db2es-client包(必须先启动db2es-admin, 再启动db2es-client)</li>
 
 <li>
 根据需要修改config/db2es.propertes文件, 该配置文件中的ACM(scfs-refactoring-db2es)和上面的db2es-admin保持一样，共享即可

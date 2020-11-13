@@ -16,7 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot>2.3.5.RELEASE</springboot>
+        <springboot>2.4.0</springboot>
         <spring-kafka>2.5.7.RELEASE</spring-kafka>
         <kafka-clients>2.6.0</kafka-clients>
         <maven-source-plugin>3.2.1</maven-source-plugin>
@@ -26,19 +26,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
-            <version>${springboot}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
-            <version>${spring-kafka}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>kafka-clients</artifactId>
-                    <groupId>org.apache.kafka</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -47,6 +39,18 @@
             <version>${kafka-clients}</version>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${springboot}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <distributionManagement>
         <repository>

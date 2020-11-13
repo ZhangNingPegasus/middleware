@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.io.Closeable;
@@ -45,10 +45,10 @@ public final class RedisService {
     public final void expire(final String key,
                              final long timeInMillSecond) {
         try {
-            if (!StringUtils.isEmpty(key)) {
+            if (!ObjectUtils.isEmpty(key)) {
                 this.redisTemplateNoTransactional.expire(key, timeInMillSecond, TimeUnit.MILLISECONDS);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error(String.format("RedisService: invoke expire method meet error with %s", e.getMessage()), e);
         }
     }
@@ -60,7 +60,7 @@ public final class RedisService {
      * @return 时间(毫秒) 返回0代表为永久有效
      */
     public final Long getExpire(final String key) {
-        if (!StringUtils.isEmpty(key)) {
+        if (!ObjectUtils.isEmpty(key)) {
             return this.redisTemplateNoTransactional.getExpire(key, TimeUnit.MILLISECONDS);
         }
         return null;
@@ -122,7 +122,7 @@ public final class RedisService {
      * @return 值
      */
     public final Object get(final String key) {
-        return StringUtils.isEmpty(key) ? null : this.redisTemplateNoTransactional.opsForValue().get(key);
+        return ObjectUtils.isEmpty(key) ? null : this.redisTemplateNoTransactional.opsForValue().get(key);
     }
 
     /**
@@ -703,7 +703,7 @@ public final class RedisService {
                 this,
                 lockKey,
                 requestId,
-                !StringUtils.isEmpty(requestId)
+                !ObjectUtils.isEmpty(requestId)
         );
     }
 
@@ -743,7 +743,7 @@ public final class RedisService {
     private String lock(final String lockKey,
                         final long expireInMillSeconds,
                         final long timeoutInMillSeconds) {
-        if (StringUtils.isEmpty(lockKey)) {
+        if (ObjectUtils.isEmpty(lockKey)) {
             throw new RedisException("lockKey is required");
         } else if (expireInMillSeconds < 1) {
             throw new RedisException("expireInMillSeconds must be greater than 0");
@@ -775,12 +775,11 @@ public final class RedisService {
      */
     private void unlock(final String lockKey,
                         final String requestId) {
-        if (StringUtils.isEmpty(lockKey)) {
+        if (ObjectUtils.isEmpty(lockKey)) {
             throw new RedisException("lockKey is required");
-        } else if (StringUtils.isEmpty(requestId)) {
+        } else if (ObjectUtils.isEmpty(requestId)) {
             throw new RedisException("requestId is required");
         }
-
         final RedisScript<Long> redisScript = new DefaultRedisScript<>(UNLOCK_SCRIPT, Long.class);
         this.redisTemplateNoTransactional.execute(redisScript, Collections.singletonList(lockKey), requestId);
     }

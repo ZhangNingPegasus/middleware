@@ -9,7 +9,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.wyyt.db2es.admin.common.Utils;
 import org.wyyt.db2es.admin.entity.dto.SysPage;
 import org.wyyt.db2es.admin.entity.vo.AdminVo;
@@ -140,7 +139,7 @@ public class SysPageService extends ServiceImpl<SysPageMapper, SysPage> {
         final Iterator<PageVo> iterator = pageVoList.iterator();
         while (iterator.hasNext()) {
             final PageVo page = iterator.next();
-            if (StringUtils.isEmpty(page.getUrl()) && (page.getChildren() == null || page.getChildren().size() < 1)) {
+            if (ObjectUtils.isEmpty(page.getUrl()) && (page.getChildren() == null || page.getChildren().size() < 1)) {
                 iterator.remove();
             } else {
                 filter(page.getChildren());
@@ -159,7 +158,7 @@ public class SysPageService extends ServiceImpl<SysPageMapper, SysPage> {
                 filter(p -> p.getParentId().equals(parentPage.getId())). // 判断是否父子关系
                 filter(p -> set.size() <= childrenPageList.size()).// set集合大小不能超过childrenPageList的大小
                 forEach(p -> {
-            if (adminVo.getSysRole().getSuperAdmin() || StringUtils.isEmpty(p.getUrl()) || permission.containsKey(p.getId())) {
+            if (adminVo.getSysRole().getSuperAdmin() || ObjectUtils.isEmpty(p.getUrl()) || permission.containsKey(p.getId())) {
                 // 放入set, 递归循环时可以跳过这个页面，提高循环效率
                 set.add(p.getId());
                 // 递归获取当前类目的子类目

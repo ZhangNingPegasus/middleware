@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.anno.TranSave;
 import org.wyyt.kafka.monitor.entity.dto.SysAlertConsumer;
@@ -68,7 +68,7 @@ public class SysAlertConsumerService extends ServiceImpl<SysAlertConsumerMapper,
 
 
     public void deleteConsumer(final String groupId) {
-        if (StringUtils.isEmpty(groupId)) {
+        if (ObjectUtils.isEmpty(groupId)) {
             return;
         }
         final QueryWrapper<SysAlertConsumer> queryWrapper = new QueryWrapper<>();

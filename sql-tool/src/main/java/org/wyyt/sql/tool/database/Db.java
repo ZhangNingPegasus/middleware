@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.sql.tool.common.Constants;
 import org.wyyt.sql.tool.common.Utils;
 import org.wyyt.sql.tool.entity.dto.SysAdmin;
@@ -88,7 +89,7 @@ public final class Db {
             strWhere.append(" AND s.sys_admin_id=?");
             params.add(sysAdminId);
         }
-        if (!StringUtils.isEmpty(ip)) {
+        if (!ObjectUtils.isEmpty(ip)) {
             strWhere.append(" AND s.ip=?");
             params.add(ip);
         }
@@ -120,7 +121,7 @@ public final class Db {
             strWhere.append(" AND p.`sys_role_id`=?");
             params.add(sysRoleId);
         }
-        if (!StringUtils.isEmpty(tableName)) {
+        if (!ObjectUtils.isEmpty(tableName)) {
             strWhere.append(" AND p.`table_name`=?");
             params.add(tableName);
         }
@@ -178,7 +179,7 @@ public final class Db {
         final IPage<SysRole> result = new Page<>();
         List<SysRole> sysRoleList;
         Long total;
-        if (StringUtils.isEmpty(name)) {
+        if (ObjectUtils.isEmpty(name)) {
             sysRoleList = this.crudService.select(SysRole.class, String.format("SELECT * FROM `sys_role` ORDER BY `create_time` ASC %s", limit(pageNum, pageSize)));
             total = this.crudService.executeScalar(Long.class, "SELECT COUNT(*) FROM `sys_role`");
         } else {
@@ -235,7 +236,7 @@ public final class Db {
         final IPage<AdminVo> result = new Page<>();
         List<SysAdmin> sysAdminList;
         Long total;
-        if (StringUtils.isEmpty(name)) {
+        if (ObjectUtils.isEmpty(name)) {
             sysAdminList = this.crudService.select(SysAdmin.class, String.format("SELECT a.*, r.`name` AS role_name FROM `sys_admin` a INNER JOIN `sys_role` r ON a.sys_role_id=r.id ORDER BY a.`create_time` ASC %s", limit(pageNum, pageSize)));
             total = this.crudService.executeScalar(Long.class, "SELECT COUNT(*) FROM `sys_admin`");
         } else {

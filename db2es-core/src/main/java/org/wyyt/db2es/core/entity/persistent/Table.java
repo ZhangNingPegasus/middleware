@@ -3,6 +3,7 @@ package org.wyyt.db2es.core.entity.persistent;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * The entity for table t_table
@@ -12,6 +13,7 @@ import lombok.Data;
  * Ning.Zhang       Initialize         10/1/2020      Initialize   *
  * *****************************************************************
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName(value = "`t_table`")
 public final class Table extends BaseDto {

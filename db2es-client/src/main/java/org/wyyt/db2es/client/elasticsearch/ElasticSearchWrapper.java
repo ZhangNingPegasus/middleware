@@ -3,7 +3,6 @@ package org.wyyt.db2es.client.elasticsearch;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -25,6 +24,7 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.client.common.Constant;
 import org.wyyt.db2es.client.common.Context;
 import org.wyyt.db2es.client.entity.Db2EsLog;
@@ -234,7 +234,7 @@ public abstract class ElasticSearchWrapper implements Closeable {
         final String hostnames = this.context.getConfig().getEsHost();
         final String[] hostnameArray = hostnames.split(",");
         for (final String hostname : hostnameArray) {
-            if (StringUtils.isEmpty(hostname.trim())) {
+            if (ObjectUtils.isEmpty(hostname.trim())) {
                 continue;
             }
             String ip;

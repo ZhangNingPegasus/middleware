@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.kafka.monitor.common.Constants;
 import org.wyyt.kafka.monitor.config.PropertyConfig;
@@ -118,7 +118,7 @@ public class RecordController {
         key = key.trim();
         createTimeRange = createTimeRange.trim();
         pageNum = Math.min(pageNum, Constants.MAX_PAGE_NUM);
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return Result.success();
         }
         final IPage<RecordVo> page = new Page(pageNum, pageSize);
@@ -141,7 +141,7 @@ public class RecordController {
                             @RequestParam(name = "offset") Long offset) throws Exception {
         topicName = topicName.trim();
         key = key.trim();
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return Result.error("主题不能为空");
         }
         final String value = topicRecordService.getRecordDetailValue(topicName, partitionId, offset);

@@ -11,8 +11,8 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.Invocation;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.sharding.entity.AnalyseResult;
 import org.wyyt.sharding.exception.ShardingException;
 import org.wyyt.sharding.interceptor.plugin.BaseMybatisInterceptorAdapter;
@@ -134,7 +134,7 @@ public final class CheckSqlInterceptor extends BaseMybatisInterceptorAdapter {
                     for (final CaseInsensitiveMap<String, List<Object>> pair : result.getWhereValueMapList()) {
                         final String columnName = existsKeyOfList(pair.keySet(), shardingColumns);
                         final List<Object> objects = pair.get(columnName);
-                        if (StringUtils.isEmpty(columnName) ||
+                        if (ObjectUtils.isEmpty(columnName) ||
                                 (
                                         mySqlSelectQueryBlock.getWhere().getClass().isAssignableFrom(SQLBinaryOpExpr.class) &&
                                                 ((SQLBinaryOpExpr) mySqlSelectQueryBlock.getWhere()).getOperator() == SQLBinaryOperator.BooleanOr
@@ -187,6 +187,6 @@ public final class CheckSqlInterceptor extends BaseMybatisInterceptorAdapter {
                 }
             }
         }
-        return StringUtils.isEmpty(value.toString());
+        return ObjectUtils.isEmpty(value.toString());
     }
 }

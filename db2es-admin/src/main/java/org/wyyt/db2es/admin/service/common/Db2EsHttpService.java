@@ -1,8 +1,8 @@
 package org.wyyt.db2es.admin.service.common;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.entity.vo.TopicInfoVo;
 import org.wyyt.db2es.core.entity.domain.TopicOffset;
 import org.wyyt.db2es.core.entity.view.NodeVo;
@@ -112,7 +112,7 @@ public class Db2EsHttpService extends BaseDb2EsService {
                         final String offset,
                         final String timestamp) throws Exception {
         String offsetTimestamp = "";
-        if (!StringUtils.isEmpty(timestamp)) {
+        if (!ObjectUtils.isEmpty(timestamp)) {
             offsetTimestamp = String.valueOf(Objects.requireNonNull(DateTool.parse(timestamp)).getTime());
         }
 

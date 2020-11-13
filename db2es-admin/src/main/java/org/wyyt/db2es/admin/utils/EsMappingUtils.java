@@ -1,6 +1,6 @@
 package org.wyyt.db2es.admin.utils;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.sharding.entity.FieldInfo;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class EsMappingUtils {
                     type = "keyword";
             }
 
-            if (StringUtils.isEmpty(format)) {
+            if (ObjectUtils.isEmpty(format)) {
                 properties.append(String.format("\"%s\":{\"type\":\"%s\"},",
                         name,
                         type));

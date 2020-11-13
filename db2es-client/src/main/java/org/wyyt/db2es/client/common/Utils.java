@@ -2,8 +2,8 @@ package org.wyyt.db2es.client.common;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.reflections.Reflections;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.client.http.BaseHandler;
 import org.wyyt.db2es.client.http.HttpServerWrapper;
 import org.wyyt.db2es.client.http.anno.PostMapping;
@@ -34,7 +34,7 @@ public final class Utils {
             final InetAddress ia = InetAddress.getLocalHost();
             result.setLocalName(ia.getHostName());
             final String db2EsHost = context.getConfig().getDb2EsHost();
-            if (StringUtils.isEmpty(db2EsHost)) {
+            if (ObjectUtils.isEmpty(db2EsHost)) {
                 result.setLocalIp(ia.getHostAddress());
             } else {
                 result.setLocalIp(db2EsHost);

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.admin.entity.dto.ErrorLog;
 import org.wyyt.db2es.admin.mapper.ErrorLogMapper;
 import org.wyyt.db2es.core.entity.domain.Config;
@@ -44,10 +44,10 @@ public class ErrorLogService extends ServiceImpl<ErrorLogMapper, ErrorLog> {
         final String topicName = errorLog.getTopicName();
         final String id = errorLog.getPrimaryKeyValue();
 
-        if (StringUtils.isEmpty(databaseName) ||
-                StringUtils.isEmpty(tableName) ||
-                StringUtils.isEmpty(topicName) ||
-                StringUtils.isEmpty(id)) {
+        if (ObjectUtils.isEmpty(databaseName) ||
+                ObjectUtils.isEmpty(tableName) ||
+                ObjectUtils.isEmpty(topicName) ||
+                ObjectUtils.isEmpty(id)) {
             return;
         }
 

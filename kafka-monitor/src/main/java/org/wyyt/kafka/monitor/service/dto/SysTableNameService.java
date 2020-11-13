@@ -3,7 +3,7 @@ package org.wyyt.kafka.monitor.service.dto;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.anno.TranSave;
 import org.wyyt.kafka.monitor.entity.dto.SysTableName;
@@ -35,7 +35,7 @@ public class SysTableNameService extends ServiceImpl<SysTableNameMapper, SysTabl
 
     @TranRead
     public SysTableName getByTopicName(final String topicName) {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return null;
         }
         final QueryWrapper<SysTableName> queryWrapper = new QueryWrapper<>();
@@ -46,7 +46,7 @@ public class SysTableNameService extends ServiceImpl<SysTableNameMapper, SysTabl
     @TranRead
     public SysTableName getByTableName(final String recordTableName,
                                        final String recordDetailTableName) {
-        if (StringUtils.isEmpty(recordTableName) || StringUtils.isEmpty(recordDetailTableName)) {
+        if (ObjectUtils.isEmpty(recordTableName) || ObjectUtils.isEmpty(recordDetailTableName)) {
             return null;
         }
         final QueryWrapper<SysTableName> queryWrapper = new QueryWrapper<>();
@@ -58,7 +58,7 @@ public class SysTableNameService extends ServiceImpl<SysTableNameMapper, SysTabl
 
     @TranSave
     public void deleteTopic(final String topicName) {
-        if (StringUtils.isEmpty(topicName)) {
+        if (ObjectUtils.isEmpty(topicName)) {
             return;
         }
         final QueryWrapper<SysTableName> queryWrapper = new QueryWrapper<>();
