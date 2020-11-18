@@ -51,7 +51,8 @@ public class TopicService extends ServiceImpl<TopicMapper, Topic> {
                 Topic::getRefreshInterval,
                 Topic::getDescription,
                 Topic::getRowCreateTime,
-                Topic::getRowUpdateTime);
+                Topic::getRowUpdateTime)
+                .orderByAsc(Topic::getName);
         return this.list(queryWrapper);
     }
 

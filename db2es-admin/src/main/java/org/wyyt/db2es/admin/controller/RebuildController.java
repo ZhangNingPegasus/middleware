@@ -145,6 +145,7 @@ public class RebuildController {
                 }
             }
         }
+        rebuildVoList.sort(Comparator.comparing(RebuildVo::getName));
         return Result.success(rebuildVoList);
     }
 

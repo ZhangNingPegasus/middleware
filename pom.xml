@@ -13,6 +13,7 @@
         <module>db2es-client</module>
         <module>db2es-admin</module>
         <module>kafka-monitor</module>
+        <module>spring-boot-admin-server</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -38,6 +39,9 @@
         <skipTests>true</skipTests>
 
         <springboot>2.4.0</springboot>
+        <spring-cloud>2020.0.0-SNAPSHOT</spring-cloud>
+        <spring-boot-admin>2.3.1</spring-boot-admin>
+        <jolokia-core>1.6.2</jolokia-core>
         <mysql-connector-java>8.0.22</mysql-connector-java>
         <lombok>1.18.16</lombok>
         <hutool-all>5.4.7</hutool-all>
@@ -65,6 +69,7 @@
         <curator-recipes>5.1.0</curator-recipes>
         <zookeeper>3.6.2</zookeeper>
         <log4j-core>2.14.0</log4j-core>
+        <apollo-client>1.7.0</apollo-client>
         <logback-core>1.2.3</logback-core>
         <logback-classic>1.2.3</logback-classic>
         <log4j-over-slf4j>1.7.30</log4j-over-slf4j>
@@ -135,9 +140,21 @@
             </dependency>
 
             <dependency>
+                <groupId>org.jolokia</groupId>
+                <artifactId>jolokia-core</artifactId>
+                <version>${jolokia-core}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ctrip.framework.apollo</groupId>
+                <artifactId>apollo-client</artifactId>
+                <version>${apollo-client}</version>
             </dependency>
 
             <dependency>

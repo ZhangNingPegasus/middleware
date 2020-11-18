@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: spring-boot-admin-server
+  cloud:
+    config:
+      enabled: false
+    consul:
+      host: 192.168.5.21
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+        prefer-ip-address: true
+        ip-address: 192.168.12.155
+  boot:
+    admin:
+      discovery:
+        ignored-services: consul,${spring.application.name}
+      ui:
+        title: 管理中台
+        brand: <img src="assets/img/icon-spring-boot-admin.svg"><span>管理中台</span>
+  security:
+    user:
+      name: admin
+      password: admin
+
+server:
+  port: ${app.port:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  id: spring-boot-admin
+apollo:
+  meta: http://192.168.5.23:8080/
+  bootstrap:
+    enabled: true
+    namespaces: application
+    eagerLoad:
+      enabled: true
