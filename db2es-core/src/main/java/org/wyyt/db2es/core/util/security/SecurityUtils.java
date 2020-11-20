@@ -1,7 +1,7 @@
 package org.wyyt.db2es.core.util.security;
 
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.util.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -46,7 +46,7 @@ public final class SecurityUtils {
         Collections.sort(keys);
         final StringBuilder signStr = new StringBuilder();
         for (String key : keys) {
-            if (null == params.get(key) || ObjectUtils.isEmpty(params.get(key).toString())) {
+            if (null == params.get(key) || StringUtils.isEmpty(params.get(key).toString())) {
                 continue;
             }
             signStr.append(key).append("=").append(params.get(key)).append("&");

@@ -26,17 +26,15 @@ public final class RsaTool {
     private static final String ALGORITHM_RSA = "RSA";
 
     public static RsaKey generatorKeyPair() throws Exception {
-        String publicKey;
-        String privateKey;
         final KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(ALGORITHM_RSA);
         keyPairGen.initialize(1024);
         final KeyPair keyPair = keyPairGen.generateKeyPair();
         final RSAPublicKey rsaPublicKey = (RSAPublicKey) keyPair.getPublic();
         byte[] keyBs = rsaPublicKey.getEncoded();
-        publicKey = encodeBase64(keyBs);
+        String publicKey = encodeBase64(keyBs);
         final RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
         keyBs = rsaPrivateKey.getEncoded();
-        privateKey = encodeBase64(keyBs);
+        String privateKey = encodeBase64(keyBs);
         final RsaKey result = new RsaKey();
         result.setPrivateKey(privateKey);
         result.setPublicKey(publicKey);

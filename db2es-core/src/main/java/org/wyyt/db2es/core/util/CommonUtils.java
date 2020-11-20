@@ -2,7 +2,7 @@ package org.wyyt.db2es.core.util;
 
 import cn.hutool.core.date.DateUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.util.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.wyyt.db2es.core.entity.domain.Config;
 import org.wyyt.db2es.core.entity.domain.TableMap;
 import org.wyyt.db2es.core.entity.persistent.Property;
@@ -71,7 +71,7 @@ public final class CommonUtils {
                 final String[] mobileArray = value.split(",");
                 final List<String> mobileList = new ArrayList<>(mobileArray.length);
                 for (final String mobile : mobileArray) {
-                    if (ObjectUtils.isEmpty(mobile.trim())) {
+                    if (StringUtils.isEmpty(mobile.trim())) {
                         continue;
                     }
                     mobileList.add(mobile);

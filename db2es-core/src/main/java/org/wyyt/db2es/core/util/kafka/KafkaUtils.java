@@ -7,7 +7,6 @@ import org.apache.kafka.clients.admin.ListOffsetsResult;
 import org.apache.kafka.clients.admin.OffsetSpec;
 import org.apache.kafka.common.TopicPartition;
 import org.json.JSONObject;
-import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.core.util.zookeeper.ZooKeeperUtils;
 
 import java.util.*;
@@ -35,7 +34,7 @@ public final class KafkaUtils {
             final JSONObject jsonObject = new JSONObject(brokerInfoJson);
             final String host = jsonObject.optString("host", "").trim();
             final String port = jsonObject.optString("port", "").trim();
-            if (ObjectUtils.isEmpty(host) || ObjectUtils.isEmpty(port)) {
+            if (StringUtils.isEmpty(host) || StringUtils.isEmpty(port)) {
                 continue;
             }
             result.add(String.format("%s:%s", host, port));

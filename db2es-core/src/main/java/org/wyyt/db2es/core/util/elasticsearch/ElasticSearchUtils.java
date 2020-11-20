@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.Data;
 import lombok.ToString;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.DocWriteRequest;
@@ -31,7 +32,6 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.VersionType;
 import org.elasticsearch.rest.RestStatus;
-import org.springframework.util.ObjectUtils;
 import org.wyyt.db2es.core.entity.domain.*;
 import org.wyyt.db2es.core.entity.persistent.Topic;
 import org.wyyt.db2es.core.entity.view.AliasVo;
@@ -170,10 +170,10 @@ public final class ElasticSearchUtils {
             final String primaryValue = datum.get(tableInfo.getPrimaryKeyFieldName());
             final String strRowCreateTime = datum.get(tableInfo.getRowCreateTimeFieldName());
 
-            if (ObjectUtils.isEmpty(primaryValue)) {
+            if (StringUtils.isEmpty(primaryValue)) {
                 throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), tableInfo.getPrimaryKeyFieldName()));
             }
-            if (ObjectUtils.isEmpty(strRowCreateTime)) {
+            if (StringUtils.isEmpty(strRowCreateTime)) {
                 throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), tableInfo.getRowCreateTimeFieldName()));
             }
 
@@ -202,10 +202,10 @@ public final class ElasticSearchUtils {
             final String primaryValue = datum.get(tableInfo.getPrimaryKeyFieldName());
             final String strRowCreateTime = datum.get(tableInfo.getRowCreateTimeFieldName());
 
-            if (ObjectUtils.isEmpty(primaryValue)) {
+            if (StringUtils.isEmpty(primaryValue)) {
                 throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), tableInfo.getPrimaryKeyFieldName()));
             }
-            if (ObjectUtils.isEmpty(strRowCreateTime)) {
+            if (StringUtils.isEmpty(strRowCreateTime)) {
                 throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), tableInfo.getRowCreateTimeFieldName()));
             }
 
@@ -237,10 +237,10 @@ public final class ElasticSearchUtils {
             final String primaryValue = newMap.get(tableInfo.getPrimaryKeyFieldName());
             final String strRowCreateTime = newMap.get(tableInfo.getRowCreateTimeFieldName());
 
-            if (ObjectUtils.isEmpty(primaryValue)) {
+            if (StringUtils.isEmpty(primaryValue)) {
                 throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), tableInfo.getPrimaryKeyFieldName()));
             }
-            if (ObjectUtils.isEmpty(strRowCreateTime)) {
+            if (StringUtils.isEmpty(strRowCreateTime)) {
                 throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), tableInfo.getRowCreateTimeFieldName()));
             }
 
@@ -332,7 +332,7 @@ public final class ElasticSearchUtils {
             ALREADY_CREATED_INDEX_NAME.add(indexName);
             return false;
         }
-        if (ObjectUtils.isEmpty(topic.getMapping().trim())) {
+        if (StringUtils.isEmpty(topic.getMapping().trim())) {
             throw new Db2EsException(String.format("ElasticSearchUtils: the index[%s] miss the mapping information", alias));
         }
         try {
@@ -369,7 +369,7 @@ public final class ElasticSearchUtils {
                                       final String refreshInterval,
                                       final String mapping) throws IOException {
         final CreateIndexRequest request = new CreateIndexRequest(indexName);
-        if (!ObjectUtils.isEmpty(alias)) {
+        if (!StringUtils.isEmpty(alias)) {
             request.alias(new Alias(alias));
         }
         request.settings(Settings.builder()

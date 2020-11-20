@@ -18,13 +18,16 @@ spring:
       ui:
         title: 管理中台
         brand: <img src="assets/img/icon-spring-boot-admin.svg"><span>管理中台</span>
+        available-languages:
+          - zh-CN
+          - en
   security:
     user:
       name: admin
       password: admin
 
 server:
-  port: ${app.port:8080}
+  port: ${app.port:10090}
 
 management:
   endpoints:
@@ -38,9 +41,13 @@ management:
 app:
   id: spring-boot-admin
 apollo:
-  meta: http://192.168.5.23:8080/
+  meta: http://192.168.12.155:8080/
   bootstrap:
     enabled: true
     namespaces: application
     eagerLoad:
       enabled: true
+
+dingtalk:
+  accessToken: c7cb6853d7600852bef4eacdb34aeef4d1916baf486603aaa13d479c2bb96880
+  secret: SECff8e21a4bff2aad655d5bb06b2a6eb1a6b7540df9e2e07c68896a823c04e64e7
