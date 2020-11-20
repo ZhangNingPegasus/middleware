@@ -1,5 +1,6 @@
 package org.wyyt.admin;
 
+import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,6 +21,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableAdminServer
 @EnableDiscoveryClient
+@EnableApolloConfig
 public class SpringBootAdminApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringBootAdminApplication.class, args);

@@ -27,7 +27,7 @@ spring:
       password: admin
 
 server:
-  port: ${app.port:10090}
+  port: ${app.port:80}
 
 management:
   endpoints:
