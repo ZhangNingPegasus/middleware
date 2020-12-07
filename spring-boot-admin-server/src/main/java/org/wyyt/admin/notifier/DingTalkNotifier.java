@@ -48,7 +48,7 @@ public class DingTalkNotifier extends AbstractEventNotifier {
     }
 
     @Override
-    protected Mono<Void> doNotify(InstanceEvent event, Instance instance) {
+    protected Mono<Void> doNotify(final InstanceEvent event, final Instance instance) {
         if (Math.abs(System.currentTimeMillis() - this.startDate) < 30 * 1000) {
             return Mono.fromRunnable(() -> {
             });
@@ -58,7 +58,7 @@ public class DingTalkNotifier extends AbstractEventNotifier {
             String urlAndPort = getUrlAndPort(instance.getRegistration().getServiceUrl());
             String checkTime = null;
             Boolean isOk = null;
-            String serviceName = instance.getRegistration().getName();
+            final String serviceName = instance.getRegistration().getName();
             String instanceName = null;
             if (event instanceof InstanceStatusChangedEvent) {
                 final InstanceStatusChangedEvent instanceStatusChangedEvent = (InstanceStatusChangedEvent) event;

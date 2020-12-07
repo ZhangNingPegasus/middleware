@@ -22,6 +22,7 @@ import org.apache.zookeeper.data.Stat;
 import org.json.JSONObject;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.common.Constants;
@@ -35,7 +36,6 @@ import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.resource.ResourceTool;
 
-import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;

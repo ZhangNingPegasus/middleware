@@ -285,12 +285,12 @@
 
     <delete id="deleteExpired">
         <foreach collection="tableNameList" item="tableName">
-            DELETE FROM `${tableName}` WHERE `id` &lt;
+            DELETE FROM `${tableName}` WHERE `id` &lt;=
             (
             SELECT `id`
             FROM
             (
-            SELECT MAX(`id`) `id` FROM `${tableName}` WHERE `row_create_time` &lt; #{dateTime}
+            SELECT MAX(`id`) `id` FROM `${tableName}` WHERE `row_create_time` &lt;= #{dateTime}
             ) a
             );
         </foreach>

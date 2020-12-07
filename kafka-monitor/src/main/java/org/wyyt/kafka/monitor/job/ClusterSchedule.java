@@ -39,7 +39,7 @@ public class ClusterSchedule {
         this.alertService = alertService;
     }
 
-    @Scheduled(cron = "0 0/1 * * * ?") //每分钟执行一次
+    @Scheduled(cron = "0 0/2 * * * ?") //每分钟执行一次
     public void checkCluster() throws Exception {
         final List<SysAlertCluster> list = this.sysAlertClusterService.list();
         if (list == null || list.isEmpty()) {

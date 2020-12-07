@@ -59,6 +59,10 @@ public final class RecordRunner extends BaseRunner {
         while (this.continued()) {
             try {
                 kafkaConsumerWrap = this.getKafkaConsumerWrap();
+                if (null == kafkaConsumerWrap) {
+                    this.sleepInterval(TRY_BACK_TIME_MS);
+                    continue;
+                }
                 while (this.continued()) {
                     final ConsumerRecords<String, String> records = kafkaConsumerWrap.poll();
                     if (null == records || records.isEmpty()) {
@@ -92,7 +96,9 @@ public final class RecordRunner extends BaseRunner {
     private KafkaConsumerWrapper getKafkaConsumerWrap() throws Exception {
         this.topicPartitionMap.clear();
         this.topicPartitionMap.putAll(this.kafkaService.listPartitionIds(this.kafkaService.listTopicNames()));
-
+        if (this.topicPartitionMap.isEmpty()) {
+            return null;
+        }
         int count = (int) this.topicPartitionMap.values().stream().collect(Collectors.summarizingInt(Set::size)).getSum();
         final List<TopicPartition> topicPartitionList = new ArrayList<>(count);
         for (Map.Entry<String, Set<Integer>> pair : topicPartitionMap.entrySet()) {

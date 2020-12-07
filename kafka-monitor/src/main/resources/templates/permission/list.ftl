@@ -157,7 +157,7 @@
                     layer.open({
                         type: 2,
                         title: admin.ADD,
-                        content: 'toadd.html',
+                        content: 'toadd',
                         area: ['450px', '445px'],
                         btn: admin.BUTTONS,
                         resize: false,

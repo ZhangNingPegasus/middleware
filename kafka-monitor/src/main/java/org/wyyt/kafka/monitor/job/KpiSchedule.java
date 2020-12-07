@@ -38,7 +38,7 @@ public class KpiSchedule {
     }
 
     //每10分钟执行一次
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void collect() throws InterruptedException {
         final Date now = new Date();
         final List<SysKpi> sysKpiList = new ArrayList<>(32);

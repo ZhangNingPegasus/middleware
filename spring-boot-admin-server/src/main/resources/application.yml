@@ -5,19 +5,19 @@ spring:
     config:
       enabled: false
     consul:
-      host: 192.168.5.21
-      port: 8500
+      host: ${consul_host:192.168.5.21}
+      port: ${consul_port:8500}
       discovery:
         service-name: ${spring.application.name}
         prefer-ip-address: true
-        ip-address: 192.168.12.155
+        # ip-address: 192.168.12.155
   boot:
     admin:
       discovery:
         ignored-services: consul,${spring.application.name}
       ui:
-        title: 管理中台
-        brand: <img src="assets/img/icon-spring-boot-admin.svg"><span>管理中台</span>
+        title: SpringBootCloud服务
+        brand: <img src="assets/img/icon-spring-boot-admin.svg"><span>SpringBootCloud</span>
         available-languages:
           - zh-CN
           - en
@@ -27,7 +27,7 @@ spring:
       password: admin
 
 server:
-  port: ${app.port:80}
+  port: ${app_port:80}
 
 management:
   endpoints:
@@ -41,7 +41,7 @@ management:
 app:
   id: spring-boot-admin
 apollo:
-  meta: http://192.168.12.155:8080/
+  meta: ${apollo_meta:http://192.168.12.155:8080/}
   bootstrap:
     enabled: true
     namespaces: application
@@ -49,5 +49,6 @@ apollo:
       enabled: true
 
 dingtalk:
-  accessToken: c7cb6853d7600852bef4eacdb34aeef4d1916baf486603aaa13d479c2bb96880
-  secret: SECff8e21a4bff2aad655d5bb06b2a6eb1a6b7540df9e2e07c68896a823c04e64e7
+  enabled: ${dingtalk_enabled:false}
+  accessToken: ${dingtalk_accessToken}
+  secret: ${dingtalk_secret}

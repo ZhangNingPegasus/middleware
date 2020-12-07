@@ -295,7 +295,6 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
         this.executorService.shutdownNow();
     }
 
-    @TranSave
     public void deleteTopic(final List<String> topicNameList) throws Exception {
         final Set<SysTableName> sysTableNameSet = new HashSet<>(topicNameList.size());
         for (String topicName : topicNameList) {
@@ -310,16 +309,21 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
         }
 
         if (!sysTableNameSet.isEmpty()) {
-            this.processorService.stop();
-            this.kafkaService.deleteTopic(sysTableNameSet.stream().map(SysTableName::getTopicName).collect(Collectors.toList()));
-            for (final SysTableName sysTableName : sysTableNameSet) {
-                this.sysTableNameService.deleteTopic(sysTableName.getTopicName());
-                this.sysTopicSizeService.deleteTopic(sysTableName.getTopicName());
-                this.sysTopicLagService.deleteTopic(sysTableName.getTopicName());
-                this.sysAlertTopicService.deleteTopic(sysTableName.getTopicName());
-                this.dropTable(sysTableName.getRecordTableName(), sysTableName.getRecordDetailTableName());
+            try {
+                this.processorService.stop();
+                this.kafkaService.deleteTopic(sysTableNameSet.stream().map(SysTableName::getTopicName).collect(Collectors.toList()));
+                for (final SysTableName sysTableName : sysTableNameSet) {
+                    this.sysTableNameService.deleteTopic(sysTableName.getTopicName());
+                    this.sysTopicSizeService.deleteTopic(sysTableName.getTopicName());
+                    this.sysTopicLagService.deleteTopic(sysTableName.getTopicName());
+                    this.sysAlertTopicService.deleteTopic(sysTableName.getTopicName());
+                    this.dropTable(sysTableName.getRecordTableName(), sysTableName.getRecordDetailTableName());
+                }
+            } catch (final Exception exception) {
+                log.error(ExceptionTool.getRootCauseMessage(exception), exception);
+            } finally {
+                this.processorService.start();
             }
-            this.processorService.start();
         }
     }
 

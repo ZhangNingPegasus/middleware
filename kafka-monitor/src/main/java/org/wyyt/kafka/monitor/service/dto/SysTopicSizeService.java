@@ -3,6 +3,7 @@ package org.wyyt.kafka.monitor.service.dto;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.anno.TranSave;
@@ -20,7 +21,6 @@ import org.wyyt.kafka.monitor.service.common.EhcacheService;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.tool.exception.ExceptionTool;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**

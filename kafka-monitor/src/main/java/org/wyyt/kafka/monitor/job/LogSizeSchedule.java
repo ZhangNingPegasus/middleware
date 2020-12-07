@@ -57,8 +57,8 @@ public class LogSizeSchedule {
         this.alertService = alertService;
     }
 
-    //每1分钟执行一次
-    @Scheduled(cron = "0 0/1 * * * ?")
+    //每10分钟执行一次
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void collect() throws Exception {
         final Date now = new Date();
         final TopicSizeLag topicSizeLag = this.sysTopicSizeService.kpi(now);

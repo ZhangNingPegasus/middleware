@@ -56,12 +56,11 @@
         <dependency>
             <groupId>com.sijibao.nacos</groupId>
             <artifactId>nacos-spring-config-ex</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>nacos-client</artifactId>
-                    <groupId>com.alibaba.nacos</groupId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
         </dependency>
     </dependencies>
 

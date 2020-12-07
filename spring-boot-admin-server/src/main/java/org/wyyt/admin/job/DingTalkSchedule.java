@@ -22,6 +22,8 @@ import java.util.List;
 @Slf4j
 @Component
 public class DingTalkSchedule {
+    @Value("${dingtalk.enabled}")
+    private Boolean enabled;
     @Value("${dingtalk.accessToken}")
     private String accessToken;
     @Value("${dingtalk.secret}")
@@ -39,9 +41,9 @@ public class DingTalkSchedule {
     @Scheduled(cron = "0/5 * * * * ?")
     public void alert() throws Exception {
         this.messageList.clear();
-        this.dingTalkNotifier.getToProcessRecords().drainTo(messageList, 10);
+        this.dingTalkNotifier.getToProcessRecords().drainTo(messageList, 20);
 
-        if (!this.messageList.isEmpty()) {
+        if (!this.messageList.isEmpty() && this.enabled) {
             final Message message = new Message();
             message.setMsgtype("text");
 

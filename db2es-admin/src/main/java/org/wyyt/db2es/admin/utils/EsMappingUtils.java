@@ -34,7 +34,7 @@ public class EsMappingUtils {
                     break;
                 case "datetime":
                     type = "date";
-                    format = "epoch_millis||yyyy-M-d HH:mm:ss.SSS||yyyy-M-d HH:mm:ss||yyyy-MM-dd HH:mm:ss";
+                    format = "yyyy-M-d HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-M-d HH:mm:ss||epoch_millis";
                     break;
                 case "bit":
                     type = "boolean";

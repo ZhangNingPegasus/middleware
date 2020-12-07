@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.lang.Nullable;
 import org.wyyt.kafka.monitor.entity.dto.SysPage;
 import org.wyyt.kafka.monitor.entity.dto.SysPermission;
 import org.wyyt.kafka.monitor.entity.vo.PageVo;
 import org.wyyt.kafka.monitor.entity.vo.PermissionVo;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 

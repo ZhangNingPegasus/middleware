@@ -42,8 +42,10 @@ public class ProcessorService implements SmartLifecycle, DisposableBean {
     @Override
     public void stop() {
         this.running = false;
-        this.workerThread.stop();
-        this.workerThread = null;
+        if (null != this.workerThread) {
+            this.workerThread.stop();
+            this.workerThread = null;
+        }
     }
 
     @Override

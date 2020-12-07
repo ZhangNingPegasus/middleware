@@ -1,11 +1,15 @@
-acm:
-  data-id: kafka.monitor.info.set
-  group: GLOBAL_SIJIBAO_BASIC_GROUP
-  acmConfigPath: acmConfig.properties
-  nacosLocalSnapshotPath: /wyyt/etc/acm/kafka-monitor
-  nacosLogPath: /wyyt/logs/kafka-monitor
+app:
+  id: kafka-monitor-business
+apollo:
+  meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
+  bootstrap:
+    enabled: true
+    namespaces: application
+    eagerLoad:
+      enabled: true
 
 server:
+  port: 8080
   tomcat:
     uri-encoding: UTF-8
   compression:
@@ -24,7 +28,7 @@ server:
 
 spring:
   application:
-    name: kafka-monitor
+    name: kafka-monitor-business
   http:
     encoding:
       charset: UTF-8

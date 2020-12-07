@@ -1,13 +1,12 @@
 package org.wyyt.kafka.monitor.mapper;
 
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.lang.Nullable;
 import org.wyyt.kafka.monitor.entity.dto.SysTopicSize;
 import org.wyyt.kafka.monitor.entity.vo.TopicRecordCountVo;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.List;
 

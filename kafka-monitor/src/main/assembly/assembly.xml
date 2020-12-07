@@ -27,6 +27,7 @@
             <fileMode>0644</fileMode>
             <includes>
                 <include>application.yml</include>
+                <include>log4j.properties</include>
                 <include>logback.xml</include>
             </includes>
         </fileSet>

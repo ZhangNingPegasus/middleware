@@ -16,107 +16,107 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <lombok>1.18.16</lombok>
-        <hutool-all>5.4.7</hutool-all>
-        <druid-spring-boot-starter>1.2.3</druid-spring-boot-starter>
-        <HikariCP>3.4.5</HikariCP>
-        <mybatis-plus-annotation>3.4.1</mybatis-plus-annotation>
-        <mysql-connector-java>8.0.22</mysql-connector-java>
-        <mybatis>3.5.6</mybatis>
-        <commons-beanutils>1.9.4</commons-beanutils>
-        <reflections>0.9.12</reflections>
-        <jackson-databind>2.11.3</jackson-databind>
-        <guava>30.0-jre</guava>
-        <commons-codec>1.15</commons-codec>
-        <httpclient>4.5.13</httpclient>
-        <fastjson>1.2.75</fastjson>
-        <maven-source-plugin>3.2.1</maven-source-plugin>
-        <json>20200518</json>
+        <lombok.version>1.18.16</lombok.version>
+        <hutool-all.version>5.5.1</hutool-all.version>
+        <druid-spring-boot-starter.version>1.2.3</druid-spring-boot-starter.version>
+        <HikariCP.version>3.4.5</HikariCP.version>
+        <mybatis-plus-annotation.version>3.4.1</mybatis-plus-annotation.version>
+        <mysql-connector-java.version>8.0.22</mysql-connector-java.version>
+        <mybatis.version>3.5.6</mybatis.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <reflections.version>0.9.12</reflections.version>
+        <jackson-databind.version>2.12.0</jackson-databind.version>
+        <guava.version>30.0-jre</guava.version>
+        <commons-codec.version>1.15</commons-codec.version>
+        <httpclient.version>4.5.13</httpclient.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <json.version>20201115</json.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok}</version>
+            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>${hutool-all}</version>
+            <version>${hutool-all.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${druid-spring-boot-starter}</version>
+            <version>${druid-spring-boot-starter.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>${HikariCP}</version>
+            <version>${HikariCP.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-annotation</artifactId>
-            <version>${mybatis-plus-annotation}</version>
+            <version>${mybatis-plus-annotation.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-connector-java}</version>
+            <version>${mysql-connector-java.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>${mybatis}</version>
+            <version>${mybatis.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils}</version>
+            <version>${commons-beanutils.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>${reflections}</version>
+            <version>${reflections.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind}</version>
+            <version>${jackson-databind.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${guava}</version>
+            <version>${guava.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>${commons-codec}</version>
+            <version>${commons-codec.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>${httpclient}</version>
+            <version>${httpclient.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-codec</artifactId>
@@ -128,13 +128,13 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>${fastjson}</version>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>${json}</version>
+            <version>${json.version}</version>
         </dependency>
     </dependencies>
 
@@ -167,7 +167,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin}</version>
+                <version>${maven-source-plugin.version}</version>
             </plugin>
         </plugins>
     </build>

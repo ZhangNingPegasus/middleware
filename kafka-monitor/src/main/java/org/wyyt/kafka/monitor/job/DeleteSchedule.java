@@ -4,8 +4,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.wyyt.kafka.monitor.service.dto.SchemaService;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * The schedule job for deleting expired records.
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DeleteSchedule {
-    private static final String SUFFIX_SYSTEM_TABLE = "sys_";
+    private static final List<String> ignoreTable = Arrays.asList("sys_admin", "sys_alert_cluster", "sys_alert_consumer", "sys_alert_topic", "sys_dingding_config", "sys_mail_config", "sys_page", "sys_permission", "sys_role", "sys_table_name");
     private final SchemaService schemaService;
 
     public DeleteSchedule(final SchemaService schemaService) {
@@ -27,8 +26,16 @@ public class DeleteSchedule {
     //每天00:01:00执行一次
     @Scheduled(cron = "0 1 0 1/1 * ?")
     public void deleteExpired() {
-        final Set<String> tableNames = this.schemaService.listTables();
-        final Set<String> filterTableNames = tableNames.stream().filter(tableName -> !tableName.startsWith(SUFFIX_SYSTEM_TABLE)).collect(Collectors.toSet());
-        this.schemaService.deleteExpired(filterTableNames);
+        final Set<String> allTableNames = this.schemaService.listTables();
+        final Set<String> tableNames = new HashSet<>(allTableNames.size());
+
+        for (final String tableName : allTableNames) {
+            if (ignoreTable.contains(tableName.toLowerCase(Locale.ROOT))) {
+                continue;
+            }
+            tableNames.add(tableName);
+        }
+
+        this.schemaService.deleteExpired(tableNames);
     }
 }

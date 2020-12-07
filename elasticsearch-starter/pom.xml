@@ -16,28 +16,28 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot>2.4.0</springboot>
-        <lombok>1.18.16</lombok>
-        <elasticsearch>7.10.0</elasticsearch>
-        <commons-lang3>3.11</commons-lang3>
-        <commons-io>2.8.0</commons-io>
-        <fastjson>1.2.75</fastjson>
-        <jackson-databind>2.11.3</jackson-databind>
-        <slf4j-api>1.7.30</slf4j-api>
-        <maven-source-plugin>3.2.1</maven-source-plugin>
+        <springboot.version>2.4.0</springboot.version>
+        <lombok.version>1.18.16</lombok.version>
+        <elasticsearch.version>7.10.0</elasticsearch.version>
+        <commons-lang3.version>3.11</commons-lang3.version>
+        <commons-io.version>2.8.0</commons-io.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <jackson-databind.version>2.12.0</jackson-databind.version>
+        <slf4j-api.version>1.7.30</slf4j-api.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok}</version>
+            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>${elasticsearch}</version>
+            <version>${elasticsearch.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jackson-core</artifactId>
@@ -59,31 +59,31 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3}</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${commons-io}</version>
+            <version>${commons-io.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>${fastjson}</version>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind}</version>
+            <version>${jackson-databind.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api}</version>
+            <version>${slf4j-api.version}</version>
         </dependency>
     </dependencies>
 
@@ -92,7 +92,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
-                <version>${springboot}</version>
+                <version>${springboot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -128,7 +128,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin}</version>
+                <version>${maven-source-plugin.version}</version>
             </plugin>
         </plugins>
     </build>

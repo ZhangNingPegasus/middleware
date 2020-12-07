@@ -15,7 +15,7 @@
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <append>true</append>
         <file>/wyyt/logs/dubbo/middleware-db2es-admin/db2es-admin-filebeat.log</file> <!-- 路径也要按照规范修改 -->
-        <encoder class="net.logstash.logback.encoder.ex.LogstashEncoderEx"> <!-- ELK 最新接入方式 -->
+        <encoder class="org.wyyt.logback.encoder.LogstashEncoderZipkin"> <!-- ELK 最新接入方式 -->
             <!--includeCallerData 请求者信息字段 需要开启异步写入，否则比较比较耗性能-->
             <includeCallerData>true</includeCallerData>
         </encoder>
