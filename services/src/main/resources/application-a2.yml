@@ -1,11 +1,11 @@
 server:
-  port: 80
+  port: 1002
 
 spring:
   application:
-    name: spring-cloud-gateway
-    group: wyyt-spring-cloud-gateway
-    version: 1.0
+    name: a
+    group: scfs
+    version: 1.2
   cloud:
     consul:
       host: 192.168.5.21

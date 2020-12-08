@@ -17,11 +17,12 @@
         <module>logstash-logback-encoder-zipkin</module>
         <module>apollo-config</module>
         <module>gateway</module>
+        <module>services</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.5.RELEASE</version>
+        <version>2.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modelVersion>4.0.0</modelVersion>

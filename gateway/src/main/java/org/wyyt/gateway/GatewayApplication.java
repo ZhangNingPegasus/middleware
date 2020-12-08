@@ -24,6 +24,10 @@ public class GatewayApplication {
                         .path("/discovery-guide-service-a/**")
                         .filters(f -> f.stripPrefix(1))
                         .uri("lb://discovery-guide-service-a"))
+                .route("a", r -> r
+                        .path("/a/**")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("lb://a"))
                 .build();
     }
 }
