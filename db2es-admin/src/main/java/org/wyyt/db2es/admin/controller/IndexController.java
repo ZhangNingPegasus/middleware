@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.db2es.admin.entity.vo.AdminVo;
+import org.wyyt.db2es.admin.service.SysAdminService;
 import org.wyyt.db2es.core.util.CommonUtils;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.web.Result;
@@ -25,6 +26,12 @@ import java.util.Calendar;
  */
 @Controller
 public class IndexController {
+    private final SysAdminService sysAdminService;
+
+    public IndexController(final SysAdminService sysAdminService) {
+        this.sysAdminService = sysAdminService;
+    }
+
     @GetMapping(value = {"/", "l"})
     public String toLogin(final Model model) {
         model.addAttribute("version", CommonUtils.getVersion());
@@ -38,6 +45,18 @@ public class IndexController {
         model.addAttribute("version", CommonUtils.getVersion());
         model.addAttribute("admin", adminVo);
         return "index";
+    }
+
+    @GetMapping("toinfo")
+    public String toInfo(final Model model,
+                         final AdminVo adminVo) {
+        model.addAttribute("admin", this.sysAdminService.getBaseMapper().getById(adminVo.getId()));
+        return "info";
+    }
+
+    @GetMapping("topassword")
+    public String toPassword() {
+        return "password";
     }
 
     @PostMapping("login")
@@ -54,6 +73,28 @@ public class IndexController {
         } catch (final Exception e) {
             return Result.error(String.format("账号或密码错误. 原因:%s", ExceptionTool.getRootCauseMessage(e)));
         }
+    }
+
+    @PostMapping("repwd")
+    @ResponseBody
+    public Result<?> repwd(final AdminVo adminVo,
+                           @RequestParam(name = "oldPassword") final String oldPassword,
+                           @RequestParam(name = "password") final String password) {
+        if (sysAdminService.changePassword(adminVo.getId(), oldPassword, password)) {
+            return Result.success();
+        }
+        return Result.error("密码修改失败");
+    }
+
+    @PostMapping("reinfo")
+    @ResponseBody
+    public Result<?> reinfo(final AdminVo adminVo,
+                            @RequestParam(name = "name") final String name,
+                            @RequestParam(name = "phoneNumber") final String phoneNumber,
+                            @RequestParam(name = "email") final String email,
+                            @RequestParam(name = "remark") final String remark) {
+        this.sysAdminService.updateInfo(adminVo.getId(), name, phoneNumber, email, remark);
+        return Result.success();
     }
 
 
