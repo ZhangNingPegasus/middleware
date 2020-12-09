@@ -226,7 +226,9 @@ public final class CrudService implements DisposableBean {
                 final Map<String, Object> row = new HashMap<>();
                 for (final String columnLabel : columnLabelList) {
                     Object value = resultSet.getObject(columnLabel);
-                    if (resultSet.getObject(columnLabel).getClass().isAssignableFrom(Timestamp.class)) {
+                    if (null == value) {
+
+                    } else if (value.getClass().isAssignableFrom(Timestamp.class)) {
                         value = DateTool.parse(resultSet.getString(columnLabel));
                     }
                     row.put(columnLabel, value);

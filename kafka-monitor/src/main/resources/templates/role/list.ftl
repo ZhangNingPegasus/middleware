@@ -92,7 +92,7 @@
                 if (obj.event === 'add') {
                     layer.open({
                         type: 2,
-                        title: '新增角色',
+                        title: '<i class="layui-icon layui-icon-add-1"></i>&nbsp;新增角色',
                         content: 'toadd',
                         area: ['880px', '650px'],
                         btn: admin.BUTTONS,

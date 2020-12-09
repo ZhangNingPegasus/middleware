@@ -166,7 +166,7 @@
                     layer.open({
                         type: 2,
                         title: '<i class="layui-icon layui-icon-add-1"></i>&nbsp;添加权限',
-                        content: 'toadd.html',
+                        content: 'toadd',
                         area: ['450px', '445px'],
                         btn: admin.BUTTONS,
                         resize: false,

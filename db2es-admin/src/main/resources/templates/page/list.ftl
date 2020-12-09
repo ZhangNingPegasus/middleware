@@ -130,8 +130,8 @@
                     layer.open({
                         type: 2,
                         title: '<i class="layui-icon layui-icon-add-1"></i>&nbsp;添加页面',
-                        content: 'toadd.html',
-                        area: ['400px', '560px'],
+                        content: 'toadd',
+                        area: ['400px', '690px'],
                         btn: admin.BUTTONS,
                         resize: false,
                         yes: function (index, layero) {
@@ -170,9 +170,9 @@
             } else if (obj.event = 'edit') {
                 layer.open({
                     type: 2,
-                    title: admin.EDIT,
-                    content: 'toedit.html?id=' + data.id,
-                    area: ['400px', '610px'],
+                    title: '<i class="layui-icon layui-icon-edit"></i>&nbsp;编辑页面',
+                    content: 'toedit?id=' + data.id,
+                    area: ['400px', '760px'],
                     btn: admin.BUTTONS,
                     resize: false,
                     yes: function (index, layero) {
