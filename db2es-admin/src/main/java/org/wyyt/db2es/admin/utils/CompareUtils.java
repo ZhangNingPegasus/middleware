@@ -48,6 +48,9 @@ public class CompareUtils {
                 final List<String> keys = map.keySet().stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
                 for (final String key : keys) {
                     final Object v = map.get(key);
+                    if (null == v) {
+                        continue;
+                    }
                     buffer.put(key, v);
                     fieldClass.put(key, v.getClass());
                 }
@@ -77,9 +80,10 @@ public class CompareUtils {
                 for (final String key : keys) {
                     Object value = map.get(key);
                     if (fieldClass.containsKey(key)) {
-                        if (null != value) {
-                            value = ConvertUtils.convert(value, fieldClass.get(key));
+                        if (null == value) {
+                            continue;
                         }
+                        value = ConvertUtils.convert(value, fieldClass.get(key));
                     }
                     buffer.put(key, value);
                 }
