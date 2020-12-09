@@ -37,6 +37,9 @@ public class CompareUtils {
                 }
                 final LinkedHashMap<String, Object> buffer = new LinkedHashMap<>();
                 for (final Map.Entry<String, Object> pair : map.entrySet()) {
+                    if (null == pair.getValue()) {
+                        continue;
+                    }
                     if (pair.getValue().getClass().isAssignableFrom(Date.class) || pair.getValue().getClass().isAssignableFrom(DateTime.class)) {
                         datetimeColumns.add(pair.getKey());
                         pair.setValue(CommonUtils.formatMs((Date) pair.getValue()));
