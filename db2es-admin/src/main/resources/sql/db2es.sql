@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `sys_admin`
 (
-    `id`              BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `sys_role_id`     BIGINT(20) UNSIGNED NOT NULL COMMENT '角色id(sys_role表的主键)',
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `sys_role_id`     BIGINT UNSIGNED NOT NULL COMMENT '角色id(sys_role表的主键)',
     `username`        VARCHAR(64)         NOT NULL COMMENT '管理员的登陆用户名',
     `password`        VARCHAR(128)        NOT NULL COMMENT '管理员的登陆密码',
     `name`            VARCHAR(64)         NOT NULL COMMENT '管理员姓名',
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `sys_admin`
     PRIMARY KEY (`id`),
     UNIQUE INDEX `idx_sys_admin_username` (`username`),
     INDEX `idx_sys_admin_sys_role_id` (`sys_role_id`)
-) ENGINE = InnoDB COMMENT ='管理员信息';
+) COMMENT ='管理员信息';
 INSERT IGNORE INTO `sys_admin`(`id`, `sys_role_id`, `username`, `password`, `name`, `phone_number`, `email`, `remark`)
 VALUES (1, 1, 'admin', 'ebc255e6a0c6711a4366bc99ebafb54f', '超级管理员', '18000000000', 'administrator@sjb.com', '超级管理员');
 
@@ -21,7 +21,7 @@ VALUES (1, 1, 'admin', 'ebc255e6a0c6711a4366bc99ebafb54f', '超级管理员', '1
 
 CREATE TABLE IF NOT EXISTS `sys_page`
 (
-    `id`              BIGINT(20) UNSIGNED  NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `id`              BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT COMMENT '主键',
     `name`            VARCHAR(64)          NOT NULL COMMENT '页面名称',
     `url`             VARCHAR(256)         NOT NULL COMMENT '页面地址',
     `is_menu`         BIT(1)               NOT NULL COMMENT '页面是否出现在菜单栏',
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `sys_page`
     `row_update_time` DATETIME(3)          NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_url` (`url`) USING BTREE
-) ENGINE = InnoDB COMMENT ='页面配置';
+) COMMENT ='页面配置';
 INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`,
                               `order_num`, `remark`)
 VALUES (1, '服务列表', '/server/tolist', b'1', b'1', b'0', 'layui-icon-template-1', 0, 1, '展现db2es_server中所有已配置的kafka主题');
@@ -83,9 +83,9 @@ VALUES (14, '页面配置', '/page/tolist', b'1', b'0', b'0', '', 12, 2, '页面
 
 CREATE TABLE IF NOT EXISTS `sys_permission`
 (
-    `id`              BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `sys_role_id`     BIGINT(20) UNSIGNED NOT NULL COMMENT 'sys_role的主键id',
-    `sys_page_id`     BIGINT(20) UNSIGNED NOT NULL COMMENT 'sys_page的主键id',
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `sys_role_id`     BIGINT UNSIGNED NOT NULL COMMENT 'sys_role的主键id',
+    `sys_page_id`     BIGINT UNSIGNED NOT NULL COMMENT 'sys_page的主键id',
     `can_insert`      TINYINT(1)          NOT NULL COMMENT '是否能新增(true:能; false:不能)',
     `can_delete`      TINYINT(1)          NOT NULL COMMENT '是否能删除(true:能; false:不能)',
     `can_update`      TINYINT(1)          NOT NULL COMMENT '是否能修改(true:能; false:不能)',
@@ -94,13 +94,13 @@ CREATE TABLE IF NOT EXISTS `sys_permission`
     `row_update_time` DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
     PRIMARY KEY (`id`),
     UNIQUE INDEX `idx_sys_role_id_page_id` (`sys_role_id`, `sys_page_id`)
-) ENGINE = InnoDB COMMENT ='用户权限信息';
+) COMMENT ='用户权限信息';
 
 
 
 CREATE TABLE IF NOT EXISTS `sys_role`
 (
-    `id`              BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
     `name`            VARCHAR(64)         NOT NULL COMMENT '角色名称',
     `super_admin`     TINYINT(1)          NOT NULL COMMENT '是否是超级管理员(1:是; 0:否)',
     `remark`          VARCHAR(256)        NOT NULL COMMENT '角色说明',
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `sys_role`
     `row_update_time` DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
     PRIMARY KEY (`id`),
     UNIQUE INDEX `idx_sys_role_name` (`name`)
-) ENGINE = InnoDB COMMENT ='角色信息';
+) COMMENT ='角色信息';
 INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`)
 VALUES (1, '超级管理员', 1, '超级管理员, 拥有最高权限');
 
@@ -116,7 +116,7 @@ VALUES (1, '超级管理员', 1, '超级管理员, 拥有最高权限');
 
 CREATE TABLE IF NOT EXISTS `t_error_log`
 (
-    `id`                BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `id`                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
     `primary_key_value` VARCHAR(128)        NOT NULL DEFAULT '' COMMENT '主键值',
     `database_name`     VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '数据库名称',
     `table_name`        VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '数据库表名称',
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `t_error_log`
     `consumer_record`   VARCHAR(8000)       NOT NULL DEFAULT '' COMMENT 'kafka消费失败的原始内容',
     `topic_name`        VARCHAR(255)        NOT NULL COMMENT 'kafka消息所在的主题',
     `partition`         INT(10) UNSIGNED    NOT NULL COMMENT 'kakfa消息所在的主题分区',
-    `offset`            BIGINT(20) UNSIGNED NOT NULL COMMENT 'kafka消息的偏移量',
+    `offset`            BIGINT UNSIGNED NOT NULL COMMENT 'kafka消息的偏移量',
     `is_resolved`       TINYINT(4) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否已解决(0: 否; 1:是)',
     `row_create_time`   DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
     `row_update_time`   DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
@@ -135,13 +135,13 @@ CREATE TABLE IF NOT EXISTS `t_error_log`
     INDEX `idx_table_name` (`table_name`) USING BTREE,
     INDEX `idx_index_name` (`index_name`) USING BTREE,
     UNIQUE INDEX `idx_topic_name_partition_offset` (`topic_name`, `partition`, `offset`) USING BTREE
-) ENGINE = INNODB COMMENT ='错误日志';
+) COMMENT ='错误日志';
 
 
 
 CREATE TABLE IF NOT EXISTS `t_property`
 (
-    `id`              BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
     `name`            VARCHAR(128)        NOT NULL DEFAULT '' COMMENT '配置项名称',
     `value`           VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '配置项的值',
     `description`     VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '配置项描述信息',
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `t_property`
     `row_update_time` DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `idx_name` (`name`) USING BTREE
-) ENGINE = INNODB COMMENT ='db2es的配置项信息';
+) COMMENT ='db2es的配置项信息';
 INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
 VALUES (1, 'db2es_admin_host', '127.0.0.1', 'db2es_admin的ip地址');
 INSERT IGNORE INTO `t_property`(`id`, `name`, `value`, `description`)
@@ -166,7 +166,7 @@ VALUES (5, 'ding_mobiles', '', '钉钉机器人发送的对象(手机号), 如�
 
 CREATE TABLE IF NOT EXISTS `t_topic`
 (
-    `id`                 BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `id`                 BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
     `name`               VARCHAR(128)        NOT NULL DEFAULT '' COMMENT '主题名称',
     `number_of_shards`   INT(10) UNSIGNED    NOT NULL COMMENT '主分片的个数',
     `number_of_replicas` INT(10) UNSIGNED    NOT NULL COMMENT '每个主分片的副本分片的个数',
@@ -178,30 +178,30 @@ CREATE TABLE IF NOT EXISTS `t_topic`
     `row_update_time`    DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `idx_name` (`name`) USING BTREE
-) ENGINE = InnoDB COMMENT = '主题以及对应的ElasticSearch信息';
+) COMMENT = '主题以及对应的ElasticSearch信息';
 
 
 
 CREATE TABLE IF NOT EXISTS `t_topic_db2es`
 (
-    `id`              BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
     `db2es_id`        INT(10) UNSIGNED    NOT NULL COMMENT 'db2es_server的分布式id',
-    `topic_id`        BIGINT(10) UNSIGNED NOT NULL COMMENT '数据表t_topic的主键id',
+    `topic_id`        BIGINT UNSIGNED NOT NULL COMMENT '数据表t_topic的主键id',
     `row_create_time` DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
     `row_update_time` DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `idx_topic_id` (`topic_id`) USING BTREE,
     INDEX `idx_db2es_id` (`db2es_id`) USING BTREE
-) ENGINE = InnoDB COMMENT = 'db2es_server与主题之间的关系';
+) COMMENT = 'db2es_server与主题之间的关系';
 
 
 
 
 CREATE TABLE IF NOT EXISTS `t_table`
 (
-  `id`                  BIGINT(20) UNSIGNED     NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `id`                  BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT COMMENT '主键',
   `info`                text                    NOT NULL COMMENT '表信息',
   `row_create_time`     datetime(3)             NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
   `row_update_time`     datetime(3)             NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB COMMENT = '缓存用户配置在ACM中的表信息';
+) COMMENT = '缓存用户配置在ACM中的表信息';

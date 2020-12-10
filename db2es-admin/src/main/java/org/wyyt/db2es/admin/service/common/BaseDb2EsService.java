@@ -145,11 +145,13 @@ public abstract class BaseDb2EsService {
 
     protected <T> List<T> post(final NodeVo leaderVo,
                                final String path,
-                               final Map<String, Object> params,
+                               Map<String, Object> params,
                                final Class<T> tClass) throws Exception {
         final List<T> result = new ArrayList<>();
         final String url = getUrl(leaderVo, path);
-
+        if (null == params) {
+            params = new HashMap<>();
+        }
         params.entrySet().removeIf(next -> null == next.getValue());
         params.put(Names.TIME_STAMPT_NAME, System.currentTimeMillis());
 

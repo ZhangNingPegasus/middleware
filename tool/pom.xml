@@ -17,7 +17,7 @@
         <skipTests>true</skipTests>
 
         <lombok.version>1.18.16</lombok.version>
-        <hutool-all.version>5.5.1</hutool-all.version>
+        <hutool-all.version>5.5.2</hutool-all.version>
         <druid-spring-boot-starter.version>1.2.3</druid-spring-boot-starter.version>
         <HikariCP.version>3.4.5</HikariCP.version>
         <mybatis-plus-annotation.version>3.4.1</mybatis-plus-annotation.version>
