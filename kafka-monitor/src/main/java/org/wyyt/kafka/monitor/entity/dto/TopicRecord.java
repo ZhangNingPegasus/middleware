@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.wyyt.kafka.monitor.entity.base.BaseDto;
+import org.wyyt.admin.ui.entity.base.BaseDto;
 import org.wyyt.kafka.monitor.entity.vo.RecordVo;
 import org.wyyt.tool.date.DateTool;
 

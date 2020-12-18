@@ -1,9 +1,15 @@
 package org.wyyt.tool.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.tool.exception.ExceptionTool;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * the common function of resources
@@ -57,5 +63,46 @@ public final class CommonTool {
 
     public static String convertSize(String number) {
         return convertSize(Math.round(numberic(number)));
+    }
+
+    public static Map<String, Object> queryParamstoMap(final String queryParams) {
+        final Map<String, Object> result = new HashMap<>();
+        if (ObjectUtils.isEmpty(queryParams)) {
+            return result;
+        }
+        final String query;
+        try {
+            query = URLDecoder.decode(queryParams.trim(), StandardCharsets.UTF_8.name());
+        } catch (final UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        final String[] pairs = query.split("&");
+        for (final String pair : pairs) {
+            final String[] kv = pair.split("=");
+            if (2 != kv.length) {
+                continue;
+            }
+            result.put(kv[0], kv[1]);
+        }
+        return result;
+    }
+
+    public static Map<String, Object> queryParamstoMap(final byte[] queryParamsByte) {
+        String queryParams = "";
+        if (null != queryParamsByte) {
+            queryParams = new String(queryParamsByte);
+        }
+        return queryParamstoMap(queryParams);
+    }
+
+    public static Map<String, Object> queryParamstoMap(final Object queryParamsObject) {
+        if (null == queryParamsObject) {
+            return new HashMap<>();
+        } else if (queryParamsObject instanceof byte[]) {
+            return queryParamstoMap((byte[]) queryParamsObject);
+        } else if (queryParamsObject instanceof String) {
+            return queryParamstoMap((String) queryParamsObject);
+        }
+        throw new RuntimeException(String.format("%s type not supported", queryParamsObject.getClass()));
     }
 }

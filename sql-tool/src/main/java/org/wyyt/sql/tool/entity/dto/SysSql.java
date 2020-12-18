@@ -1,13 +1,11 @@
 package org.wyyt.sql.tool.entity.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.ToString;
+import org.wyyt.admin.ui.entity.base.BaseDto;
 import org.wyyt.tool.date.DateTool;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -22,11 +20,8 @@ import java.util.Date;
  */
 @ToString
 @Data
-public final class SysSql implements Serializable {
-    private static final long serialVersionUID = 1L;
+public final class SysSql extends BaseDto {
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
     @TableField(value = "sysAdminId")
     private Long sysAdminId;
     @TableField(value = "name")
@@ -44,8 +39,6 @@ public final class SysSql implements Serializable {
     private String strExecutionTime;
     @TableField(value = "execution_duration")
     private Long executionDuration;
-    @TableField(value = "create_time")
-    private Date createTime;
 
     public String getStrExecutionTime() {
         return DateTool.format(executionTime);

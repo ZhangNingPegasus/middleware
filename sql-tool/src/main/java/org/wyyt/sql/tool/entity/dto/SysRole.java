@@ -1,12 +1,8 @@
 package org.wyyt.sql.tool.entity.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
-
-import java.io.Serializable;
-import java.util.Date;
+import org.wyyt.admin.ui.entity.base.BaseDto;
 
 /**
  * The entity of role
@@ -19,17 +15,11 @@ import java.util.Date;
  * *****************************************************************
  */
 @Data
-public final class SysRole implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+public final class SysRole extends BaseDto {
     @TableField(value = "name")
     private String name;
     @TableField(value = "super_admin")
     private Boolean superAdmin;
     @TableField(value = "remark")
     private String remark;
-    @TableField(value = "create_time")
-    private Date createTime;
 }

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.wyyt.kafka.monitor.entity.base.BaseDto;
+import org.wyyt.admin.ui.entity.base.BaseDto;
 
 /**
  * The entity for table `sys_alert_cluster`. Using for throw a alerm when there's something wrong in cluster.

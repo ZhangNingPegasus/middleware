@@ -46,11 +46,11 @@ public class PropertyConfig implements InitializingBean {
     private String dbPwd;
 
     @Getter
-    @Value("${retention.days}")
+    @Value("${retention.days:3}")
     private Integer retentionDays;
 
     @Getter
-    @Value("${topic.blacklist}")
+    @Value("${topic.blacklist:}")
     private String topicBlacklist;
 
     @Getter

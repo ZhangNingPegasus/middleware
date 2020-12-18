@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.wyyt.kafka.monitor.entity.base.BaseDto;
+import org.wyyt.admin.ui.entity.base.BaseDto;
 
 /**
  * The entity for table `sys_topic_size`. Using for saving the kafka topics' log size.

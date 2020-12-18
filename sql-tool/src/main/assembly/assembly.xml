@@ -53,9 +53,6 @@
 
     <dependencySets>
         <dependencySet>
-            <includes>
-                <include>org.wyyt.sql.tool:sql-tool</include>
-            </includes>
             <outputDirectory>lib</outputDirectory>
         </dependencySet>
     </dependencySets>

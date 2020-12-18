@@ -63,7 +63,7 @@ public class BigScreenController {
         ThreadInfo threadInfo = this.ehcacheService.get("BigScreenController::threadInfo");
 
         if (null == day0 || null == zkCount || null == kafkaCount || null == topicCount || null == topicRecordCountVoList || null == cpuInfo || null == threadInfo) {
-            day0 = this.sysTopicSizeService.getTotalRecordCount();
+            day0 = this.sysTopicSizeService.getTotalRecordCount(3);
             zkCount = this.propertyConfig.getZkServers().split(",").length;
             kafkaCount = this.kafkaService.listBrokerNames().size();
             topicCount = this.kafkaService.listTopicNames().size();

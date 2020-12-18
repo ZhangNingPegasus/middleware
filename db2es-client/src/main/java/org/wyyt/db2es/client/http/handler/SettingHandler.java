@@ -6,7 +6,7 @@ import org.wyyt.db2es.client.http.Param;
 import org.wyyt.db2es.client.http.anno.PostMapping;
 import org.wyyt.db2es.client.http.anno.RestController;
 import org.wyyt.db2es.core.entity.view.SettingVo;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +54,12 @@ public final class SettingHandler extends BaseHandler {
                     pair.getValue(),
                     "指定主题的消费位点. 格式: [偏移量] 或 [偏移量@消费位点的时间戳],如:1183或1183@1591752301558,当是后者时,会忽略[偏移量]"));
         }
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("refreshDbConfig")
     public synchronized final Result<Boolean> refreshDbConfig(final Param param) throws Exception {
         this.context.refreshExtraConfig();
-        return Result.success(true);
+        return Result.ok(true);
     }
 }

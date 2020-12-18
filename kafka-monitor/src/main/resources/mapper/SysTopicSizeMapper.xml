@@ -3,11 +3,10 @@
 
 <mapper namespace="org.wyyt.kafka.monitor.mapper.SysTopicSizeMapper">
     <select id="getHistoryLogSize" resultType="java.lang.Long">
-        SELECT
-        COUNT(1)
+        SELECT COUNT(1)
         FROM `${recordTableName}`
         WHERE `timestamp` &gt;= #{from}
-        AND   `timestamp` &lt; #{to}
+          AND `timestamp` &lt; #{to}
     </select>
 
     <select id="getTopicRank" resultType="org.wyyt.kafka.monitor.entity.dto.SysTopicSize">
@@ -33,71 +32,61 @@
     </select>
 
     <select id="getTotalRecordCount" resultType="java.lang.Long">
-    SELECT
-    IFNULL(SUM(log_size), 0)
-    FROM
-    (
-        SELECT
-        DISTINCT `a`.`topic_name`, `a`.`log_size`
-        FROM `sys_topic_size` `a`
-        INNER JOIN
-        (
-            SELECT
-             `topic_name`,
-             MAX(`row_create_time`) `row_create_time`
-            FROM `sys_topic_size`
-            GROUP BY `topic_name`
-        ) b ON `a`.`topic_name` = `b`.`topic_name` AND `a`.`row_create_time` = `b`.`row_create_time`
-    ) rec
+        SELECT SUM(IFNULL(a.log_size, 0) - IFNULL(b.log_size, 0))
+        FROM (
+                 SELECT `topic_name`,
+                        MAX(`log_size`) `log_size`
+                 FROM `sys_topic_size` PARTITION(${toPartition})
+                 GROUP BY `topic_name`
+             ) a
+                 LEFT OUTER JOIN
+             (
+                 SELECT `topic_name`,
+                        MAX(`log_size`) `log_size`
+                 FROM `sys_topic_size` PARTITION(${fromPartition})
+                 GROUP BY `topic_name`
+             ) b ON a.topic_name = b.topic_name
     </select>
 
     <select id="listTotalRecordCount" resultType="org.wyyt.kafka.monitor.entity.vo.TopicRecordCountVo">
-        SELECT
-        `a`.`topic_name`,
-        `a`.`day0_log_size` AS `log_size`,
-        (`a`.`day0_log_size` - `b`.`day1_log_size`) / `a`.`day0_log_size` AS `growth_rate`
-        FROM
-        (
-        SELECT
-        DISTINCT
-        `a`.`topic_name`,
-        `a`.`log_size` AS `day0_log_size`,
-        `a`.`row_create_time`
-        FROM `sys_topic_size` AS `a`
-        INNER JOIN
-        (
-        SELECT
-        `topic_name`,
-        MAX(`row_create_time`) AS `row_create_time`
-        FROM `sys_topic_size`
-        WHERE `row_create_time` &gt;= #{from0}
-        AND `row_create_time` &lt; #{to0}
-        GROUP BY `topic_name`
-        ) AS `b` ON `a`.`topic_name` = `b`.`topic_name` AND `a`.`row_create_time` = `b`.`row_create_time`
-        ORDER BY `a`.`log_size` DESC
-        LIMIT #{top}
-        ) `a`
-        LEFT OUTER JOIN
-        (
-        SELECT
-        DISTINCT
-        `a`.`topic_name`,
-        `a`.`log_size` AS `day1_log_size`,
-        `a`.row_create_time
-        FROM `sys_topic_size` AS `a`
-        INNER JOIN
-        (
-        SELECT
-        `topic_name`,
-        MAX(`row_create_time`) AS `row_create_time`
-        FROM `sys_topic_size`
-        WHERE `row_create_time` &gt;= #{from1}
-        AND `row_create_time` &lt; #{to1}
-        GROUP BY `topic_name`
-        ) AS `b` ON `a`.`topic_name` = `b`.`topic_name` AND `a`.`row_create_time` = `b`.`row_create_time`
-        ORDER BY `a`.`log_size` DESC
-        LIMIT #{top}
-        ) `b` ON `a`.`topic_name` = `b`.`topic_name`
+        SELECT `a`.`topic_name`,
+               `a`.`day0_log_size`                                               AS `log_size`,
+               (`a`.`day0_log_size` - `b`.`day1_log_size`) / `a`.`day0_log_size` AS `growth_rate`
+        FROM (
+                 SELECT DISTINCT `a`.`topic_name`,
+                                 `a`.`log_size` AS `day0_log_size`,
+                                 `a`.`row_create_time`
+                 FROM `sys_topic_size` AS `a`
+                          INNER JOIN
+                      (
+                          SELECT `topic_name`,
+                                 MAX(`row_create_time`) AS `row_create_time`
+                          FROM `sys_topic_size`
+                          WHERE `row_create_time` &gt;= #{from0}
+                            AND `row_create_time` &lt; #{to0}
+                          GROUP BY `topic_name`
+                      ) AS `b` ON `a`.`topic_name` = `b`.`topic_name` AND `a`.`row_create_time` = `b`.`row_create_time`
+                 ORDER BY `a`.`log_size` DESC
+                     LIMIT #{top}
+             ) `a`
+                 LEFT OUTER JOIN
+             (
+                 SELECT DISTINCT `a`.`topic_name`,
+                                 `a`.`log_size` AS `day1_log_size`,
+                                 `a`.row_create_time
+                 FROM `sys_topic_size` AS `a`
+                          INNER JOIN
+                      (
+                          SELECT `topic_name`,
+                                 MAX(`row_create_time`) AS `row_create_time`
+                          FROM `sys_topic_size`
+                          WHERE `row_create_time` &gt;= #{from1}
+                            AND `row_create_time` &lt; #{to1}
+                          GROUP BY `topic_name`
+                      ) AS `b` ON `a`.`topic_name` = `b`.`topic_name` AND `a`.`row_create_time` = `b`.`row_create_time`
+                 ORDER BY `a`.`log_size` DESC
+                     LIMIT #{top}
+             ) `b` ON `a`.`topic_name` = `b`.`topic_name`
         ORDER BY `log_size` DESC
     </select>
 </mapper>

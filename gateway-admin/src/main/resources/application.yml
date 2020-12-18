@@ -1,0 +1,89 @@
+app:
+  id: spring-cloud-gateway
+apollo:
+  portalUrl: ${apollo_portal_url}
+  token: ${apollo_token}
+  meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
+  bootstrap:
+    enabled: true
+    namespaces: application
+    eagerLoad:
+      enabled: true
+
+gateway:
+  consul:
+    name: ${gateway_consul_name}
+
+admin:
+  ui:
+    title: Spring Cloud 智能网关管理平台
+    full-name: Spring Cloud 智能网关
+    short-name: Spring Cloud 智能网关
+
+server:
+  port: 81
+  tomcat:
+    uri-encoding: UTF-8
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json,application/xml
+  servlet:
+    session:
+      timeout: 180m
+      tracking-modes: cookie
+      cookie:
+        http-only: true
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: gateway-admin
+  cloud:
+    consul:
+      host: ${consul_host}
+      port: ${consul_port}
+      discovery:
+        service-name: ${spring.application.name}
+        prefer-ip-address: true
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  aop:
+    proxy-target-class: true
+  jmx:
+    default-domain: ${spring.application.name}
+  freemarker:
+    allow-session-override: true
+    check-template-location: true
+    suffix: .ftl
+    content-type: text/html
+    enabled: true
+    cache: false
+    template-loader-path: classpath:/templates/
+    charset: UTF-8
+    expose-request-attributes: true
+    expose-session-attributes: true
+    expose-spring-macro-helpers: true
+    request-context-attribute: request
+    settings:
+      auto_import: common/spring.ftl as spring
+      number_format: '0.##'
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

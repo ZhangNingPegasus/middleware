@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.wyyt.kafka.monitor.entity.dto.SysTableName;
 import org.wyyt.kafka.monitor.entity.dto.TopicRecord;
 import org.wyyt.kafka.monitor.entity.po.MaxOffset;
+import org.wyyt.kafka.monitor.entity.po.PartitionInfo;
 import org.wyyt.kafka.monitor.entity.vo.RecordVo;
 
 import java.util.Date;
@@ -22,11 +23,8 @@ import java.util.List;
  */
 @Mapper
 public interface TopicRecordMapper extends BaseMapper<TopicRecord> {
-    void createTableIfNotExists(@Param(value = "sysTableNameList") List<SysTableName> sysTableNameList);
-
-    void deleteExpired(@Param(value = "recordTableName") String recordTableName,
-                       @Param(value = "recordDetailTableName") String recordDetailTableName,
-                       @Param(value = "dateTime") Date dateTime);
+    void createTableIfNotExists(@Param(value = "sysTableNameList") List<SysTableName> sysTableNameList,
+                                @Param(value = "partitionInfoList") List<PartitionInfo> partitionInfoList);
 
     void dropTable(@Param(value = "recordTableName") String recordTableName,
                    @Param(value = "recordDetailTableName") String recordDetailTableName);

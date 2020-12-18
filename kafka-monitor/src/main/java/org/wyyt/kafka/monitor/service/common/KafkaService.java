@@ -25,12 +25,12 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.wyyt.admin.ui.exception.BusinessException;
 import org.wyyt.kafka.monitor.common.Constants;
 import org.wyyt.kafka.monitor.common.JMX;
 import org.wyyt.kafka.monitor.entity.dto.SysKpi;
 import org.wyyt.kafka.monitor.entity.po.Offset;
 import org.wyyt.kafka.monitor.entity.vo.*;
-import org.wyyt.kafka.monitor.exception.BusinessException;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.exception.ExceptionTool;
@@ -98,7 +98,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
         final Map<TopicPartition, Long> partitionLogSize = this.getTopicLogSizeMap(topicName);
 
         if (null == kafkaConsumerVoList || kafkaConsumerVoList.isEmpty()) {
-            kafkaConsumerVoList = this.listKafkaConsumers(groupId);
+            kafkaConsumerVoList = this.listKafkaConsumers(groupId, true);
         } else {
             kafkaConsumerVoList = kafkaConsumerVoList.stream().filter(p -> p.getGroupId().equals(groupId)).collect(Collectors.toList());
         }
@@ -270,7 +270,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
 
     public List<TopicVo> listTopicVos(final List<String> topicNameList) throws Exception {
         final List<TopicVo> result = new ArrayList<>(topicNameList.size());
-        final List<KafkaConsumerVo> kafkaConsumerVoList = this.listKafkaConsumers(null);
+        final List<KafkaConsumerVo> kafkaConsumerVoList = this.listKafkaConsumers();
         for (final String topicName : topicNameList) {
             final TopicVo topicVo = new TopicVo();
             topicVo.setTopicName(topicName);
@@ -363,7 +363,8 @@ public class KafkaService implements InitializingBean, DisposableBean {
         return result.get(topicName);
     }
 
-    public List<KafkaConsumerVo> listKafkaConsumers(@Nullable final String searchGroupId) throws Exception {
+    public List<KafkaConsumerVo> listKafkaConsumers(@Nullable final String searchGroupId,
+                                                    @Nullable final Boolean isAccurate) throws Exception {
         final List<KafkaConsumerVo> result = new ArrayList<>();
         final ListConsumerGroupsResult listConsumerGroupsResult = this.kafkaAdminClient.listConsumerGroups();
         final Collection<ConsumerGroupListing> consumerGroupListings = listConsumerGroupsResult.all().get();
@@ -371,8 +372,16 @@ public class KafkaService implements InitializingBean, DisposableBean {
             final String groupId = consumerGroupListing.groupId();
             if (groupId.startsWith(Constants.KAFKA_MONITOR_PEGASUS_SYSTEM_PREFIX)) {
                 continue;
-            } else if (!ObjectUtils.isEmpty(searchGroupId) && !groupId.equals(searchGroupId)) {
-                continue;
+            } else if (!ObjectUtils.isEmpty(searchGroupId) && null != isAccurate) {
+                if (isAccurate) {
+                    if (!groupId.equals(searchGroupId)) {
+                        continue;
+                    }
+                } else {
+                    if (!groupId.contains(searchGroupId)) {
+                        continue;
+                    }
+                }
             }
             final KafkaConsumerVo kafkaConsumerVo = new KafkaConsumerVo();
             kafkaConsumerVo.setGroupId(groupId);
@@ -449,12 +458,16 @@ public class KafkaService implements InitializingBean, DisposableBean {
         return result;
     }
 
+    public List<KafkaConsumerVo> listKafkaConsumers() throws Exception {
+        return this.listKafkaConsumers(null, null);
+    }
+
     public List<KafkaConsumerVo> listKafkaConsumersByTopicName(String topicName) throws Exception {
         final List<KafkaConsumerVo> result = new ArrayList<>();
         if (ObjectUtils.isEmpty(topicName)) {
             return result;
         }
-        final List<KafkaConsumerVo> kafkaConsumerVoList = this.listKafkaConsumers(null);
+        final List<KafkaConsumerVo> kafkaConsumerVoList = this.listKafkaConsumers();
         for (final KafkaConsumerVo kafkaConsumerVo : kafkaConsumerVoList) {
             if (kafkaConsumerVo.getTopicNames().contains(topicName)) {
                 result.add(kafkaConsumerVo);

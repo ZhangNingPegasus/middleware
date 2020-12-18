@@ -1,6 +1,5 @@
 package org.wyyt.db2es.client.http;
 
-import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
@@ -22,10 +21,10 @@ import org.wyyt.db2es.client.common.Context;
 import org.wyyt.db2es.core.entity.domain.Names;
 import org.wyyt.db2es.core.entity.domain.TopicOffset;
 import org.wyyt.db2es.core.exception.Db2EsException;
-import org.wyyt.db2es.core.util.security.SecurityUtils;
 import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.exception.ExceptionTool;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
+import org.wyyt.tool.rpc.SignTool;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -164,27 +163,11 @@ public abstract class BaseHandler implements HttpAsyncRequestHandler<HttpRequest
     }
 
     private static boolean checkSign(final HttpRequest request,
-                                     final Map<String, Object> data) throws Exception {
+                                     final Map<String, Object> params) throws Exception {
         final Header header = request.getFirstHeader("sign");
         if (null == header) {
             return false;
         }
-
-        final Object timestamp = data.get(Names.TIME_STAMPT_NAME);
-        if (null == timestamp) {
-            return false;
-        } else if (!NumberUtil.isLong(timestamp.toString())) {
-            return false;
-        }
-        final Date date = new Date(Long.parseLong(timestamp.toString()));
-        final long diff = Math.abs(new Date().getTime() - date.getTime());
-        if (diff > 1000 * 60 * 5) {
-            return false;
-        }
-
-        final String oSign = header.getValue();
-        final String str = SecurityUtils.createLinkString(data);
-        final String tSign = Objects.requireNonNull(SecurityUtils.encryptData(str, Names.API_KEY, Names.API_IV)).toLowerCase();
-        return tSign.equals(oSign);
+        return SignTool.checkSign(header.getValue(), params, Names.API_KEY, Names.API_IV);
     }
 }

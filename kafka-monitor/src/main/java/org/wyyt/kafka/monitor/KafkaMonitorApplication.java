@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.wyyt.admin.ui.config.EnableAdminUI;
 
 /**
  * Kafka-Monitor
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableApolloConfig
+@EnableAdminUI
 public class KafkaMonitorApplication {
     public static void main(String[] args) {
         SpringApplication.run(KafkaMonitorApplication.class, args);

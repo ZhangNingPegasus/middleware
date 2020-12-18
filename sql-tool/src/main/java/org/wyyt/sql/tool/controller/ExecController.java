@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.wyyt.admin.ui.common.Utils;
 import org.wyyt.sharding.algorithm.MathsTool;
 import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.auto.property.DimensionProperty;
@@ -16,7 +17,6 @@ import org.wyyt.sharding.auto.property.TableProperty;
 import org.wyyt.sharding.entity.FieldInfo;
 import org.wyyt.sharding.entity.IndexInfo;
 import org.wyyt.sharding.service.ShardingService;
-import org.wyyt.sql.tool.common.Utils;
 import org.wyyt.sql.tool.database.Db;
 import org.wyyt.sql.tool.entity.dto.SysSql;
 import org.wyyt.sql.tool.entity.vo.AdminVo;
@@ -24,7 +24,7 @@ import org.wyyt.sql.tool.entity.vo.AlgorithmVo;
 import org.wyyt.sql.tool.entity.vo.DataTableVo;
 import org.wyyt.sql.tool.service.SqlService;
 import org.wyyt.sql.tool.service.TreeService;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -120,7 +120,7 @@ public final class ExecController {
         } else {
             result.add(String.format("下列%s个数据表的索引与其他大多数的索引不一致, 请检查修正\n%s", diffIndexList.size(), StringUtils.join(diffIndexList, ", ")));
         }
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("exec")
@@ -130,9 +130,9 @@ public final class ExecController {
                                                 final @RequestParam(name = "sql") String sql,
                                                 final @RequestParam(name = "limit") Integer limit) {
         try {
-            return Result.success(this.sqlService.exec(Utils.getCliectIp(request), adminVo, sql, limit));
+            return Result.ok(this.sqlService.exec(Utils.getCliectIp(request), adminVo, sql, limit));
         } catch (final Exception exception) {
-            return Result.success(new ArrayList<>(Collections.singleton(this.sqlService.exception(exception))));
+            return Result.ok(new ArrayList<>(Collections.singleton(this.sqlService.exception(exception))));
         }
     }
 
@@ -141,7 +141,7 @@ public final class ExecController {
     public final Result<SysSql> getNext(final AdminVo adminVo,
                                         final @RequestParam(name = "id") Long id) throws Exception {
         final SysSql sysSql = this.db.getNextSql(adminVo.getId(), id);
-        return Result.success(sysSql);
+        return Result.ok(sysSql);
     }
 
     @PostMapping("getPrevious")
@@ -149,7 +149,7 @@ public final class ExecController {
     public final Result<SysSql> getPrevious(final AdminVo adminVo,
                                             final @RequestParam(name = "id") Long id) throws Exception {
         final SysSql sysSql = this.db.getPreviousSql(adminVo.getId(), id);
-        return Result.success(sysSql);
+        return Result.ok(sysSql);
     }
 
     @PostMapping("doalgorithm")
@@ -184,6 +184,6 @@ public final class ExecController {
         formular = String.format("%s %% %s = %s", result.getHash(), tableCount, remainder);
         result.setTable(String.format("%s    计算公式: %s", String.format(dimensionInfo.getTableNameFormat(), remainder), formular));
 
-        return Result.success(result);
+        return Result.ok(result);
     }
 }

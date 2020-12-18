@@ -12,7 +12,7 @@ import org.wyyt.kafka.monitor.entity.vo.KafkaBrokerVo;
 import org.wyyt.kafka.monitor.entity.vo.ZooKeeperVo;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.common.KafkaZkService;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -336,13 +336,13 @@ public class ClusterController {
     @PostMapping("list")
     @ResponseBody
     public Result<List<KafkaBrokerVo>> list() throws Exception {
-        return Result.success(this.kafkaService.listBrokerInfos());
+        return Result.ok(this.kafkaService.listBrokerInfos());
     }
 
     @PostMapping("listZk")
     @ResponseBody
     public Result<List<ZooKeeperVo>> listZk() {
-        return Result.success(this.kafkaZkService.listZooKeeperCluster());
+        return Result.ok(this.kafkaZkService.listZooKeeperCluster());
     }
 
     @PostMapping("getChartData")
@@ -359,6 +359,6 @@ public class ClusterController {
         if (!children.isEmpty()) {
             root.setChildren(children);
         }
-        return Result.success(root);
+        return Result.ok(root);
     }
 }

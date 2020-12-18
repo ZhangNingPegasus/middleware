@@ -13,7 +13,7 @@ import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.common.KafkaZkService;
 import org.wyyt.kafka.monitor.service.dto.SysAlertClusterService;
 import org.wyyt.kafka.monitor.service.dto.SysDingDingConfigService;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +81,7 @@ public class AlertClusterController {
         final QueryWrapper<SysAlertCluster> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().orderByAsc(SysAlertCluster::getRowCreateTime);
         Page<SysAlertCluster> page = this.sysAlertClusterService.page(new Page<>(pageNum, pageSize), queryWrapper);
-        return Result.success(page.getRecords(), page.getTotal());
+        return Result.ok(page.getRecords(), page.getTotal());
     }
 
     @PostMapping("add")
@@ -93,7 +93,7 @@ public class AlertClusterController {
                          @RequestParam(value = "secret") final String secret
     ) {
         this.sysAlertClusterService.save(type, server, email, accessToken, secret);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("edit")
@@ -106,14 +106,14 @@ public class AlertClusterController {
                           @RequestParam(value = "secret") final String secret
     ) {
         this.sysAlertClusterService.update(id, type, server, email, accessToken, secret);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("del")
     @ResponseBody
     public Result<?> del(@RequestParam(value = "id") Long id) {
         this.sysAlertClusterService.removeById(id);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("listServers")
@@ -141,6 +141,6 @@ public class AlertClusterController {
             result.removeAll(sysAlertClusterList.stream().map(SysAlertCluster::getServer).collect(Collectors.toList()));
         }
         result.sort(String::compareTo);
-        return Result.success(result);
+        return Result.ok(result);
     }
 }

@@ -20,7 +20,7 @@ import org.wyyt.kafka.monitor.service.dto.SysTopicSizeService;
 import org.wyyt.kafka.monitor.util.CommonUtil;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.date.DateTool;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class DashboardController {
     @PostMapping("getConsumersByTopicName")
     @ResponseBody
     public Result<List<KafkaConsumerVo>> getConsumersByTopicName(@RequestParam(name = "topicName", defaultValue = "") final String topicName) throws Exception {
-        return Result.success(this.kafkaService.listKafkaConsumersByTopicName(topicName.trim()));
+        return Result.ok(this.kafkaService.listKafkaConsumersByTopicName(topicName.trim()));
     }
 
 
@@ -78,19 +78,19 @@ public class DashboardController {
     public Result<LineInfo> getTopicSendChart(@RequestParam(name = "topicName") String topicName,
                                               @RequestParam(name = "createTimeRange") String createTimeRange) {
         if (ObjectUtils.isEmpty(topicName.trim()) || ObjectUtils.isEmpty(createTimeRange.trim())) {
-            return Result.success(new LineInfo(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            return Result.ok(new LineInfo(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }
 
         final String key = String.format("DashboardController::getTopicSendChart:%s:%s", topicName, createTimeRange);
         final LineInfo cache = this.ehcacheService.get(key);
         if (cache != null) {
-            return Result.success(cache);
+            return Result.ok(cache);
         }
 
         topicName = topicName.trim();
         createTimeRange = createTimeRange.trim();
         if (ObjectUtils.isEmpty(createTimeRange)) {
-            return Result.success();
+            return Result.ok();
         }
         final LineInfo result = new LineInfo();
         final TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
@@ -157,7 +157,7 @@ public class DashboardController {
             series.setData(data);
         }
         this.ehcacheService.put(key, result);
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("getLagChart")
@@ -168,12 +168,12 @@ public class DashboardController {
         final String key = String.format("DashboardController::getLagChart:%s:%s", groupId, createTimeRange);
         final LineInfo cache = this.ehcacheService.get(key);
         if (null != cache) {
-            return Result.success(cache);
+            return Result.ok(cache);
         }
         groupId = groupId.trim();
         createTimeRange = createTimeRange.trim();
         if (ObjectUtils.isEmpty(groupId) || ObjectUtils.isEmpty(createTimeRange)) {
-            return Result.success();
+            return Result.ok();
         }
         LineInfo result = new LineInfo();
         final TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
@@ -209,7 +209,7 @@ public class DashboardController {
             series.setData(data);
         }
         this.ehcacheService.put(key, result);
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("getConsumeTpsChart")
@@ -220,12 +220,12 @@ public class DashboardController {
         String key = String.format("DashboardController::getConsumeTpsChart:%s:%s", groupId, createTimeRange);
         LineInfo cache = this.ehcacheService.get(key);
         if (cache != null) {
-            return Result.success(cache);
+            return Result.ok(cache);
         }
         groupId = groupId.trim();
         createTimeRange = createTimeRange.trim();
         if (ObjectUtils.isEmpty(groupId) || ObjectUtils.isEmpty(createTimeRange)) {
-            return Result.success();
+            return Result.ok();
         }
         LineInfo result = new LineInfo();
         TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
@@ -292,7 +292,7 @@ public class DashboardController {
             series.setData(data);
         }
         this.ehcacheService.put(key, result);
-        return Result.success(result);
+        return Result.ok(result);
     }
 
 
@@ -302,11 +302,11 @@ public class DashboardController {
         final String key = String.format("DashboardController::getTopicRankChart:%s", createTimeRange);
         final LineInfo cache = this.ehcacheService.get(key);
         if (null != cache) {
-            return Result.success(cache);
+            return Result.ok(cache);
         }
         createTimeRange = createTimeRange.trim();
         if (ObjectUtils.isEmpty(createTimeRange)) {
-            return Result.success();
+            return Result.ok();
         }
         final TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
         final Date from = timeRange.getStart(), to = timeRange.getEnd();
@@ -323,7 +323,7 @@ public class DashboardController {
         result.setTopicNames(topicNames);
         result.setSeries(seriesList);
         this.ehcacheService.put(key, result);
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("getTopicHistoryChart")
@@ -332,7 +332,7 @@ public class DashboardController {
     public Result<LineInfo> getTopicHistoryChart(@RequestParam(name = "topicName") String topicName) {
         topicName = topicName.trim();
         if (ObjectUtils.isEmpty(topicName)) {
-            return Result.success();
+            return Result.ok();
         }
 
         final LineInfo result = new LineInfo();
@@ -370,6 +370,6 @@ public class DashboardController {
 
         result.setTimes(timesList);
         result.setSeries(seriesList);
-        return Result.success(result);
+        return Result.ok(result);
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.wyyt.kafka.monitor.entity.dto.SysMailConfig;
 import org.wyyt.kafka.monitor.service.common.MailService;
 import org.wyyt.kafka.monitor.service.dto.SysMailConfigService;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class MailConfigController {
                                 @RequestParam(name = "username") final String username,
                                 @RequestParam(name = "password") final String password) {
         final int result = this.sysMailConfigService.save(host, port, username, password);
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("test")
@@ -64,7 +64,7 @@ public class MailConfigController {
                           @RequestParam(name = "subject") final String subject,
                           @RequestParam(name = "html") final String html) throws Exception {
         this.mailService.send(to, subject, html);
-        return Result.success();
+        return Result.ok();
     }
 
 }

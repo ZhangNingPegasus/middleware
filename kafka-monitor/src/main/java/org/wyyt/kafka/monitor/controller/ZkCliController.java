@@ -8,7 +8,7 @@ import org.wyyt.kafka.monitor.entity.vo.ZooKeeperVo;
 import org.wyyt.kafka.monitor.service.common.KafkaZkService;
 import org.wyyt.kafka.monitor.util.ZooKeeperKpiUtil;
 import org.wyyt.tool.exception.ExceptionTool;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +46,7 @@ public class ZkCliController {
                 final ZooKeeperKpi zooKeeperKpi = ZooKeeperKpiUtil.listKpi(zooKeeperInfo.getHost(), Integer.parseInt(zooKeeperInfo.getPort()));
                 if (!ObjectUtils.isEmpty(zooKeeperKpi.getZkNumAliveConnections())) {
                     final List<String> result = zooKeeperVoList.stream().map(p -> String.format("%s:%s", p.getHost(), p.getPort())).collect(Collectors.toList());
-                    return Result.success(result.toString());
+                    return Result.ok(result.toString());
                 }
             }
         } catch (Exception e) {
@@ -60,7 +60,7 @@ public class ZkCliController {
     public Result<String> execute(@RequestParam(name = "command") final String command,
                                   @RequestParam(name = "type") final String type) {
         try {
-            return Result.success(this.kafkaZkService.execute(command, type));
+            return Result.ok(this.kafkaZkService.execute(command, type));
         } catch (Exception e) {
             return Result.error(ExceptionTool.getRootCauseMessage(e));
         }

@@ -4,7 +4,7 @@ package org.wyyt.kafka.monitor.entity.dto;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import org.wyyt.kafka.monitor.entity.base.BaseDto;
+import org.wyyt.admin.ui.entity.base.BaseDto;
 
 import java.util.Objects;
 

@@ -27,6 +27,7 @@
         <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
         <discovery.version>6.3.3</discovery.version>
         <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
+        <checker-qual.version>3.8.0</checker-qual.version>
     </properties>
 
     <dependencies>
@@ -49,6 +50,16 @@
             <groupId>com.nepxion</groupId>
             <artifactId>discovery-plugin-admin-center-starter</artifactId>
             <version>${discovery.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>checker-qual</artifactId>
+                    <groupId>org.checkerframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>error_prone_annotations</artifactId>
+                    <groupId>com.google.errorprone</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- 服务的策略编排插件 -->
@@ -56,6 +67,16 @@
             <groupId>com.nepxion</groupId>
             <artifactId>discovery-plugin-strategy-starter-service</artifactId>
             <version>${discovery.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jsr305</artifactId>
+                    <groupId>com.google.code.findbugs</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- 熔断器 -->
@@ -63,6 +84,12 @@
             <groupId>com.nepxion</groupId>
             <artifactId>discovery-plugin-strategy-starter-hystrix</artifactId>
             <version>${discovery.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>HdrHistogram</artifactId>
+                    <groupId>org.hdrhistogram</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Spring Boot Admin监控 -->
@@ -76,6 +103,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+            <version>${checker-qual.version}</version>
         </dependency>
 
         <dependency>

@@ -7,7 +7,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.db2es.admin.service.PropertyService;
 import org.wyyt.db2es.core.entity.persistent.Property;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class ParamsController {
         if (!ObjectUtils.isEmpty(name)) {
             queryWrapper.lambda().like(Property::getName, name);
         }
-        return Result.success(this.propertyService.list(queryWrapper));
+        return Result.ok(this.propertyService.list(queryWrapper));
     }
 
     @PostMapping("edit")
@@ -57,7 +57,7 @@ public class ParamsController {
     public Result<?> edit(@RequestParam(value = "id") final Long id,
                           @RequestParam(value = "value") final String value) throws Exception {
         if (this.propertyService.editValue(id, value)) {
-            return Result.success();
+            return Result.ok();
         } else {
             return Result.error("");
         }

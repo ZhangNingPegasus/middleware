@@ -18,11 +18,14 @@
         <module>apollo-config</module>
         <module>gateway</module>
         <module>services</module>
+        <module>gateway-admin</module>
+        <module>admin-ui-starter</module>
+        <module>gateway-business</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.0</version>
+        <version>2.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -42,14 +45,13 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot.version>2.4.0</springboot.version>
-        <spring-cloud.version>2020.0.0-M5</spring-cloud.version>
-        <discovery-plugin.version>6.3.3</discovery-plugin.version>
+        <springboot.version>2.4.1</springboot.version>
+        <spring-cloud.version>2020.0.0-M6</spring-cloud.version>
         <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
         <jolokia-core.version>1.6.2</jolokia-core.version>
         <mysql-connector-java.version>8.0.22</mysql-connector-java.version>
         <lombok.version>1.18.16</lombok.version>
-        <hutool-all.version>5.5.1</hutool-all.version>
+        <hutool-all.version>5.5.2</hutool-all.version>
         <fastjson.version>1.2.75</fastjson.version>
         <json.version>20201115</json.version>
         <jackson-databind.version>2.12.0</jackson-databind.version>
@@ -63,13 +65,13 @@
         <ehcache.version>3.9.0</ehcache.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <mybatis.version>3.5.6</mybatis.version>
-        <druid-spring-boot-starter.version>1.2.3</druid-spring-boot-starter.version>
+        <druid-spring-boot-starter.version>1.2.4</druid-spring-boot-starter.version>
         <HikariCP.version>3.4.5</HikariCP.version>
         <shiro.version>1.7.0</shiro.version>
         <reflections.version>0.9.12</reflections.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <elasticsearch.version>7.10.0</elasticsearch.version>
+        <elasticsearch.version>7.10.1</elasticsearch.version>
         <kafka-clients.version>2.6.0</kafka-clients.version>
         <slf4j-api.version>1.7.30</slf4j-api.version>
         <curator-recipes.version>5.1.0</curator-recipes.version>
@@ -86,14 +88,14 @@
         <spring-context-support.version>1.0.11</spring-context-support.version>
         <acm-sdk.version>1.0.9</acm-sdk.version>
         <nacos-api.version>1.4.0</nacos-api.version>
-        <apm-toolkit-trace.version>8.2.0</apm-toolkit-trace.version>
+        <apm-toolkit-trace.version>8.3.0</apm-toolkit-trace.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <hibernate-validator.version>6.1.6.Final</hibernate-validator.version>
         <logstash-logback-encoder.version>6.5</logstash-logback-encoder.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
         <jackson-module-jaxb-annotations.version>2.12.0</jackson-module-jaxb-annotations.version>
-        <xstream.version>1.4.14</xstream.version>
+        <xstream.version>1.4.15</xstream.version>
         <javax.mail-api.version>1.6.2</javax.mail-api.version>
         <javax.mail.version>1.6.2</javax.mail.version>
         <commons-codec.version>1.15</commons-codec.version>
@@ -120,30 +122,6 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <optional>true</optional>
-            </dependency>
-
-            <dependency>
-                <groupId>com.nepxion</groupId>
-                <artifactId>discovery-plugin-register-center-starter-consul</artifactId>
-                <version>${discovery-plugin.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.nepxion</groupId>
-                <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>
-                <version>${discovery-plugin.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.nepxion</groupId>
-                <artifactId>discovery-plugin-strategy-starter-gateway</artifactId>
-                <version>${discovery-plugin.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.nepxion</groupId>
-                <artifactId>discovery-plugin-strategy-starter-hystrix</artifactId>
-                <version>${discovery-plugin.version}</version>
             </dependency>
 
             <dependency>

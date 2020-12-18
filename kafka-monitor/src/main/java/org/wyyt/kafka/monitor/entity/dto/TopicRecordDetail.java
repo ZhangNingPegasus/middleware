@@ -3,7 +3,9 @@ package org.wyyt.kafka.monitor.entity.dto;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.wyyt.kafka.monitor.entity.base.BaseDto;
+import org.wyyt.admin.ui.entity.base.BaseDto;
+
+import java.util.Date;
 
 /**
  * The entity for dynamic table. Using for saving the topic's full content.
@@ -34,4 +36,10 @@ public class TopicRecordDetail extends BaseDto {
      */
     @TableField(value = "`value`")
     private String value;
+
+    /**
+     * 消息时间
+     */
+    @TableField(value = "`timestamp`")
+    private Date timestamp;
 }

@@ -3,7 +3,7 @@ package org.wyyt.kafka.monitor.entity.vo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.wyyt.kafka.monitor.entity.base.BaseDto;
+import org.wyyt.admin.ui.entity.base.BaseDto;
 
 import java.util.List;
 

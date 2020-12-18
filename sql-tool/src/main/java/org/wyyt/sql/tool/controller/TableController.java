@@ -15,7 +15,7 @@ import org.wyyt.sql.tool.entity.vo.IndexVo;
 import org.wyyt.sql.tool.entity.vo.TableInfoVo;
 import org.wyyt.sql.tool.service.TableService;
 import org.wyyt.sql.tool.service.TreeService;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -194,7 +194,7 @@ public final class TableController {
         session.setAttribute("tableCount", tableCount);
         session.setAttribute("data", data);
         session.setAttribute("index", index);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("session1")
@@ -204,7 +204,7 @@ public final class TableController {
                                     @RequestParam(value = "data") final String data) {
         session.setAttribute("names", names);
         session.setAttribute("data", data);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("getTableDetail")
@@ -219,6 +219,6 @@ public final class TableController {
 
         final List<IndexInfo> indexInfoList = this.shardingService.listIndex(dimension, datasource, table);
         final List<FieldInfo> fieldInfoList = this.shardingService.listFields(dimension, datasource, table);
-        return Result.success(new TableInfoVo(databaseCount, tableCount / databaseCount, indexInfoList, fieldInfoList));
+        return Result.ok(new TableInfoVo(databaseCount, tableCount / databaseCount, indexInfoList, fieldInfoList));
     }
 }

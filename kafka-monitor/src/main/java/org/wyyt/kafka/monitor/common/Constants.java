@@ -1,7 +1,5 @@
 package org.wyyt.kafka.monitor.common;
 
-import org.wyyt.kafka.monitor.util.SecurityUtil;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,12 +12,11 @@ import java.util.List;
  * *****************************************************************
  */
 public class Constants {
-    public static final String DEFAULT_ADMIN_USER_NAME = "admin";
-    public static final String DEFAULT_ADMIN_PASSWORD = SecurityUtil.hash("admin");
-    public static final String SYSTEM_ROLE_NAME = "超级管理员";
-    public static final Integer MAX_PAGE_NUM = 10000;
+    public static final List<String> IGNORE_TABLE = Arrays.asList("sys_admin", "sys_alert_cluster", "sys_alert_consumer", "sys_alert_topic", "sys_dingding_config", "sys_mail_config", "sys_page", "sys_permission", "sys_role", "sys_table_name");
 
-    public static final String CURRENT_ADMIN_LOGIN = "CURRENT_ADMIN_LOGIN";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String MAX_VALUE = "MAXVALUE";
+    public static final String MAX_VALUE_PARTITION_NAME = "p_max";
 
     public static final String ZK_BROKER_IDS_PATH = "/brokers/ids";
     public static final String ZK_BROKERS_TOPICS_PATH = "/brokers/topics";

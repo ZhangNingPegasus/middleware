@@ -3,7 +3,7 @@ package org.wyyt.db2es.admin.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.wyyt.db2es.admin.common.Utils;
+import org.wyyt.admin.ui.common.Utils;
 import org.wyyt.db2es.admin.service.TopicDb2EsService;
 import org.wyyt.db2es.admin.service.TopicService;
 import org.wyyt.db2es.admin.service.common.ShardingDbService;
@@ -13,7 +13,7 @@ import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.auto.property.TableProperty;
 import org.wyyt.sharding.entity.FieldInfo;
 import org.wyyt.sharding.service.ShardingService;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -70,11 +70,11 @@ public class TopicController {
         model.addAttribute("topic", topic);
         return String.format("%s/%s", PREFIX, "detail");
     }
-    
+
     @PostMapping("list")
     @ResponseBody
     public Result<List<Topic>> list(@RequestParam(value = "name", required = false) final String name) {
-        return Result.success(this.topicService.listTopic(name));
+        return Result.ok(this.topicService.listTopic(name));
     }
 
     @PostMapping("getMapping")
@@ -93,7 +93,7 @@ public class TopicController {
 
         final DataSource dataSource = this.shardingDbService.getDataSourceByName(dbNameList.get(0));
         final List<FieldInfo> fieldInfoList = this.shardingService.listFields(dataSource, String.format(dimensionInfo.getValue().getTableNameFormat(), 0));
-        return Result.success(Utils.toPrettyFormatJson(EsMappingUtils.getEsMapping(fieldInfoList)));
+        return Result.ok(Utils.toPrettyFormatJson(EsMappingUtils.getEsMapping(fieldInfoList)));
     }
 
     @PostMapping("add")
@@ -119,13 +119,13 @@ public class TopicController {
         topic.setMapping(mapping);
         topic.setDescription(description);
         this.topicService.save(topic);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("delete")
     @ResponseBody
     public Result<?> add(@RequestParam(value = "id") final Long id) {
         this.topicDb2EsService.deleteTopic(id);
-        return Result.success();
+        return Result.ok();
     }
 }

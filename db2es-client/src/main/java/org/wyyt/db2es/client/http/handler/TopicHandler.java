@@ -15,7 +15,7 @@ import org.wyyt.db2es.core.entity.persistent.Topic;
 import org.wyyt.db2es.core.entity.view.TopicVo;
 import org.wyyt.db2es.core.util.CommonUtils;
 import org.wyyt.tool.exception.ExceptionTool;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -66,9 +66,9 @@ public final class TopicHandler extends BaseHandler {
                 result.add(topicVo);
             }
             result.sort(Comparator.comparing(TopicVo::getTopicName));
-            return Result.success(result);
+            return Result.ok(result);
         } catch (Exception exception) {
-            return Result.success(result);
+            return Result.ok(result);
         }
     }
 
@@ -103,7 +103,7 @@ public final class TopicHandler extends BaseHandler {
         }
 
         this.context.getProcessorWrapper().startTopic(topicPartition, checkpoint, new RecordListenerImpl(this.context));
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("stopTopic")
@@ -117,7 +117,7 @@ public final class TopicHandler extends BaseHandler {
         if (this.context.getProcessorWrapper().containsTopic(topicPartition)) {
             this.context.getProcessorWrapper().stopTopic(topicPartition);
         }
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("restartTopic")
@@ -145,7 +145,7 @@ public final class TopicHandler extends BaseHandler {
             stopTopic(param);
         }
         this.startTopic(param);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("startAll")
@@ -164,13 +164,13 @@ public final class TopicHandler extends BaseHandler {
         }
 
         this.context.getProcessorWrapper().startAll(checkpoint);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("stopAll")
     public synchronized final Result<?> stopAll(final Param param) throws InterruptedException {
         this.context.getProcessorWrapper().stopAll();
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("calcOffsetByTimestamp")
@@ -190,7 +190,7 @@ public final class TopicHandler extends BaseHandler {
         }
 
         final TopicPartition topicPartition = new TopicPartition(topicName, Integer.parseInt(partition));
-        return Result.success(this.context.getKafkaAdminClientWrapper().listOffsetForTimes(topicPartition, Long.parseLong(timestamp)));
+        return Result.ok(this.context.getKafkaAdminClientWrapper().listOffsetForTimes(topicPartition, Long.parseLong(timestamp)));
     }
 
     @PostMapping("installTopic")
@@ -214,7 +214,7 @@ public final class TopicHandler extends BaseHandler {
         }
         this.context.getConfig().getTopicMap().put(topic.getName(), topic);
         this.context.getProcessorWrapper().startTopic(topicPartition, null, new RecordListenerImpl(this.context));
-        return Result.success(true);
+        return Result.ok(true);
     }
 
     @PostMapping("uninstallTopic")
@@ -234,6 +234,6 @@ public final class TopicHandler extends BaseHandler {
         }
         this.context.getProcessorWrapper().stopTopic(topicPartition);
         this.context.getConfig().getTopicMap().remove(topicName);
-        return Result.success(true);
+        return Result.ok(true);
     }
 }

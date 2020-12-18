@@ -3,7 +3,7 @@ package org.wyyt.db2es.admin.utils;
 import cn.hutool.core.date.DateTime;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.beanutils.ConvertUtils;
-import org.wyyt.db2es.admin.common.Utils;
+import org.wyyt.admin.ui.common.Utils;
 import org.wyyt.db2es.admin.entity.vo.CompareJsonVo;
 import org.wyyt.db2es.core.util.CommonUtils;
 import org.wyyt.tool.date.DateTool;

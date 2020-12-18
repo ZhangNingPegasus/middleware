@@ -10,7 +10,7 @@ import org.wyyt.kafka.monitor.entity.dto.SysDingDingConfig;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.dto.SysAlertTopicService;
 import org.wyyt.kafka.monitor.service.dto.SysDingDingConfigService;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.Comparator;
 import java.util.List;
@@ -85,7 +85,7 @@ public class AlertTopicController {
         final QueryWrapper<SysAlertTopic> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().orderByAsc(SysAlertTopic::getRowCreateTime);
         Page<SysAlertTopic> page = this.sysAlertTopicService.page(new Page<>(pageNum, pageSize), queryWrapper);
-        return Result.success(page.getRecords(), page.getTotal());
+        return Result.ok(page.getRecords(), page.getTotal());
     }
 
     @PostMapping("save")
@@ -114,7 +114,7 @@ public class AlertTopicController {
         } else {
             this.sysAlertTopicService.update(id, topicName, fromTime, toTime, fromTps, toTps, fromMomTps, toMomTps, email, accessToken, secret);
         }
-        return Result.success();
+        return Result.ok();
     }
 
 
@@ -122,6 +122,6 @@ public class AlertTopicController {
     @ResponseBody
     public Result<?> del(@RequestParam(value = "id") final Long id) {
         this.sysAlertTopicService.removeById(id);
-        return Result.success();
+        return Result.ok();
     }
 }

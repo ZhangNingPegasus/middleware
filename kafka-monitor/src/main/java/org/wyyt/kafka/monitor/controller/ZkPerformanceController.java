@@ -14,7 +14,7 @@ import org.wyyt.kafka.monitor.service.common.EhcacheService;
 import org.wyyt.kafka.monitor.service.dto.SysKpiService;
 import org.wyyt.kafka.monitor.util.CommonUtil;
 import org.wyyt.tool.date.DateTool;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,7 +77,7 @@ public class ZkPerformanceController {
             result.setQueue(getInfo(sysKpiList, SysKpi.ZK_KPI.ZK_OUTSTANDING_REQUESTS));
             ehcacheService.put(key, result);
         }
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     private LineInfo getInfo(final List<SysKpi> sysKpiList,

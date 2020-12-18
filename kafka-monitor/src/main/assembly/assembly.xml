@@ -53,9 +53,6 @@
 
     <dependencySets>
         <dependencySet>
-            <includes>
-                <include>org.wyyt.kafka.monitor:kafka-monitor</include>
-            </includes>
             <outputDirectory>lib</outputDirectory>
         </dependencySet>
     </dependencySets>

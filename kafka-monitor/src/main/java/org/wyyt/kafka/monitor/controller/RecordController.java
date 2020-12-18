@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-import org.wyyt.kafka.monitor.common.Constants;
 import org.wyyt.kafka.monitor.config.PropertyConfig;
 import org.wyyt.kafka.monitor.entity.po.TimeRange;
 import org.wyyt.kafka.monitor.entity.vo.KafkaConsumerVo;
@@ -20,10 +19,9 @@ import org.wyyt.kafka.monitor.entity.vo.RecordVo;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.dto.TopicRecordService;
 import org.wyyt.kafka.monitor.util.CommonUtil;
-import org.wyyt.tool.compress.GZipTool;
 import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.exception.ExceptionTool;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -66,8 +64,8 @@ public class RecordController {
                               @RequestParam(value = "partitionId") final Integer partitionId,
                               @RequestParam(value = "offset") final Long offset,
                               @RequestParam(value = "key") final String key,
-                              @RequestParam(value = "createTime") final Date createTime) throws Exception {
-        final String recordValue = GZipTool.uncompress(this.topicRecordService.getRecordDetailValue(topicName, partitionId, offset));
+                              @RequestParam(value = "createTime") final Date createTime) {
+        final String recordValue = this.topicRecordService.getRecordDetailValue(topicName, partitionId, offset);
         model.addAttribute("topicName", topicName);
         model.addAttribute("partitionId", partitionId);
         model.addAttribute("offset", offset);
@@ -102,7 +100,7 @@ public class RecordController {
     @PostMapping("listTopicPartitions")
     @ResponseBody
     public Result<Set<Integer>> listTopicPartitions(@RequestParam(name = "topicName") final String topicName) throws Exception {
-        return Result.success(kafkaService.listPartitionIds(topicName));
+        return Result.ok(kafkaService.listPartitionIds(topicName));
     }
 
     @PostMapping("list")
@@ -112,21 +110,20 @@ public class RecordController {
                                        @RequestParam(name = "offset", required = false, defaultValue = "-1") Long offset,
                                        @RequestParam(name = "key", required = false, defaultValue = "") String key,
                                        @RequestParam(name = "createTimeRange", required = false, defaultValue = "") String createTimeRange,
-                                       @RequestParam(value = "page") Integer pageNum,
+                                       @RequestParam(value = "page") final Integer pageNum,
                                        @RequestParam(value = "limit") Integer pageSize) {
         topicName = topicName.trim();
         key = key.trim();
         createTimeRange = createTimeRange.trim();
-        pageNum = Math.min(pageNum, Constants.MAX_PAGE_NUM);
         if (ObjectUtils.isEmpty(topicName)) {
-            return Result.success();
+            return Result.ok();
         }
         final IPage<RecordVo> page = new Page(pageNum, pageSize);
         final TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
         final Date from = timeRange.getStart(), to = timeRange.getEnd();
         try {
             this.topicRecordService.listRecords(page, topicName, partitionId, offset, key, from, to);
-            return Result.success(page.getRecords(), page.getTotal());
+            return Result.ok(page.getRecords(), page.getTotal());
         } catch (final Exception e) {
             log.error(ExceptionTool.getRootCauseMessage(e), e);
             return Result.error(ExceptionTool.getRootCauseMessage(e));
@@ -144,9 +141,9 @@ public class RecordController {
         if (ObjectUtils.isEmpty(topicName)) {
             return Result.error("主题不能为空");
         }
-        final String value = topicRecordService.getRecordDetailValue(topicName, partitionId, offset);
+        final String value = this.topicRecordService.getRecordDetailValue(topicName, partitionId, offset);
         this.kafkaService.sendMessage(topicName, key, value);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("listTopicConsumers")
@@ -154,7 +151,7 @@ public class RecordController {
     public Result<List<RecordConsumeVo>> listTopicConsumers(@RequestParam(name = "topicName", defaultValue = "") final String topicName,
                                                             @RequestParam(name = "partitionId", required = false) final Integer partitionId,
                                                             @RequestParam(name = "offset", required = false, defaultValue = "") final Long offset) throws Exception {
-        final List<KafkaConsumerVo> allConsumers = this.kafkaService.listKafkaConsumers(null);
+        final List<KafkaConsumerVo> allConsumers = this.kafkaService.listKafkaConsumers();
         final List<KafkaConsumerVo> kafkaConsumerVoList = allConsumers.stream().filter(p -> p.getTopicNames().contains(topicName)).collect(Collectors.toList());
 
         final List<RecordConsumeVo> result = new ArrayList<>(kafkaConsumerVoList.size());
@@ -169,6 +166,6 @@ public class RecordController {
                 result.add(recordConsumeVo);
             }
         }
-        return Result.success(result);
+        return Result.ok(result);
     }
 }

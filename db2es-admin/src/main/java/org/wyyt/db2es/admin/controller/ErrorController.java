@@ -8,15 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-import org.wyyt.db2es.admin.common.Utils;
+import org.wyyt.admin.ui.common.Utils;
+import org.wyyt.admin.ui.entity.vo.TimeRangeVo;
 import org.wyyt.db2es.admin.entity.dto.ErrorLog;
 import org.wyyt.db2es.admin.entity.vo.CompareJsonVo;
-import org.wyyt.db2es.admin.entity.vo.TimeRange;
 import org.wyyt.db2es.admin.service.ErrorLogService;
 import org.wyyt.db2es.admin.service.common.EsService;
 import org.wyyt.db2es.admin.service.common.ShardingDbService;
 import org.wyyt.db2es.admin.utils.CompareUtils;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.Collections;
 import java.util.List;
@@ -107,7 +107,7 @@ public class ErrorController {
                                        @RequestParam(value = "offset", required = false) final Long offset,
                                        @RequestParam(value = "page") final Integer pageNum,
                                        @RequestParam(value = "limit") final Integer pageSize) {
-        final TimeRange range = Utils.splitTime(timeRange);
+        final TimeRangeVo timeRangeVo = Utils.splitTime(timeRange);
 
         final QueryWrapper<ErrorLog> queryWrapper = new QueryWrapper<>();
         final LambdaQueryWrapper<ErrorLog> lambdaQueryWrapper = queryWrapper.lambda()
@@ -119,8 +119,8 @@ public class ErrorController {
         if (null != isResolved) {
             lambdaQueryWrapper.eq(ErrorLog::getIsResolved, isResolved);
         }
-        if (null != range) {
-            lambdaQueryWrapper.between(ErrorLog::getRowCreateTime, range.getStart(), range.getEnd());
+        if (null != timeRangeVo) {
+            lambdaQueryWrapper.between(ErrorLog::getRowCreateTime, timeRangeVo.getStart(), timeRangeVo.getEnd());
         }
         if (!ObjectUtils.isEmpty(topicName)) {
             lambdaQueryWrapper.eq(ErrorLog::getTopicName, topicName);
@@ -134,20 +134,20 @@ public class ErrorController {
 
         final IPage<ErrorLog> page = new Page<>(pageNum, pageSize);
         this.errorLogService.page(page, queryWrapper);
-        return Result.success(page.getRecords(), page.getTotal());
+        return Result.ok(page.getRecords(), page.getTotal());
     }
 
     @PostMapping("resolve")
     @ResponseBody
     public Result<?> resolve(@RequestParam(value = "id") final Long id) {
         this.errorLogService.resolve(id);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("repair")
     @ResponseBody
     public Result<?> repair(@RequestParam(value = "id") final Long errorLogId) throws Exception {
         this.errorLogService.repair(errorLogId);
-        return Result.success();
+        return Result.ok();
     }
 }

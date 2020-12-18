@@ -52,9 +52,6 @@
 
     <dependencySets>
         <dependencySet>
-            <includes>
-                <include>org.wyyt.admin:spring-boot-admin-server</include>
-            </includes>
             <outputDirectory>lib</outputDirectory>
         </dependencySet>
     </dependencySets>

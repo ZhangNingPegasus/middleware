@@ -17,7 +17,6 @@ import org.wyyt.sharding.exception.ShardingException;
 import org.wyyt.sharding.service.RewriteService;
 import org.wyyt.sharding.service.ShardingService;
 import org.wyyt.sql.tool.database.Db;
-import org.wyyt.sql.tool.entity.dto.SysPermission;
 import org.wyyt.sql.tool.entity.dto.SysSql;
 import org.wyyt.sql.tool.entity.vo.AdminVo;
 import org.wyyt.sql.tool.entity.vo.DataTableVo;
@@ -114,10 +113,6 @@ public class SqlService {
             final List<SQLStatement> sqlStatementList = SqlTool.analyseMySql(singleSql);
             final SQLSelectStatement sqlSelectStatement = (SQLSelectStatement) sqlStatementList.get(0);
             final String tableName = sqlSelectStatement.getSelect().getQueryBlock().getFrom().toString();
-            final SysPermission sysPermission = this.db.getPermissionByRoleIdAndTableName(adminVo.getSysRoleId(), tableName);
-            if (null == sysPermission || !sysPermission.getCanSelect()) {
-                throw new ShardingException(String.format("当前角色[%s]没有表[%s]的查询权限", adminVo.getRole().getName(), tableName));
-            }
         }
         final DataTableVo result = new DataTableVo();
         final List<String> columnNameList = new ArrayList<>();
@@ -170,10 +165,6 @@ public class SqlService {
             final List<SQLStatement> sqlStatementList = SqlTool.analyseMySql(singleSql);
             final MySqlInsertStatement insertStatement = (MySqlInsertStatement) sqlStatementList.get(0);
             final String tableName = insertStatement.getTableName().getSimpleName();
-            final SysPermission sysPermission = this.db.getPermissionByRoleIdAndTableName(adminVo.getSysRoleId(), tableName);
-            if (null == sysPermission || !sysPermission.getCanInsert()) {
-                throw new ShardingException(String.format("当前角色[%s]没有表[%s]的插入权限", adminVo.getRole().getName(), tableName));
-            }
         }
         final DataTableVo result = new DataTableVo();
         final List<String> columnNameList = new ArrayList<>();
@@ -205,10 +196,6 @@ public class SqlService {
             final List<SQLStatement> sqlStatementList = SqlTool.analyseMySql(singleSql);
             final MySqlUpdateStatement updateStatement = (MySqlUpdateStatement) sqlStatementList.get(0);
             final String tableName = updateStatement.getTableName().getSimpleName();
-            final SysPermission sysPermission = this.db.getPermissionByRoleIdAndTableName(adminVo.getSysRoleId(), tableName);
-            if (null == sysPermission || !sysPermission.getCanUpdate()) {
-                throw new ShardingException(String.format("当前角色[%s]没有表[%s]的修改权限", adminVo.getRole().getName(), tableName));
-            }
         }
 
         final DataTableVo result = new DataTableVo();
@@ -241,10 +228,6 @@ public class SqlService {
             final List<SQLStatement> sqlStatementList = SqlTool.analyseMySql(singleSql);
             final MySqlDeleteStatement mySqlDeleteStatement = (MySqlDeleteStatement) sqlStatementList.get(0);
             final String tableName = mySqlDeleteStatement.getTableName().getSimpleName();
-            final SysPermission sysPermission = this.db.getPermissionByRoleIdAndTableName(adminVo.getSysRoleId(), tableName);
-            if (sysPermission == null || !sysPermission.getCanDelete()) {
-                throw new ShardingException(String.format("当前角色[%s]没有表[%s]的删除权限", adminVo.getRole().getName(), tableName));
-            }
         }
 
         final DataTableVo result = new DataTableVo();

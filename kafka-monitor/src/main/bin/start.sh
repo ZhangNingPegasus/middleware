@@ -15,6 +15,7 @@ cd $(dirname $0) || exit 1
 cd ..
 DEPLOY_DIR=$(pwd)
 LIB_DIR=$DEPLOY_DIR/lib
+CONFIG_DIR=$DEPLOY_DIR/config
 JAR_FULL_NAME=
 files=$(ls $LIB_DIR)
 for filename in $files; do
@@ -25,7 +26,7 @@ for filename in $files; do
 done
 jarName=${JAR_FULL_NAME/.jar/}
 VERSION=${jarName##*-}
-JAR_DIR=../lib/$JAR_FULL_NAME
+JAR_DIR=$LIB_DIR/$JAR_FULL_NAME
 
 PID=$(ps -ef | grep $JAR_FULL_NAME | grep -v grep | awk '{print $2}')
 
@@ -47,10 +48,10 @@ fi
 JAVA_OPTS="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true "
 JAVA_GC="-Xloggc:$COMMON_LOG_DIR/$JAR_NAME-gc.log -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCApplicationStoppedTime -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=10M "
 
-JAVA_MEM_OPTS="-server -Xms${Xms} -Xmx${Xmx} -Xmn${Xmn} -XX:NewRatio=1 -Xss256k -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSCompactAtFullCollection -XX:LargePageSizeInBytes=128m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 "
+JAVA_MEM_OPTS="-server -Xms${Xms} -Xmx${Xmx} -Xmn${Xmn} -XX:NewRatio=1 -Xss256k -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 "
 JAVA_MEM_OPTS="$JAVA_MEM_OPTS -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m -XX:MaxDirectMemorySize=512m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$LOGS_HEAPDUMP/ "
 JAVA_PARAMETER_OPTS="-Dversion=$VERSION -Dwork.dir=$DEPLOY_DIR"
-JAVA_YML_CONFIG="--spring.config.location=../config/application.yml"
+JAVA_YML_CONFIG="--spring.config.location=$CONFIG_DIR/application.yml"
 
 echo "java $JAVA_OPTS $JAVA_GC $JAVA_MEM_OPTS $JAVA_PARAMETER_OPTS -jar $JAR_DIR $JAVA_YML_CONFIG"
 nohup java $JAVA_OPTS $JAVA_GC $JAVA_MEM_OPTS $JAVA_PARAMETER_OPTS -jar $JAR_DIR $JAVA_YML_CONFIG >/dev/null 2>&1 &

@@ -1,0 +1,19 @@
+server:
+  port: 3002
+
+spring:
+  application:
+    name: c
+    group: scfs
+    version: 1.2
+  cloud:
+    consul:
+      host: 192.168.5.21
+      port: 8500
+  zipkin:
+    base-url: http://192.168.6.167:9411/
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 1

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import org.springframework.util.ObjectUtils;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.anno.TranSave;
 import org.wyyt.kafka.monitor.common.Constants;
-import org.wyyt.kafka.monitor.config.PropertyConfig;
 import org.wyyt.kafka.monitor.entity.dto.SysTableName;
 import org.wyyt.kafka.monitor.entity.dto.TopicRecord;
 import org.wyyt.kafka.monitor.entity.po.MaxOffset;
@@ -47,7 +45,6 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
     public static final String TABLE_PREFIX = "t_";
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAX_POOL_SIZE = 10;
-    private final PropertyConfig propertyConfig;
     private final SysTableNameService sysTableNameService;
     private final ExecutorService executorService;
     private final DataSource dataSource;
@@ -57,17 +54,17 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
     private final ProcessorService processorService;
     private final SysAlertTopicService sysAlertTopicService;
     private final SysAlertConsumerService sysAlertConsumerService;
+    private final PartitionService partitionService;
 
-    public TopicRecordService(final PropertyConfig propertyConfig,
-                              final SysTableNameService sysTableNameService,
+    public TopicRecordService(final SysTableNameService sysTableNameService,
                               final DataSource dataSource,
                               final KafkaService kafkaService,
                               final SysTopicSizeService sysTopicSizeService,
                               final SysTopicLagService sysTopicLagService,
                               final ProcessorService processorService,
                               final SysAlertTopicService sysAlertTopicService,
-                              final SysAlertConsumerService sysAlertConsumerService) {
-        this.propertyConfig = propertyConfig;
+                              final SysAlertConsumerService sysAlertConsumerService,
+                              final PartitionService partitionService) {
         this.sysTableNameService = sysTableNameService;
         this.dataSource = dataSource;
         this.kafkaService = kafkaService;
@@ -76,6 +73,7 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
         this.processorService = processorService;
         this.sysAlertTopicService = sysAlertTopicService;
         this.sysAlertConsumerService = sysAlertConsumerService;
+        this.partitionService = partitionService;
         this.executorService = new ThreadPoolExecutor(CORE_POOL_SIZE,
                 MAX_POOL_SIZE,
                 10L,
@@ -118,7 +116,7 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
             return null;
         }
         try {
-            return this.baseMapper.getRecordDetailValue(sysTableName.getRecordDetailTableName(), partitionId, offset);
+            return GZipTool.uncompress(this.baseMapper.getRecordDetailValue(sysTableName.getRecordDetailTableName(), partitionId, offset));
         } catch (final Exception e) {
             log.error(ExceptionTool.getRootCauseMessage(e), e);
             return null;
@@ -162,7 +160,7 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
         final Set<String> topicNames = filterExistedTopicTable(topicNameSet);
         final List<SysTableName> sysTableNameList = insertTableNames(topicNames);
         if (!sysTableNameList.isEmpty()) {
-            this.baseMapper.createTableIfNotExists(sysTableNameList);
+            this.baseMapper.createTableIfNotExists(sysTableNameList, this.partitionService.getPartitionInfoList());
         }
         return this.sysTableNameService.listMap();
     }
@@ -199,24 +197,6 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
             result.add(this.sysTableNameService.insert(topicName, recordTableName, recordDetailTableName));
         }
         return result;
-    }
-
-    @TranSave
-    public void deleteExpired(Set<String> topicNames) {
-        if (null == topicNames || topicNames.isEmpty()) {
-            return;
-        }
-
-        Date now = new Date();
-        Date date = DateUtils.addDays(now, -this.propertyConfig.getRetentionDays());
-
-        for (String topicName : topicNames) {
-            final SysTableName sysTableName = this.sysTableNameService.getByTopicName(topicName);
-            if (null == sysTableName) {
-                continue;
-            }
-            this.baseMapper.deleteExpired(sysTableName.getRecordTableName(), sysTableName.getRecordDetailTableName(), date);
-        }
     }
 
     @TranSave
@@ -267,11 +247,12 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
                         connection.commit();
                     }
 
-                    try (final PreparedStatement preparedStatement = connection.prepareStatement(String.format("INSERT IGNORE INTO `%s`(`partition_id`,`offset`,`value`) VALUES(?,?,?)", sysTableName.getRecordDetailTableName()))) {
+                    try (final PreparedStatement preparedStatement = connection.prepareStatement(String.format("INSERT IGNORE INTO `%s`(`partition_id`,`offset`,`value`,`timestamp`) VALUES(?,?,?,?)", sysTableName.getRecordDetailTableName()))) {
                         for (final TopicRecord topicRecord : pair.getValue()) {
                             preparedStatement.setInt(1, topicRecord.getPartitionId());
                             preparedStatement.setLong(2, topicRecord.getOffset());
                             preparedStatement.setString(3, GZipTool.compress(topicRecord.getValue()));
+                            preparedStatement.setTimestamp(4, new java.sql.Timestamp(topicRecord.getTimestamp().getTime()));
                             preparedStatement.addBatch();
                         }
                         preparedStatement.executeBatch();
@@ -295,7 +276,7 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
         this.executorService.shutdownNow();
     }
 
-    public void deleteTopic(final List<String> topicNameList) throws Exception {
+    public void deleteTopic(final List<String> topicNameList) {
         final Set<SysTableName> sysTableNameSet = new HashSet<>(topicNameList.size());
         for (String topicName : topicNameList) {
             if (ObjectUtils.isEmpty(topicName.trim())) {

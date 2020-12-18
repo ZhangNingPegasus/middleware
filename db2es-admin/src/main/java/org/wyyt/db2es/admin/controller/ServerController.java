@@ -25,7 +25,7 @@ import org.wyyt.db2es.core.entity.view.SettingVo;
 import org.wyyt.db2es.core.exception.Db2EsException;
 import org.wyyt.sharding.entity.ShardingResult;
 import org.wyyt.sharding.service.ShardingService;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.io.IOException;
 import java.util.*;
@@ -132,7 +132,7 @@ public class ServerController {
                 }
             }
         }
-        return Result.success(topicInfoVoList);
+        return Result.ok(topicInfoVoList);
     }
 
     @PostMapping("listTopicDb2Es")
@@ -148,21 +148,21 @@ public class ServerController {
 
         final List<TopicDb2EsVo> result = new ArrayList<>(topicDb2EsVoMap.values());
         result.sort(Comparator.comparing(TopicDb2EsVo::getDb2esId));
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("start")
     @ResponseBody
     public synchronized Result<?> start(@RequestParam(value = "topicName") final String topicName) throws Exception {
         this.db2EsHttpService.start(topicName);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("stop")
     @ResponseBody
     public synchronized Result<?> stop(@RequestParam(value = "topicName") final String topicName) throws Exception {
         this.db2EsHttpService.stop(topicName);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("restart")
@@ -171,14 +171,14 @@ public class ServerController {
                                           @RequestParam(value = "offset") final String offset,
                                           @RequestParam(value = "timestamp") final String timestamp) throws Exception {
         this.db2EsHttpService.restart(topicName, offset, timestamp);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("calcOffset")
     @ResponseBody
     public Result<TopicOffset> reset(@RequestParam(value = "topicName") final String topicName,
                                      @RequestParam(value = "timestamp") final Date timestamp) throws Exception {
-        return Result.success(this.db2EsHttpService.calcOffsetByTimestamp(topicName, timestamp.getTime()));
+        return Result.ok(this.db2EsHttpService.calcOffsetByTimestamp(topicName, timestamp.getTime()));
     }
 
     @PostMapping("listShards")
@@ -186,7 +186,7 @@ public class ServerController {
     public Result<List<IndexVo>> listShards(@RequestParam(value = "indexName") final String indexName) {
         final List<IndexVo> indexVos = this.esService.listIndexVo(Collections.singleton(indexName));
         indexVos.sort(Comparator.comparing(o -> o.getShard().concat(o.getPrirep())));
-        return Result.success(indexVos);
+        return Result.ok(indexVos);
     }
 
     @PostMapping("listSetting")
@@ -206,7 +206,7 @@ public class ServerController {
                     String.format("id=%s的备用节点", leaderNodeVo.getId())));
         }
 
-        return Result.success(setting);
+        return Result.ok(setting);
     }
 
     @PostMapping("installTopic")
@@ -214,14 +214,14 @@ public class ServerController {
     public synchronized Result<?> installTopic(@RequestParam(value = "db2esId") final Integer db2esId,
                                                @RequestParam(value = "topicId") final Long topicId) throws Exception {
         this.topicDb2EsService.installTopic(db2esId, topicId);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("uninstallTopic")
     @ResponseBody
     public synchronized Result<?> uninstallTopic(@RequestParam(value = "topicName") final String topicName) throws Exception {
         this.topicDb2EsService.uninstallTopic(topicName);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("remove")
@@ -229,13 +229,13 @@ public class ServerController {
     public Result<?> remove(@RequestParam(value = "db2esId") final Integer db2esId,
                             @RequestParam(value = "id") final Long topicId) throws Exception {
         this.topicDb2EsService.remove(db2esId, topicId);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("listUnused")
     @ResponseBody
     public Result<List<Topic>> listUnused() {
-        return Result.success(this.topicDb2EsService.listUnused());
+        return Result.ok(this.topicDb2EsService.listUnused());
     }
 
     @PostMapping("diffData")
@@ -268,7 +268,7 @@ public class ServerController {
         final CompareJsonVo compare = CompareUtils.compare(Collections.singletonList(dbData), Collections.singletonList(esData));
         compareDataResult.setDbData(compare.getFirst());
         compareDataResult.setEsData(compare.getSecond());
-        return Result.success(compareDataResult);
+        return Result.ok(compareDataResult);
     }
 
     @PostMapping("sync")
@@ -296,7 +296,7 @@ public class ServerController {
                 shardingResult.getTableName(),
                 indexName,
                 pkValue);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("optimize")
@@ -307,14 +307,14 @@ public class ServerController {
             return Result.error(String.format("不存在索引%s", indexAliasName));
         }
         final boolean result = this.esService.optimizeBulk(indexNameSet.stream().map(IndexName::toString).collect(Collectors.toSet()));
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("restore")
     @ResponseBody
     public Result<?> restore(@RequestParam(value = "topicName") final String indexAliasName) throws Exception {
         final boolean result = this.esService.unoptimizeBulk(indexAliasName);
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @Data

@@ -17,7 +17,7 @@ import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.dto.TopicRecordService;
 import org.wyyt.kafka.monitor.util.CommonUtil;
 import org.wyyt.tool.exception.ExceptionTool;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -74,18 +74,18 @@ public class ConsumerController {
                                               @RequestParam(value = "page") final Integer pageNum,
                                               @RequestParam(value = "limit") final Integer pageSize) {
         try {
-            final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers(searchGroupId.trim());
+            final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers(searchGroupId.trim(), false);
 
             final List<KafkaConsumerVo> currentPage = kafkaConsumerVoList.stream()
-                    .skip(pageSize * (pageNum - 1))
+                    .skip(pageSize * (pageNum - 1L))
                     .limit(pageSize)
                     .sorted(Comparator.comparing(KafkaConsumerVo::getGroupId))
                     .collect(Collectors.toList());
             httpSession.setAttribute(Constants.SESSION_KAFKA_CONSUMER_INFO, currentPage);
-            return Result.success(currentPage, kafkaConsumerVoList.size());
+            return Result.ok(currentPage, kafkaConsumerVoList.size());
         } catch (final Exception e) {
             log.error(ExceptionTool.getRootCauseMessage(e), e);
-            return Result.success();
+            return Result.ok();
         }
     }
 
@@ -128,9 +128,9 @@ public class ConsumerController {
             root.setChildren(consuerGroupTreeInfoList);
         }
         if (null != root.getChildren() && root.getChildren().size() > 0) {
-            return Result.success(root);
+            return Result.ok(root);
         } else {
-            return Result.success();
+            return Result.ok();
         }
     }
 
@@ -140,7 +140,7 @@ public class ConsumerController {
         groupId = groupId.trim();
         final List<TopicVo> result = new ArrayList<>();
 
-        final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers(groupId);
+        final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers(groupId, true);
 
         if (null != kafkaConsumerVoList && !kafkaConsumerVoList.isEmpty()) {
             final KafkaConsumerVo kafkaConsumerVo = kafkaConsumerVoList.get(0);
@@ -176,7 +176,7 @@ public class ConsumerController {
             }
             topicVo.setLag(lag);
         }
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("listOffsetVo")
@@ -184,10 +184,10 @@ public class ConsumerController {
     public Result<List<OffsetVo>> listOffsetVo(@RequestParam(name = "groupId") final String groupId,
                                                @RequestParam(name = "topicName") final String topicName) {
         try {
-            return Result.success(this.kafkaService.listOffsetVo(null, groupId.trim(), topicName.trim()));
+            return Result.ok(this.kafkaService.listOffsetVo(null, groupId.trim(), topicName.trim()));
         } catch (final Exception exception) {
             log.error(ExceptionTool.getRootCauseMessage(exception), exception);
-            return Result.success();
+            return Result.ok();
         }
     }
 
@@ -203,7 +203,7 @@ public class ConsumerController {
         } catch (final Exception exception) {
             return Result.error(String.format("偏移量修改失败, 原因:%s", ExceptionTool.getRootCauseMessage(exception)));
         }
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("del")
@@ -211,7 +211,7 @@ public class ConsumerController {
     public Result<?> del(@RequestParam(name = "consumerGroupIds") final String consumerGroupIds) {
         String errMsg = this.topicRecordService.deleteConsumer(new HashSet<>(Arrays.asList(consumerGroupIds.split(","))));
         if (ObjectUtils.isEmpty(errMsg)) {
-            return Result.success();
+            return Result.ok();
         } else {
             return Result.error(String.format("部分消费者删除失败, 原因: %s", errMsg));
         }

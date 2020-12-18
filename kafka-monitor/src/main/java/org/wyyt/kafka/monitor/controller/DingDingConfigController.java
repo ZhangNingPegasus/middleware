@@ -8,7 +8,7 @@ import org.wyyt.kafka.monitor.service.dto.SysDingDingConfigService;
 import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.dingtalk.DingTalkTool;
 import org.wyyt.tool.dingtalk.Message;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.net.InetAddress;
 import java.util.Arrays;
@@ -55,7 +55,7 @@ public class DingDingConfigController {
     public Result<Integer> save(@RequestParam(name = "accesstoken") final String accesstoken,
                                 @RequestParam(name = "secret") final String secret) {
         int result = this.sysDingDingConfigService.save(accesstoken, secret);
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("test")
@@ -74,6 +74,6 @@ public class DingDingConfigController {
                 "告警时间：" + DateTool.format(new Date()) + "\n"));
         message.setAt(new Message.At(Arrays.asList(atMobiles.split(",")), isAtAll));
         DingTalkTool.send(message, sysDingDingConfig.getAccessToken(), sysDingDingConfig.getSecret());
-        return Result.success();
+        return Result.ok();
     }
 }

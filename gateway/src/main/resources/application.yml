@@ -3,13 +3,13 @@ server:
 
 spring:
   application:
-    name: spring-cloud-gateway
-    group: wyyt-spring-cloud-gateway
+    name: ${gateway_consul_name}
+    group: ${gateway_consul_group}
     version: 1.0
   cloud:
     consul:
-      host: 192.168.5.21
-      port: 8500
+      host: ${consul_host}
+      port: ${consul_port}
   zipkin:
     base-url: http://192.168.6.167:9411/
     sender:

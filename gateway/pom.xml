@@ -31,6 +31,18 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.wyyt</groupId>
+            <artifactId>tool</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wyyt</groupId>
+            <artifactId>gateway-business</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- 注册中心插件 -->
         <dependency>
             <groupId>com.nepxion</groupId>

@@ -8,8 +8,14 @@ apollo:
     eagerLoad:
       enabled: true
 
+admin:
+  ui:
+    title: Kafka监控管理综合平台
+    full-name: Kafka监控管理综合平台
+    short-name: Kafka监控管理综合平台
+
 server:
-  port: 8080
+  port: 9999
   tomcat:
     uri-encoding: UTF-8
   compression:

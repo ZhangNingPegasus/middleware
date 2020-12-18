@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
+import org.wyyt.admin.ui.entity.base.BaseDto;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,11 +20,7 @@ import java.util.Date;
  * *****************************************************************
  */
 @Data
-public final class SysPermission implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+public final class SysPermission extends BaseDto {
     @TableField(value = "sys_role_id")
     private Long sysRoleId;
     @TableField(value = "role_name")
@@ -38,6 +35,4 @@ public final class SysPermission implements Serializable {
     private Boolean canUpdate;
     @TableField(value = "can_select")
     private Boolean canSelect;
-    @TableField(value = "create_time")
-    private Date createTime;
 }

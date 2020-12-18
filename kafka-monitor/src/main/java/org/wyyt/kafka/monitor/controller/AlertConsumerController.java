@@ -11,7 +11,7 @@ import org.wyyt.kafka.monitor.entity.vo.KafkaConsumerVo;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.dto.SysAlertConsumerService;
 import org.wyyt.kafka.monitor.service.dto.SysDingDingConfigService;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class AlertConsumerController {
 
     @GetMapping("toadd")
     public String toAdd(final Model model) throws Exception {
-        final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers(null);
+        final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers();
         final SysDingDingConfig sysDingDingConfig = this.sysDingDingConfigService.get();
 
         model.addAttribute("consumers", kafkaConsumerVoList);
@@ -63,7 +63,7 @@ public class AlertConsumerController {
     public String toEdit(final Model model,
                          @RequestParam(value = "id") final String id) throws Exception {
         final SysAlertConsumer sysAlertConsumer = this.sysAlertConsumerService.getById(id);
-        final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers(null);
+        final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers();
         model.addAttribute("consumers", kafkaConsumerVoList);
         model.addAttribute("item", sysAlertConsumer);
         model.addAttribute("topics", this.listTopics(sysAlertConsumer.getGroupId(), "update").getData());
@@ -77,7 +77,7 @@ public class AlertConsumerController {
         final QueryWrapper<SysAlertConsumer> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().orderByAsc(SysAlertConsumer::getRowCreateTime);
         Page<SysAlertConsumer> page = this.sysAlertConsumerService.page(new Page<>(pageNum, pageSize), queryWrapper);
-        return Result.success(page.getRecords(), page.getTotal());
+        return Result.ok(page.getRecords(), page.getTotal());
     }
 
     @PostMapping("listTopics")
@@ -85,7 +85,7 @@ public class AlertConsumerController {
     public Result<List<String>> listTopics(@RequestParam(value = "groupId") final String groupId,
                                            @RequestParam(value = "opt") final String opt) throws Exception {
         final List<String> result = new ArrayList<>();
-        final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers(groupId);
+        final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers(groupId,true);
         for (final KafkaConsumerVo kafkaConsumerVo : kafkaConsumerVoList) {
             result.addAll(kafkaConsumerVo.getTopicNames());
         }
@@ -96,7 +96,7 @@ public class AlertConsumerController {
         }
 
         result.sort(String::compareTo);
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     @PostMapping("add")
@@ -109,7 +109,7 @@ public class AlertConsumerController {
                          @RequestParam(value = "secret") final String secret
     ) {
         this.sysAlertConsumerService.save(groupId, topicName, lagThreshold, email, accessToken, secret);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("edit")
@@ -123,13 +123,13 @@ public class AlertConsumerController {
                           @RequestParam(value = "secret") final String secret
     ) {
         this.sysAlertConsumerService.update(id, groupId, topicName, lagThreshold, email, accessToken, secret);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("del")
     @ResponseBody
     public Result<?> del(@RequestParam(value = "id") final Long id) {
         this.sysAlertConsumerService.removeById(id);
-        return Result.success();
+        return Result.ok();
     }
 }

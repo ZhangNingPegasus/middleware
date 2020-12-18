@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 @ConditionalOnProperty(name = DiscoveryConstant.SPRING_APPLICATION_NAME, havingValue = "b")
 public class BRestImpl {
     private static final Logger LOG = LoggerFactory.getLogger(BRestImpl.class);
-
     @Autowired
     private PluginAdapter pluginAdapter;
 

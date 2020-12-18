@@ -122,6 +122,26 @@ public final class CrudService implements DisposableBean {
         return result.get();
     }
 
+    public final <T> CrudPage<T> page(final Class<T> cls,
+                                      final Integer pageNum,
+                                      final Integer pageSize,
+                                      final String sql,
+                                      final Object... params) throws Exception {
+        final int startIndex = (Math.max(pageNum, 1) - 1) * pageSize;
+        final String pageSql = String.format("SELECT * FROM (%s) crud_service_page LIMIT %s, %s",
+                sql,
+                startIndex,
+                pageSize);
+
+        final List<T> records = this.select(cls, sql, params);
+        final Long total = this.executeScalar(Long.class, String.format("SELECT COUNT(*) FROM (%s) crud_service_count", sql), params);
+        final CrudPage<T> crudPage = new CrudPage<>();
+        crudPage.setRecrods(records);
+        crudPage.setTotal(total);
+        return crudPage;
+    }
+
+
     public final <T> T selectOne(final Class<T> cls, final String sql, final Object... params) throws Exception {
         final List<T> result = this.select(cls, sql, params);
         if (null == result || result.isEmpty()) {
@@ -210,8 +230,16 @@ public final class CrudService implements DisposableBean {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
             if (null != params) {
-                for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setObject(i + 1, params[i]);
+                final List<Object> parameters = new ArrayList<>();
+                for (Object param : params) {
+                    if (null == param) {
+                        continue;
+                    }
+                    parameters.add(param);
+                }
+
+                for (int i = 0; i < parameters.size(); i++) {
+                    preparedStatement.setObject(i + 1, parameters.get(i));
                 }
             }
             resultSet = preparedStatement.executeQuery();

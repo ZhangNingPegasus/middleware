@@ -14,7 +14,7 @@ import org.wyyt.kafka.monitor.service.common.EhcacheService;
 import org.wyyt.kafka.monitor.service.dto.SysKpiService;
 import org.wyyt.kafka.monitor.util.CommonUtil;
 import org.wyyt.tool.date.DateTool;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -84,7 +84,7 @@ public class KafkaPerformanceController {
             result.setOsFreeMemory(getInfo(sysKpiList, SysKpi.KAFKA_KPI.KAFKA_OS_USED_MEMORY_PERCENTAGE));
             ehcacheService.put(key, result);
         }
-        return Result.success(result);
+        return Result.ok(result);
     }
 
     private LineInfo getInfo(List<SysKpi> sysKpiList, SysKpi.KAFKA_KPI kpi) {

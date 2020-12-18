@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @ConditionalOnProperty(name = DiscoveryConstant.SPRING_APPLICATION_NAME, havingValue = "a")
 public class ARestImpl {
@@ -23,7 +25,7 @@ public class ARestImpl {
     private RestTemplate restTemplate;
 
     @GetMapping(path = "/rest/{value}")
-    public String rest(@PathVariable(value = "value") String value) {
+    public String rest(@PathVariable(value = "value") String value, HttpServletRequest request) {
         value = pluginAdapter.getPluginInfo(value);
         value = restTemplate.getForEntity("http://b/rest/" + value, String.class).getBody();
         LOG.info("调用路径：{}", value);

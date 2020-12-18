@@ -12,8 +12,9 @@ import org.wyyt.db2es.core.entity.domain.Names;
 import org.wyyt.db2es.core.entity.view.NodeVo;
 import org.wyyt.db2es.core.entity.view.TopicVo;
 import org.wyyt.db2es.core.exception.Db2EsException;
-import org.wyyt.db2es.core.util.security.SecurityUtils;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
+import org.wyyt.tool.rpc.RpcTool;
+import org.wyyt.tool.rpc.SignTool;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -43,7 +44,7 @@ public abstract class BaseDb2EsService {
     @Autowired
     private ZooKeeperService zooKeeperService;
     @Autowired
-    private HttpService httpService;
+    private RpcTool rpcTool;
 
     public List<NodeVo> listDd2Es() throws Exception {
         final Set<NodeVo> leaderVoSet = this.refreshLeaderVoSet();
@@ -149,18 +150,13 @@ public abstract class BaseDb2EsService {
                                final Class<T> tClass) throws Exception {
         final List<T> result = new ArrayList<>();
         final String url = getUrl(leaderVo, path);
+        final Map<String, String> headers = new HashMap<>();
         if (null == params) {
             params = new HashMap<>();
         }
-        params.entrySet().removeIf(next -> null == next.getValue());
-        params.put(Names.TIME_STAMPT_NAME, System.currentTimeMillis());
+        headers.put("sign", SignTool.sign(params, Names.API_KEY, Names.API_IV));
 
-        final Map<String, String> headers = new HashMap<>();
-        final String str = SecurityUtils.createLinkString(params);
-        final String sign = Objects.requireNonNull(SecurityUtils.encryptData(str, Names.API_KEY, Names.API_IV)).toLowerCase();
-        headers.put("sign", sign);
-
-        final String responseText = this.httpService.post(url, params, headers);
+        final String responseText = this.rpcTool.post(url, params, headers);
 
         if (ObjectUtils.isEmpty(responseText)) {
             throw new Db2EsException(String.format("接口[%s]无法响应, 请检查该主机上db2es-client的运行状态", url));
@@ -169,7 +165,7 @@ public abstract class BaseDb2EsService {
         final Result respondResult = OBJECT_MAPPER.readValue(responseText, new TypeReference<Result>() {
         });
 
-        if (respondResult.getSuccess()) {
+        if (respondResult.getOk()) {
             final Object data = respondResult.getData();
             if (null != data) {
                 if (data instanceof List) {

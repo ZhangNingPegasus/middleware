@@ -138,7 +138,6 @@ public final class Names {
      */
     public static final String API_KEY = "pegasuszhangning";
     public static final String API_IV = "asusgeipganzgnhn";
-    public static final String TIME_STAMPT_NAME = "_$_current__timestampt_$_";
 
     /**
      * DB2ES存储在zk中的路径

@@ -5,9 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.wyyt.admin.ui.service.SysAdminService;
 import org.wyyt.sql.tool.database.Db;
 import org.wyyt.sql.tool.entity.dto.SysSql;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.List;
 
@@ -28,16 +29,19 @@ import static org.wyyt.sql.tool.controller.HistoryController.PREFIX;
 @RequestMapping(PREFIX)
 public final class HistoryController {
     public static final String PREFIX = "his";
+    private final SysAdminService sysAdminService;
 
     private final Db db;
 
-    public HistoryController(final Db db) {
+    public HistoryController(final SysAdminService sysAdminService,
+                             final Db db) {
+        this.sysAdminService = sysAdminService;
         this.db = db;
     }
 
     @GetMapping("tolist")
     public final String toList(final Model model) throws Exception {
-        model.addAttribute("admins", this.db.listAdmin());
+        model.addAttribute("admins", this.sysAdminService.list());
         return String.format("%s/%s", PREFIX, "list");
     }
 
@@ -57,6 +61,6 @@ public final class HistoryController {
                                            @RequestParam(name = "fromExecutionTime", required = false) final Long fromExecutionTime,
                                            @RequestParam(name = "toExecutionTime", required = false) final Long toExecutionTime) throws Exception {
         final IPage<SysSql> result = this.db.listSql(pageNum, pageSize, sysAdminId, ip, fromExecutionTime, toExecutionTime);
-        return Result.success(result.getRecords(), result.getTotal());
+        return Result.ok(result.getRecords(), result.getTotal());
     }
 }

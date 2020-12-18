@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-import org.wyyt.db2es.admin.common.Utils;
+import org.wyyt.admin.ui.common.Utils;
 import org.wyyt.db2es.admin.entity.vo.DataSourceVo;
 import org.wyyt.db2es.admin.entity.vo.RebuildVo;
 import org.wyyt.db2es.admin.rebuild.RebuildService;
@@ -23,7 +23,7 @@ import org.wyyt.sharding.auto.property.TableProperty;
 import org.wyyt.sharding.entity.FieldInfo;
 import org.wyyt.sharding.service.ShardingService;
 import org.wyyt.tool.db.DataSourceTool;
-import org.wyyt.tool.web.Result;
+import org.wyyt.tool.rpc.Result;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -146,7 +146,7 @@ public class RebuildController {
             }
         }
         rebuildVoList.sort(Comparator.comparing(RebuildVo::getName));
-        return Result.success(rebuildVoList);
+        return Result.ok(rebuildVoList);
     }
 
     @PostMapping("rebuild")
@@ -178,27 +178,27 @@ public class RebuildController {
             tableSourceMap.put(dataSourceVo, tableNameSet);
         }
         this.rebuildService.rebuild(topic, tableSourceMap);
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("stopRebuild")
     @ResponseBody
     public Result<?> stopRebuild() throws Exception {
         this.rebuildService.stopRebuild();
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("rebuilddetail")
     @ResponseBody
     public Result<RebuildService.RebuildStatus> rebuildDetail() {
-        return Result.success(this.rebuildService.getRebuildStatus());
+        return Result.ok(this.rebuildService.getRebuildStatus());
     }
 
     @PostMapping("clearRebuild")
     @ResponseBody
     public Result<?> clearRebuild() throws InterruptedException {
         this.rebuildService.clearRebuild();
-        return Result.success();
+        return Result.ok();
     }
 
     @PostMapping("test")
@@ -231,7 +231,7 @@ public class RebuildController {
             DataSourceTool.close(connection);
             DataSourceTool.close(dataSource);
         }
-        return Result.success();
+        return Result.ok();
     }
 
     private List<DataSourceVo> getAcmDataSource(final String logicTableName) {

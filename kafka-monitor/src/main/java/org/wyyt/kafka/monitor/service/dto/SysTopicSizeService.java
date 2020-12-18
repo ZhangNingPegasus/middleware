@@ -1,10 +1,12 @@
 package org.wyyt.kafka.monitor.service.dto;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.wyyt.admin.ui.exception.BusinessException;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.anno.TranSave;
 import org.wyyt.kafka.monitor.common.Constants;
@@ -15,7 +17,6 @@ import org.wyyt.kafka.monitor.entity.po.TopicSizeLag;
 import org.wyyt.kafka.monitor.entity.vo.KafkaConsumerVo;
 import org.wyyt.kafka.monitor.entity.vo.OffsetVo;
 import org.wyyt.kafka.monitor.entity.vo.TopicRecordCountVo;
-import org.wyyt.kafka.monitor.exception.BusinessException;
 import org.wyyt.kafka.monitor.mapper.SysTopicSizeMapper;
 import org.wyyt.kafka.monitor.service.common.EhcacheService;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
@@ -37,13 +38,16 @@ public class SysTopicSizeService extends ServiceImpl<SysTopicSizeMapper, SysTopi
     private final EhcacheService ehcacheService;
     private final SysTableNameService sysTableNameService;
     private final KafkaService kafkaService;
+    private final PartitionService partitionService;
 
     public SysTopicSizeService(final EhcacheService ehcacheService,
                                final SysTableNameService sysTableNameService,
-                               final KafkaService kafkaService) {
+                               final KafkaService kafkaService,
+                               final PartitionService partitionService) {
         this.ehcacheService = ehcacheService;
         this.sysTableNameService = sysTableNameService;
         this.kafkaService = kafkaService;
+        this.partitionService = partitionService;
     }
 
     @TranRead
@@ -132,7 +136,7 @@ public class SysTopicSizeService extends ServiceImpl<SysTopicSizeMapper, SysTopi
         final TopicSizeLag result = new TopicSizeLag();
         final List<SysTopicSize> sysTopicSizeList = this.getRecordsCount(now);
         final List<SysTopicLag> sysTopicLagList = new ArrayList<>(BATCH_SIZE);
-        final List<KafkaConsumerVo> kafkaConsumerVoList = kafkaService.listKafkaConsumers(null);
+        final List<KafkaConsumerVo> kafkaConsumerVoList = this.kafkaService.listKafkaConsumers();
         for (final KafkaConsumerVo kafkaConsumerVo : kafkaConsumerVoList) {
             final Set<String> topicNames = kafkaConsumerVo.getTopicNames();
             for (final String topicName : topicNames) {
@@ -205,8 +209,13 @@ public class SysTopicSizeService extends ServiceImpl<SysTopicSizeMapper, SysTopi
     }
 
     @TranRead
-    public Long getTotalRecordCount() {
-        return this.baseMapper.getTotalRecordCount();
+    public Long getTotalRecordCount(final int recentDays) {
+        final Date today = DateUtil.parse(DateUtil.today(), Constants.DATE_FORMAT);
+        final Date toDate = DateUtils.addDays(today, 1);
+        final Date fromDate = DateUtils.addDays(toDate, -recentDays + 1);
+        final String toPartition = partitionService.generatePartitionName(toDate);
+        final String fromPartition = partitionService.generatePartitionName(fromDate);
+        return this.baseMapper.getTotalRecordCount(fromPartition, toPartition);
     }
 
     @TranRead

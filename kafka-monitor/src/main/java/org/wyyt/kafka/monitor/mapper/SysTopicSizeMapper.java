@@ -28,7 +28,8 @@ public interface SysTopicSizeMapper extends BaseMapper<SysTopicSize> {
                                     @Nullable @Param(value = "from") final Date from,
                                     @Nullable @Param(value = "to") final Date to);
 
-    Long getTotalRecordCount();
+    Long getTotalRecordCount(@Param(value = "fromPartition") String fromPartition,
+                             @Param(value = "toPartition") String toPartition);
 
     List<TopicRecordCountVo> listTotalRecordCount(@Param(value = "top") final int top,
                                                   @Param(value = "from0") final Date from0,
