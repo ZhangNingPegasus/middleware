@@ -46,12 +46,13 @@
         <skipTests>true</skipTests>
 
         <springboot.version>2.4.1</springboot.version>
-        <spring-cloud.version>2020.0.0-M6</spring-cloud.version>
+        <spring-cloud.version>2020.0.0-RC1</spring-cloud.version>
         <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
         <jolokia-core.version>1.6.2</jolokia-core.version>
         <mysql-connector-java.version>8.0.22</mysql-connector-java.version>
         <lombok.version>1.18.16</lombok.version>
-        <hutool-all.version>5.5.2</hutool-all.version>
+        <unirest-java.version>3.11.06</unirest-java.version>
+        <hutool-all.version>5.5.4</hutool-all.version>
         <fastjson.version>1.2.75</fastjson.version>
         <json.version>20201115</json.version>
         <jackson-databind.version>2.12.0</jackson-databind.version>
@@ -59,12 +60,13 @@
         <commons-lang3.version>3.11</commons-lang3.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-io.version>2.8.0</commons-io.version>
-        <guava.version>30.0-jre</guava.version>
+        <guava.version>30.1-jre</guava.version>
         <sharding-sphere.version>4.1.1</sharding-sphere.version>
         <dom4j.version>2.1.3</dom4j.version>
         <ehcache.version>3.9.0</ehcache.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <mybatis.version>3.5.6</mybatis.version>
+        <com.nepxion.discovery>6.3.3</com.nepxion.discovery>
         <druid-spring-boot-starter.version>1.2.4</druid-spring-boot-starter.version>
         <HikariCP.version>3.4.5</HikariCP.version>
         <shiro.version>1.7.0</shiro.version>
@@ -72,7 +74,7 @@
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
         <elasticsearch.version>7.10.1</elasticsearch.version>
-        <kafka-clients.version>2.6.0</kafka-clients.version>
+        <kafka-clients.version>2.7.0</kafka-clients.version>
         <slf4j-api.version>1.7.30</slf4j-api.version>
         <curator-recipes.version>5.1.0</curator-recipes.version>
         <zookeeper.version>3.6.2</zookeeper.version>
@@ -90,7 +92,7 @@
         <nacos-api.version>1.4.0</nacos-api.version>
         <apm-toolkit-trace.version>8.3.0</apm-toolkit-trace.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
-        <hibernate-validator.version>6.1.6.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.1.7.Final</hibernate-validator.version>
         <logstash-logback-encoder.version>6.5</logstash-logback-encoder.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
@@ -122,6 +124,12 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>com.konghq</groupId>
+                <artifactId>unirest-java</artifactId>
+                <version>${unirest-java.version}</version>
             </dependency>
 
             <dependency>

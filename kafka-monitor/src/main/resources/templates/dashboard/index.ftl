@@ -48,7 +48,6 @@
                                    title=" 自 动 刷 新 " checked="checked"/>
                         </span>
                     </div>
-
                 </div>
             </div>
         </div>

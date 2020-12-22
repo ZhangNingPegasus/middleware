@@ -52,14 +52,14 @@ public class RouteController {
 
     @GetMapping("toadd")
     public String toAdd(final Model model) {
-        model.addAttribute("serviceNames", this.gatewayService.listServiceNames());
+        model.addAttribute("serviceIds", this.gatewayService.listServiceIds());
         return String.format("%s/%s", PREFIX, "add");
     }
 
     @GetMapping("toedit")
     public String toEdit(final Model model,
                          @RequestParam(name = "id") final Long id) {
-        model.addAttribute("serviceNames", this.gatewayService.listServiceNames());
+        model.addAttribute("serviceIds", this.gatewayService.listServiceIds());
         model.addAttribute("route", this.routeService.getById(id));
         return String.format("%s/%s", PREFIX, "edit");
     }

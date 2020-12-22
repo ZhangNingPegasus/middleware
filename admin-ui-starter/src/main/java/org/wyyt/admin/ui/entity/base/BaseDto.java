@@ -1,4 +1,4 @@
-package org.wyyt.kafka.monitor.entity.base;
+package org.wyyt.admin.ui.entity.base;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * all DTO class's super class.
+ * All DTO class's super class.
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *

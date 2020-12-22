@@ -25,6 +25,7 @@ import org.wyyt.admin.ui.config.EnableAdminUI;
 @EnableTransactionManagement(proxyTargetClass = true)
 public class GatewayAdminApplication {
     public static void main(String[] args) {
+        System.setProperty("nepxion.banner.shown", "false");
         SpringApplication.run(GatewayAdminApplication.class, args);
     }
 }

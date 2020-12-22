@@ -368,7 +368,7 @@
         form.on('select(type)', function (obj) {
             const dataIndex = $(obj.elem).parent().parent().parent().attr('data-index');
             const data = table.cache['grid'];
-            data[dataIndex]['type'] = obj.value
+            data[dataIndex]['type'] = obj.value;
         });
 
         form.on('checkbox(notNull)', function (obj) {

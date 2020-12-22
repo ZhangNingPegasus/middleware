@@ -45,16 +45,32 @@ public class PropertyConfig {
     private String gatewayConsulGroup;
 
     @Getter
+    @Value("${spring.cloud.consul.discovery.service-name}")
+    private String serviceName;
+
+    @Getter
+    @Value("${spring.cloud.consul.host}")
+    private String conulHost;
+
+    @Getter
+    @Value("${spring.cloud.consul.port}")
+    private String consulPort;
+
+    @Getter
     @Value("${app.id}")
     private String apolloAppId;
 
     @Getter
-    @Value("${apollo.portalUrl}")
+    @Value("${apollo_portal_url}")
     private String apolloPortalUrl;
 
     @Getter
-    @Value("${apollo.token}")
+    @Value("${apollo_token}")
     private String apolloToken;
+
+    @Getter
+    @Value("${apollo_operator}")
+    private String apolloOperator;
 
     @Getter
     @Value("${apollo.meta}")

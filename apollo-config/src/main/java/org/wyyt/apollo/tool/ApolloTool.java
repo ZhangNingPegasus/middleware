@@ -4,6 +4,7 @@ import com.ctrip.framework.apollo.core.ConfigConsts;
 import com.ctrip.framework.apollo.openapi.client.ApolloOpenApiClient;
 import com.ctrip.framework.apollo.openapi.client.constant.ApolloOpenApiConstants;
 import com.ctrip.framework.apollo.openapi.client.service.ItemOpenApiService;
+import com.ctrip.framework.apollo.openapi.dto.NamespaceReleaseDTO;
 import com.ctrip.framework.apollo.openapi.dto.OpenEnvClusterDTO;
 import com.ctrip.framework.apollo.openapi.dto.OpenItemDTO;
 import com.ctrip.framework.apollo.openapi.dto.OpenNamespaceDTO;
@@ -19,6 +20,7 @@ import org.reflections.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -33,12 +35,30 @@ import java.util.concurrent.atomic.AtomicReference;
  * *****************************************************************
  */
 public class ApolloTool {
+    private final String env;
+    private final String appId;
+    private final String operator;
     private final Escaper escaper;
     private final Gson gson;
     private final ApolloOpenApiClient apolloOpenApiClient;
 
     public ApolloTool(final String portalUrl,
-                      final String token) {
+                      final String apolloMeta,
+                      final String token,
+                      final String appId,
+                      final String operator) {
+
+        if (apolloMeta.contains(".dev.")) {
+            env = "DEV";
+        } else if (apolloMeta.contains(".test.")) {
+            env = "FAT";
+        } else if (apolloMeta.contains(".prod.")) {
+            env = "PRO";
+        } else {
+            throw new RuntimeException("The value of config [apollo.meta] is incorrent");
+        }
+        this.appId = appId;
+        this.operator = operator;
         this.escaper = UrlEscapers.urlPathSegmentEscaper();
         this.gson = new GsonBuilder().setDateFormat(ApolloOpenApiConstants.JSON_DATE_FORMAT).create();
         this.apolloOpenApiClient = ApolloOpenApiClient.newBuilder()
@@ -49,7 +69,7 @@ public class ApolloTool {
                 .build();
     }
 
-    public Set<String> getEnv(final String appId) {
+    public Set<String> getEnvironments(final String appId) {
         final List<OpenEnvClusterDTO> envClusterInfo = this.apolloOpenApiClient.getEnvClusterInfo(appId);
         final Set<String> result = new HashSet<>(envClusterInfo.size());
         for (final OpenEnvClusterDTO openEnvClusterDTO : envClusterInfo) {
@@ -58,9 +78,13 @@ public class ApolloTool {
         return result;
     }
 
-    public Map<String, String> getItems(final String env,
-                                        final String appId,
-                                        String clusterName) throws Exception {
+    public Set<String> getEnvironments() {
+        return this.getEnvironments(this.appId);
+    }
+
+    public Map<String, String> getConfigs(final String env,
+                                          final String appId,
+                                          String clusterName) throws Exception {
         if (Strings.isNullOrEmpty(clusterName)) {
             clusterName = ConfigConsts.CLUSTER_NAME_DEFAULT;
         }
@@ -84,16 +108,24 @@ public class ApolloTool {
         return result;
     }
 
-    public Map<String, String> getItems(final String env,
-                                        final String appId) throws Exception {
-        return this.getItems(env, appId, null);
+    public Map<String, String> getConfigs(final String env,
+                                          final String appId) throws Exception {
+        return this.getConfigs(env, appId, null);
     }
 
-    public String getItem(final String env,
-                          final String appId,
-                          String clusterName,
-                          String namespaceName,
-                          final String key) throws Exception {
+    public Map<String, String> getConfigs(final String appId) throws Exception {
+        return this.getConfigs(this.env, appId, null);
+    }
+
+    public Map<String, String> getConfigs() throws Exception {
+        return this.getConfigs(this.env, this.appId, null);
+    }
+
+    public String getConfig(final String env,
+                            final String appId,
+                            String clusterName,
+                            String namespaceName,
+                            final String key) throws Exception {
         if (Strings.isNullOrEmpty(clusterName)) {
             clusterName = ConfigConsts.CLUSTER_NAME_DEFAULT;
         }
@@ -117,10 +149,107 @@ public class ApolloTool {
         return openItemDTO.getValue();
     }
 
-    public String getItem(final String env,
-                          final String appId,
-                          final String key) throws Exception {
-        return this.getItem(env, appId, null, null, key);
+    public String getConfig(final String env,
+                            final String appId,
+                            final String key) throws Exception {
+        return this.getConfig(env, appId, null, null, key);
+    }
+
+    public String getConfig(final String appId,
+                            final String key) throws Exception {
+        return this.getConfig(this.env, appId, null, null, key);
+    }
+
+    public String getConfig(final String key) throws Exception {
+        return this.getConfig(this.env, this.appId, null, null, key);
+    }
+
+    public void updateConfig(final String env,
+                             final String appId,
+                             final String key,
+                             String clusterName,
+                             String namespaceName,
+                             final String config) {
+        if (Strings.isNullOrEmpty(clusterName)) {
+            clusterName = ConfigConsts.CLUSTER_NAME_DEFAULT;
+        }
+        if (Strings.isNullOrEmpty(namespaceName)) {
+            namespaceName = ConfigConsts.NAMESPACE_APPLICATION;
+        }
+
+        final Date now = new Date();
+
+        final OpenItemDTO openItemDTO = new OpenItemDTO();
+        openItemDTO.setKey(key);
+        openItemDTO.setValue(config);
+        openItemDTO.setComment("Operated by ".concat(this.operator));
+        openItemDTO.setDataChangeCreatedBy(this.operator);
+        openItemDTO.setDataChangeLastModifiedBy(this.operator);
+        openItemDTO.setDataChangeCreatedTime(now);
+        openItemDTO.setDataChangeLastModifiedTime(now);
+        this.apolloOpenApiClient.createOrUpdateItem(appId, env, clusterName, namespaceName, openItemDTO);
+
+        NamespaceReleaseDTO namespaceReleaseDTO = new NamespaceReleaseDTO();
+        namespaceReleaseDTO.setReleaseTitle(new SimpleDateFormat("yyyyMMddHHmmss").format(now) + "-release");
+        namespaceReleaseDTO.setReleasedBy(this.operator);
+        namespaceReleaseDTO.setReleaseComment("Released by ".concat(this.operator));
+        namespaceReleaseDTO.setEmergencyPublish(true);
+        this.apolloOpenApiClient.publishNamespace(appId, env, clusterName, namespaceName, namespaceReleaseDTO);
+    }
+
+    public void updateConfig(final String env,
+                             final String appId,
+                             final String key,
+                             final String config) {
+        this.updateConfig(env, appId, key, null, null, config);
+    }
+
+    public void updateConfig(final String appId,
+                             final String key,
+                             final String config) {
+        this.updateConfig(this.env, appId, key, null, null, config);
+    }
+
+    public void updateConfig(final String key,
+                             final String config) {
+        this.updateConfig(this.env, this.appId, key, null, null, config);
+    }
+
+    public void clearConfig(final String env,
+                            final String appId,
+                            final String key,
+                            String clusterName,
+                            String namespaceName) {
+        if (Strings.isNullOrEmpty(clusterName)) {
+            clusterName = ConfigConsts.CLUSTER_NAME_DEFAULT;
+        }
+        if (Strings.isNullOrEmpty(namespaceName)) {
+            namespaceName = ConfigConsts.NAMESPACE_APPLICATION;
+        }
+
+        this.apolloOpenApiClient.removeItem(appId, env, clusterName, namespaceName, key, this.operator);
+
+        final NamespaceReleaseDTO namespaceReleaseDTO = new NamespaceReleaseDTO();
+        namespaceReleaseDTO.setReleaseTitle(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "-release");
+        namespaceReleaseDTO.setReleasedBy(operator);
+        namespaceReleaseDTO.setReleaseComment("Deleted by " + operator);
+        namespaceReleaseDTO.setEmergencyPublish(true);
+        this.apolloOpenApiClient.publishNamespace(appId, env, clusterName, namespaceName, namespaceReleaseDTO);
+    }
+
+    public void clearConfig(final String env,
+                            final String appId,
+                            final String key) {
+        this.clearConfig(env, appId, key, null, null);
+    }
+
+    public void clearConfig(final String appId,
+                            final String key) {
+        this.clearConfig(this.env, appId, key, null, null);
+    }
+
+    public void clearConfig(final String key) {
+        this.clearConfig(this.env, this.appId, key, null, null);
     }
 
     private void execute(final String path,

@@ -238,7 +238,6 @@
                 });
                 $("#divGridOffset").show();
             }
-
         });
     </script>
 

@@ -121,7 +121,7 @@ public class ShardingService {
     @EhCache
     public TableProperty.DimensionInfo getTableDimensionInfo(final String logicTableName,
                                                              final String dimensionName) {
-        final Optional<TableProperty> first = shardingProperty.getTableProperties().stream().filter(p -> p.getName().equals(logicTableName)).findFirst();
+        final Optional<TableProperty> first = this.shardingProperty.getTableProperties().stream().filter(p -> p.getName().equals(logicTableName)).findFirst();
         if (first.isPresent()) {
             if (!first.get().getDimensionInfos().containsKey(dimensionName)) {
                 throw new ShardingException(String.format("在表[%s]配置中, 没有找到关于维度[%s]的配置", logicTableName, dimensionName));
@@ -133,8 +133,20 @@ public class ShardingService {
 
     @EhCache
     public String getPrimaryDimensionShardingColumn(final String logicTableName) {
-        final DimensionProperty primaryDimension = getPrimaryDimension();
-        return getTableDimensionInfo(logicTableName, primaryDimension.getName()).getShardingColumn();
+        final Optional<TableProperty> first = this.shardingProperty.getTableProperties().stream().filter(p -> p.getName().equals(logicTableName)).findFirst();
+        if (!first.isPresent()) {
+            throw new ShardingException(String.format("没有找到逻辑表[%s]相关的配置", logicTableName));
+        }
+
+        String dimensionName;
+        if (null == first.get().getDimensionInfos() || first.get().getDimensionInfos().isEmpty()) {
+            throw new ShardingException(String.format("逻辑表[%s]缺少维度信息", logicTableName));
+        } else if (1 == first.get().getDimensionInfos().size()) {
+            dimensionName = first.get().getDimensionInfos().values().iterator().next().getDimensionProperty().getName();
+        } else {
+            dimensionName = this.getPrimaryDimension().getName();
+        }
+        return this.getTableDimensionInfo(logicTableName, dimensionName).getShardingColumn();
     }
 
     @EhCache

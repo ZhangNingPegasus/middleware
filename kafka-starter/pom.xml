@@ -17,7 +17,7 @@
         <skipTests>true</skipTests>
 
         <springboot.version>2.4.0</springboot.version>
-        <kafka-clients.version>2.6.0</kafka-clients.version>
+        <kafka-clients.version>2.7.0</kafka-clients.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     </properties>
 

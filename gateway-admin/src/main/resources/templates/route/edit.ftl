@@ -33,8 +33,8 @@
                        value="${route.uri}">
                 <select name="uri1" lay-filter="uri1" autocomplete="off" lay-verify="required"
                         class="layui-select" lay-search>
-                    <#list serviceNames as name>
-                        <option value="lb://${name}" tag="${name}">lb://${name}</option>
+                    <#list serviceIds as serviceId>
+                        <option value="lb://${serviceId}" tag="${serviceId}">lb://${serviceId}</option>
                     </#list>
                 </select>
             </div>

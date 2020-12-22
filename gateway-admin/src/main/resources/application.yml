@@ -1,18 +1,12 @@
 app:
   id: spring-cloud-gateway
 apollo:
-  portalUrl: ${apollo_portal_url}
-  token: ${apollo_token}
   meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
   bootstrap:
     enabled: true
     namespaces: application
     eagerLoad:
       enabled: true
-
-gateway:
-  consul:
-    name: ${gateway_consul_name}
 
 admin:
   ui:
@@ -48,6 +42,7 @@ spring:
       discovery:
         service-name: ${spring.application.name}
         prefer-ip-address: true
+
   http:
     encoding:
       charset: UTF-8
