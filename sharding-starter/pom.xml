@@ -16,7 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot.version>2.4.0</springboot.version>
+        <springboot.version>2.4.1</springboot.version>
         <mybatis-plus-boot-starter.version>3.4.1</mybatis-plus-boot-starter.version>
         <sharding-sphere.version>4.1.1</sharding-sphere.version>
         <guava.version>30.1-jre</guava.version>

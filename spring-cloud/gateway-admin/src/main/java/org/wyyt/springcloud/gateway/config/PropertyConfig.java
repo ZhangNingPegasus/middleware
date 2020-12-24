@@ -1,0 +1,78 @@
+package org.wyyt.springcloud.gateway.config;
+
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * the entity of configuration information
+ * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * *****************************************************************
+ */
+@Configuration
+public class PropertyConfig {
+    @Getter
+    @Value("${db_host}")
+    private String dbHost;
+
+    @Getter
+    @Value("${db_port}")
+    private String dbPort;
+
+    @Getter
+    @Value("${db_name}")
+    private String dbName;
+
+    @Getter
+    @Value("${db_username}")
+    private String dbUid;
+
+    @Getter
+    @Value("${db_password}")
+    private String dbPwd;
+
+    @Getter
+    @Value("${gateway_consul_name}")
+    private String gatewayConsulName;
+
+    @Getter
+    @Value("${gateway_consul_group}")
+    private String gatewayConsulGroup;
+
+    @Getter
+    @Value("${spring.cloud.consul.discovery.service-name}")
+    private String serviceName;
+
+    @Getter
+    @Value("${spring.cloud.consul.host}")
+    private String conulHost;
+
+    @Getter
+    @Value("${spring.cloud.consul.port}")
+    private String consulPort;
+
+    @Getter
+    @Value("${app.id}")
+    private String apolloAppId;
+
+    @Getter
+    @Value("${apollo_portal_url}")
+    private String apolloPortalUrl;
+
+    @Getter
+    @Value("${apollo_token}")
+    private String apolloToken;
+
+    @Getter
+    @Value("${apollo_operator}")
+    private String apolloOperator;
+
+    @Getter
+    @Value("${apollo.meta}")
+    private String apolloMeta;
+}

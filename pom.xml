@@ -13,19 +13,15 @@
         <module>db2es-client</module>
         <module>db2es-admin</module>
         <module>kafka-monitor</module>
-        <module>spring-boot-admin-server</module>
         <module>logstash-logback-encoder-zipkin</module>
         <module>apollo-config</module>
-        <module>gateway</module>
-        <module>services</module>
-        <module>gateway-admin</module>
         <module>admin-ui-starter</module>
-        <module>gateway-business</module>
+        <module>spring-cloud</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.1</version>
+        <version>2.3.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -45,8 +41,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot.version>2.4.1</springboot.version>
-        <spring-cloud.version>2020.0.0-RC1</spring-cloud.version>
+        <springboot.version>2.3.6.RELEASE</springboot.version>
+        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
         <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
         <jolokia-core.version>1.6.2</jolokia-core.version>
         <mysql-connector-java.version>8.0.22</mysql-connector-java.version>

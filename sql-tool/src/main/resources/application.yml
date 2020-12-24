@@ -71,6 +71,7 @@ spring:
     enabled: true
     cache: false
     template-loader-path: classpath:/templates/
+    prefer-file-system-access: false
     charset: UTF-8
     expose-request-attributes: true
     expose-session-attributes: true

@@ -14,6 +14,13 @@ Date.prototype.format = function (fmt) {
     return fmt;
 };
 
+Array.prototype.remove = function (val) {
+    const index = this.indexOf(val);
+    if (index > -1) {
+        this.splice(index, 1);
+    }
+};
+
 function tableErrorHandler() {
     const admin = layui.admin, table = layui.table
     table.set({

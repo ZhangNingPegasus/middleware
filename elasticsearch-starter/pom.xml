@@ -16,7 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot.version>2.4.0</springboot.version>
+        <springboot.version>2.4.1</springboot.version>
         <lombok.version>1.18.16</lombok.version>
         <elasticsearch.version>7.10.1</elasticsearch.version>
         <commons-lang3.version>3.11</commons-lang3.version>

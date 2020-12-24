@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>spring-cloud</artifactId>
+        <groupId>org.wyyt</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>service-demo</artifactId>
+
+    <dependencies>
+        <!-- 注册中心插件 -->
+        <dependency>
+            <groupId>com.nepxion</groupId>
+            <artifactId>discovery-plugin-register-center-starter-consul</artifactId>
+        </dependency>
+
+        <!-- 配置中心插件 -->
+        <dependency>
+            <groupId>com.nepxion</groupId>
+            <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>
+        </dependency>
+
+        <!-- 管理中心插件 -->
+        <dependency>
+            <groupId>com.nepxion</groupId>
+            <artifactId>discovery-plugin-admin-center-starter</artifactId>
+        </dependency>
+
+        <!-- 服务的策略编排插件 -->
+        <dependency>
+            <groupId>com.nepxion</groupId>
+            <artifactId>discovery-plugin-strategy-starter-service</artifactId>
+        </dependency>
+
+        <!-- 熔断器 -->
+        <dependency>
+            <groupId>com.nepxion</groupId>
+            <artifactId>discovery-plugin-strategy-starter-hystrix</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Admin监控 -->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+        </dependency>
+
+        <!-- 链路跟踪 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wyyt</groupId>
+            <artifactId>logstash-logback-encoder-zipkin</artifactId>
+        </dependency>
+    </dependencies>
+</project>

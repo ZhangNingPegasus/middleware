@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modules>
+        <module>gateway</module>
+        <module>gateway-entity</module>
+        <module>service-demo</module>
+        <module>gateway-admin</module>
+        <module>spring-boot-admin</module>
+    </modules>
+
+    <packaging>pom</packaging>
+    <parent>
+        <artifactId>middleware</artifactId>
+        <groupId>org.wyyt</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>spring-cloud</artifactId>
+    <description>Spring-Cloud</description>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <resource.delimiter>@</resource.delimiter>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <skipTests>true</skipTests>
+
+        <springboot.version>2.3.6.RELEASE</springboot.version>
+        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+        <spring-cloud-starter-zipkin.version>2.2.6.RELEASE</spring-cloud-starter-zipkin.version>
+        <lombok.version>1.18.16</lombok.version>
+        <mysql-connector-java.version>8.0.22</mysql-connector-java.version>
+        <mybatis-plus.version>3.4.1</mybatis-plus.version>
+        <HikariCP.version>3.4.5</HikariCP.version>
+        <discovery.version>6.3.3</discovery.version>
+        <guava.version>30.1-jre</guava.version>
+        <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
+        <checker-qual.version>3.8.0</checker-qual.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.wyyt</groupId>
+                <artifactId>tool</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
+            <!-- 注册中心插件 -->
+            <dependency>
+                <groupId>com.nepxion</groupId>
+                <artifactId>discovery-plugin-register-center-starter-consul</artifactId>
+                <version>${discovery.version}</version>
+            </dependency>
+
+            <!-- 配置中心插件 -->
+            <dependency>
+                <groupId>com.nepxion</groupId>
+                <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>
+                <version>${discovery.version}</version>
+            </dependency>
+
+            <!-- 管理中心插件 -->
+            <dependency>
+                <groupId>com.nepxion</groupId>
+                <artifactId>discovery-plugin-admin-center-starter</artifactId>
+                <version>${discovery.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>checker-qual</artifactId>
+                        <groupId>org.checkerframework</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>error_prone_annotations</artifactId>
+                        <groupId>com.google.errorprone</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- 服务的策略编排插件 -->
+            <dependency>
+                <groupId>com.nepxion</groupId>
+                <artifactId>discovery-plugin-strategy-starter-service</artifactId>
+                <version>${discovery.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>jsr305</artifactId>
+                        <groupId>com.google.code.findbugs</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>commons-io</artifactId>
+                        <groupId>commons-io</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- 熔断器 -->
+            <dependency>
+                <groupId>com.nepxion</groupId>
+                <artifactId>discovery-plugin-strategy-starter-hystrix</artifactId>
+                <version>${discovery.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>jsr305</artifactId>
+                        <groupId>com.google.code.findbugs</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>HdrHistogram</artifactId>
+                        <groupId>org.hdrhistogram</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- 网关的策略编排插件 -->
+            <dependency>
+                <groupId>com.nepxion</groupId>
+                <artifactId>discovery-plugin-strategy-starter-gateway</artifactId>
+                <version>${discovery.version}</version>
+            </dependency>
+
+            <!-- Spring Boot Admin监控 -->
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin.version}</version>
+            </dependency>
+
+            <!-- 链路跟踪 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-zipkin</artifactId>
+                <version>${spring-cloud-starter-zipkin.version}</version>
+            </dependency>
+
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- mysql -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+
+            <!-- mybatis-plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- HikariCP -->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${HikariCP.version}</version>
+            </dependency>
+
+            <!-- other -->
+            <dependency>
+                <artifactId>guava</artifactId>
+                <groupId>com.google.guava</groupId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>${checker-qual.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wyyt</groupId>
+                <artifactId>logstash-logback-encoder-zipkin</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
+            <!-- SpringBoot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- SpringCloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

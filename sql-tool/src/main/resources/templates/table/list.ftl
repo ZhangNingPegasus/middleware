@@ -459,7 +459,7 @@
                         for (let i = 0; i < data.length; i++) {
                             if (data[i].id === item) {
                                 data.remove(data[i]);
-                                break;
+                                return;
                             }
                         }
                     });
@@ -516,7 +516,6 @@
                     $.each(data, function (i, d) {
                         names.push(d.name);
                     });
-
 
                     admin.post("session1", {
                         'names': names.join(','),

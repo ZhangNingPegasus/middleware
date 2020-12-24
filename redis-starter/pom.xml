@@ -16,7 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot.version>2.4.0</springboot.version>
+        <springboot.version>2.4.1</springboot.version>
         <lombok.version>1.18.16</lombok.version>
         <jackson-databind.version>2.12.0</jackson-databind.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
