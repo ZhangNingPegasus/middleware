@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -59,9 +58,18 @@ public class GatewayService {
         this.rpcTool = rpcTool;
     }
 
-    public EndpointVo getGatewayUri() throws Exception {
-        final ServiceVo service = this.getService(this.propertyConfig.getGatewayConsulName());
-        return service.getEndpointVoList().get(RandomUtils.nextInt(0, service.getEndpointVoList().size()));
+    public EndpointVo getGatewayUri() {
+        final ServiceInstance serviceInstance = this.loadBalancerClient.choose(this.propertyConfig.getGatewayConsulName());
+        if (null == serviceInstance) {
+            return null;
+        }
+
+        final EndpointVo result = new EndpointVo();
+        result.setHost(serviceInstance.getHost());
+        result.setPort(serviceInstance.getPort());
+        result.setVersion(serviceInstance.getMetadata().get("version"));
+        result.setGroup(serviceInstance.getMetadata().get("group"));
+        return result;
     }
 
     public List<ServiceVo> listService() throws Exception {
@@ -95,7 +103,7 @@ public class GatewayService {
                 if (service instanceof JSONObject) {
                     final EndpointVo endpointVo = new EndpointVo();
                     final JSONObject jsonService = (JSONObject) service;
-                    endpointVo.setAddress(jsonService.getString("Address"));
+                    endpointVo.setHost(jsonService.getString("Address"));
                     endpointVo.setPort(jsonService.getInteger("Port"));
                     final Object tags = jsonService.get("Tags");
 
@@ -109,6 +117,8 @@ public class GatewayService {
                                     continue;
                                 } else if ("version".equals(all[0])) {
                                     endpointVo.setVersion(all[1]);
+                                } else if ("group".equals(all[0])) {
+                                    endpointVo.setGroup(all[1]);
                                 }
                             }
                             if (!ObjectUtils.isEmpty(endpointVo.getVersion())) {
@@ -133,7 +143,7 @@ public class GatewayService {
 
     public void refresh() throws Exception {
         final List<Exception> exceptionList = new ArrayList<>();
-        final List<ServiceInstance> instances = this.discoveryClient.getInstances(propertyConfig.getGatewayConsulName());
+        final List<ServiceInstance> instances = this.discoveryClient.getInstances(this.propertyConfig.getGatewayConsulName());
         for (final ServiceInstance instance : instances) {
             try {
                 final URI uri = instance.getUri();
@@ -155,10 +165,12 @@ public class GatewayService {
     }
 
     public List<String> listWorkingRoutes() throws Exception {
+        final ServiceInstance serviceInstance = this.loadBalancerClient.choose(this.propertyConfig.getGatewayConsulName());
+        if (null == serviceInstance) {
+            return null;
+        }
 
-//        org.springframework.cloud.consul.discovery.ConsulRibbonClientConfiguration
-
-        final URI uri = this.loadBalancerClient.choose(propertyConfig.getGatewayConsulName()).getUri();
+        final URI uri = serviceInstance.getUri();
         final Result respondResult = this.rpc(uri, LIST_ROUTES_URL, null);
         return (List<String>) ConvertUtils.convert(respondResult.getData(), List.class);
     }

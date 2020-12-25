@@ -2,121 +2,83 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <version>0.0.1-SNAPSHOT</version>
+    <parent>
+        <artifactId>middleware</artifactId>
+        <groupId>org.wyyt</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wyyt</groupId>
     <artifactId>tool</artifactId>
-
-    <properties>
-        <java.version>1.8</java.version>
-        <resource.delimiter>@</resource.delimiter>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <skipTests>true</skipTests>
-
-        <lombok.version>1.18.16</lombok.version>
-        <hutool-all.version>5.5.4</hutool-all.version>
-        <druid-spring-boot-starter.version>1.2.4</druid-spring-boot-starter.version>
-        <HikariCP.version>3.4.5</HikariCP.version>
-        <mybatis-plus-annotation.version>3.4.1</mybatis-plus-annotation.version>
-        <mysql-connector-java.version>8.0.22</mysql-connector-java.version>
-        <mybatis.version>3.5.6</mybatis.version>
-        <commons-beanutils.version>1.9.4</commons-beanutils.version>
-        <reflections.version>0.9.12</reflections.version>
-        <jackson-databind.version>2.12.0</jackson-databind.version>
-        <guava.version>30.1-jre</guava.version>
-        <commons-codec.version>1.15</commons-codec.version>
-        <httpclient.version>4.5.13</httpclient.version>
-        <fastjson.version>1.2.75</fastjson.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <json.version>20201115</json.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>${hutool-all.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${druid-spring-boot-starter.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>${HikariCP.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-annotation</artifactId>
-            <version>${mybatis-plus-annotation.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-connector-java.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>${mybatis.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>${reflections.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>${commons-codec.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-codec</artifactId>
@@ -128,47 +90,11 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>${json.version}</version>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <url>
-                http://nexus.sijibao.co/repository/maven-releases/
-            </url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>
-                http://nexus.sijibao.co/repository/maven-snapshots/
-            </url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <developers>
-        <developer>
-            <name>Ning.Zhang(Pegasus)</name>
-            <email>zhangning@sijibao.com</email>
-            <organization>WYYT</organization>
-            <organizationUrl>https://www.sijibao.com/</organizationUrl>
-        </developer>
-    </developers>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin.version}</version>
-            </plugin>
-        </plugins>
-    </build>
 </project>

@@ -2,40 +2,23 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>middleware</artifactId>
+        <groupId>org.wyyt</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <version>0.0.1-SNAPSHOT</version>
-    <groupId>org.wyyt</groupId>
     <artifactId>apollo-config</artifactId>
-
-    <properties>
-        <java.version>1.8</java.version>
-        <resource.delimiter>@</resource.delimiter>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <skipTests>true</skipTests>
-
-        <reflections.version>0.9.12</reflections.version>
-        <lombok.version>1.18.16</lombok.version>
-        <apollo-openapi.version>1.7.0</apollo-openapi.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <slf4j-log4j12.version>1.7.30</slf4j-log4j12.version>
-        <slf4j-api.version>1.7.30</slf4j-api.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.ctrip.framework.apollo</groupId>
             <artifactId>apollo-openapi</artifactId>
-            <version>${apollo-openapi.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-api</artifactId>
@@ -47,52 +30,24 @@
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>${reflections.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j-log4j12.version}</version>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <url>
-                http://nexus.sijibao.co/repository/maven-releases/
-            </url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>
-                http://nexus.sijibao.co/repository/maven-snapshots/
-            </url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <developers>
-        <developer>
-            <name>Ning.Zhang(Pegasus)</name>
-            <email>zhangning@sijibao.com</email>
-            <organization>WYYT</organization>
-            <organizationUrl>https://www.sijibao.com/</organizationUrl>
-        </developer>
-    </developers>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin.version}</version>
                 <configuration>
                     <attach>true</attach>
                 </configuration>

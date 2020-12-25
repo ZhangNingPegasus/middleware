@@ -4,6 +4,7 @@ import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.plugin.framework.adapter.PluginAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 public class ARestImpl {
     private static final Logger LOG = LoggerFactory.getLogger(ARestImpl.class);
 
+    @Value("${user.name.test}")
+    private String userName;
+
     private final PluginAdapter pluginAdapter;
     private final RestTemplate restTemplate;
 
@@ -27,6 +31,7 @@ public class ARestImpl {
 
     @GetMapping(path = "/rest/{value}")
     public String rest(@PathVariable(value = "value") String value, HttpServletRequest request) {
+        System.out.println(userName);
         value = pluginAdapter.getPluginInfo(value);
         value = restTemplate.getForEntity("http://b/rest/" + value, String.class).getBody();
         LOG.info("调用路径：{}", value);

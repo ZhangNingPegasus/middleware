@@ -12,16 +12,16 @@
         <div class="layui-form-item">
             <label class="layui-form-label">路由标识</label>
             <div class="layui-input-inline">
-                <input type="text" name="routeId" lay-verify="required" class="layui-input" style="width: 740px"
+                <input type="text" name="description" lay-verify="required" class="layui-input" style="width: 740px"
                        placeholder="请输入路由标识" autocomplete="off" value="${route.routeId}">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">路由名称</label>
+            <label class="layui-form-label">路由描述</label>
             <div class="layui-input-inline">
                 <input type="text" name="routeName" lay-verify="required" class="layui-input" style="width: 740px"
-                       placeholder="请输入路由名称" autocomplete="off" value="${route.routeName}">
+                       placeholder="请输入路由描述" autocomplete="off" value="${route.description}">
             </div>
         </div>
 

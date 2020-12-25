@@ -18,10 +18,10 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">路由名称</label>
+            <label class="layui-form-label">路由描述</label>
             <div class="layui-input-inline">
-                <input type="text" name="routeName" lay-verify="required" class="layui-input" style="width: 740px"
-                       placeholder="请输入路由名称" autocomplete="off">
+                <input type="text" name="description" lay-verify="required" class="layui-input" style="width: 740px"
+                       placeholder="请输入路由描述" autocomplete="off">
             </div>
         </div>
 

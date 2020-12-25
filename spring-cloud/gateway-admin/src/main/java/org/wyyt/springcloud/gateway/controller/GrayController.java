@@ -13,6 +13,7 @@ import org.wyyt.springcloud.gateway.service.GrayPublishService;
 import org.wyyt.tool.rpc.Result;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -94,14 +95,14 @@ public class GrayController {
 
     @PostMapping("inspect")
     @ResponseBody
-    public Result<String> inspect(@RequestParam("data") String data) throws Exception {
+    public Result<String> inspect(@RequestParam("data") String data) {
         final List<InspectVo> inspectVos = JSON.parseArray(data, InspectVo.class);
         return Result.ok(this.grayPublishService.inspect(inspectVos));
     }
 
     @PostMapping("globalinspect")
     @ResponseBody
-    public Result<String> globalInspect() throws Exception {
+    public Result<String> globalInspect() {
         return Result.ok(this.grayPublishService.globalInspect());
     }
 
@@ -114,4 +115,11 @@ public class GrayController {
         return Result.ok();
     }
 
+    @PostMapping("publish")
+    @ResponseBody
+    public Result<?> publish(@RequestParam("data") String data) throws IOException {
+        final List<GrayVo> grayVoList = JSON.parseArray(data, GrayVo.class);
+        this.grayPublishService.publish(grayVoList);
+        return Result.ok();
+    }
 }

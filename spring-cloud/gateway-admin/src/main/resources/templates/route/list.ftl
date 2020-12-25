@@ -10,13 +10,13 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">
-                    <div class="layui-inline">路由名称</div>
+                    <div class="layui-inline">路由标识</div>
                     <div class="layui-inline" style="width:500px">
-                        <input type="text" name="routeName" placeholder="请输入路由名称" autocomplete="off"
+                        <input type="text" name="routeId" placeholder="请输入路由标识" autocomplete="off"
                                class="layui-input">
                     </div>
                     <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search">
+                        <button id="search" class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search">
                             <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                         </button>
                     </div>
@@ -28,14 +28,25 @@
 
                 <script type="text/html" id="grid-toolbar">
                     <div class="layui-btn-container">
+                        <@update>
+                            <button id="btnPublish"
+                                    class="layui-btn-disabled layui-btn layui-btn-sm layui-btn-normal layuiadmin-btn-admin"
+                                    lay-event="publish" style="margin-right: 50px">
+                                <i class="layui-icon layui-icon-release"></i>&nbsp;&nbsp;发布路由
+                                <span id="spanStatus" class="layui-badge layui-bg-orange"
+                                      style="display: none">有修改</span>
+                            </button>
+                        </@update>
                         <@insert>
-                            <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="add"><i
-                                        class="layui-icon layui-icon-add-1"></i>&nbsp;新增路由
+                            <button class="layui-btn layui-btn-sm layuiadmin-btn-admin"
+                                    lay-event="add"><i
+                                        class="layui-icon layui-icon-add-1"></i>&nbsp;&nbsp;新增路由
                             </button>
                         </@insert>
                         <@select>
-                            <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="working"><i
-                                        class="layui-icon layui-icon-read"></i>&nbsp;查看正在工作路由
+                            <button class="layui-btn layui-btn-sm layui-btn-primary layuiadmin-btn-admin"
+                                    lay-event="working"><i
+                                        class="layui-icon layui-icon-read"></i>&nbsp;&nbsp;查看正在工作路由
                             </button>
                         </@select>
                     </div>
@@ -66,10 +77,12 @@
     <script>
         layui.config({base: '../../..${ctx}/layuiadmin/'}).extend({index: 'lib/index'}).use(['index', 'table'], function () {
             const admin = layui.admin, $ = layui.$, form = layui.form, table = layui.table;
+            let isUpdate = false;
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
                 table.reload('grid', {where: field, page: 1});
+                updateStatus(false);
             });
             table.render({
                 elem: '#grid',
@@ -86,8 +99,8 @@
                 },
                 cols: [[
                     {type: 'numbers', title: '序号', width: 50},
-                    {field: 'routeName', title: '路由名称', width: 200},
                     {field: 'routeId', title: '路由标识', width: 200},
+                    {field: 'description', title: '路由描述', width: 200},
                     {field: 'uri', title: '目标地址', width: 300},
                     {field: 'predicates', title: '断言器'},
                     {field: 'filters', title: '过滤器'},
@@ -119,6 +132,7 @@
                                 const field = data.field;
                                 admin.post('add', field, function () {
                                     table.reload('grid');
+                                    updateStatus(true);
                                     layer.close(index);
                                 }, function (result) {
                                     admin.error(admin.OPT_FAILURE, result.error);
@@ -137,7 +151,17 @@
                         shade: 0.8,
                         area: ['90%', '78%']
                     });
-
+                } else if (obj.event === 'publish') {
+                    if (!$("#btnPublish").hasClass("layui-btn-disabled")) {
+                        layer.confirm("确定要发布路由吗?", function (index) {
+                            admin.post("publish", {}, function () {
+                                $("#search").click();
+                                updateStatus(false);
+                                admin.success("系统提示", "路由发布成功, 已立即生效");
+                                layer.close(index);
+                            });
+                        });
+                    }
                 }
             });
 
@@ -146,18 +170,8 @@
                 if (obj.event === 'del') {
                     layer.confirm(admin.DEL_QUESTION, function (index) {
                         admin.post("del", data, function () {
-                            if (table.cache.grid.length < 2) {
-                                const skip = $(".layui-laypage-skip");
-                                const curPage = skip.find("input").val();
-                                let page = parseInt(curPage) - 1;
-                                if (page < 1) {
-                                    page = 1;
-                                }
-                                skip.find("input").val(page);
-                                $(".layui-laypage-btn").click();
-                            } else {
-                                table.reload('grid');
-                            }
+                            table.reload('grid');
+                            updateStatus(true);
                             layer.close(index);
                         });
                     });
@@ -177,6 +191,7 @@
                                 field.id = data.id;
                                 admin.post('edit', field, function () {
                                     table.reload('grid');
+                                    updateStatus(true);
                                     layer.close(index);
                                 }, function (result) {
                                     admin.error(admin.OPT_FAILURE, result.error);
@@ -189,6 +204,7 @@
                     layer.confirm("确定要禁用路由[" + data.routeName + "]吗", function (index) {
                         admin.post('disable', {"id": data.id}, function () {
                             table.reload('grid');
+                            updateStatus(true);
                             layer.close(index);
                         }, function (result) {
                             admin.error(admin.OPT_FAILURE, result.error);
@@ -199,6 +215,7 @@
                     layer.confirm("确定要启用路由[" + data.routeName + "]吗", function (index) {
                         admin.post('enable', {"id": data.id}, function () {
                             table.reload('grid');
+                            updateStatus(true);
                             layer.close(index);
                         }, function (result) {
                             admin.error(admin.OPT_FAILURE, result.error);
@@ -207,6 +224,26 @@
                     });
                 }
             });
+
+            function updateStatus(update) {
+                isUpdate = update;
+                if (isUpdate) {
+                    enablePublish();
+                } else {
+                    disablePublish();
+                }
+            }
+
+            function enablePublish() {
+                $("#btnPublish").removeClass("layui-btn-disabled");
+                $("#spanStatus").show();
+            }
+
+            function disablePublish() {
+                $("#btnPublish").addClass("layui-btn-disabled");
+                $("#spanStatus").hide();
+            }
+
         });
     </script>
     </body>

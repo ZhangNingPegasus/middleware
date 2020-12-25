@@ -31,28 +31,26 @@
                         style="height: 38px;margin-top: -5px;">&nbsp;&nbsp;停&nbsp;&nbsp;止&nbsp;&nbsp;
                 </button>
             </div>
+        </div>
 
-            <hr/>
+        <blockquote id="message" class="layui-elem-quote">
+        </blockquote>
 
-            <blockquote id="message" class="layui-elem-quote">
-            </blockquote>
-
-            <div class="layui-form-item layui-hide">
-                <input type="button" lay-submit lay-filter="btn_confirm" id="btn_confirm" value="确认">
-                <input id="complete" name="complete"/>
-            </div>
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit lay-filter="btn_confirm" id="btn_confirm" value="确认">
+            <input id="complete" name="complete"/>
         </div>
     </div>
 
     <script>
-        layui.config({base: '../../..${ctx}/layuiadmin/'}).extend(  {index: 'lib/index'}).use(['index', 'element', 'form'], function () {
+        layui.config({base: '../../..${ctx}/layuiadmin/'}).extend({index: 'lib/index'}).use(['index', 'element', 'form'], function () {
             const admin = layui.admin, $ = layui.$;
             let content = [], interval = null, times = 0;
 
             function refresh() {
                 admin.postQuiet('inspect', {"data": '${data}'}, function (data) {
                     content.push(data.data);
-                    $("#message").html(content.join("<br/><br/>"));
+                    $("#message").html(content.join("<br/>"));
                     times++;
                     if (times >= parseInt($("#times").val())) {
                         $("#btnStop").click();
@@ -64,9 +62,14 @@
                 if ($("#btnStart").hasClass("layui-btn-disabled")) {
                     return;
                 }
-                interval = setInterval(refresh, 1000);
-                $("#btnStart").addClass("layui-btn-disabled");
-                $("#btnStop").removeClass("layui-btn-disabled");
+                const times = parseInt($("#times").val());
+                if (times > 0 && times <= 100) {
+                    interval = setInterval(refresh, 1000);
+                    $("#btnStart").addClass("layui-btn-disabled");
+                    $("#btnStop").removeClass("layui-btn-disabled");
+                } else {
+                    admin.error("系统提示", "调用次数范围必须在0~100之间")
+                }
             });
 
             $("#btnStop").click(function () {

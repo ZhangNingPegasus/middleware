@@ -5,9 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.springcloud.gateway.entity.WorkingVo;
-import org.wyyt.springcloud.gateway.service.GatewayService;
 import org.wyyt.springcloud.gateway.entity.entity.Route;
 import org.wyyt.springcloud.gateway.entity.service.RouteService;
+import org.wyyt.springcloud.gateway.service.GatewayService;
 import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
@@ -68,8 +68,8 @@ public class RouteController {
     @ResponseBody
     public Result<List<Route>> list(@RequestParam(value = "page") final Integer pageNum,
                                     @RequestParam(value = "limit") final Integer pageSize,
-                                    @RequestParam(value = "routeName", required = false) final String routeName) {
-        final IPage<Route> page = this.routeService.page(routeName, pageNum, pageSize);
+                                    @RequestParam(value = "routeId", required = false) final String routeId) {
+        final IPage<Route> page = this.routeService.page(routeId, pageNum, pageSize);
         return Result.ok(page.getRecords(), page.getTotal());
     }
 
@@ -78,11 +78,14 @@ public class RouteController {
     public Result<List<WorkingVo>> listWorking(@RequestParam(value = "page") final Integer pageNum,
                                                @RequestParam(value = "limit") final Integer pageSize,
                                                @RequestParam(value = "routeName", required = false) final String routeName) throws Exception {
-        final List<String> list = this.gatewayService.listWorkingRoutes();
-        final List<WorkingVo> workingVoList = new ArrayList<>();
-        for (final String s : list) {
+        final List<String> workingRouteList = this.gatewayService.listWorkingRoutes();
+        if (null == workingRouteList || workingRouteList.isEmpty()) {
+            return Result.ok();
+        }
+        final List<WorkingVo> workingVoList = new ArrayList<>(workingRouteList.size());
+        for (final String workingRoute : workingRouteList) {
             final WorkingVo workingVo = new WorkingVo();
-            workingVo.setData(s
+            workingVo.setData(workingRoute
                     .replaceAll("RouteDefinition", "")
                     .replaceAll("PredicateDefinition", "")
                     .replaceAll("FilterDefinition", ""));
@@ -94,53 +97,55 @@ public class RouteController {
     @PostMapping("add")
     @ResponseBody
     public Result<?> add(@RequestParam(value = "routeId") final String routeId,
-                         @RequestParam(value = "routeName") final String routeName,
+                         @RequestParam(value = "description") final String description,
                          @RequestParam(value = "uri") final String uri,
                          @RequestParam(value = "predicates") final String predicates,
                          @RequestParam(value = "filters") final String filters,
                          @RequestParam(value = "orderNum") final Integer orderNum,
-                         @RequestParam(value = "enabled") final Boolean enabled) throws Exception {
-        this.routeService.add(routeId, routeName, uri, predicates, filters, orderNum, enabled);
-        this.gatewayService.refresh();
+                         @RequestParam(value = "enabled") final Boolean enabled) {
+        this.routeService.add(routeId, description, uri, predicates, filters, orderNum, enabled);
         return Result.ok();
     }
 
     @PostMapping("edit")
     @ResponseBody
     public Result<?> edit(@RequestParam(value = "id") final Long id,
+                          @RequestParam(value = "description") final String description,
                           @RequestParam(value = "routeName") final String routeName,
                           @RequestParam(value = "uri") final String uri,
                           @RequestParam(value = "predicates") final String predicates,
                           @RequestParam(value = "filters") final String filters,
                           @RequestParam(value = "orderNum") final Integer orderNum,
-                          @RequestParam(value = "enabled") final Boolean enabled) throws Exception {
-        this.routeService.edit(id, routeName, uri, predicates, filters, orderNum, enabled);
-        this.gatewayService.refresh();
+                          @RequestParam(value = "enabled") final Boolean enabled) {
+        this.routeService.edit(id, description, routeName, uri, predicates, filters, orderNum, enabled);
         return Result.ok();
     }
 
     @PostMapping("del")
     @ResponseBody
-    public Result<?> del(@RequestParam(value = "id") final Long id) throws Exception {
+    public Result<?> del(@RequestParam(value = "id") final Long id) {
         this.routeService.delete(id);
-        this.gatewayService.refresh();
         return Result.ok();
     }
 
     @PostMapping("enable")
     @ResponseBody
-    public Result<?> enable(@RequestParam(value = "id") final Long id) throws Exception {
+    public Result<?> enable(@RequestParam(value = "id") final Long id) {
         this.routeService.enable(id, true);
-        this.gatewayService.refresh();
         return Result.ok();
     }
 
     @PostMapping("disable")
     @ResponseBody
-    public Result<?> disable(@RequestParam(value = "id") final Long id) throws Exception {
+    public Result<?> disable(@RequestParam(value = "id") final Long id) {
         this.routeService.enable(id, false);
-        this.gatewayService.refresh();
         return Result.ok();
     }
 
+    @PostMapping("publish")
+    @ResponseBody
+    public Result<?> publish() throws Exception {
+        this.gatewayService.refresh();
+        return Result.ok();
+    }
 }

@@ -48,8 +48,9 @@
             <div class="layui-inline" style="margin-left: -10px;color:#cccccc"><small><i>不可修改</i></small></div>
 
             <div class="layui-inline" style="margin-left: 50px">流量比例</div>
-            <div class="layui-inline" style="width:50px">
-                <input type="number" name="weight" class="layui-input" placeholder="请填写流量比例" autocomplete="off"
+            <div class="layui-inline" style="width:130px">
+                <input type="number" id="weight" name="weight" class="layui-input" placeholder="请填写流量比例"
+                       autocomplete="off"
                        lay-verify="required" value="${gray.weight}">
             </div>
             <div class="layui-inline" style="margin-left: -10px"><b>%</b></div>
@@ -75,13 +76,13 @@
         <script type="text/html" id="grid-toolbar">
             <div class="layui-btn-container">
                 <@update>
-                    <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="inspect">
-                        <i class="layui-icon layui-icon-rss"></i>测试调用链路
+                    <button class="layui-btn layui-btn-primary layui-btn-sm layuiadmin-btn-admin" lay-event="inspect">
+                        <i class="layui-icon layui-icon-rss"></i>&nbsp;&nbsp;测试调用链路
                     </button>
                 </@update>
                 <@select>
-                    <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="refresh">
-                        <i class="layui-icon layui-icon-refresh-3"></i>刷新服务列表
+                    <button class="layui-btn layui-btn-primary layui-btn-sm layuiadmin-btn-admin" lay-event="refresh">
+                        <i class="layui-icon layui-icon-refresh-3"></i>&nbsp;&nbsp;刷新服务列表
                     </button>
                 </@select>
 
@@ -146,7 +147,7 @@
                     {title: '服务ID', templet: '#tName'},
                     {title: '版本号', unresize: true, templet: '#tVersion', width: 250},
                     {title: '版本数量', align: "center", templet: '#tVersionSize', width: 150},
-                    {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 250}
+                    {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 80}
                 ]],
                 done: function (res) {
 
@@ -193,8 +194,8 @@
                         type: 2,
                         title: '<i class="layui-icon layui-icon-rss" style="color: #1E9FFF;"></i>&nbsp;测试调用链路',
                         content: 'toinspect?data=' + escape(JSON.stringify(service)),
-                        area: ['800px', '600px'],
-                        btn: ['确定'],
+                        area: ['960px', '700px'],
+                        btn: ['取消'],
                         closeBtn: 0,
                         resize: false
                     });
@@ -207,6 +208,11 @@
                 data[dataIndex]['version'] = obj.value;
                 reload(data);
             });
+
+            setTimeout(function () {
+                $("#weight").select();
+                $("#weight").focus();
+            }, 100);
         });
     </script>
     </body>

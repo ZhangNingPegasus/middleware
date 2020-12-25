@@ -21,6 +21,7 @@ import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.EndpointVo;
 import org.wyyt.springcloud.gateway.entity.GrayVo;
 import org.wyyt.springcloud.gateway.entity.InspectVo;
+import org.wyyt.springcloud.gateway.entity.anno.TranSave;
 import org.wyyt.springcloud.gateway.entity.entity.Gray;
 import org.wyyt.springcloud.gateway.entity.service.GrayService;
 import org.wyyt.tool.sql.SqlTool;
@@ -28,6 +29,7 @@ import org.wyyt.tool.sql.SqlTool;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The service of Gray publish
@@ -63,6 +65,9 @@ public class GrayPublishService {
     public List<GrayVo> listGrayVo() {
         final List<GrayVo> result = new ArrayList<>();
         final String grayConfig = this.getGrayConfig();
+        if (StringUtils.isEmpty(grayConfig)) {
+            return result;
+        }
         final RuleEntity ruleEntity = this.pluginConfigParser.parse(grayConfig);
         final StrategyCustomizationEntity strategyCustomizationEntity = ruleEntity.getStrategyCustomizationEntity();
         final Map<String, Integer> versionWeight = new HashMap<>();
@@ -85,11 +90,30 @@ public class GrayPublishService {
         return result;
     }
 
-    public void updateGrayConfig(final List<GrayVo> grayVoList) {
-        this.updateGrayConfig("");
+    @TranSave
+    public void publish(final List<GrayVo> grayVoList) throws IOException {
+        final List<Gray> grayList = new ArrayList<>();
+        for (final GrayVo grayVo : grayVoList) {
+            final Gray gray = new Gray();
+            gray.setGrayId(grayVo.getId());
+            gray.setDescription(grayVo.getDescription());
+            grayList.add(gray);
+        }
+        this.grayService.update(grayList);
+
+        if (grayVoList.isEmpty()) {
+            this.updateGrayConfig("");
+        } else {
+            final String xml = this.toGlobalHeaderConfig(grayVoList);
+            this.updateGrayConfig(xml);
+        }
     }
 
-    public String inspect(final List<InspectVo> inspectVos) throws Exception {
+    public void clearGrayConfig() {
+        this.apolloTool.clearConfig(this.grayKey);
+    }
+
+    public String inspect(final List<InspectVo> inspectVos) {
         if (null == inspectVos || inspectVos.isEmpty()) {
             return "";
         }
@@ -110,7 +134,7 @@ public class GrayPublishService {
         final EndpointVo gatewayUri = this.gatewayService.getGatewayUri();
         final String startServiceName = inspectVos.get(0).getService();
         serviceIdList.remove(startServiceName);
-        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getAddress(), gatewayUri.getPort(), startServiceName))
+        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getHost(), gatewayUri.getPort(), startServiceName))
                 .header("Content-Type", "application/json")
                 .headers(headers)
                 .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.stream().sorted(Comparator.naturalOrder()).toArray())))
@@ -120,37 +144,40 @@ public class GrayPublishService {
         return formatInspect(inspect);
     }
 
-    public String globalInspect() throws Exception {
+    public String globalInspect() {
         final String grayConfig = this.getGrayConfig();
         final RuleEntity ruleEntity = this.pluginConfigParser.parse(grayConfig);
 
-        final Set<String> serviceIdList = new HashSet<>();
+        final Set<String> serviceIdSet = new HashSet<>();
         for (final StrategyRouteEntity strategyRouteEntity : ruleEntity.getStrategyCustomizationEntity().getStrategyRouteEntityList()) {
             final String value = strategyRouteEntity.getValue();
             final Map<String, String> map = JSON.parseObject(value, Map.class);
-            serviceIdList.addAll(map.keySet());
+            for (final String serverId : map.keySet()) {
+                serviceIdSet.add(String.format("\"%s\"", serverId));
+            }
         }
 
-        if (serviceIdList.isEmpty()) {
+        if (serviceIdSet.isEmpty()) {
             return "";
         }
 
-        String startServiceName = serviceIdList.iterator().next();
-        serviceIdList.remove(startServiceName);
+        final List<String> serviceIdList = serviceIdSet.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
 
+        final String startServiceName = serviceIdList.get(0);
+        serviceIdList.remove(startServiceName);
 
         serviceIdList.remove(String.format("\"%s\"", startServiceName));
         final EndpointVo gatewayUri = this.gatewayService.getGatewayUri();
-        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getAddress(), gatewayUri.getPort(), startServiceName))
+        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getHost(), gatewayUri.getPort(), SqlTool.removeQualifier(startServiceName, "\"")))
                 .header("Content-Type", "application/json")
-                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.stream().sorted(Comparator.naturalOrder()).toArray())))
+                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.toArray())))
                 .asString()
                 .getBody();
 
         return formatInspect(inspect);
     }
 
-    public String toGlobalHeaderConfig(final List<GrayVo> grayVoList) throws IOException {
+    private String toGlobalHeaderConfig(final List<GrayVo> grayVoList) throws IOException {
         final Document doc = DocumentHelper.createDocument();
         final Element rule = doc.addElement("rule");
         final Element customization = rule.addElement("strategy-customization");
@@ -179,10 +206,6 @@ public class GrayPublishService {
         this.apolloTool.updateConfig(this.grayKey, config);
     }
 
-    public void clearGrayConfig() {
-        this.apolloTool.clearConfig(this.grayKey);
-    }
-
     private String getGrayConfig() {
         try {
             return this.apolloTool.getConfig(this.grayKey);
@@ -208,7 +231,7 @@ public class GrayPublishService {
         }
     }
 
-    public static String formatInspect(final String inspect) {
+    private static String formatInspect(final String inspect) {
         if (StringUtils.isEmpty(inspect)) {
             return "";
         }
@@ -219,6 +242,9 @@ public class GrayPublishService {
             return inspect.trim();
         }
         final String chain = jsonObject.getString("result");
+        if (StringUtils.isEmpty(chain)) {
+            return inspect;
+        }
 
         final StringBuilder result = new StringBuilder();
 

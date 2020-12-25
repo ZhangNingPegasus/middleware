@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modules>
+        <module>sharding-starter</module>
+        <module>sql-tool</module>
+        <module>db2es-core</module>
+        <module>db2es-client</module>
+        <module>db2es-admin</module>
+    </modules>
+
+    <packaging>pom</packaging>
+    <parent>
+        <artifactId>middleware</artifactId>
+        <groupId>org.wyyt</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>sharding</artifactId>
+    <description>Sharding Tables</description>
+</project>

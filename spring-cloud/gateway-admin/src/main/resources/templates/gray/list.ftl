@@ -11,26 +11,39 @@
             <div class="layui-card-body">
                 <table id="grid" lay-filter="grid"></table>
 
+                <script type="text/html" id="colWeight">
+                    {{#  if(d.weight == 0){ }}
+                    <span class="layui-badge layui-bg-orange"><b>{{d.weight}}%</span>
+                    {{#  } else { }}
+                    <span class="layui-badge layui-bg-green"><b>{{d.weight}}%</span>
+                    {{#  } }}
+                </script>
+
                 <script type="text/html" id="grid-toolbar">
                     <div class="layui-btn-container">
                         <@update>
-                            <button class="layui-btn layui-btn-sm layui-btn-normal layuiadmin-btn-admin"
-                                    lay-event="publish">
-                                <i class="layui-icon layui-icon-release"></i>发布灰度策略
+                            <button id="btnPublish"
+                                    class="layui-btn-disabled layui-btn layui-btn-sm layui-btn-normal layuiadmin-btn-admin"
+                                    lay-event="publish" style="margin-right: 50px">
+                                <i class="layui-icon layui-icon-release"></i>&nbsp;&nbsp;发布灰度策略
+                                <span id="spanStatus" class="layui-badge layui-bg-orange"
+                                      style="display: none">有修改</span>
                             </button>
                         </@update>
                         <@insert>
                             <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="add">
-                                <i class="layui-icon layui-icon-add-1"></i>新增调用分支
+                                <i class="layui-icon layui-icon-add-1"></i>&nbsp;&nbsp;新增调用分支
                             </button>
                         </@insert>
                         <@select>
-                            <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="inspect">
-                                <i class="layui-icon layui-icon-rss"></i>测试灰度调用链
+                            <button class="layui-btn layui-btn-sm layui-btn-primary layuiadmin-btn-admin"
+                                    lay-event="inspect">
+                                <i class="layui-icon layui-icon-rss"></i>&nbsp;&nbsp;测试灰度调用
                             </button>
 
-                            <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="refresh">
-                                <i class="layui-icon layui-icon-refresh-3"></i>刷新服务列表
+                            <button class="layui-btn layui-btn-sm layui-btn-primary layuiadmin-btn-admin"
+                                    lay-event="refresh">
+                                <i class="layui-icon layui-icon-refresh-3"></i>&nbsp;&nbsp;刷新服务列表
                             </button>
                         </@select>
                     </div>
@@ -53,16 +66,18 @@
     <script>
         layui.config({base: '../../..${ctx}/layuiadmin/'}).extend({index: 'lib/index'}).use(['index', 'table'], function () {
             const admin = layui.admin, $ = layui.$, form = layui.form, table = layui.table;
+            let isUpdate = false;
             tableErrorHandler();
 
             function reload(data) {
                 table.reload('grid', {url: null, 'data': data});
+                updateStatus(true);
             }
 
-            form.on('submit(search)', function (data) {
-                const field = data.field;
-                table.reload('grid', {where: field, page: 1});
-            });
+            function reloadWithUrl() {
+                table.reload('grid', {url: 'list'});
+                updateStatus(false);
+            }
 
             table.render({
                 elem: '#grid',
@@ -70,9 +85,7 @@
                 toolbar: '#grid-toolbar',
                 method: 'post',
                 cellMinWidth: 80,
-                page: true,
-                limit: 15,
-                limits: [15],
+                page: false,
                 even: true,
                 text: {
                     none: '暂无相关数据'
@@ -82,10 +95,9 @@
                     {field: 'id', title: '分支标识', width: 150},
                     {field: 'description', title: '描述信息', width: 200},
                     {
-                        field: 'weight',
                         title: '流量比例',
                         align: "center",
-                        templet: '<div>{{d.weight}}%</div>',
+                        templet: '#colWeight',
                         width: 150
                     },
                     {field: 'value', title: '调用分支(service_name : service_version)'}
@@ -101,7 +113,7 @@
                         type: 2,
                         title: '<i class="layui-icon layui-icon-add-1"></i>&nbsp;新增调用分支',
                         content: 'toadd',
-                        area: ['1200px', '750px'],
+                        area: ['1200px', '820px'],
                         btn: admin.BUTTONS,
                         resize: false,
                         yes: function (index, layero) {
@@ -161,21 +173,40 @@
                     table.reload('grid', {url: 'list'});
                 } else if (obj.event === 'inspect') {
                     const d = table.cache['grid'];
-
                     if (d.length < 1) {
                         admin.error("系统提示", "请先添加调用分支");
                         return;
                     }
-
                     layer.open({
                         type: 2,
                         title: '<i class="layui-icon layui-icon-rss" style="color: #1E9FFF;"></i>&nbsp;测试灰度调用链路',
                         content: 'toglobalinspect',
-                        area: ['800px', '600px'],
-                        btn: ['确定'],
+                        area: ['960px', '750px'],
+                        btn: ['取消'],
                         closeBtn: 0,
                         resize: false
                     });
+                } else if (obj.event === 'publish') {
+                    if (!$("#btnPublish").hasClass("layui-btn-disabled")) {
+                        const d = table.cache['grid'];
+                        let weight = 0;
+                        $.each(d, function (index, item) {
+                            weight += parseInt(item.weight);
+                        });
+
+                        if (weight !== 100 && weight !== 0) {
+                            admin.error("系统提示", "所有分支的权重比例总和应该等于100%, 请重新调整权重比例");
+                            return;
+                        }
+                        layer.confirm("确定要发布灰度策略吗?", function (index) {
+                            admin.post("publish", {"data": JSON.stringify(d)}, function () {
+                                updateStatus(false);
+                                reloadWithUrl();
+                                admin.success("系统提示", "灰度策略发布成功, 已立即生效");
+                                layer.close(index);
+                            });
+                        });
+                    }
                 }
             });
 
@@ -201,7 +232,7 @@
                             type: 2,
                             title: '<i class="layui-icon layui-icon-edit" style="color: #1E9FFF;"></i>&nbsp;编辑调用分支',
                             content: 'toedit',
-                            area: ['1200px', '750px'],
+                            area: ['1200px', '820px'],
                             btn: admin.BUTTONS,
                             resize: false,
                             yes: function (index, layero) {
@@ -259,6 +290,26 @@
                     });
                 }
             });
+
+            function updateStatus(update) {
+                isUpdate = update;
+                if (isUpdate) {
+                    enablePublish();
+                } else {
+                    disablePublish();
+                }
+            }
+
+            function enablePublish() {
+                $("#btnPublish").removeClass("layui-btn-disabled");
+                $("#spanStatus").show();
+            }
+
+            function disablePublish() {
+                $("#btnPublish").addClass("layui-btn-disabled");
+                $("#spanStatus").hide();
+            }
+
         });
     </script>
     </body>

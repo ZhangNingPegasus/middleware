@@ -2,31 +2,18 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <version>0.0.1-SNAPSHOT</version>
-    <groupId>org.wyyt</groupId>
+    <parent>
+        <artifactId>middleware</artifactId>
+        <groupId>org.wyyt</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>redis-starter</artifactId>
-
-    <properties>
-        <java.version>1.8</java.version>
-        <resource.delimiter>@</resource.delimiter>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <skipTests>true</skipTests>
-
-        <springboot.version>2.4.1</springboot.version>
-        <lombok.version>1.18.16</lombok.version>
-        <jackson-databind.version>2.12.0</jackson-databind.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
@@ -42,7 +29,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind.version}</version>
         </dependency>
     </dependencies>
 
@@ -58,36 +44,22 @@
         </dependencies>
     </dependencyManagement>
 
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <url>
-                http://nexus.sijibao.co/repository/maven-releases/
-            </url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>
-                http://nexus.sijibao.co/repository/maven-snapshots/
-            </url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <developers>
-        <developer>
-            <name>Ning.Zhang(Pegasus)</name>
-            <email>zhangning@sijibao.com</email>
-            <organization>WYYT</organization>
-            <organizationUrl>https://www.sijibao.com/</organizationUrl>
-        </developer>
-    </developers>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin.version}</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

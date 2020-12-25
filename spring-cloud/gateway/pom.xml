@@ -16,10 +16,11 @@
         <dependency>
             <groupId>org.wyyt</groupId>
             <artifactId>tool</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.wyyt</groupId>
+            <groupId>org.wyyt.springcloud</groupId>
             <artifactId>gateway-entity</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -73,8 +74,8 @@
 
         <!-- guava -->
         <dependency>
-            <artifactId>guava</artifactId>
             <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
 
         <!-- other -->
@@ -83,4 +84,24 @@
             <artifactId>checker-qual</artifactId>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

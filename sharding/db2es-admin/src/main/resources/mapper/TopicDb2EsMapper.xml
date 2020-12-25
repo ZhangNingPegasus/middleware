@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.wyyt.sharding.db2es.admin.mapper.TopicDb2EsMapper">
+    <select id="listUnused" resultType="org.wyyt.sharding.db2es.core.entity.persistent.Topic">
+    SELECT
+    `t`.`id`,
+    `t`.`name`
+    FROM `t_topic` `t`
+    LEFT OUTER JOIN `t_topic_db2es` `d` ON `d`.`topic_id` = `t`.`id`
+    WHERE `d`.`id` IS NULL
+    </select>
+
+    <select id="listAll" resultType="org.wyyt.sharding.db2es.admin.entity.vo.TopicDb2EsVo">
+    SELECT
+    `t`.`id`,
+    `d`.`db2es_id`,
+    `t`.`name`
+    FROM `t_topic_db2es` `d`
+    LEFT OUTER JOIN `t_topic` `t` ON `d`.`topic_id` = `t`.`id`
+    </select>
+</mapper>

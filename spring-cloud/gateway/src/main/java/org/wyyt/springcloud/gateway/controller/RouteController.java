@@ -4,9 +4,9 @@ import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.wyyt.springcloud.gateway.anno.Auth;
 import org.wyyt.springcloud.gateway.entity.BaseEntity;
 import org.wyyt.springcloud.gateway.service.DynamicRouteService;
-import org.wyyt.springcloud.gateway.anno.Auth;
 import org.wyyt.tool.rpc.Result;
 import reactor.core.publisher.Mono;
 
