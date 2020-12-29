@@ -51,7 +51,7 @@
             function refresh() {
                 admin.postQuiet('globalinspect', {}, function (data) {
                     content.push(data.data);
-                    $("#message").html(content.join("<br/>"));
+                    $("#message").html(content.join("<br/><br/>"));
                     times++;
                     if (times >= parseInt($("#times").val())) {
                         $("#btnStop").click();
@@ -63,6 +63,7 @@
                 if ($("#btnStart").hasClass("layui-btn-disabled")) {
                     return;
                 }
+                $("#message").html("");
                 const times = parseInt($("#times").val());
                 if (times > 0 && times <= 100) {
                     interval = setInterval(refresh, 1000);

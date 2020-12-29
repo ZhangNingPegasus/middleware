@@ -37,6 +37,8 @@
                 cellMinWidth: 80,
                 toolbar: '#grid-toolbar',
                 page: false,
+                limit: 99999999,
+                limits: [99999999],
                 even: true,
                 text: {none: '暂无相关数据'},
                 cols: [[

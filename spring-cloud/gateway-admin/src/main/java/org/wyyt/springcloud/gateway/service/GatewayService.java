@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -90,19 +91,42 @@ public class GatewayService {
                 this.propertyConfig.getConsulPort(),
                 serviceId);
         final String json = this.rpcTool.get(url);
-        final JSONArray jsonArray = JSON.parseArray(json);
+        final JSONArray allJsonArray = JSON.parseArray(json);
 
-        if (null == jsonArray || jsonArray.isEmpty()) {
+        if (null == allJsonArray || allJsonArray.isEmpty()) {
             return null;
         }
 
-        for (final Object object : jsonArray) {
+        for (final Object object : allJsonArray) {
             if (object instanceof JSONObject) {
                 final JSONObject jsonObject = (JSONObject) object;
                 final Object service = jsonObject.get("Service");
+                final Object checks = jsonObject.get("Checks");
+
+                final Map<String, JSONObject> checksMap = new HashMap<>();
+                if (checks instanceof JSONArray) {
+                    JSONArray jsonArray = (JSONArray) checks;
+                    for (final Object obj : jsonArray) {
+                        if (obj instanceof JSONObject) {
+                            final JSONObject jsonObj = (JSONObject) obj;
+                            final String serviceID = jsonObj.getString("ServiceID");
+                            if (StringUtils.isEmpty(serviceID)) {
+                                continue;
+                            }
+                            checksMap.put(serviceID, jsonObj);
+                        }
+                    }
+                }
+
                 if (service instanceof JSONObject) {
                     final EndpointVo endpointVo = new EndpointVo();
                     final JSONObject jsonService = (JSONObject) service;
+
+                    final JSONObject jsonCheck = checksMap.get(jsonService.getString("ID"));
+                    if (null == jsonCheck || !jsonCheck.getString("Status").equalsIgnoreCase("passing")) {
+                        continue;
+                    }
+
                     endpointVo.setHost(jsonService.getString("Address"));
                     endpointVo.setPort(jsonService.getInteger("Port"));
                     final Object tags = jsonService.get("Tags");

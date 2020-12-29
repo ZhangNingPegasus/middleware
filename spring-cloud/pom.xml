@@ -8,6 +8,8 @@
         <module>service-demo</module>
         <module>gateway-admin</module>
         <module>spring-boot-admin</module>
+        <module>service-starter</module>
+        <module>maven-springcloud-quickstart</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -17,8 +19,8 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wyyt.springcloud</groupId>
     <artifactId>spring-cloud</artifactId>
-    <description>Spring-Cloud</description>
     <version>0.0.1-SNAPSHOT</version>
 
     <dependencyManagement>

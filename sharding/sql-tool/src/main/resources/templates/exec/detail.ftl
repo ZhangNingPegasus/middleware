@@ -205,8 +205,9 @@
                 elem: '#grid',
                 cellMinWidth: 80,
                 page: false,
+                limit: 99999999,
+                limits: [99999999],
                 even: true,
-                limit: 999999999,
                 height: '600',
                 text: {none: '暂无相关字段信息'},
                 cols: [[
@@ -225,8 +226,9 @@
                 elem: '#gridIndex',
                 cellMinWidth: 80,
                 page: false,
+                limit: 99999999,
+                limits: [99999999],
                 even: true,
-                limit: 999999999,
                 height: '600',
                 text: {none: '暂无相关索引信息'},
                 cols: [[

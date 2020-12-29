@@ -71,6 +71,8 @@
                 toolbar: '#grid-toolbar',
                 cellMinWidth: 80,
                 page: false,
+                limit: 99999999,
+                limits: [99999999],
                 even: true,
                 text: {
                     none: '暂无相关数据'

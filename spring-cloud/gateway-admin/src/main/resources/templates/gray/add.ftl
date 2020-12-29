@@ -106,7 +106,7 @@
                 {{# }); }}
             </select>
             {{#  } else { }}
-            <span class="layui-badge layui-bg-orange">此服务没有配置version, 请检查[spring.application.version]配置项</span>
+            <span class="layui-badge layui-bg-orange">此服务缺少运行实例或没有配置版本号[spring.application.version]</span>
             {{#  } }}
         </script>
 
@@ -138,6 +138,8 @@
                 method: 'post',
                 cellMinWidth: 80,
                 page: false,
+                limit: 99999999,
+                limits: [99999999],
                 even: true,
                 text: {
                     none: '暂无相关数据'

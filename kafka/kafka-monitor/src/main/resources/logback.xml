@@ -8,15 +8,14 @@
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>
         <encoder>
-            <pattern>%d{MM-dd HH:mm:ss.SSS} %-5level [%thread{36}]
-                %logger{36}.%method\(%file:%line\) - %msg%n
+            <pattern>%d{MM-dd HH:mm:ss.SSS} %-5level [%thread{36}] %logger{36}.%method\(%file:%line\) - %msg%n
             </pattern>
         </encoder>
     </appender>
 
     <appender name="elkLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <append>true</append>
-        <file>/wyyt/logs/dubbo/middleware/kafka_monitor/kafka_monitor-filebeat.log</file> <!-- 路径也要按照规范修改 -->
+        <file>/wyyt/logs/middleware/kafka_monitor/filebeat.log</file> <!-- 路径也要按照规范修改 -->
         <encoder class="net.logstash.logback.encoder.ex.LogstashEncoderEx"> <!-- ELK 最新接入方式 -->
             <!--includeCallerData 请求者信息字段 需要开启异步写入，否则比较比较耗性能-->
             <includeCallerData>true</includeCallerData>
@@ -26,7 +25,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                /wyyt/logs/dubbo/middleware/kafka_monitor/kafka_monitor-filebeat.%d{yyyy-MM-dd-HH}.%i.log.gz
+                /wyyt/logs/middleware/kafka_monitor/filebeat.%d{yyyy-MM-dd-HH}.%i.log.gz
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
         </rollingPolicy>

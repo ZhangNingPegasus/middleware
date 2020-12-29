@@ -23,7 +23,9 @@ import org.wyyt.springcloud.gateway.entity.GrayVo;
 import org.wyyt.springcloud.gateway.entity.InspectVo;
 import org.wyyt.springcloud.gateway.entity.anno.TranSave;
 import org.wyyt.springcloud.gateway.entity.entity.Gray;
+import org.wyyt.springcloud.gateway.entity.entity.Route;
 import org.wyyt.springcloud.gateway.entity.service.GrayService;
+import org.wyyt.springcloud.gateway.entity.service.RouteService;
 import org.wyyt.tool.sql.SqlTool;
 
 import java.io.IOException;
@@ -47,17 +49,20 @@ public class GrayPublishService {
     private final String grayKey;
     private final ApolloTool apolloTool;
     private final GrayService grayService;
+    private final RouteService routeService;
     private final GatewayService gatewayService;
     private final PluginConfigParser pluginConfigParser;
 
     public GrayPublishService(final ApolloTool apolloTool,
                               final PropertyConfig propertyConfig,
                               final GrayService grayService,
+                              RouteService routeService,
                               final GatewayService gatewayService,
                               final PluginConfigParser pluginConfigParser) {
         this.apolloTool = apolloTool;
         this.grayKey = String.format("%s-%s", propertyConfig.getGatewayConsulGroup(), propertyConfig.getGatewayConsulGroup());
         this.grayService = grayService;
+        this.routeService = routeService;
         this.gatewayService = gatewayService;
         this.pluginConfigParser = pluginConfigParser;
     }
@@ -109,18 +114,14 @@ public class GrayPublishService {
         }
     }
 
-    public void clearGrayConfig() {
-        this.apolloTool.clearConfig(this.grayKey);
-    }
-
     public String inspect(final List<InspectVo> inspectVos) {
         if (null == inspectVos || inspectVos.isEmpty()) {
             return "";
         }
 
         final Set<String> serviceIdList = new HashSet<>(inspectVos.size());
-        for (int i = 1; i < inspectVos.size(); i++) {
-            serviceIdList.add(String.format("\"%s\"", inspectVos.get(i).getService().trim()));
+        for (InspectVo vo : inspectVos) {
+            serviceIdList.add(String.format("\"%s\"", vo.getService().trim()));
         }
 
         final List<String> ndVersionList = new ArrayList<>(inspectVos.size());
@@ -132,9 +133,15 @@ public class GrayPublishService {
         headers.put("n-d-version", String.format("{%s}", StringUtils.join(ndVersionList, ",")));
 
         final EndpointVo gatewayUri = this.gatewayService.getGatewayUri();
-        final String startServiceName = inspectVos.get(0).getService();
-        serviceIdList.remove(startServiceName);
-        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getHost(), gatewayUri.getPort(), startServiceName))
+        final Route firstRoute = this.getFirstServiceName(inspectVos.stream().map(InspectVo::getService).collect(Collectors.toList()));
+
+        if (null == firstRoute) {
+            return "缺少网关路由配置,请先进行路由配置";
+        }
+
+        serviceIdList.remove(String.format("\"%s\"", firstRoute.getServiceName()));
+
+        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getHost(), gatewayUri.getPort(), firstRoute.getPathPredicate()))
                 .header("Content-Type", "application/json")
                 .headers(headers)
                 .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.stream().sorted(Comparator.naturalOrder()).toArray())))
@@ -153,7 +160,7 @@ public class GrayPublishService {
             final String value = strategyRouteEntity.getValue();
             final Map<String, String> map = JSON.parseObject(value, Map.class);
             for (final String serverId : map.keySet()) {
-                serviceIdSet.add(String.format("\"%s\"", serverId));
+                serviceIdSet.add(serverId);
             }
         }
 
@@ -163,18 +170,39 @@ public class GrayPublishService {
 
         final List<String> serviceIdList = serviceIdSet.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
 
-        final String startServiceName = serviceIdList.get(0);
-        serviceIdList.remove(startServiceName);
+        final Route firstRoute = this.getFirstServiceName(serviceIdList);
 
-        serviceIdList.remove(String.format("\"%s\"", startServiceName));
+        if (null == firstRoute) {
+            return "缺少网关路由配置,请先进行路由配置";
+        }
+
+        serviceIdList.remove(firstRoute.getServiceName());
         final EndpointVo gatewayUri = this.gatewayService.getGatewayUri();
-        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getHost(), gatewayUri.getPort(), SqlTool.removeQualifier(startServiceName, "\"")))
+        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getHost(), gatewayUri.getPort(), firstRoute.getPathPredicate()))
                 .header("Content-Type", "application/json")
-                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.toArray())))
+                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.stream().map(p -> String.format("\"%s\"", p)).toArray())))
                 .asString()
                 .getBody();
 
         return formatInspect(inspect);
+    }
+
+    private Route getFirstServiceName(final List<String> serviceNameList) {
+        final List<Route> routeList = this.routeService.list();
+        if (null == routeList || routeList.isEmpty()) {
+            return null;
+        }
+
+        for (final String serviceName : serviceNameList) {
+            final Optional<Route> first = routeList.stream().filter(p -> p.getUri().endsWith(serviceName)).findFirst();
+            if (first.isPresent()) {
+                final Route route = first.get();
+                route.setServiceName(serviceName);
+                return route;
+            }
+        }
+
+        return null;
     }
 
     private String toGlobalHeaderConfig(final List<GrayVo> grayVoList) throws IOException {
@@ -273,6 +301,6 @@ public class GrayPublishService {
                     map.get("V")));
         }
 
-        return result.toString();
+        return SqlTool.removeQualifier(result.toString(), "-><br/>");
     }
 }

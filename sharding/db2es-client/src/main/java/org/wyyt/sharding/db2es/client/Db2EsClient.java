@@ -7,6 +7,7 @@ import org.wyyt.sharding.db2es.client.boot.Boot;
 import org.wyyt.sharding.db2es.client.common.Context;
 import org.wyyt.sharding.db2es.core.entity.domain.Config;
 import org.wyyt.sharding.db2es.core.entity.domain.Names;
+import org.wyyt.tool.resource.ResourceTool;
 
 import java.io.File;
 import java.io.FileInputStream;

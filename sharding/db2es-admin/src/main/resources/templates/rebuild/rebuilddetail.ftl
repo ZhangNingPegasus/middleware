@@ -59,8 +59,8 @@
                 elem: '#grid',
                 cellMinWidth: 80,
                 page: false,
-                limit: 9999999,
-                limits: [9999999],
+                limit: 99999999,
+                limits: [99999999],
                 even: false,
                 text: {
                     none: '暂无相关数据'
