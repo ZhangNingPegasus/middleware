@@ -1,4 +1,4 @@
-#Apollo Config
+# Apollo Config
 app:
   # Apollo的AppId(类似ACM中的DataId)
   id: services
@@ -22,4 +22,4 @@ spring:
     strategy:
       scan:
         # RestController类的扫描路径
-        packages: ${package:org.wyyt}
+        packages: org.wyyt

@@ -1,3 +1,13 @@
+app:
+  id: spring-cloud-gateway
+apollo:
+  meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
+  bootstrap:
+    enabled: true
+    namespaces: Architecture.spring-cloud-common,application
+    eagerLoad:
+      enabled: true
+
 server:
   port: 80
 

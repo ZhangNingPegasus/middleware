@@ -9,6 +9,15 @@ cd $(dirname $0)
 cd ..
 BASE_PATH=$(pwd)
 CONFIG_DIR=${BASE_PATH}"/config/"
+AGENT_DIR=${BASE_PATH}"/agent/"
+AGENT_JAR=""
+for fileName in $(ls ${AGENT_DIR}); do
+  if [ ! -d ${fileName} ]; then
+    if [ ${fileName##*.} = jar ]; then
+      AGENT_JAR=$fileName
+    fi
+  fi
+done
 
 LOG_DIR="/wyyt/logs/springcloud/${APPLICATION}"
 LOGS_HEAPDUMP="${LOG_DIR}/heapdump"
@@ -17,6 +26,11 @@ STARTUP_LOG="================================================ $(date +'%Y-%m-%m 
 
 if [[ ! -d "${LOG_DIR}" ]]; then
   mkdir -p "${LOG_DIR}"
+fi
+
+JAVA_AGENT=""
+if [ -f "${AGENT_DIR}${AGENT_JAR}" ]; then
+  JAVA_AGENT="-javaagent:${AGENT_DIR}${AGENT_JAR} "
 fi
 
 JAVA_OPT="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -XX:-OmitStackTraceInFastThrow "
@@ -30,9 +44,9 @@ STARTUP_LOG="${STARTUP_LOG}application jar name: ${APPLICATION_JAR}\n"
 STARTUP_LOG="${STARTUP_LOG}application jar version: ${VERSION}\n"
 STARTUP_LOG="${STARTUP_LOG}application root path: ${BASE_PATH}\n"
 STARTUP_LOG="${STARTUP_LOG}application config path: ${CONFIG_DIR}\n"
-STARTUP_LOG="${STARTUP_LOG}application startup command: java ${JAVA_OPT} ${JAVA_GC} ${JAVA_MEM_OPT} ${JAVA_PARAMETER_OPT} -jar ${BASE_PATH}/boot/${APPLICATION_JAR} --spring.config.location=${CONFIG_DIR}\n"
+STARTUP_LOG="${STARTUP_LOG}application startup command: java ${JAVA_AGENT} ${JAVA_OPT} ${JAVA_GC} ${JAVA_MEM_OPT} ${JAVA_PARAMETER_OPT} -jar ${BASE_PATH}/boot/${APPLICATION_JAR} --spring.config.location=${CONFIG_DIR}\n"
 
-nohup java ${JAVA_OPT} ${JAVA_GC} ${JAVA_MEM_OPT} ${JAVA_PARAMETER_OPT} -jar ${BASE_PATH}/boot/${APPLICATION_JAR} --spring.config.location=${CONFIG_DIR} >/dev/null 2>&1 &
+nohup java ${JAVA_AGENT} ${JAVA_OPT} ${JAVA_GC} ${JAVA_MEM_OPT} ${JAVA_PARAMETER_OPT} -jar ${BASE_PATH}/boot/${APPLICATION_JAR} --spring.config.location=${CONFIG_DIR} >/dev/null 2>&1 &
 
 PID=$(ps -ef | grep "${APPLICATION_JAR}" | grep -v grep | awk '{ print $2 }')
 STARTUP_LOG="${STARTUP_LOG}application pid: ${PID}\n"

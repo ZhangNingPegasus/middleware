@@ -28,6 +28,13 @@
             <fileMode>0644</fileMode>
         </fileSet>
 
+        <!-- 将第三方agent打包到agent目录中 -->
+        <fileSet>
+            <directory>${build.outputDirectory}/agent</directory>
+            <outputDirectory>agent</outputDirectory>
+            <fileMode>0755</fileMode>
+        </fileSet>
+
         <!-- 指定输出target/classes中的配置文件到logs目录中 -->
         <fileSet>
             <directory>${build.outputDirectory}/logs</directory>

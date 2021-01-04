@@ -115,6 +115,8 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
                     <include>db2es.properties</include>
+                    <include>logback.xml</include>
+                    <include>log4j.properties</include>
                 </includes>
             </resource>
 

@@ -248,10 +248,10 @@
                                         error = true;
                                         return;
                                     }
-
+                                    
                                     const branch = {};
                                     $.each(gridData, function (index, item) {
-                                        if (item.version) {
+                                        if (item.version && item.versionList.indexOf(item.version) >= 0) {
                                             eval('branch["' + item.name + '"]=' + '"' + item.version + '"');
                                         }
                                     });

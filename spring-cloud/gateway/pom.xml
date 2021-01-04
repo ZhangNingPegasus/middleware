@@ -114,6 +114,9 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
                     <include>mapper/**</include>
+                    <include>logback.xml</include>
+                    <include>config.properties</include>
+                    <include>rule.xml</include>
                 </includes>
             </resource>
 
@@ -125,9 +128,6 @@
                 <includes>
                     <include>application.yml</include>
                     <include>bootstrap.properties</include>
-                    <include>config.properties</include>
-                    <include>logback.xml</include>
-                    <include>rule.xml</include>
                 </includes>
             </resource>
 

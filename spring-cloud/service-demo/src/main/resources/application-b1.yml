@@ -1,11 +1,13 @@
-#Apollo Config
+# Apollo Config
 app:
+  # Apollo的AppId(类似ACM中的DataId)
   id: services
 apollo:
+  # apollo_meta需配置在环境变量中
   meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
   bootstrap:
     enabled: true
-    namespaces: application
+    namespaces: Architecture.spring-cloud-common,application
     eagerLoad:
       enabled: true
 
@@ -15,15 +17,9 @@ server:
 spring:
   application:
     name: b
-    group: scfs
+    group: sample-group
     version: 1.1
     strategy:
       scan:
         # RestController类的扫描路径
         packages: org.wyyt
-  cloud:
-    consul:
-      host: ${consul_host:192.168.5.21}
-      port: ${consul_port:8500}
-  zipkin:
-    base-url: ${zipkin_url:http://192.168.6.167:9411}

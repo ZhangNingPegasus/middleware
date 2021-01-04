@@ -51,6 +51,9 @@
                     <include>mapper/**</include>
                     <include>static/**</include>
                     <include>templates/**</include>
+                    <include>config.properties</include>
+                    <include>logback.xml</include>
+                    <include>rule.xml</include>
                 </includes>
             </resource>
 
@@ -62,9 +65,15 @@
                 <includes>
                     <include>application.yml</include>
                     <include>bootstrap.properties</include>
-                    <include>config.properties</include>
-                    <include>logback.xml</include>
-                    <include>rule.xml</include>
+                </includes>
+            </resource>
+
+            <!-- 输出到外部agent目录的资源 -->
+            <resource>
+                <directory>${basedir}/src/main/resources/agent</directory>
+                <targetPath>agent</targetPath>
+                <includes>
+                    <include>**/**</include>
                 </includes>
             </resource>
 
@@ -102,7 +111,7 @@
                     <archive>
                         <manifest>
                             <!-- 项目启动类 -->
-                            <mainClass>org.wyyt.springcloud.quickstart.archetype.Application</mainClass>
+                            <mainClass>${groupId}.Application</mainClass>
                             <!-- 依赖的jar的目录前缀 -->
                             <classpathPrefix>../lib</classpathPrefix>
                             <addClasspath>true</addClasspath>

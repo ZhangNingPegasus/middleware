@@ -1,3 +1,13 @@
+app:
+  id: spring-boot-admin
+apollo:
+  meta: ${apollo_meta:http://192.168.12.155:8080/}
+  bootstrap:
+    enabled: true
+    namespaces: Architecture.spring-cloud-common,application
+    eagerLoad:
+      enabled: true
+
 spring:
   application:
     name: spring-boot-admin-server
@@ -5,8 +15,8 @@ spring:
     config:
       enabled: false
     consul:
-      host: ${consul_host:192.168.5.21}
-      port: ${consul_port:8500}
+      host: ${consul_host}
+      port: ${consul_port}
       discovery:
         service-name: ${spring.application.name}
         prefer-ip-address: true
@@ -17,7 +27,7 @@ spring:
         ignored-services: consul,${spring.application.name}
       ui:
         title: SpringBootCloud服务
-        brand: <img src="assets/img/icon-spring-boot-admin.svg"><span>SpringBootCloud</span>
+        brand: <img src="assets/img/icon-spring-boot-admin.svg"><span>SpringBoot Cloud</span>
         available-languages:
           - zh-CN
           - en
@@ -37,16 +47,6 @@ management:
   endpoint:
     health:
       show-details: always
-
-app:
-  id: spring-boot-admin
-apollo:
-  meta: ${apollo_meta:http://192.168.12.155:8080/}
-  bootstrap:
-    enabled: true
-    namespaces: application
-    eagerLoad:
-      enabled: true
 
 dingtalk:
   enabled: ${dingtalk_enabled:false}

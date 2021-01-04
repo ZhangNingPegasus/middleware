@@ -6,7 +6,7 @@ import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.StrategyConditionGrayEntity;
 import com.nepxion.discovery.common.entity.StrategyCustomizationEntity;
 import com.nepxion.discovery.common.entity.StrategyRouteEntity;
-import com.nepxion.discovery.plugin.framework.config.PluginConfigParser;
+import com.nepxion.discovery.plugin.framework.parser.PluginConfigParser;
 import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -159,9 +159,7 @@ public class GrayPublishService {
         for (final StrategyRouteEntity strategyRouteEntity : ruleEntity.getStrategyCustomizationEntity().getStrategyRouteEntityList()) {
             final String value = strategyRouteEntity.getValue();
             final Map<String, String> map = JSON.parseObject(value, Map.class);
-            for (final String serverId : map.keySet()) {
-                serviceIdSet.add(serverId);
-            }
+            serviceIdSet.addAll(map.keySet());
         }
 
         if (serviceIdSet.isEmpty()) {
