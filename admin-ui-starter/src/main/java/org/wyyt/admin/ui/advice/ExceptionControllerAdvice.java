@@ -36,10 +36,10 @@ public class ExceptionControllerAdvice {
     private Object handleException(final Model model,
                                    final HttpServletRequest request,
                                    final Exception exception) {
-        String errorMsg = ExceptionTool.getRootCauseMessage(exception);
+        final String errorMsg = ExceptionTool.getRootCauseMessage(exception);
         log.error(errorMsg, exception);
         if (isAjax(request)) {
-            ResultCode respondCode = ResultCode.get(errorMsg);
+            final ResultCode respondCode = ResultCode.get(errorMsg);
             if (null == respondCode) {
                 return Result.error(errorMsg);
             } else {

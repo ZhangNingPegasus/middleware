@@ -2,6 +2,10 @@
 <configuration>
     <logger name="org.hibernate.validator" level="OFF">
     </logger>
+    <logger name="com.nepxion.discovery.plugin.framework.util" level="OFF">
+    </logger>
+    <logger name="com.netflix.config.sources" level="OFF">
+    </logger>
     <logger name="org.springframework.boot.actuate.endpoint.EndpointId" level="OFF">
     </logger>
     <logger name="org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration" level="OFF">

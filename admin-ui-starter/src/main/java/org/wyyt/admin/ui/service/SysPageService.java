@@ -37,6 +37,10 @@ public class SysPageService {
         return this.crudService.selectOne(SysPage.class, "SELECT * FROM `sys_page` WHERE `id`=?", id);
     }
 
+    public SysPage getByName(final String name) throws Exception {
+        return this.crudService.selectOne(SysPage.class, "SELECT * FROM `sys_page` WHERE `name`=?", name);
+    }
+
     public List<SysPage> getEmptyUrl() throws Exception {
         return this.crudService.select(SysPage.class, "SELECT * FROM `sys_page` WHERE `url`='' ORDER BY `name` ASC");
     }

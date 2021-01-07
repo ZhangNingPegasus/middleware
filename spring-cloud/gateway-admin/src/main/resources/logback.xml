@@ -2,6 +2,10 @@
 <configuration>
     <logger name="com.nepxion.discovery.plugin.configcenter.parser.xml.XmlConfigParser" level="OFF">
     </logger>
+    <logger name="com.nepxion.discovery.plugin.framework.util" level="OFF">
+    </logger>
+    <logger name="com.netflix.config.sources" level="OFF">
+    </logger>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>

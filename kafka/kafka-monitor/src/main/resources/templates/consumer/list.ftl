@@ -81,7 +81,7 @@
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {where: field, page: 1});
+                table.reload('grid', {page: {curr: 1}, where: field});
             });
             table.render({
                 elem: '#grid',
@@ -103,7 +103,7 @@
                     {field: 'node', title: '消费组所在节点', width: 250},
                     {title: '订阅主题数', sort: true, templet: "#topicCount", width: 150},
                     {title: '活跃主题数', sort: true, templet: "#activeTopicCount", width: 150},
-                    {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 145}
+                    {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 145}
                 ]],
                 done: function () {
                     $("a[class='groupid layui-table-link']").click(function () {

@@ -149,7 +149,7 @@
                     {title: '服务ID', templet: '#tName'},
                     {title: '版本号', unresize: true, align: "center", templet: '#tVersion', width: 400},
                     {title: '版本数量', align: "center", templet: '#tVersionSize', width: 150},
-                    {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 80}
+                    {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 80}
                 ]],
                 done: function (res) {
 

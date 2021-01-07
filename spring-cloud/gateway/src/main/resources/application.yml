@@ -16,14 +16,3 @@ spring:
     name: ${gateway_consul_name}
     group: ${gateway_consul_group}
     version: 1.0
-  cloud:
-    consul:
-      host: ${consul_host}
-      port: ${consul_port}
-  zipkin:
-    base-url: http://192.168.6.167:9411/
-    sender:
-      type: web
-  sleuth:
-    sampler:
-      probability: 1

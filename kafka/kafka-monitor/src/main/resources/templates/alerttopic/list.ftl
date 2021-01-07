@@ -67,7 +67,7 @@
                     {field: 'toMomTps', title: 'TPS变化下限', width: 150},
                     {field: 'email', title: '通知邮箱', width: 150}
                     <@select>
-                    , {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 160}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 160}
                     </@select>
                 ]]
             });

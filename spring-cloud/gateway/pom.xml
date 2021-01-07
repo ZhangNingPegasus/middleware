@@ -35,22 +35,16 @@
             <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>
         </dependency>
 
-        <!-- 熔断器 -->
+        <!-- 网关的策略编排插件 -->
         <dependency>
             <groupId>com.nepxion</groupId>
-            <artifactId>discovery-plugin-strategy-starter-hystrix</artifactId>
+            <artifactId>discovery-plugin-strategy-starter-gateway</artifactId>
         </dependency>
 
         <!-- 管理中心插件 -->
         <dependency>
             <groupId>com.nepxion</groupId>
             <artifactId>discovery-plugin-admin-center-starter</artifactId>
-        </dependency>
-
-        <!-- 网关的策略编排插件 -->
-        <dependency>
-            <groupId>com.nepxion</groupId>
-            <artifactId>discovery-plugin-strategy-starter-gateway</artifactId>
         </dependency>
 
         <!-- Spring Boot Admin监控 -->

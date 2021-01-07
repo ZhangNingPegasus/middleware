@@ -108,7 +108,7 @@
 
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {where: field, page: 1});
+                table.reload('grid', {page: {curr: 1}, where: field});
             });
 
             table.render({
@@ -131,7 +131,7 @@
                     {field: 'key', title: '消息Key', width: 220},
                     {field: 'createTime', title: '消息时间', width: 180},
                     {field: 'value', title: '消息体'},
-                    {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 285}
+                    {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 285}
                 ]]
             });
 

@@ -81,7 +81,7 @@
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {where: field, page: 1});
+                table.reload('grid', {page: {curr: 1}, where: field});
                 updateStatus(false);
             });
             table.render({
@@ -111,7 +111,7 @@
                         }
                     }
                     <@select>
-                    , {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 210}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 210}
                     </@select>
                 ]]
             });

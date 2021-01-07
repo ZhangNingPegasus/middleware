@@ -1,4 +1,6 @@
 #!/bin/bash
+# 修改成Runnable/Callable对象所在的扫描目录, 该包下的Runnable/Callable对象都会被装饰, 最好精细和准确, 减少被装饰的对象数，提高性能,多个用';'分隔
+THREAD_PACKAGES="@project.groupId@"
 Xms=2G
 Xmx=2G
 Xmn=1G
@@ -31,6 +33,9 @@ fi
 JAVA_AGENT=""
 if [ -f "${AGENT_DIR}${AGENT_JAR}" ]; then
   JAVA_AGENT="-javaagent:${AGENT_DIR}${AGENT_JAR} "
+  JAVA_AGENT="${JAVA_AGENT} -Dthread.scan.packages=\"reactor.core.scheduler;org.springframework.aop.interceptor;com.netflix.hystrix;${THREAD_PACKAGES}\""
+  JAVA_AGENT="${JAVA_AGENT} -Dthread.request.decorator.enabled=true "
+  JAVA_AGENT="${JAVA_AGENT} -Dthread.mdc.enabled=true "
 fi
 
 JAVA_OPT="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -XX:-OmitStackTraceInFastThrow "

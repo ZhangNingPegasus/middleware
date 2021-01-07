@@ -7,12 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.wyyt.tool.rpc.Result;
 
 @RestController
 @ConditionalOnProperty(name = DiscoveryConstant.SPRING_APPLICATION_NAME, havingValue = "b")
 public class BFeignImpl implements BFeign {
     private static final Logger LOG = LoggerFactory.getLogger(BFeignImpl.class);
-
 
     private final PluginAdapter pluginAdapter;
 
@@ -21,9 +21,9 @@ public class BFeignImpl implements BFeign {
     }
 
     @Override
-    public String invoke(@PathVariable(value = "value") String value) {
+    public Result<String> invoke(@PathVariable(value = "value") String value) {
         value = pluginAdapter.getPluginInfo(value);
         LOG.info("调用路径：{}", value);
-        return value;
+        return Result.ok(value);
     }
 }

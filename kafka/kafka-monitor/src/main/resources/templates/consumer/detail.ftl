@@ -122,7 +122,7 @@
                     {field: 'topicName', title: '主题名称', templet: '#colTopicName'},
                     {field: "lag", title: '堆积消息数量', templet: '#colLag', width: 200},
                     {title: '消费状态', templet: '#colConsumerStatus', width: 200},
-                    {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 220}
+                    {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 220}
                 ]],
                 done: function (res) {
                     $("a[class='topicName layui-table-link']").click(function () {

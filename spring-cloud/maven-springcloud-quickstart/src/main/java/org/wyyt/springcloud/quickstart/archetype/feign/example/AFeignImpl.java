@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,15 +20,15 @@ public class AFeignImpl implements AFeign {
     private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
     @Override
-    public String invoke(@PathVariable(value = "value") String value) {
+    public Result<String> invoke(@PathVariable(value = "value") String value) {
         value = doInvoke(value);
         log.info(value);
-        return value;
+        return Result.ok(value);
     }
 
     @Override
     @Async
-    public Future<String> invokeAsync(@PathVariable(value = "value") String value) {
+    public Result<Future<String>> invokeAsync(@PathVariable(value = "value") String value) {
         try {
             value = doInvoke(value);
         } catch (final Exception e) {
@@ -36,7 +37,7 @@ public class AFeignImpl implements AFeign {
 
         AsyncResult<String> result = new AsyncResult<>(value);
         try {
-            return result;
+            return Result.ok(result);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -45,17 +46,17 @@ public class AFeignImpl implements AFeign {
     }
 
     @Override
-    public String invokeThread(@PathVariable(value = "value") final String value) {
+    public Result<String> invokeThread(@PathVariable(value = "value") final String value) {
         final Runnable runnable = createRunnable(value);
         new Thread(runnable).start();
-        return "Invoke Thread";
+        return Result.ok("Invoke Thread");
     }
 
     @Override
-    public String invokeThreadPool(final String value) {
+    public Result<String> invokeThreadPool(final String value) {
         final Runnable runnable = createRunnable(value);
         cachedThreadPool.execute(runnable);
-        return "Invoke ThreadPool";
+        return Result.ok("Invoke ThreadPool");
     }
 
     private Runnable createRunnable(final String value) {

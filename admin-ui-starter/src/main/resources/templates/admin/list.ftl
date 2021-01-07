@@ -56,7 +56,7 @@
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {where: field, page: 1});
+                table.reload('grid', {page: {curr: 1}, where: field});
             });
             table.render({
                 elem: '#grid',
@@ -80,7 +80,7 @@
                     {field: 'email', title: '邮箱地址', width: 200},
                     {field: 'remark', title: '备注'}
                     <@select>
-                    , {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 235}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 235}
                     </@select>
                 ]]
             });

@@ -2,6 +2,8 @@ package org.wyyt.springcloud.quickstart.archetype.feign.example;
 
 import feign.hystrix.FallbackFactory;
 import org.springframework.stereotype.Component;
+import org.wyyt.tool.exception.ExceptionTool;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -11,19 +13,18 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class AFeignFallback implements FallbackFactory<AFeign> {
-    private static final String STR_FALL_BACK = "服务器正忙，请稍后再试";
 
     @Override
     public AFeign create(Throwable throwable) {
         return new AFeign() {
             @Override
-            public String invoke(String value) {
-                return STR_FALL_BACK;
+            public Result<String> invoke(String value) {
+                return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
 
             @Override
-            public Future<String> invokeAsync(String value) {
-                return new Future<String>() {
+            public Result<Future<String>> invokeAsync(String value) {
+                return Result.ok(new Future<String>() {
                     @Override
                     public boolean cancel(boolean mayInterruptIfRunning) {
                         return false;
@@ -41,24 +42,25 @@ public class AFeignFallback implements FallbackFactory<AFeign> {
 
                     @Override
                     public String get() {
-                        return STR_FALL_BACK;
+                        return ExceptionTool.getRootCauseMessage(throwable);
                     }
 
                     @Override
-                    public String get(long timeout, TimeUnit unit) {
-                        return STR_FALL_BACK;
+                    public String get(final long timeout,
+                                      final TimeUnit unit) {
+                        return ExceptionTool.getRootCauseMessage(throwable);
                     }
-                };
+                });
             }
 
             @Override
-            public String invokeThread(String value) {
-                return STR_FALL_BACK;
+            public Result<String> invokeThread(String value) {
+                return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
 
             @Override
-            public String invokeThreadPool(String value) {
-                return STR_FALL_BACK;
+            public Result<String> invokeThreadPool(String value) {
+                return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
         };
     }

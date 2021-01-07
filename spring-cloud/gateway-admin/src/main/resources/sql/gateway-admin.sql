@@ -69,17 +69,31 @@ CREATE TABLE IF NOT EXISTS `sys_role`
     ) COMMENT ='角色信息';
 INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`) VALUES (1, '超级管理员', 1, '超级管理员, 拥有最高权限');
 
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (1, '权限设置', '', b'1', b'0', b'0', 'layui-icon-password', 0, 8, '权限设置');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (2, '管理员配置', '/admin/tolist', b'1', b'0', b'0', '', 1, 1, '管理员配置');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (3, '角色管理', '/role/tolist', b'1', b'0', b'0', '', 1, 2, '角色管理');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (4, '权限管理', '/permission/tolist', b'1', b'0', b'0', '', 1, 3, '权限管理');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (5, '系统设置', '', b'1', b'0', b'0', 'layui-icon-set', 0, 7, '系统设置');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (6, '页面配置', '/page/tolist', b'1', b'0', b'0', '', 5, 1, '页面配置');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (7, '网关管理', '', b'1', b'0', b'0', 'layui-icon-website', 0, 1, '网关管理');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (8, '灰度发布', '/gray/tolist', b'1', b'1', b'0', 'layui-icon-release', 0, 2, '灰度发布');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (9, '应用管理', '/app/tolist', b'1', b'0', b'0', 'layui-icon-app', 0, 3, '应用管理');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (10, '路由配置', '/route/tolist', b'1', b'0', b'0', '', 7, 1, '动态路由配置');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (11, '链路跟踪', 'http://192.168.6.167:9411', b'1', b'0', b'1', 'layui-icon-location', 0, 4, '');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (12, '配置中心', 'http://apollo.wyyt.com/signin', b'1', b'0', b'1', 'layui-icon-form', 0, 5, '');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (13, '注册中心', 'http://192.168.5.21:8500', b'1', b'0', b'1', 'layui-icon-component', 0, 6, '');
-INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (14, '监控中心', 'http://springadmin.wyyt.com', b'1', b'0', b'1', 'layui-icon-chart-screen', 0, 7, '');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (1, '网关管理', '', b'1', b'0', b'0', 'layui-icon-website', 0, 1, '网关管理');
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (2, '路由配置', '/route/tolist', b'1', b'0', b'0', '', 1, 1, '动态路由配置');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (3, '灰度发布', '/gray/tolist', b'1', b'1', b'0', 'layui-icon-release', 0, 2, '灰度发布');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (4, '接口管理', '', b'1', b'0', b'0', 'layui-icon-app', 0, 3, '接口管理');
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (5, '接口列表', '/api/tolist', b'1', b'0', b'0', '', 4, 1, '动态路由配置');
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (6, '接口授权', '/auth/tolist', b'1', b'0', b'0', '', 4, 2, '动态路由配置');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (7, '链路跟踪', 'http://192.168.6.167:9411', b'1', b'0', b'1', 'layui-icon-location', 0, 4, '链路跟踪');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (8, '配置中心', 'http://apollo.wyyt.com/signin', b'1', b'0', b'1', 'layui-icon-form', 0, 5, '配置中心');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (9, '注册中心', 'http://192.168.5.21:8500', b'1', b'0', b'1', 'layui-icon-component', 0, 6, '注册中心');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (10, '监控中心', 'http://springadmin.wyyt.com', b'1', b'0', b'1', 'layui-icon-chart-screen', 0, 7, '监控中心');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (11, '工具集合', '', b'1', b'0', b'0', 'layui-icon-util', 0, 8, '工具集合');
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (12, '注册中心管理', '/consul/tolist', b'1', b'0', b'0', '', 11, 1, '注册中心管理');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (13, '系统设置', '', b'1', b'0', b'0', 'layui-icon-set', 0, 9, '系统设置');
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (14, '页面配置', '/page/tolist', b'1', b'0', b'0', '', 13, 1, '页面配置');
+
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (15, '权限设置', '', b'1', b'0', b'0', 'layui-icon-password', 0, 10, '权限设置');
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (16, '管理员配置', '/admin/tolist', b'1', b'0', b'0', '', 15, 1, '管理员配置');
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (17, '角色管理', '/role/tolist', b'1', b'0', b'0', '', 15, 2, '角色管理');
+INSERT INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (18, '权限管理', '/permission/tolist', b'1', b'0', b'0', '', 15, 3, '权限管理');

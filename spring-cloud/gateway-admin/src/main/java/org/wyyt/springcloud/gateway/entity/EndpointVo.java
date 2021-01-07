@@ -14,8 +14,10 @@ import lombok.Data;
  */
 @Data
 public class EndpointVo {
+    private String id;
     private String host;
     private Integer port;
     private String version;
     private String group;
+    private boolean alive;
 }

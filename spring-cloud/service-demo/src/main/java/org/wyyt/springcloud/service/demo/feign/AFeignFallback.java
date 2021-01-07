@@ -2,6 +2,8 @@ package org.wyyt.springcloud.service.demo.feign;
 
 import feign.hystrix.FallbackFactory;
 import org.springframework.stereotype.Component;
+import org.wyyt.tool.exception.ExceptionTool;
+import org.wyyt.tool.rpc.Result;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -12,13 +14,13 @@ public class AFeignFallback implements FallbackFactory<AFeign> {
     public AFeign create(Throwable throwable) {
         return new AFeign() {
             @Override
-            public String invoke(String value) {
-                return "服务器正忙，请稍后再试1";
+            public Result<String> invoke(String value) {
+                return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
 
             @Override
-            public Future<String> invokeAsync(String value) {
-                return new Future<String>() {
+            public Result<Future<String>> invokeAsync(String value) {
+                return Result.ok(new Future<String>() {
                     @Override
                     public boolean cancel(boolean mayInterruptIfRunning) {
                         return false;
@@ -36,24 +38,24 @@ public class AFeignFallback implements FallbackFactory<AFeign> {
 
                     @Override
                     public String get() {
-                        return "服务器正忙，请稍后再试1";
+                        return "服务器正忙，请稍后再试";
                     }
 
                     @Override
                     public String get(long timeout, TimeUnit unit) {
-                        return "服务器正忙，请稍后再试1";
+                        return ExceptionTool.getRootCauseMessage(throwable);
                     }
-                };
+                });
             }
 
             @Override
-            public String invokeThread(String value) {
-                return "服务器正忙，请稍后再试1";
+            public Result<String> invokeThread(String value) {
+                return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
 
             @Override
-            public String invokeThreadPool(String value) {
-                return "服务器正忙，请稍后再试1";
+            public Result<String> invokeThreadPool(String value) {
+                return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
         };
     }

@@ -62,7 +62,7 @@
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {where: field});
+                table.reload('grid', {page: {curr: 1}, where: field});
             });
             table.render({
                 elem: '#grid',
@@ -98,7 +98,7 @@
                         width: 170
                     }
                     <@select>
-                    , {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 150}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 150}
                     </@select>
                 ]]
             });

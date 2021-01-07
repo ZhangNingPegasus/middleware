@@ -21,5 +21,16 @@ spring:
     version: 1.1
     strategy:
       scan:
-        # RestController类的扫描路径
+        # 指定对业务RestController类的扫描路径。此项配置作用于RPC方式的调用拦截、消费端的服务隔离和调用链三项功能
         packages: org.wyyt
+  cloud:
+    consul:
+      host: ${consul_host}
+      port: ${consul_port}
+  zipkin:
+    base-url: ${zipkin_url}
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 1

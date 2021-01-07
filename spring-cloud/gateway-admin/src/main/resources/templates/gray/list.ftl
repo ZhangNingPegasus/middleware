@@ -104,7 +104,7 @@
                     },
                     {field: 'value', title: '调用分支(service_name : service_version)'}
                     <@select>
-                    , {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 150}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 150}
                     </@select>
                 ]]
             });
@@ -248,7 +248,7 @@
                                         error = true;
                                         return;
                                     }
-                                    
+
                                     const branch = {};
                                     $.each(gridData, function (index, item) {
                                         if (item.version && item.versionList.indexOf(item.version) >= 0) {

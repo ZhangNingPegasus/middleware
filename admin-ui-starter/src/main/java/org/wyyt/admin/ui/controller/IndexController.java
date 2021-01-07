@@ -1,6 +1,7 @@
 package org.wyyt.admin.ui.controller;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
@@ -70,6 +71,8 @@ public class IndexController {
             usernamePasswordToken.setRememberMe(remember);
             subject.login(usernamePasswordToken);
             return Result.ok();
+        } catch (final UnknownAccountException e) {
+            return Result.error("无效的用户名或密码");
         } catch (final Exception e) {
             return Result.error(String.format("账号或密码错误. 原因:%s", ExceptionTool.getRootCauseMessage(e)));
         }

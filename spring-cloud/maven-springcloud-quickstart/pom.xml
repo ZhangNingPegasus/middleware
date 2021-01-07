@@ -18,26 +18,6 @@
         </dependency>
     </dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <!-- 打包后的启动jar名称 -->
         <finalName>${project.artifactId}</finalName>
@@ -51,9 +31,7 @@
                     <include>mapper/**</include>
                     <include>static/**</include>
                     <include>templates/**</include>
-                    <include>config.properties</include>
                     <include>logback.xml</include>
-                    <include>rule.xml</include>
                 </includes>
             </resource>
 
@@ -83,7 +61,6 @@
                 <filtering>true</filtering>
                 <targetPath>bin</targetPath>
                 <includes>
-                    <include>*.bat</include>
                     <include>*.sh</include>
                 </includes>
             </resource>
@@ -110,9 +87,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <!-- 项目启动类 -->
+                            <!-- 修改成项目启动类的全名称 -->
                             <mainClass>${groupId}.Application</mainClass>
-                            <!-- 依赖的jar的目录前缀 -->
                             <classpathPrefix>../lib</classpathPrefix>
                             <addClasspath>true</addClasspath>
                         </manifest>

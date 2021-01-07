@@ -108,7 +108,7 @@
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {where: field, page: 1});
+                table.reload('grid', {page: {curr: 1}, where: field});
             });
             table.render({
                 elem: '#grid',
@@ -148,7 +148,7 @@
                         width: 160
                     }
                     <@not_only_select>
-                    , {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 240}
+                    , {fixed: 'right', title: '操作', align: "center",toolbar: '#grid-bar', width: 240}
                     </@not_only_select>
                 ]],
                 done: function () {

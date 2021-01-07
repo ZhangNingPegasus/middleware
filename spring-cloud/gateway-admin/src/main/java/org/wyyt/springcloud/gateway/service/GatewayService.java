@@ -73,15 +73,20 @@ public class GatewayService {
         return result;
     }
 
-    public List<ServiceVo> listService() throws Exception {
+    public List<ServiceVo> listService(boolean onlyAlive) throws Exception {
         final List<ServiceVo> result = new ArrayList<>();
         for (final String serviceId : this.listServiceIds()) {
-            result.add(this.getService(serviceId));
+            result.add(this.getService(serviceId, onlyAlive));
         }
         return result;
     }
 
-    public ServiceVo getService(final String serviceId) throws Exception {
+    public List<ServiceVo> listService() throws Exception {
+        return this.listService(true);
+    }
+
+    public ServiceVo getService(final String serviceId,
+                                final boolean onlyAlive) throws Exception {
         final ServiceVo result = new ServiceVo();
         result.setName(serviceId);
         final List<EndpointVo> endpointVoList = new ArrayList<>();
@@ -123,12 +128,15 @@ public class GatewayService {
                     final JSONObject jsonService = (JSONObject) service;
 
                     final JSONObject jsonCheck = checksMap.get(jsonService.getString("ID"));
-                    if (null == jsonCheck || !jsonCheck.getString("Status").equalsIgnoreCase("passing")) {
+                    boolean alive = (null != jsonCheck && jsonCheck.getString("Status").equalsIgnoreCase("passing"));
+
+                    if (onlyAlive && !alive) {
                         continue;
                     }
-
+                    endpointVo.setId(jsonService.getString("ID"));
                     endpointVo.setHost(jsonService.getString("Address"));
                     endpointVo.setPort(jsonService.getInteger("Port"));
+                    endpointVo.setAlive(alive);
                     final Object tags = jsonService.get("Tags");
 
                     if (tags instanceof JSONArray) {
@@ -137,7 +145,7 @@ public class GatewayService {
                             if (jsonTag instanceof String) {
                                 final String tag = jsonTag.toString().trim();
                                 final String[] all = tag.split("=");
-                                if (null == all || all.length < 2) {
+                                if (all.length < 2) {
                                     continue;
                                 } else if ("version".equals(all[0])) {
                                     endpointVo.setVersion(all[1]);
@@ -157,8 +165,12 @@ public class GatewayService {
         return result;
     }
 
+    public ServiceVo getService(final String serviceId) throws Exception {
+        return this.getService(serviceId, true);
+    }
+
     public List<String> listServiceIds() {
-        final List ignoredServiceNames = Arrays.asList("consul", this.propertyConfig.getServiceName(), this.propertyConfig.getGatewayConsulName());
+        final List<String> ignoredServiceNames = Arrays.asList("consul", this.propertyConfig.getServiceName(), this.propertyConfig.getGatewayConsulName());
         final List<String> services = this.discoveryClient.getServices();
         return services.stream().filter(p -> !ignoredServiceNames.contains(p))
                 .sorted(Comparator.naturalOrder())
@@ -171,7 +183,7 @@ public class GatewayService {
         for (final ServiceInstance instance : instances) {
             try {
                 final URI uri = instance.getUri();
-                final Result respondResult = this.rpc(instance.getUri(), REFRESH_URL, null);
+                final Result<?> respondResult = this.rpc(instance.getUri(), REFRESH_URL, null);
                 if (!respondResult.getOk()) {
                     throw new GatewayException(respondResult.getError());
                 }
@@ -195,13 +207,13 @@ public class GatewayService {
         }
 
         final URI uri = serviceInstance.getUri();
-        final Result respondResult = this.rpc(uri, LIST_ROUTES_URL, null);
+        final Result<?> respondResult = this.rpc(uri, LIST_ROUTES_URL, null);
         return (List<String>) ConvertUtils.convert(respondResult.getData(), List.class);
     }
 
-    private Result rpc(final URI uri,
-                       final String path,
-                       Map<String, Object> params) throws Exception {
+    private Result<?> rpc(final URI uri,
+                          final String path,
+                          Map<String, Object> params) throws Exception {
         if (null == params) {
             params = new HashMap<>();
         }
@@ -210,7 +222,7 @@ public class GatewayService {
 
         final URI remoteAddress = UriComponentsBuilder.fromHttpUrl(uri.toString().concat(path)).build().toUri();
         final String responseText = this.rpcTool.post(remoteAddress.toString(), params, headers);
-        return OBJECT_MAPPER.readValue(responseText, new TypeReference<Result>() {
+        return OBJECT_MAPPER.readValue(responseText, new TypeReference<Result<?>>() {
         });
     }
 }

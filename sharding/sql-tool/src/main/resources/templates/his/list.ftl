@@ -57,7 +57,7 @@
         tableErrorHandler();
         form.on('submit(search)', function (data) {
             const field = data.field;
-            table.reload('grid', {where: field});
+            table.reload('grid', {page: {curr: 1}, where: field});
         });
         table.render({
             elem: '#grid',
@@ -76,7 +76,7 @@
                 {field: 'shortSql', title: 'SQL', unresize: true},
                 {field: 'strExecutionTime', title: '执行时间', unresize: true, sort: true, width: 200},
                 {field: 'executionDuration', title: '执行时长(毫秒)', unresize: true, sort: true, width: 170},
-                {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 105}
+                {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 105}
             ]]
         });
 

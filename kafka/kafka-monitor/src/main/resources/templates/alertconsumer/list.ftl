@@ -62,7 +62,7 @@
                         width: 200
                     }
                     <@select>
-                    , {fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 160}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 160}
                     </@select>
                 ]]
             });
