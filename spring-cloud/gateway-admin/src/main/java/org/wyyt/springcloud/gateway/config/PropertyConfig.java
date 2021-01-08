@@ -50,7 +50,7 @@ public class PropertyConfig {
 
     @Getter
     @Value("${spring.cloud.consul.host}")
-    private String conulHost;
+    private String consulHost;
 
     @Getter
     @Value("${spring.cloud.consul.port}")

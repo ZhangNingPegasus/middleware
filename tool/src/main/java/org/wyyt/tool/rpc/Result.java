@@ -20,7 +20,7 @@ import java.util.List;
 @ToString
 @Data
 @JsonSerialize
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonInclude
 public final class Result<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 

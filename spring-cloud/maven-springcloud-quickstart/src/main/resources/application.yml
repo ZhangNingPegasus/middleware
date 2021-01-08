@@ -32,6 +32,3 @@ spring:
     base-url: ${zipkin_url}
     sender:
       type: web
-  sleuth:
-    sampler:
-      probability: 1

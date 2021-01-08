@@ -36,10 +36,11 @@
         <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
         <spring-cloud-starter-zipkin.version>2.2.6.RELEASE</spring-cloud-starter-zipkin.version>
         <com.nepxion.discovery.version>6.5.0</com.nepxion.discovery.version>
-        <checker-qual.version>3.8.0</checker-qual.version>
+        <checker-qual.version>3.9.0</checker-qual.version>
         <mysql-connector-java.version>8.0.22</mysql-connector-java.version>
         <lombok.version>1.18.16</lombok.version>
         <unirest-java.version>3.11.09</unirest-java.version>
+        <feign-httpclient.version>11.0</feign-httpclient.version>
         <hutool-all.version>5.5.6</hutool-all.version>
         <fastjson.version>1.2.75</fastjson.version>
         <json.version>20201115</json.version>
@@ -129,6 +130,12 @@
                 <groupId>com.konghq</groupId>
                 <artifactId>unirest-java</artifactId>
                 <version>${unirest-java.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-httpclient</artifactId>
+                <version>${feign-httpclient.version}</version>
             </dependency>
 
             <dependency>

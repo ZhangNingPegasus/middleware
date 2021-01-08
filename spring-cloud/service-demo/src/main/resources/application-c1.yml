@@ -22,7 +22,7 @@ spring:
     strategy:
       scan:
         # RestController类的扫描路径
-        packages: org.wyyt
+        packages: springcloud.service.demo
   cloud:
     consul:
       host: ${consul_host}
@@ -31,6 +31,3 @@ spring:
     base-url: ${zipkin_url}
     sender:
       type: web
-  sleuth:
-    sampler:
-      probability: 1

@@ -25,6 +25,8 @@ public class DefaultConfigApplicationListener implements ApplicationListener<App
         final ConfigurableEnvironment environment = event.getEnvironment();
         final Properties properties = new Properties();
 
+        System.setProperty("nepxion.banner.shown", "false");
+
         // common config
         this.addDefaultConfig(environment, properties, "spring.cloud.consul.discovery.tags", "group=${spring.application.group},version=${spring.application.version}");
         this.addDefaultConfig(environment, properties, "spring.cloud.consul.discovery.metadata.group", "${spring.application.group}");
@@ -35,21 +37,31 @@ public class DefaultConfigApplicationListener implements ApplicationListener<App
         this.addDefaultConfig(environment, properties, "spring.cloud.gateway.discovery.locator.enabled", false);
         this.addDefaultConfig(environment, properties, "spring.cloud.loadbalancer.ribbon.enabled", true);
 
+        // sleuth config
+        this.addDefaultConfig(environment, properties, "spring.sleuth.sampler.probability", 1);
+
         // Ribbon config
         this.addDefaultConfig(environment, properties, "ribbon.ServerListRefreshInterval", 5000);
-        this.addDefaultConfig(environment, properties, "ribbon.ConnectTimeout", 60000);
-        this.addDefaultConfig(environment, properties, "ribbon.ReadTimeout", 60000);
+        this.addDefaultConfig(environment, properties, "ribbon.ConnectTimeout", 5000);
+        this.addDefaultConfig(environment, properties, "ribbon.ReadTimeout", 5000);
         this.addDefaultConfig(environment, properties, "ribbon.maxAutoRetries", 3);
         this.addDefaultConfig(environment, properties, "ribbon.maxAutoRetriesNextServer", 3);
         this.addDefaultConfig(environment, properties, "ribbon.okToRetryOnAllOperations", true);
 
         // feign config
         this.addDefaultConfig(environment, properties, "feign.hystrix.enabled", true);
+        this.addDefaultConfig(environment, properties, "feign.httpclient.enabled", true);
+        this.addDefaultConfig(environment, properties, "feign.client.config.default.ConnectTimeOut", 5000);
+        this.addDefaultConfig(environment, properties, "feign.client.config.default.ReadTimeOut", 5000);
         this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.isolation.strategy", "THREAD");
+        this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds", 5000);
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.coreSize", "200");
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.maximumSize", "500");
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.allowMaximumSizeToDivergeFromCoreSize", true);
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.keepAliveTimeInMinutes", 1);
+
+        //hystrix config
+        this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.timeout.enabled", false);
 
         // compression config
         this.addDefaultConfig(environment, properties, "server.compression.enabled", true);

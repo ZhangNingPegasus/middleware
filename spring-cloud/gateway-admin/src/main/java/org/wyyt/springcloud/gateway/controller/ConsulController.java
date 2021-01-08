@@ -4,8 +4,7 @@ import kong.unirest.Unirest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.wyyt.admin.ui.entity.dto.SysPage;
-import org.wyyt.admin.ui.service.SysPageService;
+import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.EndpointVo;
 import org.wyyt.springcloud.gateway.entity.ServiceVo;
 import org.wyyt.springcloud.gateway.service.GatewayService;
@@ -34,13 +33,13 @@ import static org.wyyt.springcloud.gateway.controller.ConsulController.PREFIX;
 public class ConsulController {
     public static final String PREFIX = "consul";
     private final GatewayService gatewayService;
-    private final SysPageService sysPageService;
+    private final PropertyConfig propertyConfig;
 
     public ConsulController(final GatewayService gatewayService,
                             final RpcTool rpcTool,
-                            final SysPageService sysPageService) {
+                            final PropertyConfig propertyConfig) {
         this.gatewayService = gatewayService;
-        this.sysPageService = sysPageService;
+        this.propertyConfig = propertyConfig;
     }
 
     @GetMapping("tolist")
@@ -71,16 +70,8 @@ public class ConsulController {
 
     @PostMapping("remove")
     @ResponseBody
-    public Result<String> remove(@RequestParam(value = "id") final String id) throws Exception {
-        final SysPage sysPage = sysPageService.getByName("注册中心");
-
-        if (null == sysPage) {
-            throw new Exception("请在[页面配置]界面配置注册中心的地址");
-        }
-        String url = sysPage.getUrl();
-        if (url.endsWith("/")) {
-            url = url.substring(0, url.length() - 1);
-        }
+    public Result<String> remove(@RequestParam(value = "id") final String id) {
+        final String url = String.format("http://%s:%s", this.propertyConfig.getConsulHost(), this.propertyConfig.getConsulPort());
         final String result = Unirest.put(String.format("%s/v1/agent/service/deregister/%s", url, id)).asString().getBody();
         return Result.ok(result);
     }

@@ -92,7 +92,7 @@ public class GatewayService {
         final List<EndpointVo> endpointVoList = new ArrayList<>();
         result.setEndpointVoList(endpointVoList);
         final String url = String.format("http://%s:%s/v1/health/service/%s",
-                this.propertyConfig.getConulHost(),
+                this.propertyConfig.getConsulHost(),
                 this.propertyConfig.getConsulPort(),
                 serviceId);
         final String json = this.rpcTool.get(url);
