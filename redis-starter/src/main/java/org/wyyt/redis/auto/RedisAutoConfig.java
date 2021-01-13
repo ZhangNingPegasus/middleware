@@ -1,10 +1,9 @@
 package org.wyyt.redis.auto;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -54,11 +53,12 @@ public class RedisAutoConfig {
     public RedisSerializer<Object> jackson2JsonRedisSerializer() {
         final Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
-        objectMapper.activateDefaultTyping(BasicPolymorphicTypeValidator.builder().build(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
         return jackson2JsonRedisSerializer;
     }
+
 
     @Bean
     @Primary
@@ -104,10 +104,15 @@ public class RedisAutoConfig {
                                                                       final RedisSerializer<Object> redisSerializer) {
         final RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
+        redisTemplate.setDefaultSerializer(redisSerializer);
+
         final StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         redisTemplate.setKeySerializer(stringRedisSerializer); // String对应key的序列化器
+        redisTemplate.setValueSerializer(redisSerializer);
+
         redisTemplate.setHashKeySerializer(stringRedisSerializer); // HashKey对应key的序列化器
-        redisTemplate.setDefaultSerializer(redisSerializer);// value对应key的序列化器
+        redisTemplate.setHashValueSerializer(redisSerializer);
+
         redisTemplate.setEnableTransactionSupport(false); // 关闭事务支持
         // 如果开启Redis事务, 且业务没有使用Spring的事务进行管理, 则连接不会自动释放, 需要使用下面的代码进行手动释放
         // RedisConnectionUtils.unbindConnection(redisTemplate.getConnectionFactory());

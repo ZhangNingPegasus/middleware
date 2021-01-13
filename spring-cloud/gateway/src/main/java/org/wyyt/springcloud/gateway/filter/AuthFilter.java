@@ -2,7 +2,6 @@ package org.wyyt.springcloud.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -10,8 +9,9 @@ import org.springframework.web.reactive.result.method.annotation.RequestMappingH
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.anno.Auth;
+import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.util.Tool;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.SignTool;
 import reactor.core.publisher.Mono;
@@ -27,10 +27,10 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Order(-1)
 @Component
-public class PermissionFilter implements WebFilter {
+public class AuthFilter implements WebFilter {
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
-    public PermissionFilter(final RequestMappingHandlerMapping requestMappingHandlerMapping) {
+    public AuthFilter(final RequestMappingHandlerMapping requestMappingHandlerMapping) {
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
     }
 
@@ -46,15 +46,15 @@ public class PermissionFilter implements WebFilter {
                         if (null != auth) {
                             final String sign = exchange.getRequest().getHeaders().getFirst("sign");
                             if (ObjectUtils.isEmpty(sign)) {
-                                return unauthorized(exchange);
+                                return Tool.unauthorized(exchange);
                             }
 
                             try {
-                                final Object queryParamsObject = exchange.getAttributeOrDefault(FilterConstant.CACHED_REQUEST_BODY_OBJECT_KEY, null);
+                                final Object queryParamsObject = exchange.getAttributeOrDefault(Names.CACHED_REQUEST_BODY_OBJECT_KEY, null);
                                 if (SignTool.checkSign(sign, CommonTool.queryParamstoMap(queryParamsObject), Names.API_KEY, Names.API_IV)) {
                                     return chain.filter(exchange);
                                 }
-                                return unauthorized(exchange);
+                                return Tool.unauthorized(exchange);
                             } catch (final Exception exception) {
                                 return Mono.error(exception);
                             }
@@ -62,10 +62,5 @@ public class PermissionFilter implements WebFilter {
                     }
                     return chain.filter(exchange);
                 });
-    }
-
-    private Mono<Void> unauthorized(final ServerWebExchange exchange) {
-        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-        return Mono.empty();
     }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.wyyt.springcloud.gateway.entity.mapper.AuthMapper">
+
+    <select id="getApiByClientId" resultType="org.wyyt.springcloud.gateway.entity.entity.Api">
+        SELECT `api`.*
+        FROM `t_app` `app`
+                 INNER JOIN `t_auth` `auth` ON `app`.`id` = `auth`.`app_id`
+                 INNER JOIN `t_api` `api` ON `api`.`id` = `auth`.`api_id`
+        WHERE `app`.`client_id` = #{clientId}
+    </select>
+</mapper>

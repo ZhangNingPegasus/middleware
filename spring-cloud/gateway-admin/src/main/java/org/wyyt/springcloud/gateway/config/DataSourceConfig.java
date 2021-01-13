@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Primary;
 import org.wyyt.tool.db.DataSourceTool;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 
 /**
  * the configuration of datasource
@@ -30,7 +29,7 @@ public class DataSourceConfig {
     @Bean
     @Primary
     @ConditionalOnMissingBean
-    public DataSource dataSource() throws IOException {
+    public DataSource dataSource() {
         return DataSourceTool.createHikariDataSource(
                 this.propertyConfig.getDbHost(),
                 this.propertyConfig.getDbPort(),

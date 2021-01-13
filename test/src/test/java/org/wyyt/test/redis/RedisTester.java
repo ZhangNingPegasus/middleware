@@ -40,7 +40,7 @@ public class RedisTester {
         Object v = this.redisService.get("full_sync_success_fin_pay_fund_flow_detail");
         System.out.println(v);
 
-        try (RedisService.Lock lock = this.redisService.getLock(KEY, 10000L, 6000L)) {
+        try (RedisService.Lock lock = this.redisService.getDistributedLock(KEY, 10000L, 6000L)) {
             if (lock.hasLock()) {
                 System.out.println("拿到锁了: " + lock.lockKey() + " " + lock.requestId());
             } else {

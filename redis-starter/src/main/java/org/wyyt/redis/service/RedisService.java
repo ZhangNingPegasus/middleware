@@ -1,8 +1,8 @@
 package org.wyyt.redis.service;
 
 import io.lettuce.core.RedisException;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
@@ -26,8 +26,8 @@ import java.util.concurrent.TimeUnit;
  * Ning.Zhang       Initialize        10/1/2020        Initialize  *
  * *****************************************************************
  */
-@Slf4j
 public final class RedisService {
+    private static final Logger LOG = LoggerFactory.getLogger(RedisService.class);
     private static final List<String> WILDCARD = Arrays.asList("*", "?", "[", "]");
     private static final String UNLOCK_SCRIPT = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
 
@@ -49,7 +49,7 @@ public final class RedisService {
                 this.redisTemplateNoTransactional.expire(key, timeInMillSecond, TimeUnit.MILLISECONDS);
             }
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke expire method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke expire method meet error with %s", e.getMessage()), e);
         }
     }
 
@@ -76,7 +76,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.hasKey(key);
         } catch (Exception e) {
-            log.error(String.format("RedisService: invoke hasKey method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke hasKey method meet error with %s", e.getMessage()), e);
             return false;
         }
     }
@@ -146,7 +146,7 @@ public final class RedisService {
         try {
             this.redisTemplateNoTransactional.opsForValue().set(key, value);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke set method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke set method meet error with %s", e.getMessage()), e);
         }
     }
 
@@ -154,7 +154,7 @@ public final class RedisService {
         try {
             this.redisTemplateNoTransactional.opsForValue().multiSet(kvMap);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke mset method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke mset method meet error with %s", e.getMessage()), e);
         }
     }
 
@@ -175,7 +175,7 @@ public final class RedisService {
                 set(key, value);
             }
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke set method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke set method meet error with %s", e.getMessage()), e);
         }
     }
 
@@ -258,7 +258,7 @@ public final class RedisService {
             this.redisTemplateNoTransactional.opsForHash().putAll(key, map);
             return true;
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke hmset method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke hmset method meet error with %s", e.getMessage()), e);
             return false;
         }
     }
@@ -281,7 +281,7 @@ public final class RedisService {
             }
             return true;
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke hmset method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke hmset method meet error with %s", e.getMessage()), e);
             return false;
         }
     }
@@ -301,7 +301,7 @@ public final class RedisService {
             this.redisTemplateNoTransactional.opsForHash().put(key, item, value);
             return true;
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke hset method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke hset method meet error with %s", e.getMessage()), e);
             return false;
         }
     }
@@ -376,7 +376,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.opsForSet().members(key);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke smembers method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke smembers method meet error with %s", e.getMessage()), e);
             return null;
         }
     }
@@ -393,7 +393,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.opsForSet().isMember(key, value);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke sismember method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke sismember method meet error with %s", e.getMessage()), e);
             return false;
         }
     }
@@ -410,7 +410,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.opsForSet().add(key, values);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke sadd method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke sadd method meet error with %s", e.getMessage()), e);
             return 0;
         }
     }
@@ -433,7 +433,7 @@ public final class RedisService {
             }
             return count;
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke sadd method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke sadd method meet error with %s", e.getMessage()), e);
             return 0;
         }
     }
@@ -448,7 +448,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.opsForSet().size(key);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke key method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke key method meet error with %s", e.getMessage()), e);
             return 0;
         }
     }
@@ -468,7 +468,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.opsForSet().remove(key, values);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke key method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke key method meet error with %s", e.getMessage()), e);
             return 0;
         }
     }
@@ -487,7 +487,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.opsForList().range(key, start, end);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke lrange method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke lrange method meet error with %s", e.getMessage()), e);
             return null;
         }
     }
@@ -502,7 +502,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.opsForList().size(key);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke llen method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke llen method meet error with %s", e.getMessage()), e);
             return 0;
         }
     }
@@ -519,7 +519,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.opsForList().index(key, index);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke lindex method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke lindex method meet error with %s", e.getMessage()), e);
             return null;
         }
     }
@@ -537,7 +537,7 @@ public final class RedisService {
             this.redisTemplateNoTransactional.opsForList().rightPush(key, value);
             return true;
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke rpush method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke rpush method meet error with %s", e.getMessage()), e);
             return false;
         }
     }
@@ -555,7 +555,7 @@ public final class RedisService {
             this.redisTemplateNoTransactional.opsForList().rightPushAll(key, value);
             return true;
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke lset method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke lset method meet error with %s", e.getMessage()), e);
             return false;
         }
     }
@@ -578,7 +578,7 @@ public final class RedisService {
             }
             return true;
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke lset method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke lset method meet error with %s", e.getMessage()), e);
             return false;
         }
     }
@@ -598,7 +598,7 @@ public final class RedisService {
             this.redisTemplateNoTransactional.opsForList().set(key, index, value);
             return true;
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke lset method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke lset method meet error with %s", e.getMessage()), e);
             return false;
         }
     }
@@ -621,7 +621,7 @@ public final class RedisService {
         try {
             return this.redisTemplateNoTransactional.opsForList().remove(key, count, value);
         } catch (final Exception e) {
-            log.error(String.format("RedisService: invoke lrem method meet error with %s", e.getMessage()), e);
+            LOG.error(String.format("RedisService: invoke lrem method meet error with %s", e.getMessage()), e);
             return 0L;
         }
     }
@@ -695,9 +695,9 @@ public final class RedisService {
      * @param timeoutInMillSeconds 获取锁的超时时间
      * @return 获取锁对象(调用hasLock方法确定是否拿到了锁)
      */
-    public final Lock getLock(final String lockKey,
-                              final long expireInMillSeconds,
-                              final long timeoutInMillSeconds) {
+    public final Lock getDistributedLock(final String lockKey,
+                                         final long expireInMillSeconds,
+                                         final long timeoutInMillSeconds) {
         final String requestId = this.lock(lockKey, expireInMillSeconds, timeoutInMillSeconds);
         return new Lock(
                 this,
@@ -713,8 +713,8 @@ public final class RedisService {
      * @param lockKey key值
      * @return 获取锁对象(调用hasLock方法确定是否拿到了锁)
      */
-    public final Lock getLock(final String lockKey) {
-        return this.getLock(lockKey, 30 * 1000L, 15 * 1000L);
+    public final Lock getDistributedLock(final String lockKey) {
+        return this.getDistributedLock(lockKey, 30 * 1000L, 15 * 1000L);
     }
 
     /**
@@ -761,7 +761,7 @@ public final class RedisService {
             try {
                 Thread.sleep(100L);
             } catch (final InterruptedException exception) {
-                log.error(String.format("RedisService: lock meet error, [%s]", exception.getMessage()), exception);
+                LOG.error(String.format("RedisService: lock meet error, [%s]", exception.getMessage()), exception);
             }
         }
         return null;
@@ -785,12 +785,45 @@ public final class RedisService {
     }
     // end============================Lock=============================end
 
-    @AllArgsConstructor
+
+    public <T> T getOrDefault(final String key,
+                              final String distributedLockKey,
+                              final HandleDefault<T> handleDefault) {
+        T result = (T) this.get(key);
+        if (null == result) {
+            try (RedisService.Lock lock = this.getDistributedLock(distributedLockKey)) {
+                if (lock.hasLock()) {
+                    result = (T) this.get(key);
+                    if (null == result) {
+                        result = handleDefault.getDefault();
+                        this.set(key, result);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public interface HandleDefault<T> {
+        T getDefault();
+    }
+
+
     public static class Lock implements Closeable {
         private final RedisService redisService;
         private final String lockKey;
         private final String requestId;
         private final Boolean hasLock;
+
+        public Lock(final RedisService redisService,
+                    final String lockKey,
+                    final String requestId,
+                    final Boolean hasLock) {
+            this.redisService = redisService;
+            this.lockKey = lockKey;
+            this.requestId = requestId;
+            this.hasLock = hasLock;
+        }
 
         public final String lockKey() {
             return lockKey;

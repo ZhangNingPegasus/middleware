@@ -4,7 +4,7 @@ apollo:
   meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
   bootstrap:
     enabled: true
-    namespaces: Architecture.spring-cloud-common,application
+    namespaces: Architecture.spring-cloud-common,Architecture.gateway,application
     eagerLoad:
       enabled: true
 
@@ -16,3 +16,14 @@ spring:
     name: ${gateway_consul_name}
     group: ${gateway_consul_group}
     version: 1.0
+  redis:
+    host: ${redis_host}
+    port: ${redis_port}
+    password: ${redis_password}
+    timeout: ${redis_timeout}
+    database: ${redis_database}
+    jedis:
+      pool:
+        max-active: ${redis-max-active}
+        max-idle: ${redis-max-idle}
+        min-idle: ${redis-min-idle}

@@ -72,6 +72,12 @@
             <artifactId>discovery-plugin-admin-center-starter</artifactId>
         </dependency>
 
+        <!-- Spring Boot Admin监控 -->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder-ex</artifactId>

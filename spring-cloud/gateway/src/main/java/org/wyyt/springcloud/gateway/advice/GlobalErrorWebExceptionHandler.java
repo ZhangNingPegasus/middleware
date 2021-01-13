@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.*;
 import org.springframework.web.reactive.result.view.ViewResolver;
-
 import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.tool.rpc.Result;
 import reactor.core.publisher.Mono;
@@ -56,7 +55,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
     private Mono<ServerResponse> renderErrorResponse(final ServerRequest request) {
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
         final Result result = JSON.parseObject(errorPropertiesMap.get(Names.ERROR_PARAMETER_KEY).toString(), Result.class);
-        return ServerResponse.status(HttpStatus.OK)
+        return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(result));
     }

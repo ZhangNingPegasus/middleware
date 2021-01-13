@@ -49,6 +49,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/fonts/**", "anon"); // 静态资源
         filterChainDefinitionMap.put("/layuiadmin/**", "anon"); // 静态资源
         filterChainDefinitionMap.put("/favicon.ico", "anon"); // 静态资源
+        filterChainDefinitionMap.put("/actuator/**", "anon"); // spring-boot-admin
         filterChainDefinitionMap.put(bean.getLoginUrl(), "anon"); // 登录页面
         filterChainDefinitionMap.put("/login", "anon"); // 登录逻辑
         filterChainDefinitionMap.put("/quit", "anon"); // 登出逻辑

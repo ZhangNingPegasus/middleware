@@ -55,8 +55,8 @@ public class SysAlertCluster extends BaseDto {
         ZOOKEEPER(1, "ZOOKEEPER"),
         KAFKA(2, "KAFKA");
 
-        private int code;
-        private String description;
+        private final int code;
+        private final String description;
 
         Type(final int code, final String description) {
             this.code = code;
