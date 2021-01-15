@@ -15,17 +15,12 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
-import org.springframework.util.ObjectUtils;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.resource.ResourceTool;
 
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,6 +67,14 @@ public class RpcTool {
         }
     }
 
+    public String post(final String url) throws Exception {
+        if (url.toLowerCase().startsWith("https:")) {
+            return post(url, null, null, true);
+        } else {
+            return post(url, null, null, false);
+        }
+    }
+
     public String post(final String url,
                        final Map<String, Object> params) throws Exception {
         if (url.toLowerCase().startsWith("https:")) {
@@ -112,7 +115,7 @@ public class RpcTool {
                 url = String.format("%s?%s", url, strParams.substring(0, strParams.length() - 1));
             }
             request = new HttpGet(url);
-            if (null != headers && headers.size() > 0) {
+            if (null != headers && !headers.isEmpty()) {
                 final List<Header> _headers = new ArrayList<>(headers.size());
                 for (final Map.Entry<String, String> header : headers.entrySet()) {
                     _headers.add(new BasicHeader(header.getKey(), header.getValue()));

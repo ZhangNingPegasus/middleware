@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.wyyt.tool.cache.CacheService;
 import org.wyyt.tool.db.DataSourceTool;
 
 import javax.sql.DataSource;
@@ -18,7 +19,7 @@ import javax.sql.DataSource;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020       Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Configuration
@@ -30,6 +31,8 @@ public class DataSourceConfig {
     }
 
     @Bean
+    @Primary
+    @ConditionalOnMissingBean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         final MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
@@ -44,10 +47,17 @@ public class DataSourceConfig {
                 this.propertyConfig.getDbHost(),
                 this.propertyConfig.getDbPort(),
                 this.propertyConfig.getDbName(),
-                this.propertyConfig.getDbUid(),
-                this.propertyConfig.getDbPwd(),
-                10,
-                30
+                this.propertyConfig.getDbUseName(),
+                this.propertyConfig.getDbPassword(),
+                this.propertyConfig.getDbMinIdle(),
+                this.propertyConfig.getDbMaximum()
         );
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
+    public CacheService cacheService() {
+        return new CacheService();
     }
 }

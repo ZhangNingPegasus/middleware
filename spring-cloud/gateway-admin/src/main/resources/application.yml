@@ -4,7 +4,7 @@ apollo:
   meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
   bootstrap:
     enabled: true
-    namespaces: Architecture.spring-cloud-common,application
+    namespaces: Architecture.spring-cloud-common,Architecture.gateway,Architecture.gateway,application
     eagerLoad:
       enabled: true
 
@@ -45,7 +45,6 @@ spring:
     loadbalancer:
       ribbon:
         enabled: false
-
   http:
     encoding:
       charset: UTF-8
@@ -77,6 +76,17 @@ spring:
     settings:
       auto_import: common/spring.ftl as spring
       number_format: '0.##'
+  redis:
+    host: ${redis_host}
+    port: ${redis_port}
+    password: ${redis_password}
+    timeout: ${redis_timeout}
+    database: ${redis_database}
+    jedis:
+      pool:
+        max-active: ${redis-max-active}
+        max-idle: ${redis-max-idle}
+        min-idle: ${redis-min-idle}
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml

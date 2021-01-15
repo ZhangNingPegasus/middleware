@@ -13,6 +13,16 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * the controller of Dynamic Routing
+ * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
+ */
 @RestController
 @RequestMapping("route")
 public class RouteController {

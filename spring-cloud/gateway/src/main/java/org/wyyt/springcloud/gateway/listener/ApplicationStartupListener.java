@@ -3,6 +3,7 @@ package org.wyyt.springcloud.gateway.listener;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.wyyt.springcloud.gateway.service.DataService;
 import org.wyyt.springcloud.gateway.service.DynamicRouteService;
 
 /**
@@ -10,20 +11,24 @@ import org.wyyt.springcloud.gateway.service.DynamicRouteService;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize        01/01/2021      Initialize   *
  * *****************************************************************
  */
 @Component
 public class ApplicationStartupListener implements ApplicationRunner {
 
     private final DynamicRouteService dynamicRouteService;
+    private final DataService dataService;
 
-    public ApplicationStartupListener(final DynamicRouteService dynamicRouteService) {
+    public ApplicationStartupListener(final DynamicRouteService dynamicRouteService,
+                                      final DataService dataService) {
         this.dynamicRouteService = dynamicRouteService;
+        this.dataService = dataService;
     }
 
     @Override
     public void run(ApplicationArguments args) {
+        this.dataService.getIgnoreUrlSet();
         this.dynamicRouteService.refresh();
     }
 }

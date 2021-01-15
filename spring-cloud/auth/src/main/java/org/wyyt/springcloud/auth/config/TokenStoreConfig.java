@@ -7,10 +7,18 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.wyyt.springcloud.gateway.entity.contants.Names;
 
+/**
+ * the configuration of TokenStore
+ * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize        01/01/2021       Initialize  *
+ * *****************************************************************
+ */
 @Configuration
 public class TokenStoreConfig {
-
-
     @Bean
     public TokenStore jwtTokenStore() {
         return new JwtTokenStore(jwtAccessTokenConverter());

@@ -4,12 +4,12 @@ apollo:
   meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
   bootstrap:
     enabled: true
-    namespaces: Architecture.spring-cloud-common,Architecture.gateway,application
+    namespaces: Architecture.spring-cloud-common,Architecture.gateway,Architecture.gateway,application
     eagerLoad:
       enabled: true
 
 server:
-  port: 80
+  port: ${server_port}
 
 spring:
   application:

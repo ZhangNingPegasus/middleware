@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+import org.wyyt.springcloud.gateway.entity.entity.Api;
+import org.wyyt.springcloud.springbootadmin.service.ApiLoadService;
 import org.wyyt.tool.dingtalk.Message;
 import reactor.core.publisher.Mono;
 
@@ -39,9 +41,12 @@ public class DingTalkNotifier extends AbstractEventNotifier {
     @Getter
     private final LinkedBlockingQueue<Message> toProcessRecords;
     public static final Integer MAX_SIZE = 1024;
+    private final ApiLoadService apiLoadService;
 
-    public DingTalkNotifier(final InstanceRepository repository) {
+    public DingTalkNotifier(final InstanceRepository repository,
+                            final ApiLoadService apiLoadService) {
         super(repository);
+        this.apiLoadService = apiLoadService;
         this.dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
         this.toProcessRecords = new LinkedBlockingQueue<>(MAX_SIZE);
         this.startDate = System.currentTimeMillis();
@@ -60,6 +65,7 @@ public class DingTalkNotifier extends AbstractEventNotifier {
             Boolean isOk = null;
             final String serviceName = instance.getRegistration().getName();
             String instanceName = null;
+            Api.Result apiResult = null;
             if (event instanceof InstanceStatusChangedEvent) {
                 final InstanceStatusChangedEvent instanceStatusChangedEvent = (InstanceStatusChangedEvent) event;
                 final String status = instanceStatusChangedEvent.getStatusInfo().getStatus();
@@ -84,6 +90,8 @@ public class DingTalkNotifier extends AbstractEventNotifier {
                         checkTime = this.dateFormat.format(instanceStatusChangedEvent.getTimestamp());
                         content = "已成功上线.";
                         isOk = true;
+                        apiResult = this.apiLoadService.updateApi(instance.getRegistration().getName(),
+                                instance.getRegistration().getServiceUrl());
                         break;
                     // 服务未知异常
                     case "UNKNOWN":
@@ -127,6 +135,11 @@ public class DingTalkNotifier extends AbstractEventNotifier {
                 } else {
                     stringBuilder.append("告警等级：严重\n");
                     stringBuilder.append(String.format("问题详情：%s\n", content));
+                }
+
+                if (null != apiResult) {
+                    stringBuilder.append(String.format("新增接口：%s个\n", apiResult.getInsertNum()));
+                    stringBuilder.append(String.format("更新接口：%s个\n", apiResult.getUpdateNum()));
                 }
 
                 if (!ObjectUtils.isEmpty(checkTime)) {

@@ -18,7 +18,6 @@ import org.dom4j.io.XMLWriter;
 import org.springframework.stereotype.Service;
 import org.wyyt.apollo.tool.ApolloTool;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
-import org.wyyt.springcloud.gateway.entity.EndpointVo;
 import org.wyyt.springcloud.gateway.entity.GrayVo;
 import org.wyyt.springcloud.gateway.entity.InspectVo;
 import org.wyyt.springcloud.gateway.entity.anno.TranSave;
@@ -30,6 +29,7 @@ import org.wyyt.tool.sql.SqlTool;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -114,7 +114,7 @@ public class GrayPublishService {
         }
     }
 
-    public String inspect(final List<InspectVo> inspectVos) {
+    public String inspect(final List<InspectVo> inspectVos) throws Exception {
         if (null == inspectVos || inspectVos.isEmpty()) {
             return "";
         }
@@ -132,7 +132,11 @@ public class GrayPublishService {
         final Map<String, String> headers = new HashMap<>();
         headers.put("n-d-version", String.format("{%s}", StringUtils.join(ndVersionList, ",")));
 
-        final EndpointVo gatewayUri = this.gatewayService.getGatewayUri();
+        final URI gatewayUri = this.gatewayService.getGatewayUri();
+        if (null == gatewayUri) {
+            return "";
+        }
+
         final Route firstRoute = this.getFirstServiceName(inspectVos.stream().map(InspectVo::getService).collect(Collectors.toList()));
 
         if (null == firstRoute) {
@@ -141,7 +145,7 @@ public class GrayPublishService {
 
         serviceIdList.remove(String.format("\"%s\"", firstRoute.getServiceName()));
 
-        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getHost(), gatewayUri.getPort(), firstRoute.getPathPredicate()))
+        final String inspect = Unirest.post(String.format("%s/%s/inspector/inspect", gatewayUri.toString(), firstRoute.getPathPredicate()))
                 .header("Content-Type", "application/json")
                 .headers(headers)
                 .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.stream().sorted(Comparator.naturalOrder()).toArray())))
@@ -151,7 +155,7 @@ public class GrayPublishService {
         return formatInspect(inspect);
     }
 
-    public String globalInspect() {
+    public String globalInspect() throws Exception {
         final String grayConfig = this.getGrayConfig();
         final RuleEntity ruleEntity = this.pluginConfigParser.parse(grayConfig);
 
@@ -175,8 +179,8 @@ public class GrayPublishService {
         }
 
         serviceIdList.remove(firstRoute.getServiceName());
-        final EndpointVo gatewayUri = this.gatewayService.getGatewayUri();
-        final String inspect = Unirest.post(String.format("http://%s:%s/%s/inspector/inspect", gatewayUri.getHost(), gatewayUri.getPort(), firstRoute.getPathPredicate()))
+        final URI gatewayUri = this.gatewayService.getGatewayUri();
+        final String inspect = Unirest.post(String.format("%s/%s/inspector/inspect", gatewayUri.toString(), firstRoute.getPathPredicate()))
                 .header("Content-Type", "application/json")
                 .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.stream().map(p -> String.format("\"%s\"", p)).toArray())))
                 .asString()

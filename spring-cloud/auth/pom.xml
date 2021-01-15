@@ -13,12 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wyyt</groupId>
-            <artifactId>redis-starter</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.wyyt.springcloud</groupId>
             <artifactId>service-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
@@ -99,7 +93,7 @@
                     <archive>
                         <manifest>
                             <!-- 项目启动类 -->
-                            <mainClass>org.wyyt.springcloud.gateway.GatewayApplication</mainClass>
+                            <mainClass>org.wyyt.springcloud.auth.AuthApplication</mainClass>
                             <!-- 依赖的jar的目录前缀 -->
                             <classpathPrefix>../lib</classpathPrefix>
                             <addClasspath>true</addClasspath>

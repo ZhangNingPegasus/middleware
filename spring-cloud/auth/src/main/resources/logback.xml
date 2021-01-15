@@ -31,7 +31,7 @@
 
     <appender name="elkLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <append>true</append>
-        <file>/wyyt/logs/springcloud/gateway/filebeat.log</file> <!-- 路径也要按照规范修改 -->
+        <file>/wyyt/logs/springcloud/auth/filebeat.log</file> <!-- 路径也要按照规范修改 -->
         <encoder class="org.wyyt.logback.encoder.LogstashEncoderZipkin"> <!-- ELK 最新接入方式 -->
             <!--includeCallerData 请求者信息字段 需要开启异步写入，否则比较比较耗性能-->
             <includeCallerData>true</includeCallerData>
@@ -40,7 +40,7 @@
             <level>INFO</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>/wyyt/logs/springcloud/gateway/filebeat.%d{yyyy-MM-dd-HH}.%i.log.gz
+            <fileNamePattern>/wyyt/logs/springcloud/auth/filebeat.%d{yyyy-MM-dd-HH}.%i.log.gz
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
         </rollingPolicy>

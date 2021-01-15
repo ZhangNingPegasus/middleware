@@ -24,7 +24,7 @@ public class BFeignImpl implements BFeign {
 
     @Override
     public Result<String> invoke(@PathVariable(value = "value") String value) {
-        System.out.println(strategyContextHolder.getHeader("access_token"));
+        log.info(strategyContextHolder.getHeader("access_token"));
         value = pluginAdapter.getPluginInfo(value);
         log.info(String.format("调用路径：{%s}", value));
         return Result.ok(value);

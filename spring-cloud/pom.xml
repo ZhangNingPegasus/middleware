@@ -10,7 +10,6 @@
         <module>spring-boot-admin</module>
         <module>service-starter</module>
         <module>maven-springcloud-quickstart</module>
-        <module>entity</module>
         <module>auth</module>
     </modules>
 

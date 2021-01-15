@@ -13,7 +13,7 @@ import org.wyyt.springcloud.gateway.entity.entity.base.BaseDto;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021        Initialize  *
  * *****************************************************************
  */
 @EqualsAndHashCode(callSuper = true)
@@ -21,8 +21,8 @@ import org.wyyt.springcloud.gateway.entity.entity.base.BaseDto;
 @TableName(value = "`t_auth`")
 public class Auth extends BaseDto {
     @TableField(value = "`app_id`")
-    private String appId;
+    private Long appId;
 
     @TableField(value = "`api_id`")
-    private String apiId;
+    private Long apiId;
 }

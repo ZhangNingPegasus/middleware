@@ -95,14 +95,14 @@ public class GrayController {
 
     @PostMapping("inspect")
     @ResponseBody
-    public Result<String> inspect(@RequestParam("data") String data) {
+    public Result<String> inspect(@RequestParam("data") String data) throws Exception {
         final List<InspectVo> inspectVos = JSON.parseArray(data, InspectVo.class);
         return Result.ok(this.grayPublishService.inspect(inspectVos));
     }
 
     @PostMapping("globalinspect")
     @ResponseBody
-    public Result<String> globalInspect() {
+    public Result<String> globalInspect() throws Exception {
         return Result.ok(this.grayPublishService.globalInspect());
     }
 

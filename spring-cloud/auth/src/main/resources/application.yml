@@ -9,7 +9,7 @@ apollo:
       enabled: true
 
 server:
-  port: 82
+  port: ${server_port}
 
 spring:
   application:
@@ -18,8 +18,7 @@ spring:
     version: 1.0
     strategy:
       scan:
-        # 指定对业务RestController类的扫描路径。此项配置作用于RPC方式的调用拦截、消费端的服务隔离和调用链三项功能
-        packages: org.wyyt.springcloud.auth
+        packages: org.wyyt.springcloud.auth.controller
   cloud:
     consul:
       host: ${consul_host}

@@ -12,42 +12,31 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wyyt.springcloud</groupId>
-            <artifactId>entity</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.wyyt</groupId>
             <artifactId>tool</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!-- 注册中心插件 -->
         <dependency>
             <groupId>com.nepxion</groupId>
             <artifactId>discovery-plugin-register-center-starter-consul</artifactId>
         </dependency>
 
-        <!-- 配置中心插件 -->
         <dependency>
             <groupId>com.nepxion</groupId>
             <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>
         </dependency>
 
-        <!-- 管理中心插件 -->
         <dependency>
             <groupId>com.nepxion</groupId>
             <artifactId>discovery-plugin-admin-center-starter</artifactId>
         </dependency>
 
-        <!-- 服务的策略编排插件 -->
         <dependency>
             <groupId>com.nepxion</groupId>
             <artifactId>discovery-plugin-strategy-starter-service</artifactId>
         </dependency>
 
-        <!-- 熔断 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
@@ -63,19 +52,16 @@
             </exclusions>
         </dependency>
 
-        <!-- Spring Boot Admin监控 -->
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-client</artifactId>
         </dependency>
 
-        <!-- 链路跟踪 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zipkin</artifactId>
         </dependency>
 
-        <!-- other -->
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
@@ -104,6 +90,38 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.netflix.netflix-commons</groupId>
+            <artifactId>netflix-commons-util</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.netflix.servo</groupId>
+            <artifactId>servo-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.netflix.netflix-commons</groupId>
+            <artifactId>netflix-statistics</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jsr305</artifactId>
+                    <groupId>com.google.code.findbugs</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.latencyutils</groupId>
+            <artifactId>LatencyUtils</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>HdrHistogram</artifactId>
+                    <groupId>org.hdrhistogram</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

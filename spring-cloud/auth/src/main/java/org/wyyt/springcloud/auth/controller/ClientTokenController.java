@@ -3,8 +3,8 @@ package org.wyyt.springcloud.auth.controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.wyyt.springcloud.auth.entity.ClientToken;
-import org.wyyt.springcloud.auth.service.ClientTokenService;
+import org.wyyt.springcloud.auth.entity.AccessToken;
+import org.wyyt.springcloud.auth.service.AccessTokenService;
 import org.wyyt.tool.rpc.Result;
 
 /**
@@ -14,21 +14,31 @@ import org.wyyt.tool.rpc.Result;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021        Initialize  *
  * *****************************************************************
  */
 @RestController
 public class ClientTokenController {
+    private final AccessTokenService clientTokenService;
 
-    private final ClientTokenService clientTokenService;
-
-    public ClientTokenController(final ClientTokenService clientTokenService) {
+    public ClientTokenController(final AccessTokenService clientTokenService) {
         this.clientTokenService = clientTokenService;
     }
 
-    @PostMapping("/v1/access_token")
-    public Result<ClientToken> clientLoginToken(@RequestParam("clientId") String clientId,
-                                                @RequestParam("clientSecret") String clientSecret) throws Exception {
+    @PostMapping("/v1/oauth/token")
+    public Result<AccessToken> clientLoginToken(@RequestParam("clientId") final String clientId,
+                                                @RequestParam("clientSecret") final String clientSecret) throws Exception {
         return Result.ok(this.clientTokenService.getClientCredentialsToken(clientId, clientSecret));
+    }
+
+
+    @PostMapping("/v1/oauth/logout")
+    public Result<?> removeToken(@RequestParam("clientId") final String clientId,
+                                 @RequestParam("accessToken") final String accessToken) {
+        if (this.clientTokenService.logoutClientCredentialsToken(clientId, accessToken)) {
+            return Result.ok();
+        } else {
+            return Result.error("Failed to logout");
+        }
     }
 }

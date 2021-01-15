@@ -3,9 +3,10 @@ package org.wyyt.springcloud.gateway.entity.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.wyyt.springcloud.gateway.entity.entity.base.BaseDto;
+
+import java.util.Objects;
 
 /**
  * The entity of table `t_gray`
@@ -17,7 +18,6 @@ import org.wyyt.springcloud.gateway.entity.entity.base.BaseDto;
  * Ning.Zhang       Initialize        10/1/2020        Initialize  *
  * *****************************************************************
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName(value = "`t_api`")
 public class Api extends BaseDto {
@@ -27,23 +27,30 @@ public class Api extends BaseDto {
     @TableField(value = "`method`")
     private String method;
 
-    @TableField(value = "`description`")
-    private String description;
-
     @TableField(value = "`service_id`")
     private String serviceId;
 
     @TableField(value = "`path`")
     private String path;
 
-    @TableField(value = "`status`")
-    private Integer status;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Api api = (Api) o;
+        return name.equals(api.name) && method.equals(api.method) && serviceId.equals(api.serviceId) && path.equals(api.path);
+    }
 
-    @TableField(value = "`class_name`")
-    private String className;
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, method, serviceId, path);
+    }
 
-    @TableField(value = "`method_name`")
-    private String methodName;
+    @Data
+    public static class Result {
+        private Integer insertNum = 0;
+        private Integer updateNum = 0;
+    }
 
     @Getter
     public enum Status {

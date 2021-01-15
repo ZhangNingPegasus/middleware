@@ -33,7 +33,7 @@ public class AFeignImpl implements AFeign {
 
     @Override
     public Result<String> invoke(@PathVariable(value = "value") String value) throws Throwable {
-       value = doInvoke(value);
+        value = doInvoke(value);
         return Result.ok(value);
     }
 
@@ -42,10 +42,8 @@ public class AFeignImpl implements AFeign {
     public Future<Result<String>> invokeAsync(@PathVariable(value = "value") String value) {
         try {
             value = doInvoke(value);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
         }
 
         AsyncResult<Result<String>> result = new AsyncResult<>(Result.ok(value));
@@ -71,7 +69,7 @@ public class AFeignImpl implements AFeign {
 
 
     private String doInvoke(String value) throws Throwable {
-        System.out.println(strategyContextHolder.getHeader("access_token"));
+        log.info(strategyContextHolder.getHeader("access_token"));
 
         value = pluginAdapter.getPluginInfo(value);
         Result<String> invoke = bFeign.invoke(value);

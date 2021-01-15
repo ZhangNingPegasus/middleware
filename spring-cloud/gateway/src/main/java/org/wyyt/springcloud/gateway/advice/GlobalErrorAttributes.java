@@ -21,19 +21,19 @@ import java.util.Map;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020       Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
 @Component
 public class GlobalErrorAttributes extends DefaultErrorAttributes {
     @Override
-    public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
+    public Map<String, Object> getErrorAttributes(final ServerRequest request,
+                                                  final ErrorAttributeOptions options) {
         final Throwable error = getError(request);
         final String errorMsg = ExceptionTool.getRootCauseMessage(error);
         log.error(errorMsg, error);
-
-        Result result;
+        Result<?> result;
         final ResultCode respondCode = ResultCode.get(errorMsg);
         if (null == respondCode) {
             result = Result.error(errorMsg);

@@ -13,13 +13,13 @@
     <dependencies>
         <dependency>
             <groupId>org.wyyt</groupId>
-            <artifactId>tool</artifactId>
+            <artifactId>redis-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.wyyt.springcloud</groupId>
-            <artifactId>entity</artifactId>
+            <groupId>org.wyyt</groupId>
+            <artifactId>tool</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

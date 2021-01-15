@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020       Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Order(-2)
@@ -54,7 +54,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
     private Mono<ServerResponse> renderErrorResponse(final ServerRequest request) {
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
-        final Result result = JSON.parseObject(errorPropertiesMap.get(Names.ERROR_PARAMETER_KEY).toString(), Result.class);
+        final Result<?> result = JSON.parseObject(errorPropertiesMap.get(Names.ERROR_PARAMETER_KEY).toString(), Result.class);
         return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(result));

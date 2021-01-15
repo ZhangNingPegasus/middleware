@@ -1,5 +1,8 @@
 package maven.springcloud.quickstart.rest.example;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -25,6 +28,7 @@ import java.util.concurrent.Future;
  * Ning.Zhang       Initialize        01/01/2021        Initialize  *
  * *****************************************************************
  */
+@Api("Rest服务示例说明")
 @Slf4j
 @RestController
 public class ARestImpl {
@@ -37,17 +41,23 @@ public class ARestImpl {
         this.executor = executor;
     }
 
+    @ApiOperation(value = "rest同步调用示例")
+    @ApiImplicitParam(name = "value", value = "参数A", required = true, dataType = "String")
     @GetMapping(path = "/rest/{value}")
     public Result<String> rest(@PathVariable(value = "value") final String value) {
         return Result.ok(this.doInvoke(value));
     }
 
+    @ApiOperation(value = "rest异步调用示例")
+    @ApiImplicitParam(name = "value", value = "参数B", required = true, dataType = "String")
     @Async
     @GetMapping(path = "/rest-async/{value}")
     public Future<Result<String>> invokeAsync(@PathVariable(value = "value") final String value) {
         return new AsyncResult<>(Result.ok(doInvoke(value)));
     }
 
+    @ApiOperation(value = "rest多线程调用示例")
+    @ApiImplicitParam(name = "value", value = "参数C", required = true, dataType = "String")
     @GetMapping(path = "/rest-threadpool/{value}")
     public Result<String> invokeThreadPool(@PathVariable final String value) {
         // 这里不准使用lambda表达式

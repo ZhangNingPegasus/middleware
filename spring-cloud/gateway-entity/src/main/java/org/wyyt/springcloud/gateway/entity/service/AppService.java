@@ -1,9 +1,15 @@
 package org.wyyt.springcloud.gateway.entity.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.wyyt.redis.service.RedisService;
 import org.wyyt.springcloud.gateway.entity.anno.TranRead;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.mapper.AppMapper;
@@ -20,6 +26,14 @@ import org.wyyt.springcloud.gateway.entity.mapper.AppMapper;
  */
 @Service
 public class AppService extends ServiceImpl<AppMapper, App> {
+
+    @Autowired
+    protected OauthClientDetailsService oauthClientDetailsService;
+    @Autowired
+    protected AuthService authService;
+    @Autowired
+    protected RedisService redisService;
+
     @TranRead
     public App getByClientId(final String clientId) {
         if (StringUtils.isEmpty(clientId)) {
@@ -28,5 +42,27 @@ public class AppService extends ServiceImpl<AppMapper, App> {
         final QueryWrapper<App> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(App::getClientId, clientId);
         return this.getOne(queryWrapper);
+    }
+
+    @TranRead
+    public IPage<App> page(final Integer pageNum,
+                           final Integer pageSize,
+                           final String clientId,
+                           final String name) {
+
+        final Page<App> page = new Page<>(pageNum, pageSize);
+        final QueryWrapper<App> queryWrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<App> lambda = queryWrapper.lambda();
+
+        if (!ObjectUtils.isEmpty(name)) {
+            lambda.like(App::getName, name);
+        }
+        if (!ObjectUtils.isEmpty(clientId)) {
+            lambda.eq(App::getClientId, clientId);
+        }
+        if (!ObjectUtils.isEmpty(name)) {
+            lambda.like(App::getName, name);
+        }
+        return this.page(page, queryWrapper);
     }
 }

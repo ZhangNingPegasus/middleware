@@ -7,13 +7,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.wyyt.admin.ui.exception.BusinessException;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.EndpointVo;
 import org.wyyt.springcloud.gateway.entity.ServiceVo;
@@ -25,6 +25,7 @@ import org.wyyt.tool.rpc.RpcTool;
 import org.wyyt.tool.rpc.SignTool;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,34 +44,23 @@ import java.util.stream.Collectors;
 public class GatewayService {
     private final DiscoveryClient discoveryClient;
     private final PropertyConfig propertyConfig;
-    private final LoadBalancerClient loadBalancerClient;
     private final RpcTool rpcTool;
     private final static String REFRESH_URL = "/route/refresh";
     private final static String LIST_ROUTES_URL = "/route/listRoutes";
+    private final static String REMOVE_IGNORE_URLS_LOCAL_CACHE = "cache/removeIngoreUrlSetLocalCache";
+    private final static String REMOVE_CLIENT_ID_LOCAL_CACHE = "cache/removeClientIdLocalCache";
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public GatewayService(final DiscoveryClient discoveryClient,
                           final PropertyConfig propertyConfig,
-                          final LoadBalancerClient loadBalancerClient,
                           final RpcTool rpcTool) {
         this.discoveryClient = discoveryClient;
         this.propertyConfig = propertyConfig;
-        this.loadBalancerClient = loadBalancerClient;
         this.rpcTool = rpcTool;
     }
 
-    public EndpointVo getGatewayUri() {
-        final ServiceInstance serviceInstance = this.loadBalancerClient.choose(this.propertyConfig.getGatewayConsulName());
-        if (null == serviceInstance) {
-            return null;
-        }
-
-        final EndpointVo result = new EndpointVo();
-        result.setHost(serviceInstance.getHost());
-        result.setPort(serviceInstance.getPort());
-        result.setVersion(serviceInstance.getMetadata().get("version"));
-        result.setGroup(serviceInstance.getMetadata().get("group"));
-        return result;
+    public URI getGatewayUri() throws Exception {
+        return this.getAvaiableServiceUri(this.propertyConfig.getGatewayConsulName());
     }
 
     public List<ServiceVo> listService(boolean onlyAlive) throws Exception {
@@ -128,7 +118,7 @@ public class GatewayService {
                     final JSONObject jsonService = (JSONObject) service;
 
                     final JSONObject jsonCheck = checksMap.get(jsonService.getString("ID"));
-                    boolean alive = (null != jsonCheck && jsonCheck.getString("Status").equalsIgnoreCase("passing"));
+                    final boolean alive = (null != jsonCheck && jsonCheck.getString("Status").equalsIgnoreCase("passing"));
 
                     if (onlyAlive && !alive) {
                         continue;
@@ -165,12 +155,42 @@ public class GatewayService {
         return result;
     }
 
+    public List<URI> getAvaiableServiceUris(final String serviceId) throws Exception {
+        final ServiceVo serviceVo = this.getService(this.propertyConfig.getGatewayConsulName(), true);
+        if (null == serviceVo) {
+            return null;
+        }
+        final List<EndpointVo> endpointVoList = serviceVo.getEndpointVoList();
+        if (endpointVoList.isEmpty()) {
+            return null;
+        }
+
+        return endpointVoList.stream().map(p -> {
+            try {
+                return new URI(String.format("http://%s:%s", p.getHost(), p.getPort()));
+            } catch (URISyntaxException e) {
+                throw new BusinessException(e);
+            }
+        }).collect(Collectors.toList());
+    }
+
+    public URI getAvaiableServiceUri(final String serviceId) throws Exception {
+        final List<URI> avaiableServiceUris = this.getAvaiableServiceUris(serviceId);
+        if (avaiableServiceUris.isEmpty()) {
+            return null;
+        }
+        return avaiableServiceUris.get(RandomUtils.nextInt(0, avaiableServiceUris.size()));
+    }
+
     public ServiceVo getService(final String serviceId) throws Exception {
         return this.getService(serviceId, true);
     }
 
     public List<String> listServiceIds() {
-        final List<String> ignoredServiceNames = Arrays.asList("consul", this.propertyConfig.getServiceName(), this.propertyConfig.getGatewayConsulName());
+        final List<String> ignoredServiceNames = Arrays.asList("consul",
+                this.propertyConfig.getServiceName(),
+                this.propertyConfig.getGatewayConsulName(),
+                this.propertyConfig.getAuthConsulName());
         final List<String> services = this.discoveryClient.getServices();
         return services.stream().filter(p -> !ignoredServiceNames.contains(p))
                 .sorted(Comparator.naturalOrder())
@@ -178,12 +198,38 @@ public class GatewayService {
     }
 
     public void refresh() throws Exception {
+        this.rpcAll(REFRESH_URL, null);
+    }
+
+    public List<String> listWorkingRoutes() throws Exception {
+        final URI uri = this.getAvaiableServiceUri(this.propertyConfig.getGatewayConsulName());
+        if (null == uri) {
+            return null;
+        }
+        final Result<?> respondResult = this.rpc(uri, LIST_ROUTES_URL, null);
+        return (List<String>) ConvertUtils.convert(respondResult.getData(), List.class);
+    }
+
+    public void removeIngoreUrlSetLocalCache() throws Exception {
+        this.rpcAll(REMOVE_IGNORE_URLS_LOCAL_CACHE, null);
+    }
+
+    public void removeClientIdLocalCache(final String clientId) throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        params.put(Names.CLIENT_ID, clientId);
+        this.rpcAll(REMOVE_CLIENT_ID_LOCAL_CACHE, params);
+    }
+
+    public void rpcAll(final String serviceUrl,
+                       final Map<String, Object> params) throws Exception {
+        final List<URI> avaiableServiceUris = this.getAvaiableServiceUris(this.propertyConfig.getGatewayConsulName());
+        if (null == avaiableServiceUris || avaiableServiceUris.isEmpty()) {
+            return;
+        }
         final List<Exception> exceptionList = new ArrayList<>();
-        final List<ServiceInstance> instances = this.discoveryClient.getInstances(this.propertyConfig.getGatewayConsulName());
-        for (final ServiceInstance instance : instances) {
+        for (final URI uri : avaiableServiceUris) {
             try {
-                final URI uri = instance.getUri();
-                final Result<?> respondResult = this.rpc(instance.getUri(), REFRESH_URL, null);
+                final Result<?> respondResult = this.rpc(uri, serviceUrl, params);
                 if (!respondResult.getOk()) {
                     throw new GatewayException(respondResult.getError());
                 }
@@ -200,19 +246,8 @@ public class GatewayService {
         }
     }
 
-    public List<String> listWorkingRoutes() throws Exception {
-        final ServiceInstance serviceInstance = this.loadBalancerClient.choose(this.propertyConfig.getGatewayConsulName());
-        if (null == serviceInstance) {
-            return null;
-        }
-
-        final URI uri = serviceInstance.getUri();
-        final Result<?> respondResult = this.rpc(uri, LIST_ROUTES_URL, null);
-        return (List<String>) ConvertUtils.convert(respondResult.getData(), List.class);
-    }
-
     private Result<?> rpc(final URI uri,
-                          final String path,
+                          final String serviceUrl,
                           Map<String, Object> params) throws Exception {
         if (null == params) {
             params = new HashMap<>();
@@ -220,7 +255,7 @@ public class GatewayService {
         final Map<String, String> headers = new HashMap<>();
         headers.put("sign", SignTool.sign(params, Names.API_KEY, Names.API_IV));
 
-        final URI remoteAddress = UriComponentsBuilder.fromHttpUrl(uri.toString().concat(path)).build().toUri();
+        final URI remoteAddress = UriComponentsBuilder.fromHttpUrl(uri.toString().concat(serviceUrl)).build().toUri();
         final String responseText = this.rpcTool.post(remoteAddress.toString(), params, headers);
         return OBJECT_MAPPER.readValue(responseText, new TypeReference<Result<?>>() {
         });

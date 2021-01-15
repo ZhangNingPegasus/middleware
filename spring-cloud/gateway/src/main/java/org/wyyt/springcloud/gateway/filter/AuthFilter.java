@@ -11,7 +11,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import org.wyyt.springcloud.gateway.anno.Auth;
 import org.wyyt.springcloud.gateway.entity.contants.Names;
-import org.wyyt.springcloud.gateway.util.Tool;
+import org.wyyt.springcloud.gateway.util.ResponseTool;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.SignTool;
 import reactor.core.publisher.Mono;
@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -46,7 +46,7 @@ public class AuthFilter implements WebFilter {
                         if (null != auth) {
                             final String sign = exchange.getRequest().getHeaders().getFirst("sign");
                             if (ObjectUtils.isEmpty(sign)) {
-                                return Tool.unauthorized(exchange);
+                                return ResponseTool.unauthorized(exchange);
                             }
 
                             try {
@@ -54,7 +54,7 @@ public class AuthFilter implements WebFilter {
                                 if (SignTool.checkSign(sign, CommonTool.queryParamstoMap(queryParamsObject), Names.API_KEY, Names.API_IV)) {
                                     return chain.filter(exchange);
                                 }
-                                return Tool.unauthorized(exchange);
+                                return ResponseTool.unauthorized(exchange);
                             } catch (final Exception exception) {
                                 return Mono.error(exception);
                             }

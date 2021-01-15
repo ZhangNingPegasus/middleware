@@ -18,7 +18,7 @@ spring:
   application:
     name: a
     group: sample-group
-    version: 1.1
+    version: 20210114151701
     strategy:
       scan:
         # 指定对业务RestController类的扫描路径。此项配置作用于RPC方式的调用拦截、消费端的服务隔离和调用链三项功能

@@ -18,6 +18,13 @@ public class Names {
     public final static String ACCESS_TOKEN = "access_token";
     public final static String JWT_SIGNING_KEY = "npegnaskugsihazgdni";
 
+    public final static String OAUTH_TOKEN = "oauth/token";
+    public final static String API_DOCS = "v2/api-docs";
+
+    public final static String EXPIRES_IN = "expires_in";
+    public final static String CLIENT_ID = "client_id";
+    public final static String CLIENT_SECRET = "client_secret";
+    public final static String GRANT_TYPE = "grant_type";
 
     public static final String REDIS_ACCESS_TOKEN_KEY = "access_token_of_%s";
 
@@ -29,4 +36,16 @@ public class Names {
 
     public static final String REDIS_API_LIST_OF_CLIENT_ID_KEY = "api_list_of_client_id_%s";
     public static final String REDIS_DISTRIBUTED_LOCK_API_LIST_OF_CLIENT_ID_KEY = "distributed_lock_api_list_of_client_id_%s";
+
+    public static String getAccessTokenRedisKey(final String clientId) {
+        return String.format(Names.REDIS_ACCESS_TOKEN_KEY, clientId);
+    }
+
+    public static String getAppOfClientId(final String clientId) {
+        return String.format(Names.REDIS_APP_OF_CLIENT_ID_KEY, clientId);
+    }
+
+    public static String getApiListOfClientIdKey(final String clientId) {
+        return String.format(Names.REDIS_API_LIST_OF_CLIENT_ID_KEY, clientId);
+    }
 }

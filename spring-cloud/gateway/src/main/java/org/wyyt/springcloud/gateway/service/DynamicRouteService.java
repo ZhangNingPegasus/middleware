@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021        Initialize  *
  * *****************************************************************
  */
 @Service
@@ -80,7 +80,7 @@ public class DynamicRouteService implements ApplicationEventPublisherAware {
         }
         result.setPredicates(predicateDefinitionList);
 
-        final List<FilterDefinition> filterDefinitionList = new ArrayList();
+        final List<FilterDefinition> filterDefinitionList = new ArrayList<>();
         for (final String text : route.getFilters().split(";")) {
             filterDefinitionList.add(new FilterDefinition(text));
         }
@@ -128,14 +128,12 @@ public class DynamicRouteService implements ApplicationEventPublisherAware {
         final List<RouteDefinition> updateRouteDefinition = new ArrayList<>(newRouteMap.size());
         final List<RouteDefinition> deleteRouteDefinition = new ArrayList<>(newRouteMap.size());
 
-        //新增
         for (final Map.Entry<String, RouteDefinition> pair : newRouteMap.entrySet()) {
             if (!currentRouteMap.containsKey(pair.getKey())) {
                 insertRouteDefinition.add(pair.getValue());
             }
         }
 
-        //修改
         for (final Map.Entry<String, RouteDefinition> pair : newRouteMap.entrySet()) {
             if (currentRouteMap.containsKey(pair.getKey())) {
                 final RouteDefinition currentRouteDefinition = currentRouteMap.get(pair.getKey());
@@ -146,7 +144,6 @@ public class DynamicRouteService implements ApplicationEventPublisherAware {
             }
         }
 
-        //删除
         for (final Map.Entry<String, RouteDefinition> pair : currentRouteMap.entrySet()) {
             if (!newRouteMap.containsKey(pair.getKey())) {
                 deleteRouteDefinition.add(pair.getValue());
