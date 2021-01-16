@@ -6,9 +6,14 @@ import org.wyyt.springcloud.gateway.entity.anno.TranSave;
 import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.Auth;
+import org.wyyt.springcloud.gateway.entity.entity.base.BaseDto;
 import org.wyyt.springcloud.gateway.entity.service.AuthService;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The service of `t_auth` table
@@ -31,42 +36,50 @@ public class AuthServiceImpl extends AuthService {
 
     @TranSave
     public void add(final Long appId,
-                    final Long apiId) throws Exception {
-        Auth auth = this.getByAppIdAndApiId(appId, apiId);
-        if (null != auth) {
-            throw new RuntimeException(String.format("App[id=%s]已存在Api[id=%s]的权限", appId, apiId));
+                    final List<Long> apiIds) throws Exception {
+        if (apiIds.isEmpty()) {
+            return;
+        }
+        final Set<Long> apiIdSet = new HashSet<>(apiIds.size());
+        for (final Long apiId : apiIds) {
+            final Auth auth = this.getByAppIdAndApiId(appId, apiId);
+            if (null == auth) {
+                apiIdSet.add(apiId);
+            }
         }
 
-        auth = new Auth();
-        auth.setAppId(appId);
-        auth.setApiId(apiId);
-        this.save(auth);
-        this.removeRedis(appId);
+        if (!apiIdSet.isEmpty()) {
+            for (final Long apiId : apiIdSet) {
+                final Auth auth = new Auth();
+                auth.setAppId(appId);
+                auth.setApiId(apiId);
+                this.save(auth);
+            }
+            this.removeRedis(appId);
+        }
     }
 
     @TranSave
-    public void edit(final Long id,
-                     final Long appId,
-                     final Long apiId) throws Exception {
-        final Auth auth = this.getById(id);
-        if (null == auth) {
-            throw new RuntimeException(String.format("不存在id=%s的权限", id));
+    public void del(final List<Long> authIds) throws Exception {
+        if (authIds.isEmpty()) {
+            return;
         }
-        auth.setAppId(appId);
-        auth.setApiId(apiId);
-        this.updateById(auth);
-        this.removeRedis(appId);
-    }
+        final List<Auth> authList = new ArrayList<>(authIds.size());
+        for (final Long authId : authIds) {
+            final Auth auth = this.getById(authId);
+            if (null != auth) {
+                authList.add(auth);
+            }
+        }
 
-    @TranSave
-    public void del(final Long appId,
-                    final Long apiId) throws Exception {
-        final Auth auth = this.getByAppIdAndApiId(appId, apiId);
-        if (null == auth) {
-            throw new RuntimeException(String.format("App[id=%s]不存在Api[id=%s]的权限", appId, apiId));
+        if (!authList.isEmpty()) {
+            final Set<Long> ids = authList.stream().map(BaseDto::getId).collect(Collectors.toSet());
+            this.removeByIds(ids);
+            final Set<Long> appIds = authList.stream().map(Auth::getAppId).collect(Collectors.toSet());
+            for (final Long appId : appIds) {
+                this.removeRedis(appId);
+            }
         }
-        this.removeById(auth);
-        this.removeRedis(appId);
     }
 
     @TranSave
@@ -77,7 +90,7 @@ public class AuthServiceImpl extends AuthService {
         final QueryWrapper<Auth> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(Auth::getAppId, appId);
         this.remove(queryWrapper);
-        removeRedis(appId);
+        this.removeRedis(appId);
     }
 
     @TranSave
@@ -90,8 +103,10 @@ public class AuthServiceImpl extends AuthService {
         final List<Auth> authList = this.list(queryWrapper);
         this.remove(queryWrapper);
 
-        for (final Auth auth : authList) {
-            this.removeRedis(auth.getAppId());
+        final Set<Long> appIdSet = authList.stream().map(Auth::getAppId).collect(Collectors.toSet());
+
+        for (final Long appId : appIdSet) {
+            this.removeRedis(appId);
         }
     }
 

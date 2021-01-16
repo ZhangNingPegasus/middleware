@@ -40,16 +40,14 @@ public class AuthService extends ServiceImpl<AuthMapper, Auth> {
     }
 
     @TranRead
-    public IPage<Auth> page(final Integer pageNum,
-                            final Integer pageSize,
-                            final Long appId) {
+    public IPage<Api> page(final Integer pageNum,
+                           final Integer pageSize,
+                           final Long appId) {
         if (null == appId) {
             return null;
         }
         final Page<Auth> page = new Page<>(pageNum, pageSize);
-        final QueryWrapper<Auth> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Auth::getAppId, appId);
-        return this.page(page, queryWrapper);
+        return this.baseMapper.page(page, appId);
     }
 
     @TranRead
@@ -64,5 +62,16 @@ public class AuthService extends ServiceImpl<AuthMapper, Auth> {
                 .eq(Auth::getAppId, appId)
                 .eq(Auth::getApiId, apiId);
         return this.getOne(queryWrapper);
+    }
+
+    @TranRead
+    public IPage<Api> selectNoAuthApis(final Integer pageNum,
+                                       final Integer pageSize,
+                                       final Long appId,
+                                       final String serviceId,
+                                       final String name,
+                                       final String path) {
+        final Page<Auth> page = new Page<>(pageNum, pageSize);
+        return this.baseMapper.selectNoAuthApis(page, appId, serviceId, name, path);
     }
 }

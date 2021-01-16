@@ -12,7 +12,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">Id</label>
             <div class="layui-input-inline">
-                <input type="text" id="clientId" name="clientId" lay-verify="required" class="layui-input" style="width: 740px"
+                <input type="text" id="clientId" name="clientId" lay-verify="required" class="layui-input"
+                       style="width: 740px"
                        placeholder="请输入Client Id" autocomplete="off">
             </div>
         </div>
@@ -20,9 +21,10 @@
         <div class="layui-form-item">
             <label class="layui-form-label">Secret</label>
             <div class="layui-input-inline">
-                <input type="text" id="clientSecret" name="clientSecret" lay-verify="required" class="layui-input" style="width: 740px"
+                <input type="text" id="clientSecret" name="clientSecret" lay-verify="required" class="layui-input"
+                       style="width: 740px"
                        placeholder="请输入Client Secret" autocomplete="off">
-                <button id="btnGenName" class="layui-btn layui-btn-sm" style="margin-top: 2px">随机生成
+                <button id="btnGenName" class="layui-btn layui-btn-sm" style="margin-top: 2px">自动生成
                 </button>
             </div>
         </div>

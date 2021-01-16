@@ -96,4 +96,9 @@ public class ApiService extends ServiceImpl<ApiMapper, Api> {
         }
         return result;
     }
+
+    @TranRead
+    public List<String> listServiceIds() {
+        return this.baseMapper.listServiceIds();
+    }
 }

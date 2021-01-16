@@ -9,5 +9,34 @@
                  INNER JOIN `t_auth` `auth` ON `app`.`id` = `auth`.`app_id`
                  INNER JOIN `t_api` `api` ON `api`.`id` = `auth`.`api_id`
         WHERE `app`.`client_id` = #{clientId}
+        ORDER BY `api`.`id`
+    </select>
+
+    <select id="page" resultType="org.wyyt.springcloud.gateway.entity.entity.Api">
+        SELECT `api`.*
+        FROM `t_auth` `auth`
+                 INNER JOIN `t_app` `app` ON `auth`.`app_id` = `app`.`id`
+                 INNER JOIN `t_api` `api` ON auth.api_id = api.id
+        WHERE app.id = #{appId}
+        ORDER BY `api`.`id`
+    </select>
+
+    <select id="selectNoAuthApis" resultType="org.wyyt.springcloud.gateway.entity.entity.Api">
+        SELECT
+        `api`.*
+        FROM `t_api` `api`
+        LEFT OUTER JOIN `t_auth` `auth` ON `api`.`id` = `auth`.`api_id`
+        LEFT OUTER JOIN `t_app` `app` ON `app`.`id` = `auth`.`app_id`
+        WHERE `api`.`id` NOT IN (SELECT `api_id` FROM `t_auth` WHERE `app_id` = #{appId})
+        <if test="serviceId!=null and serviceId!=''">
+            AND `api`.`service_id` = #{serviceId}
+        </if>
+        <if test="name!=null and name!=''">
+            AND `api`.`name` LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="path!=null and path!=''">
+            AND `api`.`path` LIKE CONCAT('%', #{path}, '%')
+        </if>
+        ORDER BY `api`.`id`
     </select>
 </mapper>

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 
+import java.util.List;
+
 /**
  * The mapper of table `t_api`
  * <p>
@@ -17,4 +19,5 @@ import org.wyyt.springcloud.gateway.entity.entity.Api;
 @Mapper
 public interface ApiMapper extends BaseMapper<Api> {
 
+    List<String> listServiceIds();
 }

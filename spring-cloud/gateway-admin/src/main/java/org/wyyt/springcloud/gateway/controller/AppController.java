@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.wyyt.springcloud.gateway.entity.ClientVo;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.service.AppServiceImpl;
-import org.wyyt.springcloud.gateway.service.GatewayService;
 import org.wyyt.tool.rpc.Result;
 
 import java.util.List;
@@ -88,7 +87,7 @@ public class AppController {
                           @RequestParam(value = "name") final String name,
                           @RequestParam(value = "isAdmin") final Boolean isAdmin,
                           @RequestParam(value = "description") final String description) throws Exception {
-         this.appServiceImpl.edit(id, name, isAdmin, description);
+        this.appServiceImpl.edit(id, name, isAdmin, description);
         return Result.ok();
     }
 
@@ -102,9 +101,14 @@ public class AppController {
     @PostMapping("genName")
     @ResponseBody
     public Result<ClientVo> genName() {
+        String clientId;
+        do {
+            clientId = RandomStringUtils.randomAlphanumeric(15);
+        } while (null != this.appServiceImpl.getByClientId(clientId));
+
         final ClientVo clientVo = new ClientVo();
-        clientVo.setClientId(RandomStringUtils.randomAlphanumeric(25));
-        clientVo.setClientSecret(RandomStringUtils.randomAlphanumeric(35));
+        clientVo.setClientId(clientId);
+        clientVo.setClientSecret(RandomStringUtils.randomAlphanumeric(25));
         return Result.ok(clientVo);
     }
 }
