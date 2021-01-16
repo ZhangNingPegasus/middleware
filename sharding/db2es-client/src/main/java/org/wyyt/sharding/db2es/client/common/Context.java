@@ -33,7 +33,7 @@ import java.util.Set;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -112,10 +112,8 @@ public final class Context implements Closeable {
     private void initTopics() throws Exception {
         final Set<Topic> topics = this.dbWrapper.listTopics(this.config.getDb2EsId());
         final Map<String, Topic> topicMap = new HashMap<>();
-        if (null != topics) {
-            for (final Topic topic : topics) {
-                topicMap.put(topic.getName(), topic);
-            }
+        for (final Topic topic : topics) {
+            topicMap.put(topic.getName(), topic);
         }
         this.config.setTopicMap(topicMap);
     }

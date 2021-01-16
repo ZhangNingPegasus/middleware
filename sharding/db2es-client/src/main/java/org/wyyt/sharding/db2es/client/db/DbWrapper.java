@@ -32,7 +32,7 @@ import java.util.*;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -71,20 +71,6 @@ public final class DbWrapper implements Closeable {
 
     public final Topic getTopicById(final Long topicId) throws Exception {
         return this.selectOne(Topic.class, "SELECT * FROM `t_topic` WHERE `id` = ?", topicId);
-    }
-
-    public final Topic getTopicByName(final String name) throws Exception {
-        return this.selectOne(Topic.class, "SELECT * FROM `t_topic` WHERE `name` = ?", name);
-    }
-
-    public final List<Topic> getTopicByNames(final String[] names) throws Exception {
-        List<String> params = new ArrayList<>();
-        for (final String name : names) {
-            params.add("?");
-        }
-        return this.select(Topic.class, "SELECT * FROM `t_topic` WHERE `name` IN (%s)",
-                StringUtils.join(params, ","),
-                names);
     }
 
     public final void insertLogs(final List<Db2EsLog> db2EsLogList) {

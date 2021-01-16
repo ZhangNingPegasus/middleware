@@ -12,7 +12,7 @@ import org.wyyt.admin.ui.template.*;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Configuration

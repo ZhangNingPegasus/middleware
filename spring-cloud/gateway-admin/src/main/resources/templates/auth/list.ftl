@@ -47,13 +47,6 @@
                         </@insert>
                     </div>
                 </script>
-
-                <script type="text/html" id="grid-bar">
-                    <@delete>
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
-                                    class="layui-icon layui-icon-delete"></i>删除</a>
-                    </@delete>
-                </script>
             </div>
         </div>
     </div>
@@ -87,9 +80,6 @@
                     {field: 'name', title: '接口名称', width: 400},
                     {field: 'method', title: '请求方式', width: 300},
                     {field: 'path', title: '接口路径'}
-                    <@select>
-                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 90}
-                    </@select>
                 ]]
             });
 
@@ -116,7 +106,6 @@
                                     layer.close(index);
                                 }, function (result) {
                                     admin.error(admin.OPT_FAILURE, result.error);
-                                    layer.close(index);
                                 });
                             });
                             submit.trigger('click');
@@ -132,8 +121,7 @@
                             for (let j = 0, len = data.length; j < len; j++) {
                                 keys = keys + data[j].id + ","
                             }
-                            console.log(keys);
-                            admin.post("del", {'authIds': keys}, function () {
+                            admin.post("del", {'appId': appId, 'apiIds': keys}, function () {
                                 table.reload('grid');
                                 layer.close(index);
                             });
@@ -144,25 +132,10 @@
                 }
             });
 
-            table.on('tool(grid)', function (obj) {
-                const data = obj.data;
-                if (obj.event === 'del') {
-                    layer.confirm(admin.DEL_QUESTION, function (index) {
-
-
-                        admin.post("del", data, function () {
-                            table.reload('grid');
-                            layer.close(index);
-                        });
-                    });
-                }
-            });
-
             form.on('select(appId)', function (data) {
                 appId = data.value;
                 $("#search").click();
             });
-
         });
     </script>
     </body>

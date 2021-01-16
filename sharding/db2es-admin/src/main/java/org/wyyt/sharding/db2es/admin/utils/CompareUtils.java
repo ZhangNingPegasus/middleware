@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public class CompareUtils {
@@ -31,7 +31,7 @@ public class CompareUtils {
         final List<LinkedHashMap<String, Object>> secondSortedMapList = new ArrayList<>(64);
 
         if (null != first && !first.isEmpty()) {
-            for (Map<String, Object> map : first) {
+            for (final Map<String, Object> map : first) {
                 if (null == map) {
                     continue;
                 }

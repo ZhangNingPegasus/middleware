@@ -11,6 +11,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * the configuration of Swagger
+ * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
+ */
 @Component
 public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider {
     private static final String SWAGGER2_URL = "/v2/api-docs";

@@ -9,15 +9,15 @@ import org.wyyt.sharding.db2es.admin.service.common.Db2EsHttpService;
 import org.wyyt.sharding.db2es.core.entity.domain.Config;
 import org.wyyt.sharding.db2es.core.entity.persistent.Property;
 import org.wyyt.sharding.db2es.core.util.CommonUtils;
-import org.wyyt.sharding.anno.TranRead;
-import org.wyyt.sharding.anno.TranSave;
+import org.wyyt.tool.anno.TranRead;
+import org.wyyt.tool.anno.TranSave;
 
 /**
  * The service for table 't_property'.
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -45,10 +45,10 @@ public class PropertyService extends ServiceImpl<PropertyMapper, Property> {
     }
 
     @TranSave
-    public boolean edit(final Long id,
-                        final String name,
-                        final String value,
-                        final String description) {
+    public void edit(final Long id,
+                     final String name,
+                     final String value,
+                     final String description) {
         final UpdateWrapper<Property> updateWrapper = new UpdateWrapper<>();
         final LambdaUpdateWrapper<Property> lambda = updateWrapper.lambda()
                 .eq(Property::getId, id);
@@ -62,6 +62,6 @@ public class PropertyService extends ServiceImpl<PropertyMapper, Property> {
         if (null != description) {
             lambda.set(Property::getDescription, description);
         }
-        return this.update(updateWrapper);
+        this.update(updateWrapper);
     }
 }

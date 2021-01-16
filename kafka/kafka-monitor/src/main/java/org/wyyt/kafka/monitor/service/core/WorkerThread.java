@@ -11,19 +11,17 @@ import org.wyyt.tool.resource.ResourceTool;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
 public final class WorkerThread<T extends Runnable & AutoCloseable> {
-    private final String threadName;
     private final T runner;
     private final Thread worker;
 
     public WorkerThread(final T runner,
                         final String threadName) {
         this.runner = runner;
-        this.threadName = threadName;
         this.worker = new Thread(runner);
         this.worker.setName(threadName);
     }
@@ -37,7 +35,7 @@ public final class WorkerThread<T extends Runnable & AutoCloseable> {
     }
 
     public final void stop() {
-        if (this.runner instanceof AutoCloseable) {
+        if (null != this.runner) {
             ResourceTool.closeQuietly(this.runner);
         }
         try {

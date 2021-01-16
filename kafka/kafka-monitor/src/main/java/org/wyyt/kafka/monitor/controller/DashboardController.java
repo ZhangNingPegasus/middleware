@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -83,7 +83,7 @@ public class DashboardController {
 
         final String key = String.format("DashboardController::getTopicSendChart:%s:%s", topicName, createTimeRange);
         final LineInfo cache = this.ehcacheService.get(key);
-        if (cache != null) {
+        if (null != cache) {
             return Result.ok(cache);
         }
 
@@ -99,7 +99,7 @@ public class DashboardController {
         final List<SysTopicSize> sysTopicSizeList = this.sysTopicSizeService.listByTopicName(topicName, from, to);
         final List<String> topicNames = sysTopicSizeList.stream().map(SysTopicSize::getTopicName).distinct().collect(Collectors.toList());
         final List<String> times = sysTopicSizeList.stream().map(p -> DateTool.format(p.getRowCreateTime())).distinct().collect(Collectors.toList());
-        if (times.size() > 0) {
+        if (!times.isEmpty()) {
             times.remove(0);
         }
         result.setTopicNames(topicNames);
@@ -137,14 +137,14 @@ public class DashboardController {
                     }
                 }
                 Long logSize = null;
-                if (curLogSize != null) {
+                if (null != curLogSize) {
                     logSize = curLogSize - (preLogSize == null ? 0 : preLogSize);
                     if (logSize < 0) {
                         logSize = 0L;
                     }
                 }
                 double seconds = 60.0D;
-                if (curDate != null && preDate != null) {
+                if (null != curDate && null != preDate) {
                     seconds = (curDate.getTime() - preDate.getTime()) / 1000.0D;
                 }
 
@@ -175,7 +175,7 @@ public class DashboardController {
         if (ObjectUtils.isEmpty(groupId) || ObjectUtils.isEmpty(createTimeRange)) {
             return Result.ok();
         }
-        LineInfo result = new LineInfo();
+        final LineInfo result = new LineInfo();
         final TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
         Date from = timeRange.getStart(), to = timeRange.getEnd();
 
@@ -200,7 +200,7 @@ public class DashboardController {
             final List<Double> data = new ArrayList<>(result.getTimes().size());
             for (final String time : result.getTimes()) {
                 final List<Double> lag = sysTopicLagList.stream().filter(p -> p.getTopicName().equals(series.getName()) && DateTool.format(p.getRowCreateTime()).equals(time)).map(p -> Double.parseDouble(p.getLag().toString())).collect(Collectors.toList());
-                if (lag.size() < 1) {
+                if (lag.isEmpty()) {
                     data.add(null);
                 } else {
                     data.addAll(lag);
@@ -219,7 +219,7 @@ public class DashboardController {
                                                @RequestParam(name = "createTimeRange") String createTimeRange) {
         String key = String.format("DashboardController::getConsumeTpsChart:%s:%s", groupId, createTimeRange);
         LineInfo cache = this.ehcacheService.get(key);
-        if (cache != null) {
+        if (null != cache) {
             return Result.ok(cache);
         }
         groupId = groupId.trim();
@@ -229,7 +229,7 @@ public class DashboardController {
         }
         LineInfo result = new LineInfo();
         TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
-        Date from = timeRange.getStart(), to = timeRange.getEnd();
+        final Date from = timeRange.getStart(), to = timeRange.getEnd();
 
         final List<SysTopicLag> sysTopicLagList = this.sysTopicLagService.listByGroupId(topicName, groupId, from, to);
         final List<String> topicNames = sysTopicLagList.stream().map(SysTopicLag::getTopicName).distinct().collect(Collectors.toList());
@@ -272,18 +272,18 @@ public class DashboardController {
                     }
                 }
                 Long offset = null;
-                if (curLogSize != null) {
+                if (null != curLogSize) {
                     offset = curLogSize - (preLogSize == null ? 0 : preLogSize);
                     if (offset < 0) {
                         offset = 0L;
                     }
                 }
                 double seconds = 60.0D;
-                if (curDate != null && preDate != null) {
+                if (null != curDate && null != preDate) {
                     seconds = (curDate.getTime() - preDate.getTime()) / 1000.0D;
                 }
 
-                if (offset == null) {
+                if (null == offset) {
                     data.add(null);
                 } else {
                     data.add(CommonTool.numberic(offset / seconds));

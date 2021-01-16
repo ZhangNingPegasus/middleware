@@ -6,6 +6,16 @@ import org.wyyt.tool.db.CrudService;
 
 import javax.sql.DataSource;
 
+/**
+ * Providing the CRUD of database
+ * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
+ */
 @EnableConfigurationProperties({AdminUiProperties.class})
 public class AdminUiAutoConfiguration {
 

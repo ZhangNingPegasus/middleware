@@ -12,7 +12,9 @@ import org.wyyt.springcloud.gateway.service.AuthServiceImpl;
 import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.wyyt.springcloud.gateway.controller.AuthController.PREFIX;
 
@@ -102,16 +104,17 @@ public class AuthController {
 
     @PostMapping("del")
     @ResponseBody
-    public Result<?> del(@RequestParam(value = "authIds") final String authIds) throws Exception {
-        final String[] authIdArray = authIds.split(",");
-        final List<Long> authIdList = new ArrayList<>(authIdArray.length);
-        for (final String authId : authIdArray) {
-            if (ObjectUtils.isEmpty(authId)) {
+    public Result<?> del(@RequestParam(value = "appId") final Long appId,
+                         @RequestParam(value = "apiIds") final String apiIds) throws Exception {
+        final String[] apiIdArray = apiIds.split(",");
+        final Set<Long> apiIdSet = new HashSet<>(apiIdArray.length);
+        for (final String apiId : apiIdArray) {
+            if (ObjectUtils.isEmpty(apiId)) {
                 continue;
             }
-            authIdList.add(Long.parseLong(authId));
+            apiIdSet.add(Long.parseLong(apiId));
         }
-        this.authServiceImpl.del(authIdList);
+        this.authServiceImpl.del(appId, apiIdSet);
         return Result.ok();
     }
 }

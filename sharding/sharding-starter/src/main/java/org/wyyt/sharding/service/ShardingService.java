@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public class ShardingService {
@@ -535,7 +535,7 @@ public class ShardingService {
             result1.add(String.format(tableDimensionInfo.getTableNameFormat(), index));
         }
 
-        query(kvs -> {
+        this.query(kvs -> {
             for (final Map<String, Object> kv : kvs) {
                 result2.add(kv.get("TABLE_NAME").toString());
             }
@@ -551,7 +551,7 @@ public class ShardingService {
         final DimensionProperty dimensionProperty = this.getDimensionByName(dimension);
         final DataSourceProperty dataSourceProperty = dimensionProperty.getDataSourceProperties().get(datasource);
 
-        query(kvs -> {
+        this.query(kvs -> {
             if (!kvs.isEmpty()) {
                 result.set(kvs.get(0).get("TABLE_NAME").toString());
             }
@@ -565,11 +565,11 @@ public class ShardingService {
         final Map<String, Long> fieldsHashMap = new HashMap<>();
 
         for (final Map.Entry<String, List<T>> pair : source.entrySet()) {
-            String targetName = pair.getKey();
-            List<T> targetValue = pair.getValue();
+            final String targetName = pair.getKey();
+            final List<T> targetValue = pair.getValue();
             targetValue.sort(Comparator.comparing(fieldComparator));
-            String strFieldVoList = StringUtils.join(targetValue, ",");
-            Long hash = MathsTool.hash(strFieldVoList);
+            final String strFieldVoList = StringUtils.join(targetValue, ",");
+            final Long hash = MathsTool.hash(strFieldVoList);
             fieldsHashMap.put(targetName, hash);
         }
 
@@ -582,13 +582,11 @@ public class ShardingService {
                 hash = pair.getKey();
             }
         }
-
         for (final Map.Entry<String, Long> pair : fieldsHashMap.entrySet()) {
             if (!pair.getValue().equals(hash)) {
                 result.add(pair.getKey());
             }
         }
-
         result.sort(Comparator.naturalOrder());
         return result;
     }
@@ -638,8 +636,8 @@ public class ShardingService {
     }
 
     private FieldType analyseFieldType(final String columnType) {
-        int start = columnType.indexOf("(");
-        int end = columnType.lastIndexOf(")");
+        final int start = columnType.indexOf("(");
+        final int end = columnType.lastIndexOf(")");
 
         String name;
         int length = 0;

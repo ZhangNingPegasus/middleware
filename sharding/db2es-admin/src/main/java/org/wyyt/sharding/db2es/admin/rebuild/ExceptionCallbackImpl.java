@@ -5,7 +5,7 @@ package org.wyyt.sharding.db2es.admin.rebuild;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public class ExceptionCallbackImpl implements ExceptionCallback {

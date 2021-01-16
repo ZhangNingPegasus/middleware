@@ -13,10 +13,10 @@ import java.util.Properties;
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
- * ******************************************************************
- * Name               Action            Time          Description   *
- * Ning.Zhang       Initialize        01/01/2021        Initialize  *
- * ******************************************************************
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
  */
 public class DefaultConfigApplicationListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
 

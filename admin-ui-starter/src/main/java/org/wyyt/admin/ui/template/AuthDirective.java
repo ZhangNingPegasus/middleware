@@ -13,7 +13,7 @@ import java.util.List;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public abstract class AuthDirective {
@@ -43,7 +43,8 @@ public abstract class AuthDirective {
         return false;
     }
 
-    private boolean checkPermission(String uri, final HandlePermission handlePermission) {
+    private boolean checkPermission(String uri,
+                                    final HandlePermission handlePermission) {
         final AdminVo adminVo = (AdminVo) SecurityUtils.getSubject().getPrincipal();
         if (null == adminVo) {
             return false;
@@ -62,7 +63,8 @@ public abstract class AuthDirective {
         return false;
     }
 
-    private PageVo getByUri(final List<PageVo> pageVoList, String uri) {
+    private PageVo getByUri(final List<PageVo> pageVoList,
+                            final String uri) {
         for (final PageVo pageVo : pageVoList) {
             if (pageVo.getUrl().equals(uri)) {
                 return pageVo;

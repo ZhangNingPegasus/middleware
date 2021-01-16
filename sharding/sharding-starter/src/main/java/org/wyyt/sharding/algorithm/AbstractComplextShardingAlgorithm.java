@@ -23,15 +23,14 @@ import java.util.*;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public abstract class AbstractComplextShardingAlgorithm {
     @Autowired
     protected ShardingService shardingService;
 
-    protected void sharding(final Collection<String> availableTargetNames,
-                            final ComplexKeysShardingValue<Long> shardingValue,
+    protected void sharding(final ComplexKeysShardingValue<Long> shardingValue,
                             final Action action) {
         final String logicTableName = shardingValue.getLogicTableName();
         final CaseInsensitiveMap<String, Collection<Long>> columnNameAndShardingValuesMap = new CaseInsensitiveMap<>(shardingValue.getColumnNameAndShardingValuesMap());

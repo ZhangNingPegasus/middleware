@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.wyyt.sharding.db2es.client.common.Context;
 import org.wyyt.sharding.db2es.client.common.Utils;
 import org.wyyt.tool.dingtalk.DingTalkTool;
-import org.wyyt.tool.dingtalk.Message;
 import org.wyyt.tool.dingtalk.WarningLevel;
 import org.wyyt.tool.exception.ExceptionTool;
 
@@ -21,12 +20,11 @@ import java.util.concurrent.TimeUnit;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
 public final class DingDingWrapper implements Closeable {
-    private static final String URL = "https://oapi.dingtalk.com/robot/send?access_token=%s&timestamp=%s&sign=%s";
     private final Context context;
     private final Cache<String, Long> cache;
 
@@ -37,12 +35,6 @@ public final class DingDingWrapper implements Closeable {
                 .build();
     }
 
-    public final void send(final Message message) throws Exception {
-        DingTalkTool.send(message,
-                this.context.getConfig().getDingAccessToken(),
-                this.context.getConfig().getDingSecret());
-    }
-
     public final void send(final String content,
                            final List<String> mobileList,
                            final WarningLevel warningLevel) throws Exception {
@@ -50,6 +42,7 @@ public final class DingDingWrapper implements Closeable {
         DingTalkTool.prettySend(content,
                 localIp.getLocalName(),
                 localIp.getLocalIp(),
+                mobileList,
                 warningLevel,
                 this.context.getConfig().getDingAccessToken(),
                 this.context.getConfig().getDingSecret());

@@ -2,6 +2,7 @@ package org.wyyt.sharding.sqltool.entity.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.wyyt.admin.ui.entity.base.BaseDto;
 
 /**
@@ -11,9 +12,10 @@ import org.wyyt.admin.ui.entity.base.BaseDto;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public final class SysPermission extends BaseDto {
     @TableField(value = "sys_role_id")

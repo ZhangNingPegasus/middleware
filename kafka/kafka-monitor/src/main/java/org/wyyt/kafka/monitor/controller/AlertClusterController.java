@@ -17,6 +17,7 @@ import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -122,7 +123,7 @@ public class AlertClusterController {
                                             @RequestParam(value = "opt") final String opt) throws Exception {
         final List<String> result = new ArrayList<>();
         final SysAlertCluster.Type clusterType = SysAlertCluster.Type.get(type);
-        switch (clusterType) {
+        switch (Objects.requireNonNull(clusterType)) {
             case KAFKA:
                 final List<KafkaBrokerVo> kafkaBrokerVos = this.kafkaService.listBrokerInfos();
                 for (final KafkaBrokerVo kafkaBrokerVo : kafkaBrokerVos) {

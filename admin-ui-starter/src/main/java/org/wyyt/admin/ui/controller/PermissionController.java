@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -71,7 +71,7 @@ public class PermissionController {
                                            @RequestParam(value = "limit") final Integer pageSize,
                                            @RequestParam(value = "sysRoleId", required = false) final Long sysRoleId,
                                            @RequestParam(value = "sysPageId", required = false) final Long sysPageId) throws Exception {
-        final IPage list = this.sysPermissionService.list(pageNum, pageSize, sysRoleId, sysPageId);
+        final IPage<PermissionVo> list = this.sysPermissionService.list(pageNum, pageSize, sysRoleId, sysPageId);
         return Result.ok(list.getRecords(), list.getTotal());
     }
 

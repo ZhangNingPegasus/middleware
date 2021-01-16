@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -30,7 +30,7 @@ public class IgnoreUrlService extends ServiceImpl<IgnoreUrlMapper, IgnoreUrl> {
     @TranRead
     public Set<String> getUrls() {
         final List<IgnoreUrl> ignoreUrls = this.list();
-        return ignoreUrls.stream().map(p -> p.getUrl()).collect(Collectors.toSet());
+        return ignoreUrls.stream().map(IgnoreUrl::getUrl).collect(Collectors.toSet());
     }
 
     @TranRead

@@ -26,7 +26,7 @@ import static org.wyyt.sharding.db2es.core.util.CommonUtils.OBJECT_MAPPER;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -162,7 +162,7 @@ public abstract class BaseDb2EsService {
             throw new Db2EsException(String.format("接口[%s]无法响应, 请检查该主机上db2es-client的运行状态", url));
         }
 
-        final Result respondResult = OBJECT_MAPPER.readValue(responseText, new TypeReference<Result>() {
+        final Result<?> respondResult = OBJECT_MAPPER.readValue(responseText, new TypeReference<Result<?>>() {
         });
 
         if (respondResult.getOk()) {
@@ -219,7 +219,7 @@ public abstract class BaseDb2EsService {
                 if (nodes == null || nodes.isEmpty()) {
                     continue;
                 }
-                final String leaderNode = getLeaderNode(idPath, nodes);
+                final String leaderNode = getLeaderNode(nodes);
                 Assert.notNull(leaderNode, "Leader Node is null");
                 final String data = this.zooKeeperService.getData(idPath.concat("/").concat(leaderNode));
                 final NodeVo leaderNodeVo = JSON.parseObject(data, NodeVo.class);
@@ -240,15 +240,13 @@ public abstract class BaseDb2EsService {
         return result;
     }
 
-    private String getLeaderNode(final String idPath,
-                                 final List<String> nodes) {
+    private String getLeaderNode(final List<String> nodes) {
         if (null == nodes || nodes.isEmpty()) {
             return null;
         }
 
         String result = null;
         Long suffix = null;
-        String nodePath = null;
 
         for (final String node : nodes) {
             if (ObjectUtils.isEmpty(node)) {

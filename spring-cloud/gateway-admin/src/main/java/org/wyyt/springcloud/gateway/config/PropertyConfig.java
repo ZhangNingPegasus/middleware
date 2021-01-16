@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Getter
@@ -31,6 +31,12 @@ public class PropertyConfig {
 
     @Value("${db_password}")
     private String dbPwd;
+
+    @Value("${db_min_idle}")
+    public int dbMinIdle;
+
+    @Value("${db_maximum}")
+    public int dbMaximum;
 
     @Value("${gateway_consul_name}")
     private String gatewayConsulName;

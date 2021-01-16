@@ -1,6 +1,5 @@
 package org.wyyt.sharding.db2es.admin.listener;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.wyyt.sharding.db2es.admin.service.TableService;
 import org.wyyt.sharding.db2es.core.entity.domain.TableInfo;
@@ -20,14 +19,12 @@ import java.util.Set;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Component
 public class ServletListener implements ServletContextListener {
-    @Autowired
     private final ShardingService shardingService;
-    @Autowired
     private final TableService tableService;
 
     public ServletListener(final ShardingService shardingService,

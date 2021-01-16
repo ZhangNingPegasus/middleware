@@ -5,7 +5,7 @@ package org.wyyt.kafka.monitor.common;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public class JMX {
@@ -30,9 +30,6 @@ public class JMX {
     public static final String PROCESS_CPU_LOAD = "ProcessCpuLoad";
 
     public static final String THREAD_COUNT = "ThreadCount";
-
-    public static final String NAME = "Name";
-    public static final String VERSION = "Version";
 
     public final static String MESSAGES_IN = "Messages in /sec";
     public final static String BYTES_IN = "Bytes in /sec";

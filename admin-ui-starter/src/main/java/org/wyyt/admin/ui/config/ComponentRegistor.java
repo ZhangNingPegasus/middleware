@@ -1,16 +1,17 @@
 package org.wyyt.admin.ui.config;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * [类描述信息]
+ * Scan component
  * <p>
- * *********************************************************
- * 姓名            事项               时间          动作
- * 张宁            创建                      创建
- * *********************************************************
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
  */
 @Configuration
 @ComponentScan(basePackages = {"org.wyyt.admin.ui"})

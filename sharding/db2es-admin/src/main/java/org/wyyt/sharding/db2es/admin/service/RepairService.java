@@ -12,7 +12,7 @@ import org.wyyt.sharding.db2es.core.entity.persistent.Topic;
 import org.wyyt.sharding.db2es.core.exception.Db2EsException;
 import org.wyyt.sharding.db2es.core.util.CommonUtils;
 import org.wyyt.elasticsearch.service.ElasticSearchService;
-import org.wyyt.sharding.anno.TranSave;
+import org.wyyt.tool.anno.TranSave;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +23,7 @@ import java.util.Map;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service

@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -89,7 +89,7 @@ public final class RecordRunner extends BaseRecordRunner {
                                     ExceptionTool.getRootCauseMessage(exception)),
                             WarningLevel.WARNING);
                     this.sleepInterval(TRY_BACK_TIME_MS);
-                } else if (isErrorRecoverable(exception) && haveTryTime < TRY_TIME) {
+                } else if (haveTryTime < TRY_TIME) {
                     log.warn(String.format("RecordRunner: topic[%s] meet an error cause %s, recover time [%s]",
                             this.topicPartition,
                             ExceptionTool.getRootCauseMessage(exception),

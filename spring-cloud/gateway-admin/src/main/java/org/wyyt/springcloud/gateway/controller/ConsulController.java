@@ -9,7 +9,6 @@ import org.wyyt.springcloud.gateway.entity.EndpointVo;
 import org.wyyt.springcloud.gateway.entity.ServiceVo;
 import org.wyyt.springcloud.gateway.service.GatewayService;
 import org.wyyt.tool.rpc.Result;
-import org.wyyt.tool.rpc.RpcTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ import static org.wyyt.springcloud.gateway.controller.ConsulController.PREFIX;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -36,7 +35,6 @@ public class ConsulController {
     private final PropertyConfig propertyConfig;
 
     public ConsulController(final GatewayService gatewayService,
-                            final RpcTool rpcTool,
                             final PropertyConfig propertyConfig) {
         this.gatewayService = gatewayService;
         this.propertyConfig = propertyConfig;

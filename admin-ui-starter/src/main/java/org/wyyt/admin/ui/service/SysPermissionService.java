@@ -6,22 +6,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.wyyt.admin.ui.entity.dto.SysPage;
 import org.wyyt.admin.ui.entity.dto.SysPermission;
-import org.wyyt.admin.ui.entity.vo.PageVo;
 import org.wyyt.admin.ui.entity.vo.PermissionVo;
 import org.wyyt.tool.db.CrudPage;
 import org.wyyt.tool.db.CrudService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The service for table 'sys_permission'.
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -35,42 +32,6 @@ public class SysPermissionService {
     public SysPermission getById(final Long id) throws Exception {
         return this.crudService.selectOne(SysPermission.class, "SELECT * FROM `sys_permission` WHERE `id`=?", id);
     }
-
-    public Map<Long, PageVo> getPermissionPages(final Long sysAdminId) throws Exception {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT" +
-                " `page`.`id`," +
-                " `page`.`name`," +
-                " `page`.`url`," +
-                " `page`.`is_menu`," +
-                " `page`.`is_default`," +
-                " `page`.`icon_class`," +
-                " `page`.`parent_id`," +
-                " `parent`.`name` AS `parent_name`," +
-                " `page`.`order_num`," +
-                " `page`.`remark`," +
-                " `p`.`can_insert`," +
-                " `p`.`can_delete`," +
-                " `p`.`can_update`," +
-                " `p`.`can_select`" +
-                " FROM `sys_page` `page`" +
-                " LEFT OUTER JOIN `sys_permission` `p` ON `page`.`id` = `p`.`sys_page_id`" +
-                " LEFT OUTER JOIN `sys_role` `r` ON `r`.`id` = `p`.`sys_role_id`" +
-                " LEFT OUTER JOIN `sys_admin` `a` ON `a`.`sys_role_id` = `r`.`id`" +
-                " LEFT OUTER JOIN `sys_page` `parent` ON `page`.`parent_id` = `parent`.`id`" +
-                " WHERE 1=1");
-
-        if (null != sysAdminId) {
-            sql.append("`a`.`id`=?");
-        }
-        final List<PageVo> pageVoList = this.crudService.select(PageVo.class, sql.toString(), sysAdminId);
-        final Map<Long, PageVo> result = new HashMap<>();
-        for (final PageVo pageVo : pageVoList) {
-            result.put(pageVo.getId(), pageVo);
-        }
-        return result;
-    }
-
 
     public IPage<PermissionVo> list(final Integer pageNum,
                                     final Integer pageSize,

@@ -1,8 +1,6 @@
 package org.wyyt.sharding.auto;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.nacos.api.annotation.NacosInjected;
-import com.alibaba.nacos.api.config.ConfigService;
 import com.sijibao.nacos.spring.util.NacosNativeUtils;
 import com.sijibao.nacos.spring.util.NacosRsaUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,10 +62,10 @@ import java.util.*;
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
- * ******************************************************************
- * Name               Action            Time          Description   *
- * Ning.Zhang       Initialize         10/1/2020        Initialize  *
- * ******************************************************************
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
  */
 @Configuration
 @EnableConfigurationProperties({XmlConfig.class})
@@ -223,10 +221,7 @@ public class ShardingAutoConfig implements DisposableBean {
         this.dataSourceMap = new HashMap<>();
     }
 
-    private final static Integer ACM_TIMEOUT_IN_MILLISECONDS = 5000;
     private static final String EHCACHE_NAME = "MIDDLEWARE_SHARDING_DEFAULT_EHCACHE";
-    @NacosInjected
-    private ConfigService configService;
     private final XmlConfig xmlConfig;
     private final Map<DbInfo, DataSource> dataSourceMap;
 

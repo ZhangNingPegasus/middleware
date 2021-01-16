@@ -2,6 +2,7 @@ package org.wyyt.sharding.db2es.client.common;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.sharding.db2es.client.http.BaseHandler;
@@ -23,7 +24,7 @@ import java.util.Set;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -49,19 +50,10 @@ public final class Utils {
         return String.format("%s(%s)", ip.localName, ip.localIp);
     }
 
-    public static boolean isReachable(final String ip) {
-        try {
-            final InetAddress address = InetAddress.getByName(ip);
-            return address.isReachable(5000);
-        } catch (Exception ignored) {
-        }
-        return false;
-    }
-
     public static Map<String, Method> getPostMappingMethods(final Class<?> tClass) {
         final Map<String, Method> result = new HashMap<>();
 
-        final Set<Method> allMethods = org.reflections.ReflectionUtils.getAllMethods(tClass);
+        final Set<Method> allMethods = ReflectionUtils.getAllMethods(tClass);
         for (final Method method : allMethods) {
             final PostMapping annotation = method.getAnnotation(PostMapping.class);
             if (null == annotation) {

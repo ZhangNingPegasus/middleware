@@ -2,10 +2,6 @@ package org.wyyt.sharding.sqltool.service;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlDeleteStatement;
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -33,7 +29,7 @@ import java.util.*;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -109,11 +105,6 @@ public class SqlService {
                               final AdminVo adminVo,
                               String singleSql,
                               final Integer limit) throws Exception {
-        if (!adminVo.getRole().getSuperAdmin()) {
-            final List<SQLStatement> sqlStatementList = SqlTool.analyseMySql(singleSql);
-            final SQLSelectStatement sqlSelectStatement = (SQLSelectStatement) sqlStatementList.get(0);
-            final String tableName = sqlSelectStatement.getSelect().getQueryBlock().getFrom().toString();
-        }
         final DataTableVo result = new DataTableVo();
         final List<String> columnNameList = new ArrayList<>();
         final List<List<String>> valueList = new ArrayList<>();
@@ -161,11 +152,6 @@ public class SqlService {
     public DataTableVo insert(final String ip,
                               final AdminVo adminVo,
                               final String singleSql) throws Exception {
-        if (!adminVo.getRole().getSuperAdmin()) {
-            final List<SQLStatement> sqlStatementList = SqlTool.analyseMySql(singleSql);
-            final MySqlInsertStatement insertStatement = (MySqlInsertStatement) sqlStatementList.get(0);
-            final String tableName = insertStatement.getTableName().getSimpleName();
-        }
         final DataTableVo result = new DataTableVo();
         final List<String> columnNameList = new ArrayList<>();
         final List<List<String>> valueList = new ArrayList<>();
@@ -192,12 +178,6 @@ public class SqlService {
     public DataTableVo update(final String ip,
                               final AdminVo adminVo,
                               final String singleSql) throws Exception {
-        if (!adminVo.getRole().getSuperAdmin()) {
-            final List<SQLStatement> sqlStatementList = SqlTool.analyseMySql(singleSql);
-            final MySqlUpdateStatement updateStatement = (MySqlUpdateStatement) sqlStatementList.get(0);
-            final String tableName = updateStatement.getTableName().getSimpleName();
-        }
-
         final DataTableVo result = new DataTableVo();
         final List<String> columnNameList = new ArrayList<>();
         final List<List<String>> valueList = new ArrayList<>();
@@ -224,12 +204,6 @@ public class SqlService {
     public DataTableVo delete(final String ip,
                               final AdminVo adminVo,
                               final String singleSql) throws Exception {
-        if (!adminVo.getRole().getSuperAdmin()) {
-            final List<SQLStatement> sqlStatementList = SqlTool.analyseMySql(singleSql);
-            final MySqlDeleteStatement mySqlDeleteStatement = (MySqlDeleteStatement) sqlStatementList.get(0);
-            final String tableName = mySqlDeleteStatement.getTableName().getSimpleName();
-        }
-
         final DataTableVo result = new DataTableVo();
         final List<String> columnNameList = new ArrayList<>();
         final List<List<String>> valueList = new ArrayList<>();

@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -128,13 +128,8 @@ public final class CrudService implements DisposableBean {
                                       final String sql,
                                       final Object... params) throws Exception {
         final int startIndex = (Math.max(pageNum, 1) - 1) * pageSize;
-        final String pageSql = String.format("SELECT * FROM (%s) crud_service_page LIMIT %s, %s",
-                sql,
-                startIndex,
-                pageSize);
-
         final List<T> records = this.select(cls, sql, params);
-        final Long total = this.executeScalar(Long.class, String.format("SELECT COUNT(*) FROM (%s) crud_service_count", sql), params);
+        final Long total = this.executeScalar(Long.class, String.format("SELECT COUNT(*) FROM (%s) crud_service_count LIMIT %s, %s", sql, startIndex, pageSize), params);
         final CrudPage<T> crudPage = new CrudPage<>();
         crudPage.setRecrods(records);
         crudPage.setTotal(total);
@@ -144,7 +139,7 @@ public final class CrudService implements DisposableBean {
 
     public final <T> T selectOne(final Class<T> cls, final String sql, final Object... params) throws Exception {
         final List<T> result = this.select(cls, sql, params);
-        if (null == result || result.isEmpty()) {
+        if (result.isEmpty()) {
             return null;
         } else if (result.size() > 1) {
             throw new RuntimeException("期待只获取一条记录, 但查出了多条符合条件的记录");
@@ -254,9 +249,7 @@ public final class CrudService implements DisposableBean {
                 final Map<String, Object> row = new HashMap<>();
                 for (final String columnLabel : columnLabelList) {
                     Object value = resultSet.getObject(columnLabel);
-                    if (null == value) {
-
-                    } else if (value.getClass().isAssignableFrom(Timestamp.class)) {
+                    if (null != value && value.getClass().isAssignableFrom(Timestamp.class)) {
                         value = DateTool.parse(resultSet.getString(columnLabel));
                     }
                     row.put(columnLabel, value);

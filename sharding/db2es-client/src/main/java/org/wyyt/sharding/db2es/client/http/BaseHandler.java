@@ -42,7 +42,7 @@ import java.util.*;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public abstract class BaseHandler implements HttpAsyncRequestHandler<HttpRequest> {
@@ -100,7 +100,7 @@ public abstract class BaseHandler implements HttpAsyncRequestHandler<HttpRequest
                 if (null != method) {
                     try {
                         final Object invoke = method.invoke(this, new Param(getMap, postMap));
-                        final Result result = (Result) invoke;
+                        final Result<?> result = (Result<?>) invoke;
                         response.setStatusCode(HttpStatus.SC_OK);
                         response.setEntity(stringEntity(JSON.toJSONString(result)));
                     } catch (final Exception e) {

@@ -31,6 +31,7 @@
     </div>
     <script>
         layui.config({base: '../../..${ctx}/layuiadmin/'}).extend({index: 'lib/index'}).use(['index', 'form'], function () {
+            parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
         });
     </script>
     </body>

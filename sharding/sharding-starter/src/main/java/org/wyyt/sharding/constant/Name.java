@@ -5,10 +5,10 @@ package org.wyyt.sharding.constant;
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
- * ******************************************************************
- * Name               Action            Time          Description   *
- * Ning.Zhang       Initialize         10/1/2020        Initialize  *
- * ******************************************************************
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
  */
 public final class Name {
     public static final String FIELD_PRIMARY_KEY = "id";

@@ -15,14 +15,14 @@ import javax.sql.DataSource;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020       Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Configuration
 public class DataSourceConfig {
     private final PropertyConfig propertyConfig;
 
-    public DataSourceConfig(PropertyConfig propertyConfig) {
+    public DataSourceConfig(final PropertyConfig propertyConfig) {
         this.propertyConfig = propertyConfig;
     }
 
@@ -36,8 +36,8 @@ public class DataSourceConfig {
                 this.propertyConfig.getDbName(),
                 this.propertyConfig.getDbUid(),
                 this.propertyConfig.getDbPwd(),
-                10,
-                30
+                this.propertyConfig.getDbMinIdle(),
+                this.propertyConfig.getDbMaximum()
         );
     }
 }

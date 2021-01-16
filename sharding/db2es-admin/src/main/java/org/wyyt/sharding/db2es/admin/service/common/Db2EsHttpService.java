@@ -17,7 +17,7 @@ import java.util.*;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -62,7 +62,7 @@ public class Db2EsHttpService extends BaseDb2EsService {
     }
 
     public Boolean refreshDbConfig() throws Exception {
-        final Map<NodeVo, List<Boolean>> nodeVoListMap = postToAllLeader(REFRESH_DB_CONFIG, null, Boolean.class);
+        postToAllLeader(REFRESH_DB_CONFIG, null, Boolean.class);
         return true;
     }
 
@@ -92,8 +92,8 @@ public class Db2EsHttpService extends BaseDb2EsService {
         final Map<String, Object> params = new HashMap<>();
         params.put("topicName", topicName);
         params.put("partition", 0);
-        params.put("offset", "");
-        params.put("timestamp", "");
+        params.put("offset", offset);
+        params.put("timestamp", timestamp);
         postToTopic(topicName, START_TOPIC, params, Void.class);
     }
 

@@ -22,7 +22,7 @@ import java.util.Calendar;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -83,7 +83,7 @@ public class IndexController {
     public Result<?> repwd(final AdminVo adminVo,
                            @RequestParam(name = "oldPassword") final String oldPassword,
                            @RequestParam(name = "password") final String password) throws Exception {
-        if (sysAdminService.changePassword(adminVo.getId(), oldPassword, password)) {
+        if (this.sysAdminService.changePassword(adminVo.getId(), oldPassword, password)) {
             return Result.ok();
         }
         return Result.error("密码修改失败");

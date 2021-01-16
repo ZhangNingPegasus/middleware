@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -60,25 +60,21 @@ public class AuthServiceImpl extends AuthService {
     }
 
     @TranSave
-    public void del(final List<Long> authIds) throws Exception {
-        if (authIds.isEmpty()) {
+    public void del(final Long appId,
+                    final Set<Long> apiIdSet) throws Exception {
+        if (apiIdSet.isEmpty()) {
             return;
         }
-        final List<Auth> authList = new ArrayList<>(authIds.size());
-        for (final Long authId : authIds) {
-            final Auth auth = this.getById(authId);
+        final List<Auth> authList = new ArrayList<>(apiIdSet.size());
+        for (final Long apiId : apiIdSet) {
+            final Auth auth = this.getByAppIdAndApiId(appId, apiId);
             if (null != auth) {
                 authList.add(auth);
             }
         }
-
         if (!authList.isEmpty()) {
-            final Set<Long> ids = authList.stream().map(BaseDto::getId).collect(Collectors.toSet());
-            this.removeByIds(ids);
-            final Set<Long> appIds = authList.stream().map(Auth::getAppId).collect(Collectors.toSet());
-            for (final Long appId : appIds) {
-                this.removeRedis(appId);
-            }
+            this.removeByIds(authList.stream().map(BaseDto::getId).collect(Collectors.toSet()));
+            this.removeRedis(appId);
         }
     }
 

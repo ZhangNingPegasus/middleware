@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -73,7 +73,7 @@ public final class ProcessorWrapper implements Closeable {
         }
     }
 
-    public final boolean stopAll() throws InterruptedException {
+    public final void stopAll() throws InterruptedException {
         if (!this.processorMap.isEmpty()) {
             final List<TopicPartition> needRemove = new ArrayList<>(this.processorMap.size());
             final CountDownLatch cdl = new CountDownLatch(this.processorMap.size());
@@ -97,14 +97,14 @@ public final class ProcessorWrapper implements Closeable {
                 this.processorMap.remove(topicPartition);
             }
         }
-        return 0 == this.processorMap.size();
+        this.processorMap.size();
     }
 
-    public final Processor startTopic(final TopicPartition topicPartition,
-                                      @Nullable final CheckpointExt checkpoint,
-                                      final RecordListener recordListener) throws Exception {
+    public final void startTopic(final TopicPartition topicPartition,
+                                 @Nullable final CheckpointExt checkpoint,
+                                 final RecordListener recordListener) throws Exception {
         if (this.isClosed.get()) {
-            return null;
+            return;
         }
 
         if (!this.context.getConfig().getTopicMap().containsKey(topicPartition.topic())) {
@@ -149,7 +149,6 @@ public final class ProcessorWrapper implements Closeable {
         result.setConsumerThread(new WorkerThread(consumerRunner, String.format("thread-consumer-for-topic-%s", consumerRunner.getRecordRunner().getTopicPartition())));
         this.processorMap.put(topicPartition, result);
         result.start();
-        return result;
     }
 
     public final void stopTopic(final TopicPartition topicPartition) throws InterruptedException {

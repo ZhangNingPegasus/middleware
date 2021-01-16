@@ -14,7 +14,7 @@ import org.wyyt.tool.rpc.Result;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @RestController
@@ -30,7 +30,6 @@ public class ClientTokenController {
                                                 @RequestParam("clientSecret") final String clientSecret) throws Exception {
         return Result.ok(this.clientTokenService.getClientCredentialsToken(clientId, clientSecret));
     }
-
 
     @PostMapping("/v1/oauth/logout")
     public Result<?> removeToken(@RequestParam("clientId") final String clientId,

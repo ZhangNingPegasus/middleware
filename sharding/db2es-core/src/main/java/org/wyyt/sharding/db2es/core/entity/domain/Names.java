@@ -7,7 +7,7 @@ package org.wyyt.sharding.db2es.core.entity.domain;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public final class Names {
@@ -71,10 +71,6 @@ public final class Names {
      * ElasticSearch的密码
      */
     public static final String ELASTICSEARCH_PASSWORD = "encrypt.elasticsearch.password";
-    /**
-     * 创建索时, 主分片的个数
-     */
-    public static final String ELASTICSEARCH_NUMBER_OF_SHARDS = "elasticsearch.numberOfShards";
     /**
      * 用于同步失败记录异常数据库的地址
      */

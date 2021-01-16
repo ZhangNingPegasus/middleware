@@ -26,13 +26,11 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
 public final class RecordRunner extends BaseRunner {
-    private static final int TRY_TIME = 150;
-    private static final long INTERVAL = 100L;
     protected static final long TRY_BACK_TIME_MS = 10L * 1000L;
     private final KafkaService kafkaService;
     private final TopicRecordService topicRecordService;

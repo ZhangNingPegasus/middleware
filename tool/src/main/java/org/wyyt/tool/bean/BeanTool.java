@@ -7,19 +7,20 @@ import org.springframework.beans.BeanUtils;
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
- * ******************************************************************
- * Name               Action            Time          Description   *
- * Ning.Zhang       Initialize         10/1/2020        Initialize  *
- * ******************************************************************
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
  */
 public final class BeanTool {
-    public static <T> T copy(Object source, Class<T> target) {
+    public static <T> T copy(final Object source,
+                             final Class<T> target) {
         if (null == source) {
             return null;
         }
 
         try {
-            T result = target.newInstance();
+            final T result = target.newInstance();
             BeanUtils.copyProperties(source, result);
             return result;
         } catch (Exception e) {

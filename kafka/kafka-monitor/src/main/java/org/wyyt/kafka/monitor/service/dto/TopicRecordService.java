@@ -36,13 +36,12 @@ import java.util.stream.Collectors;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
 @Service
 public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicRecord> implements DisposableBean {
-    public static final String TABLE_PREFIX = "t_";
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAX_POOL_SIZE = 10;
     private final SysTableNameService sysTableNameService;
@@ -203,12 +202,6 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
     public void dropTable(final String recordTableName,
                           final String recordDetailTableName) {
         this.baseMapper.dropTable(recordTableName, recordDetailTableName);
-    }
-
-    @TranSave
-    public void truncateTable(final String recordTableName,
-                              final String recordDetailTableName) {
-        this.baseMapper.truncateTable(recordTableName, recordDetailTableName);
     }
 
     public void saveRecords(final Map<String, List<TopicRecord>> topicRecordMap,

@@ -24,14 +24,13 @@ import static org.wyyt.springcloud.gateway.controller.IgnoreUrlController.PREFIX
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
 @RequestMapping(PREFIX)
 public class IgnoreUrlController {
     public static final String PREFIX = "ignoreurl";
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final IgnoreUrlServiceImpl ignoreUrlServiceImpl;
 
     public IgnoreUrlController(final IgnoreUrlServiceImpl ignoreUrlServiceImpl) {

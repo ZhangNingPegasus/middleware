@@ -22,7 +22,7 @@ import static org.wyyt.sharding.db2es.core.entity.domain.Names.*;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public final class CommonUtils {
@@ -35,7 +35,7 @@ public final class CommonUtils {
     public static boolean isPortUsing(final String host, final int port) {
         try {
             final InetAddress Address = InetAddress.getByName(host);
-            final Socket socket = new Socket(Address, port);
+            new Socket(Address, port);
             return true;
         } catch (Exception ignored) {
             return false;

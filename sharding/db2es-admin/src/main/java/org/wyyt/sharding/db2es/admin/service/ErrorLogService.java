@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.sharding.db2es.admin.entity.dto.ErrorLog;
 import org.wyyt.sharding.db2es.admin.mapper.ErrorLogMapper;
-import org.wyyt.sharding.db2es.core.entity.domain.Config;
-import org.wyyt.sharding.anno.TranSave;
+import org.wyyt.tool.anno.TranSave;
 
 import java.util.Date;
 
@@ -18,18 +17,15 @@ import java.util.Date;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service
 public class ErrorLogService extends ServiceImpl<ErrorLogMapper, ErrorLog> {
     private final RepairService repairService;
-    private final PropertyService propertyService;
 
-    public ErrorLogService(final RepairService repairService,
-                           final PropertyService propertyService) {
+    public ErrorLogService(final RepairService repairService) {
         this.repairService = repairService;
-        this.propertyService = propertyService;
     }
 
     @TranSave
@@ -38,7 +34,6 @@ public class ErrorLogService extends ServiceImpl<ErrorLogMapper, ErrorLog> {
         if (null == errorLog) {
             return;
         }
-        final Config config = propertyService.getConfig();
         final String databaseName = errorLog.getDatabaseName();
         final String tableName = errorLog.getTableName();
         final String topicName = errorLog.getTopicName();
@@ -56,12 +51,12 @@ public class ErrorLogService extends ServiceImpl<ErrorLogMapper, ErrorLog> {
     }
 
     @TranSave
-    public boolean resolve(final Long errorLogId) {
+    public void resolve(final Long errorLogId) {
         final UpdateWrapper<ErrorLog> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda()
                 .eq(ErrorLog::getId, errorLogId)
                 .set(ErrorLog::getIsResolved, true);
-        return this.update(updateWrapper);
+        this.update(updateWrapper);
     }
 
     @TranSave

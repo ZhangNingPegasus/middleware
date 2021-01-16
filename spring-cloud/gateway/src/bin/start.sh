@@ -10,7 +10,7 @@ cd ..
 BASE_PATH=$(pwd)
 CONFIG_DIR=${BASE_PATH}"/config/"
 
-LOG_DIR="/wyyt/logs/springcloud/${APPLICATION}"
+LOG_DIR="/wyyt/logs/springcloud/gateway/${APPLICATION}"
 LOGS_HEAPDUMP="${LOG_DIR}/heapdump"
 
 STARTUP_LOG="================================================ $(date +'%Y-%m-%m %H:%M:%S') ================================================\n"

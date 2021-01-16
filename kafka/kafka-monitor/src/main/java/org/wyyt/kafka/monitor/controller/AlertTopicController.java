@@ -21,7 +21,7 @@ import java.util.List;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -47,7 +47,6 @@ public class AlertTopicController {
 
     @GetMapping("toadd")
     public String toAdd(final Model model) throws Exception {
-        final List<String> topicNameList = this.sysAlertTopicService.listTopicNames();
         final List<String> allTopicNameList = this.kafkaService.listTopicNames();
         final SysDingDingConfig sysDingDingConfig = this.sysDingDingConfigService.get();
 

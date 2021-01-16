@@ -53,7 +53,7 @@ import static org.wyyt.sharding.db2es.core.util.CommonUtils.OBJECT_MAPPER;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public final class ElasticSearchUtils {
@@ -300,9 +300,9 @@ public final class ElasticSearchUtils {
         return indexName;
     }
 
-    public static boolean removeAlias(final RestHighLevelClient restHighLevelClient,
-                                      final String indexName,
-                                      final String alias) throws Exception {
+    public static void removeAlias(final RestHighLevelClient restHighLevelClient,
+                                   final String indexName,
+                                   final String alias) throws Exception {
         if (exists(restHighLevelClient, indexName)) {
             final IndicesAliasesRequest request = new IndicesAliasesRequest();
             final IndicesAliasesRequest.AliasActions aliasAction =
@@ -311,9 +311,7 @@ public final class ElasticSearchUtils {
                             .alias(alias);
             request.addAliasAction(aliasAction);
             final AcknowledgedResponse response = restHighLevelClient.indices().updateAliases(request, RequestOptions.DEFAULT);
-            return response.isAcknowledged();
         }
-        return true;
     }
 
     public static boolean createIndexIfNotExists(final RestHighLevelClient restHighLevelClient,

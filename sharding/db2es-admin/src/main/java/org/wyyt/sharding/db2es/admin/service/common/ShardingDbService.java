@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -40,7 +40,6 @@ public class ShardingDbService implements DisposableBean {
     public Map<String, Object> getByIdValue(final String logicTableName,
                                             final String shardingValue,
                                             final String id) throws Exception {
-        final String shardingColumn = this.shardingService.listShardingColumns(logicTableName).iterator().next();
         final ShardingResult shardingResult = this.shardingService.doSharding(logicTableName, shardingValue);
         return getById(shardingResult.getDatabaseName(), shardingResult.getTableName(), id);
     }
@@ -181,10 +180,5 @@ public class ShardingDbService implements DisposableBean {
             }
         }
         return null;
-    }
-
-    private int getDataSourceIndex(final String datasourceName) {
-        final int i = datasourceName.lastIndexOf('_');
-        return Integer.parseInt(datasourceName.substring(i + 1));
     }
 }

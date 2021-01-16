@@ -1,6 +1,6 @@
 #!/bin/bash
-Xms=4G
-Xmx=4G
+Xms=2G
+Xmx=2G
 Xmn=1G
 APPLICATION="@project.name@"
 APPLICATION_JAR="@build.finalName@.jar"
@@ -10,7 +10,7 @@ cd ..
 BASE_PATH=$(pwd)
 CONFIG_DIR=${BASE_PATH}"/config/"
 
-LOG_DIR="/wyyt/logs/springcloud/${APPLICATION}"
+LOG_DIR="/wyyt/logs/kafka-monitor/${APPLICATION}"
 LOGS_HEAPDUMP="${LOG_DIR}/heapdump"
 
 STARTUP_LOG="================================================ $(date +'%Y-%m-%m %H:%M:%S') ================================================\n"

@@ -152,7 +152,6 @@
                                 }, function (result) {
                                     table.reload('grid');
                                     admin.error(admin.OPT_FAILURE, result.error);
-                                    layer.close(index);
                                 });
                             });
                             submit.trigger('click');

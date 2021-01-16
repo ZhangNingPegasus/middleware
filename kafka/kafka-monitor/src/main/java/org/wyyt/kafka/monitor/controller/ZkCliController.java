@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -49,7 +49,7 @@ public class ZkCliController {
                     return Result.ok(result.toString());
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return Result.error(ExceptionTool.getRootCauseMessage(e));
         }
         return Result.error();
@@ -61,7 +61,7 @@ public class ZkCliController {
                                   @RequestParam(name = "type") final String type) {
         try {
             return Result.ok(this.kafkaZkService.execute(command, type));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return Result.error(ExceptionTool.getRootCauseMessage(e));
         }
     }

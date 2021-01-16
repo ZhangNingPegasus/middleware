@@ -17,7 +17,7 @@ import java.util.*;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -65,8 +65,8 @@ public class TreeService {
         return result;
     }
 
-    private List<TreeVo> populateLeafNodes(final List<TreeVo> source,
-                                           final List<TreeVo> result) {
+    private void populateLeafNodes(final List<TreeVo> source,
+                                   final List<TreeVo> result) {
         for (final TreeVo treeVo : source) {
             if (null != treeVo.getChildren() && !treeVo.getChildren().isEmpty()) {
                 populateLeafNodes(treeVo.getChildren(), result);
@@ -74,7 +74,6 @@ public class TreeService {
                 result.add(treeVo);
             }
         }
-        return result;
     }
 
     private void fillDataSource(final TreeVo treeVo) {

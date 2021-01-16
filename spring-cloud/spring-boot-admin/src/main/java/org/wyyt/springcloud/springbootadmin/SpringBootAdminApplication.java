@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @EnableScheduling
@@ -23,7 +23,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableDiscoveryClient
 @EnableApolloConfig
 public class SpringBootAdminApplication {
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(SpringBootAdminApplication.class, args);
     }
 }

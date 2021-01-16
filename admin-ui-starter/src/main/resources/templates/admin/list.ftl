@@ -111,7 +111,6 @@
                                     layer.close(index);
                                 }, function (result) {
                                     admin.error(admin.OPT_FAILURE, result.error);
-                                    layer.close(index);
                                 });
                             });
                             submit.trigger('click');

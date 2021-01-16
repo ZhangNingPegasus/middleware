@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.wyyt.sharding.anno.TranRead;
-import org.wyyt.sharding.anno.TranSave;
+import org.wyyt.tool.anno.TranRead;
+import org.wyyt.tool.anno.TranSave;
 import org.wyyt.sharding.db2es.admin.mapper.TopicMapper;
 import org.wyyt.sharding.db2es.core.entity.persistent.Topic;
 
@@ -20,7 +20,7 @@ import java.util.Map;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -59,27 +59,16 @@ public class TopicService extends ServiceImpl<TopicMapper, Topic> {
     @TranRead
     public Topic getByName(final String topicName) {
         final QueryWrapper<Topic> queryWrapper = new QueryWrapper<>();
-        LambdaQueryWrapper<Topic> eq = queryWrapper.lambda()
+        queryWrapper.lambda()
                 .eq(Topic::getName, topicName);
         return this.getOne(queryWrapper);
     }
 
-    @TranRead
-    public String getMapping(final Long topicId) {
-        final QueryWrapper<Topic> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Topic::getId, topicId).select(Topic::getMapping);
-        final Topic topic = this.getOne(queryWrapper);
-        if (null == topic) {
-            return null;
-        }
-        return topic.getMapping();
-    }
-
     @TranSave
-    public boolean insertOrUpdate(final Topic newTopic) {
+    public void insertOrUpdate(final Topic newTopic) {
         final Topic dbTopic = getByName(newTopic.getName());
         if (null == dbTopic) {
-            return this.save(newTopic);
+            this.save(newTopic);
         } else {
             final UpdateWrapper<Topic> updateWrapper = new UpdateWrapper<>();
             updateWrapper.lambda()
@@ -90,16 +79,15 @@ public class TopicService extends ServiceImpl<TopicMapper, Topic> {
                     .set(Topic::getAliasOfYears, newTopic.getAliasOfYears())
                     .set(Topic::getMapping, newTopic.getMapping())
                     .set(Topic::getDescription, newTopic.getDescription());
-            return this.update(updateWrapper);
+            this.update(updateWrapper);
         }
     }
 
     @TranSave
-    public boolean insertIfNotExists(final Topic newTopic) {
+    public void insertIfNotExists(final Topic newTopic) {
         final Topic dbTopic = getByName(newTopic.getName());
         if (null == dbTopic) {
-            return this.save(newTopic);
+            this.save(newTopic);
         }
-        return true;
     }
 }

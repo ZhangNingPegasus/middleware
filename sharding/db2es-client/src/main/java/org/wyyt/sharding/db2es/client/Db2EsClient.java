@@ -7,7 +7,6 @@ import org.wyyt.sharding.db2es.client.boot.Boot;
 import org.wyyt.sharding.db2es.client.common.Context;
 import org.wyyt.sharding.db2es.core.entity.domain.Config;
 import org.wyyt.sharding.db2es.core.entity.domain.Names;
-import org.wyyt.tool.resource.ResourceTool;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +25,7 @@ import static org.wyyt.sharding.db2es.client.common.Constant.PROPERTIES_FILE_NAM
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j

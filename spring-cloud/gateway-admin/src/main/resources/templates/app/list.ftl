@@ -84,7 +84,7 @@
                     {field: 'clientId', title: 'Client Id', width: 300},
                     {field: 'clientSecret', title: 'Client Secret', width: 400},
                     {
-                        field: 'isAdmin', title: '是否管理员',align: 'center',
+                        field: 'isAdmin', title: '是否管理员', align: 'center',
                         templet: function (d) {
                             return d.isAdmin ? '<span class="layui-badge layui-bg-green"><b>是</b></span>' : '<span class="layui-badge layui-bg-green"><b>否</b></span>'
                         }, width: 100
@@ -115,7 +115,6 @@
                                     layer.close(index);
                                 }, function (result) {
                                     admin.error(admin.OPT_FAILURE, result.error);
-                                    layer.close(index);
                                 });
                             });
                             submit.trigger('click');

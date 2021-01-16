@@ -22,7 +22,7 @@ import java.util.List;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 public final class DatabaseComplexShardingAlgorithm extends AbstractComplextShardingAlgorithm implements ComplexKeysShardingAlgorithm<Long> {
@@ -31,7 +31,7 @@ public final class DatabaseComplexShardingAlgorithm extends AbstractComplextShar
     public final Collection<String> doSharding(final Collection<String> availableTargetNames,
                                                final ComplexKeysShardingValue<Long> shardingValue) {
         final List<String> result = new ArrayList<>();
-        super.sharding(availableTargetNames, shardingValue, (value, databaseNumCount, tableCount, dimensionInfo, datasourceNames) -> {
+        super.sharding(shardingValue, (value, databaseNumCount, tableCount, dimensionInfo, datasourceNames) -> {
             final long remainder = MathsTool.doDatabaseSharding(value, databaseNumCount, tableCount);
             result.add(datasourceNames.get((int) remainder));
         });

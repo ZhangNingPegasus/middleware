@@ -9,10 +9,10 @@ import java.util.Date;
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
- * ******************************************************************
- * Name               Action            Time          Description   *
- * Ning.Zhang       Initialize         10/1/2020        Initialize  *
- * ******************************************************************
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
  */
 public final class DateTool {
     public static Date parse(final String value) {

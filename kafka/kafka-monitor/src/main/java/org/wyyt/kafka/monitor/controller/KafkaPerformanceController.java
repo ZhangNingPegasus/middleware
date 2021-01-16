@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -87,9 +87,9 @@ public class KafkaPerformanceController {
         return Result.ok(result);
     }
 
-    private LineInfo getInfo(List<SysKpi> sysKpiList, SysKpi.KAFKA_KPI kpi) {
+    private LineInfo getInfo(final List<SysKpi> sysKpiList,
+                             final SysKpi.KAFKA_KPI kpi) {
         final LineInfo result = new LineInfo();
-
         final List<String> times = sysKpiList.stream().map(p -> DateTool.format(p.getCollectTime())).distinct().collect(Collectors.toList());
         result.setTimes(times);
         final List<Series> seriesList = new ArrayList<>(1);
@@ -98,14 +98,12 @@ public class KafkaPerformanceController {
         series.setType("line");
         series.setSmooth(true);
         series.setAreaStyle(new JSONObject());
-
         final List<Double> data = new ArrayList<>(result.getTimes().size());
         final List<Double> val = sysKpiList.stream().filter(p -> p.getKpi().equals(kpi.getCode())).map(SysKpi::getValue).collect(Collectors.toList());
         data.addAll(val);
         series.setData(data);
         seriesList.add(series);
         result.setSeries(seriesList);
-
         return result;
     }
 }

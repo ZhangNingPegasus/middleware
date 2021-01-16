@@ -22,7 +22,7 @@ import java.util.*;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -35,10 +35,6 @@ public class SysPageService {
 
     public SysPage getById(final Long id) throws Exception {
         return this.crudService.selectOne(SysPage.class, "SELECT * FROM `sys_page` WHERE `id`=?", id);
-    }
-
-    public SysPage getByName(final String name) throws Exception {
-        return this.crudService.selectOne(SysPage.class, "SELECT * FROM `sys_page` WHERE `name`=?", name);
     }
 
     public List<SysPage> getEmptyUrl() throws Exception {
@@ -94,7 +90,7 @@ public class SysPageService {
         return this.crudService.select(SysPage.class, "SELECT * FROM `sys_page` WHERE `url`!='' ORDER BY `name` ASC");
     }
 
-    public List<PageVo> listPermissionPages(Long adminId) throws Exception {
+    public List<PageVo> listPermissionPages(final Long adminId) throws Exception {
         return this.crudService.select(PageVo.class,
                 "SELECT" +
                         " `page`.`id`," +

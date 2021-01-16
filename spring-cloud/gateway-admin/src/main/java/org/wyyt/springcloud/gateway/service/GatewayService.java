@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -156,7 +156,7 @@ public class GatewayService {
     }
 
     public List<URI> getAvaiableServiceUris(final String serviceId) throws Exception {
-        final ServiceVo serviceVo = this.getService(this.propertyConfig.getGatewayConsulName(), true);
+        final ServiceVo serviceVo = this.getService(serviceId, true);
         if (null == serviceVo) {
             return null;
         }
@@ -176,7 +176,7 @@ public class GatewayService {
 
     public URI getAvaiableServiceUri(final String serviceId) throws Exception {
         final List<URI> avaiableServiceUris = this.getAvaiableServiceUris(serviceId);
-        if (avaiableServiceUris.isEmpty()) {
+        if (null == avaiableServiceUris || avaiableServiceUris.isEmpty()) {
             return null;
         }
         return avaiableServiceUris.get(RandomUtils.nextInt(0, avaiableServiceUris.size()));

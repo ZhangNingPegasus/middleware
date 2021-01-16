@@ -27,10 +27,10 @@ import java.util.concurrent.TimeUnit;
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
- * ******************************************************************
- * Name               Action            Time          Description   *
- * Ning.Zhang       Initialize         10/1/2020        Initialize  *
- * ******************************************************************
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * *****************************************************************
  */
 @Slf4j
 @Component
@@ -112,7 +112,7 @@ public class DingTalkNotifier extends AbstractEventNotifier {
                     isOk = true;
                 }
             }
-            if (!ObjectUtils.isEmpty(content) && null != isOk) {
+            if (!ObjectUtils.isEmpty(content)) {
                 final Message message = new Message();
                 message.setMsgtype("text");
 

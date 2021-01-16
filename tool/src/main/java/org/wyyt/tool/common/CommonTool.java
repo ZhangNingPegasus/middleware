@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -28,7 +28,6 @@ public final class CommonTool {
     private final static long GB_IN_BYTES = 1024 * MB_IN_BYTES;
     private final static long TB_IN_BYTES = 1024 * GB_IN_BYTES;
     private final static long PB_IN_BYTES = 1024 * TB_IN_BYTES;
-    private final static long EB_IN_BYTES = 1024 * PB_IN_BYTES;
     private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
 
     public static void sleep(final long milliseconds) {

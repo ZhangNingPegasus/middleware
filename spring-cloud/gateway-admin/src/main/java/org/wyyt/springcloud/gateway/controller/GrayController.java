@@ -27,7 +27,7 @@ import static org.wyyt.springcloud.gateway.controller.GrayController.PREFIX;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        10/1/2020        Initialize  *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -50,7 +50,7 @@ public class GrayController {
     }
 
     @GetMapping("toadd")
-    public String toAdd(final Model model) {
+    public String toAdd() {
         return String.format("%s/%s", PREFIX, "add");
     }
 
@@ -70,7 +70,7 @@ public class GrayController {
     }
 
     @GetMapping("toglobalinspect")
-    public String toGlobalInspect(final Model model) {
+    public String toGlobalInspect() {
         return String.format("%s/%s", PREFIX, "globalinspect");
     }
 

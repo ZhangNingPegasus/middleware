@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -75,7 +75,7 @@ public class ZkPerformanceController {
             result.setReceived(getInfo(sysKpiList, SysKpi.ZK_KPI.ZK_PACKETS_RECEIVED));
             result.setAlive(getInfo(sysKpiList, SysKpi.ZK_KPI.ZK_NUM_ALIVE_CONNECTIONS));
             result.setQueue(getInfo(sysKpiList, SysKpi.ZK_KPI.ZK_OUTSTANDING_REQUESTS));
-            ehcacheService.put(key, result);
+            this.ehcacheService.put(key, result);
         }
         return Result.ok(result);
     }

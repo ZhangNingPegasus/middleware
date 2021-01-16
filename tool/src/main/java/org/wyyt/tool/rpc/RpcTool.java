@@ -29,7 +29,7 @@ import java.util.Map;
  * <p>
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize         10/1/2020      Initialize   *
+ * Ning.Zhang       Initialize       01/01/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -37,8 +37,6 @@ public class RpcTool {
     private static final Integer CONNECTION_TIMEOUT = 30000;
     private static final Integer REQUEST_TIMEOUT = 30000;
     private static final Integer SOCKET_TIMEOUT = 30000;
-    private CloseableHttpClient httpClient;
-    private CloseableHttpClient httpsClient;
 
     public String get(final String url) throws Exception {
         if (url.toLowerCase().startsWith("https:")) {
