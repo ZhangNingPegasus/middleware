@@ -15,10 +15,10 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.lang.Nullable;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.resource.ResourceTool;
 
-import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.Map;
  * *****************************************************************
  */
 @Slf4j
-public class RpcTool {
+public class RpcService {
     private static final Integer CONNECTION_TIMEOUT = 30000;
     private static final Integer REQUEST_TIMEOUT = 30000;
     private static final Integer SOCKET_TIMEOUT = 30000;

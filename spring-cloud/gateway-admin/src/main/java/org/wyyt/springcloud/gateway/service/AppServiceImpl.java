@@ -88,8 +88,6 @@ public class AppServiceImpl extends AppService {
     }
 
     private void removeRedis(final String clientId) throws Exception {
-        this.redisService.del(Names.getAppOfClientId(clientId));
-        this.redisService.del(Names.getApiListOfClientIdKey(clientId));
-        this.gatewayService.removeClientIdLocalCache(clientId);
+        this.gatewayService.clearAllCache(clientId);
     }
 }

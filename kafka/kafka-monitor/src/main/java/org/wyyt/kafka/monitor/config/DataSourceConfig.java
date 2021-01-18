@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.wyyt.tool.cache.CacheService;
 import org.wyyt.tool.db.DataSourceTool;
 
 import javax.sql.DataSource;
@@ -39,5 +40,12 @@ public class DataSourceConfig {
                 30,
                 60
         );
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
+    public CacheService cacheService() {
+        return new CacheService(10L, 128, 1024L);
     }
 }

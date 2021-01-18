@@ -13,7 +13,7 @@ import org.wyyt.sharding.db2es.core.entity.view.NodeVo;
 import org.wyyt.sharding.db2es.core.entity.view.TopicVo;
 import org.wyyt.sharding.db2es.core.exception.Db2EsException;
 import org.wyyt.tool.rpc.Result;
-import org.wyyt.tool.rpc.RpcTool;
+import org.wyyt.tool.rpc.RpcService;
 import org.wyyt.tool.rpc.SignTool;
 
 import javax.annotation.Nullable;
@@ -44,7 +44,7 @@ public abstract class BaseDb2EsService {
     @Autowired
     private ZooKeeperService zooKeeperService;
     @Autowired
-    private RpcTool rpcTool;
+    private RpcService rpcService;
 
     public List<NodeVo> listDd2Es() throws Exception {
         final Set<NodeVo> leaderVoSet = this.refreshLeaderVoSet();
@@ -156,7 +156,7 @@ public abstract class BaseDb2EsService {
         }
         headers.put("sign", SignTool.sign(params, Names.API_KEY, Names.API_IV));
 
-        final String responseText = this.rpcTool.post(url, params, headers);
+        final String responseText = this.rpcService.post(url, params, headers);
 
         if (ObjectUtils.isEmpty(responseText)) {
             throw new Db2EsException(String.format("接口[%s]无法响应, 请检查该主机上db2es-client的运行状态", url));

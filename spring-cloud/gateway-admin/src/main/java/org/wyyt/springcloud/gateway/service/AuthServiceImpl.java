@@ -3,7 +3,6 @@ package org.wyyt.springcloud.gateway.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 import org.wyyt.springcloud.gateway.entity.anno.TranSave;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.Auth;
 import org.wyyt.springcloud.gateway.entity.entity.base.BaseDto;
@@ -113,11 +112,10 @@ public class AuthServiceImpl extends AuthService {
         this.removeRedis(this.appService.getById(appId));
     }
 
-    private void removeRedis(App app) throws Exception {
+    private void removeRedis(final App app) throws Exception {
         if (null == app) {
             return;
         }
-        this.redisService.del(Names.getApiListOfClientIdKey(app.getClientId()));
-        this.gatewayService.removeClientIdLocalCache(app.getClientId());
+        this.gatewayService.clearAllCache(app.getClientId());
     }
 }

@@ -10,7 +10,7 @@ import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 import org.wyyt.springcloud.gateway.entity.service.ApiService;
 import org.wyyt.tool.exception.ExceptionTool;
-import org.wyyt.tool.rpc.RpcTool;
+import org.wyyt.tool.rpc.RpcService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +28,12 @@ import java.util.List;
 @Slf4j
 @Service
 public class ApiLoadService {
-    private final RpcTool rpcTool;
+    private final RpcService rpcService;
     private final ApiService apiService;
 
-    public ApiLoadService(final RpcTool rpcTool,
+    public ApiLoadService(final RpcService rpcService,
                           final ApiService apiService) {
-        this.rpcTool = rpcTool;
+        this.rpcService = rpcService;
         this.apiService = apiService;
     }
 
@@ -46,7 +46,7 @@ public class ApiLoadService {
             int tryTimes = 0;
             String text = "";
             while (ObjectUtils.isEmpty(text)) {
-                text = this.rpcTool.post(String.format("%s/%s", serviceUrl, Names.API_DOCS));
+                text = this.rpcService.post(String.format("%s/%s", serviceUrl, Names.API_DOCS));
                 Thread.sleep(100);
                 tryTimes++;
                 if (tryTimes >= 10) {

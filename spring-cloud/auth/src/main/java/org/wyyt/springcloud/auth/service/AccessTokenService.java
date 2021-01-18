@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.redis.service.RedisService;
 import org.wyyt.springcloud.auth.config.PropertyConfig;
-import org.wyyt.springcloud.auth.entity.AccessToken;
 import org.wyyt.springcloud.exception.BusinessException;
 import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.enums.GrantType;
+import org.wyyt.springcloud.gateway.entity.entity.vo.AccessToken;
 import org.wyyt.springcloud.gateway.entity.service.AppService;
-import org.wyyt.tool.rpc.RpcTool;
+import org.wyyt.tool.rpc.RpcService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,16 +30,16 @@ import java.util.Map;
 @Slf4j
 @Service
 public class AccessTokenService {
-    private final RpcTool rpcTool;
+    private final RpcService rpcService;
     private final PropertyConfig propertyConfig;
     private final AppService appService;
     private final RedisService redisService;
 
-    public AccessTokenService(final RpcTool rpcTool,
+    public AccessTokenService(final RpcService rpcService,
                               final PropertyConfig propertyConfig,
                               final AppService appService,
                               final RedisService redisService) {
-        this.rpcTool = rpcTool;
+        this.rpcService = rpcService;
         this.propertyConfig = propertyConfig;
         this.appService = appService;
         this.redisService = redisService;
@@ -56,13 +56,12 @@ public class AccessTokenService {
         params.put(Names.CLIENT_SECRET, clientSecret);
 
         params.put(Names.GRANT_TYPE, GrantType.CLIENT_CREDENTIALS.getCode());
-        final String response = this.rpcTool.post(String.format("http://localhost:%s/%s", this.propertyConfig.getServerPort(), Names.OAUTH_TOKEN), params);
+        final String response = this.rpcService.post(String.format("http://localhost:%s/%s", this.propertyConfig.getServerPort(), Names.OAUTH_TOKEN), params);
         final Map<String, Object> map = JSON.parseObject(response, Map.class);
         if (map.containsKey("error")) {
             throw new BusinessException(response);
         }
         final AccessToken result = new AccessToken();
-        result.setAppId(app.getId());
         result.setAccessToken(map.get(Names.ACCESS_TOKEN).toString());
         result.setExpiresTime(Long.parseLong(map.get(Names.EXPIRES_IN).toString()));  //单位:秒
         this.redisService.set(Names.getAccessTokenRedisKey(clientId), result.getAccessToken(), result.getExpiresTime() * 1000);

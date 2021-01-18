@@ -15,11 +15,16 @@ server:
   port: 1000
 
 spring:
+  servlet:
+    multipart:
+      # 文件上传大小配置
+      max-request-size: 100MB
+      max-file-size: 10MB
   application:
     name: @project.artifactId@
     group: @project.artifactId@
-    # 版本号, 使用发布的时间作为版本号, 精确到分钟, 格式: yyyyMMddHHmmss
-    version: 20210101010100
+    # 版本号, 使用发布的时间作为版本号, 精确到分钟, 格式: yyyyMMddHHmm
+    version: 202101181606
     strategy:
       scan:
         # 指定对业务RestController类的扫描路径。此项配置作用于RPC方式的调用拦截、消费端的服务隔离和调用链三项功能

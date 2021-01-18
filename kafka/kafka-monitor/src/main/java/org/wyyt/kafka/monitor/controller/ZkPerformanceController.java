@@ -10,9 +10,9 @@ import org.wyyt.kafka.monitor.entity.echarts.LineInfo;
 import org.wyyt.kafka.monitor.entity.echarts.Series;
 import org.wyyt.kafka.monitor.entity.po.TimeRange;
 import org.wyyt.kafka.monitor.entity.po.ZooKeeperPerformance;
-import org.wyyt.kafka.monitor.service.common.EhcacheService;
 import org.wyyt.kafka.monitor.service.dto.SysKpiService;
 import org.wyyt.kafka.monitor.util.CommonUtil;
+import org.wyyt.tool.cache.CacheService;
 import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.rpc.Result;
 
@@ -44,14 +44,14 @@ public class ZkPerformanceController {
 
     private final PropertyConfig propertyConfig;
     private final SysKpiService sysKpiService;
-    private final EhcacheService ehcacheService;
+    private final CacheService cacheService;
 
     public ZkPerformanceController(final PropertyConfig propertyConfig,
                                    final SysKpiService sysKpiService,
-                                   final EhcacheService ehcacheService) {
+                                   final CacheService cacheService) {
         this.propertyConfig = propertyConfig;
         this.sysKpiService = sysKpiService;
-        this.ehcacheService = ehcacheService;
+        this.cacheService = cacheService;
     }
 
     @GetMapping("tolist")
@@ -64,7 +64,7 @@ public class ZkPerformanceController {
     @ResponseBody
     public Result<ZooKeeperPerformance> getChart(@RequestParam(name = "createTimeRange") final String createTimeRange) {
         final String key = String.format("ZkPerformanceController::getChart::%s", createTimeRange);
-        ZooKeeperPerformance result = this.ehcacheService.get(key);
+        ZooKeeperPerformance result = this.cacheService.get(key);
         if (result == null) {
             result = new ZooKeeperPerformance();
             TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
@@ -75,7 +75,7 @@ public class ZkPerformanceController {
             result.setReceived(getInfo(sysKpiList, SysKpi.ZK_KPI.ZK_PACKETS_RECEIVED));
             result.setAlive(getInfo(sysKpiList, SysKpi.ZK_KPI.ZK_NUM_ALIVE_CONNECTIONS));
             result.setQueue(getInfo(sysKpiList, SysKpi.ZK_KPI.ZK_OUTSTANDING_REQUESTS));
-            this.ehcacheService.put(key, result);
+            this.cacheService.put(key, result);
         }
         return Result.ok(result);
     }

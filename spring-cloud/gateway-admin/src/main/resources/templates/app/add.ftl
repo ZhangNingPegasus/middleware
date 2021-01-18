@@ -10,7 +10,7 @@
          style="padding: 20px 30px 0 0;">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">Id</label>
+            <label class="layui-form-label" style="width: 90px">Client Id</label>
             <div class="layui-input-inline">
                 <input type="text" id="clientId" name="clientId" lay-verify="required" class="layui-input"
                        style="width: 740px"
@@ -19,7 +19,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">Secret</label>
+            <label class="layui-form-label" style="width: 90px">Client Secret</label>
             <div class="layui-input-inline">
                 <input type="text" id="clientSecret" name="clientSecret" lay-verify="required" class="layui-input"
                        style="width: 740px"
@@ -30,7 +30,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">应用名称</label>
+            <label class="layui-form-label" style="width: 90px">应用名称</label>
             <div class="layui-input-inline">
                 <input type="text" name="name" lay-verify="required" class="layui-input" style="width: 740px"
                        placeholder="请输入应用名称" autocomplete="off">
@@ -38,7 +38,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">是否管理员</label>
+            <label class="layui-form-label" style="width: 90px">是否管理员</label>
             <div class="layui-input-inline">
                 <input type="radio" name="isAdmin" value="true" title="是">
                 <input type="radio" name="isAdmin" value="false" title="否" checked>
@@ -46,7 +46,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">描述信息</label>
+            <label class="layui-form-label" style="width: 90px">描述信息</label>
             <div class="layui-input-inline">
                 <textarea name="description" placeholder="请输入描述信息" class="layui-textarea"
                           style="resize: none;width: 740px;height:300px"></textarea>

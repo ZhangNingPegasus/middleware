@@ -10,9 +10,9 @@ import org.wyyt.kafka.monitor.entity.echarts.LineInfo;
 import org.wyyt.kafka.monitor.entity.echarts.Series;
 import org.wyyt.kafka.monitor.entity.po.KafkaPerformance;
 import org.wyyt.kafka.monitor.entity.po.TimeRange;
-import org.wyyt.kafka.monitor.service.common.EhcacheService;
 import org.wyyt.kafka.monitor.service.dto.SysKpiService;
 import org.wyyt.kafka.monitor.util.CommonUtil;
+import org.wyyt.tool.cache.CacheService;
 import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.rpc.Result;
 
@@ -43,14 +43,14 @@ public class KafkaPerformanceController {
     }
 
     private final PropertyConfig propertyConfig;
-    private final EhcacheService ehcacheService;
+    private final CacheService cacheService;
     private final SysKpiService sysKpiService;
 
     public KafkaPerformanceController(final PropertyConfig propertyConfig,
-                                      final EhcacheService ehcacheService,
+                                      final CacheService cacheService,
                                       final SysKpiService sysKpiService) {
         this.propertyConfig = propertyConfig;
-        this.ehcacheService = ehcacheService;
+        this.cacheService = cacheService;
         this.sysKpiService = sysKpiService;
     }
 
@@ -64,7 +64,7 @@ public class KafkaPerformanceController {
     @ResponseBody
     public Result<KafkaPerformance> getZkSendChart(@RequestParam(name = "createTimeRange") final String createTimeRange) {
         final String key = String.format("KafkaPerformanceController::getZkSendChart::%s", createTimeRange);
-        KafkaPerformance result = ehcacheService.get(key);
+        KafkaPerformance result = this.cacheService.get(key);
         if (null == result) {
             result = new KafkaPerformance();
             final TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
@@ -82,7 +82,7 @@ public class KafkaPerformanceController {
             result.setReplicationBytesOut(getInfo(sysKpiList, SysKpi.KAFKA_KPI.KAFKA_REPLICATION_BYTES_OUT_PER_SEC));
             result.setReplicationBytesIn(getInfo(sysKpiList, SysKpi.KAFKA_KPI.KAFKA_REPLICATION_BYTES_IN_PER_SEC));
             result.setOsFreeMemory(getInfo(sysKpiList, SysKpi.KAFKA_KPI.KAFKA_OS_USED_MEMORY_PERCENTAGE));
-            ehcacheService.put(key, result);
+            this.cacheService.put(key, result);
         }
         return Result.ok(result);
     }

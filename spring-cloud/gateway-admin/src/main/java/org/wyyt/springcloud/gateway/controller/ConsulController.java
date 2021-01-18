@@ -3,6 +3,7 @@ package org.wyyt.springcloud.gateway.controller;
 import kong.unirest.Unirest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.EndpointVo;
@@ -57,7 +58,7 @@ public class ConsulController {
         }
 
         final List<EndpointVo> filterEndpointVoList = endpointVoList.stream()
-                .filter(p -> StringUtils.isEmpty(instanceId) || p.getId().contains(instanceId)).collect(Collectors.toList());
+                .filter(p -> ObjectUtils.isEmpty(instanceId) || p.getId().contains(instanceId)).collect(Collectors.toList());
 
         final List<EndpointVo> result = filterEndpointVoList.stream().skip((pageNum - 1L) * pageSize)
                 .limit(pageSize)

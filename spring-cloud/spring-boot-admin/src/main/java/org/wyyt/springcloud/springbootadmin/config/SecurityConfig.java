@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.wyyt.tool.rpc.RpcTool;
+import org.wyyt.tool.rpc.RpcService;
 
 /**
  * the config of security
@@ -26,8 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Primary
     @ConditionalOnMissingBean
-    public RpcTool rpcTool() {
-        return new RpcTool();
+    public RpcService rpcService() {
+        return new RpcService();
     }
 
     @Override

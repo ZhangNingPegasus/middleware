@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
+import org.wyyt.springcloud.springbootadmin.config.PropertyConfig;
 import org.wyyt.springcloud.springbootadmin.service.ApiLoadService;
 import org.wyyt.tool.dingtalk.Message;
 import reactor.core.publisher.Mono;
@@ -42,11 +43,14 @@ public class DingTalkNotifier extends AbstractEventNotifier {
     private final LinkedBlockingQueue<Message> toProcessRecords;
     public static final Integer MAX_SIZE = 1024;
     private final ApiLoadService apiLoadService;
+    private final PropertyConfig propertyConfig;
 
     public DingTalkNotifier(final InstanceRepository repository,
-                            final ApiLoadService apiLoadService) {
+                            final ApiLoadService apiLoadService,
+                            final PropertyConfig propertyConfig) {
         super(repository);
         this.apiLoadService = apiLoadService;
+        this.propertyConfig = propertyConfig;
         this.dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
         this.toProcessRecords = new LinkedBlockingQueue<>(MAX_SIZE);
         this.startDate = System.currentTimeMillis();
@@ -90,8 +94,12 @@ public class DingTalkNotifier extends AbstractEventNotifier {
                         checkTime = this.dateFormat.format(instanceStatusChangedEvent.getTimestamp());
                         content = "已成功上线.";
                         isOk = true;
-                        apiResult = this.apiLoadService.updateApi(instance.getRegistration().getName(),
-                                instance.getRegistration().getServiceUrl());
+                        if (!serviceName.equals(this.propertyConfig.getGatewayConsulName()) &&
+                                !serviceName.equals(this.propertyConfig.getGatewayAdminConsulName()) &&
+                                !serviceName.equals(this.propertyConfig.getAuthConsulName())) {
+                            apiResult = this.apiLoadService.updateApi(instance.getRegistration().getName(),
+                                    instance.getRegistration().getServiceUrl());
+                        }
                         break;
                     // 服务未知异常
                     case "UNKNOWN":

@@ -15,10 +15,14 @@ server:
   port: 2001
 
 spring:
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 10MB
   application:
     name: b
     group: sample-group
-    version: 20210114151701
+    version: 202101181601
     strategy:
       scan:
         # RestController类的扫描路径

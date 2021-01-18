@@ -11,10 +11,10 @@ import org.wyyt.kafka.monitor.entity.dto.SysKpi;
 import org.wyyt.kafka.monitor.entity.echarts.CpuInfo;
 import org.wyyt.kafka.monitor.entity.echarts.ThreadInfo;
 import org.wyyt.kafka.monitor.entity.vo.TopicRecordCountVo;
-import org.wyyt.kafka.monitor.service.common.EhcacheService;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.dto.SysKpiService;
 import org.wyyt.kafka.monitor.service.dto.SysTopicSizeService;
+import org.wyyt.tool.cache.CacheService;
 import org.wyyt.tool.common.CommonTool;
 
 import java.text.SimpleDateFormat;
@@ -38,29 +38,29 @@ public class BigScreenController {
     private final SysKpiService sysKpiService;
     private final KafkaService kafkaService;
     private final SysTopicSizeService sysTopicSizeService;
-    private final EhcacheService ehcacheService;
+    private final CacheService cacheService;
 
     public BigScreenController(final PropertyConfig propertyConfig,
                                final SysKpiService sysKpiService,
                                final KafkaService kafkaService,
                                final SysTopicSizeService sysTopicSizeService,
-                               final EhcacheService ehcacheService) {
+                               final CacheService cacheService) {
         this.propertyConfig = propertyConfig;
         this.sysKpiService = sysKpiService;
         this.kafkaService = kafkaService;
         this.sysTopicSizeService = sysTopicSizeService;
-        this.ehcacheService = ehcacheService;
+        this.cacheService = cacheService;
     }
 
     @GetMapping("tolist")
     public String toList(Model model) throws Exception {
-        Long day0 = this.ehcacheService.get("BigScreenController::day0");
-        Integer zkCount = this.ehcacheService.get("BigScreenController::zkCount");
-        Integer kafkaCount = this.ehcacheService.get("BigScreenController::kafkaCount");
-        Integer topicCount = this.ehcacheService.get("BigScreenController::topicCount");
-        List<TopicRecordCountVo> topicRecordCountVoList = this.ehcacheService.get("BigScreenController::topicRecordCountVoList");
-        CpuInfo cpuInfo = this.ehcacheService.get("BigScreenController::cpuInfo");
-        ThreadInfo threadInfo = this.ehcacheService.get("BigScreenController::threadInfo");
+        Long day0 = this.cacheService.get("BigScreenController::day0");
+        Integer zkCount = this.cacheService.get("BigScreenController::zkCount");
+        Integer kafkaCount = this.cacheService.get("BigScreenController::kafkaCount");
+        Integer topicCount = this.cacheService.get("BigScreenController::topicCount");
+        List<TopicRecordCountVo> topicRecordCountVoList = this.cacheService.get("BigScreenController::topicRecordCountVoList");
+        CpuInfo cpuInfo = this.cacheService.get("BigScreenController::cpuInfo");
+        ThreadInfo threadInfo = this.cacheService.get("BigScreenController::threadInfo");
 
         if (null == day0 || null == zkCount || null == kafkaCount || null == topicCount || null == topicRecordCountVoList || null == cpuInfo || null == threadInfo) {
             day0 = this.sysTopicSizeService.getTotalRecordCount(3);
@@ -110,13 +110,13 @@ public class BigScreenController {
             threadInfo.setStrXAxis(JSON.toJSONString(threadInfo.getXAxis()));
             threadInfo.setStrThreadCount(JSON.toJSONString(threadInfo.getThreadCount()));
 
-            this.ehcacheService.put("BigScreenController::day0", day0);
-            this.ehcacheService.put("BigScreenController::zkCount", zkCount);
-            this.ehcacheService.put("BigScreenController::kafkaCount", kafkaCount);
-            this.ehcacheService.put("BigScreenController::topicCount", topicCount);
-            this.ehcacheService.put("BigScreenController::topicRecordCountVoList", topicRecordCountVoList);
-            this.ehcacheService.put("BigScreenController::cpuInfo", cpuInfo);
-            this.ehcacheService.put("BigScreenController::threadInfo", threadInfo);
+            this.cacheService.put("BigScreenController::day0", day0);
+            this.cacheService.put("BigScreenController::zkCount", zkCount);
+            this.cacheService.put("BigScreenController::kafkaCount", kafkaCount);
+            this.cacheService.put("BigScreenController::topicCount", topicCount);
+            this.cacheService.put("BigScreenController::topicRecordCountVoList", topicRecordCountVoList);
+            this.cacheService.put("BigScreenController::cpuInfo", cpuInfo);
+            this.cacheService.put("BigScreenController::threadInfo", threadInfo);
         }
 
         model.addAttribute("savingDays", this.propertyConfig.getRetentionDays());

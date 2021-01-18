@@ -10,7 +10,7 @@ import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.auto.property.DimensionProperty;
 import org.wyyt.sharding.auto.property.ShardingProperty;
 import org.wyyt.sharding.auto.property.TableProperty;
-import org.wyyt.sharding.cache.anno.EhCache;
+import org.wyyt.sharding.cache.anno.LocalCache;
 import org.wyyt.sharding.entity.DbInfo;
 import org.wyyt.sharding.entity.FieldInfo;
 import org.wyyt.sharding.entity.IndexInfo;
@@ -100,7 +100,7 @@ public class ShardingService {
                 StringUtils.join(shardingColumns, ", ")));
     }
 
-    @EhCache
+    @LocalCache
     public boolean needSharding(final String logicTableName) {
         for (final TableProperty tableProperty : this.shardingProperty.getTableProperties()) {
             if (tableProperty.getName().equals(logicTableName)) {
@@ -110,7 +110,7 @@ public class ShardingService {
         return false;
     }
 
-    @EhCache
+    @LocalCache
     public DimensionProperty getDimensionByName(final String name) {
         if (ObjectUtils.isEmpty(name)) {
             return null;
@@ -118,7 +118,7 @@ public class ShardingService {
         return this.shardingProperty.getDimensionProperties().get(name);
     }
 
-    @EhCache
+    @LocalCache
     public TableProperty.DimensionInfo getTableDimensionInfo(final String logicTableName,
                                                              final String dimensionName) {
         final Optional<TableProperty> first = this.shardingProperty.getTableProperties().stream().filter(p -> p.getName().equals(logicTableName)).findFirst();
@@ -131,7 +131,7 @@ public class ShardingService {
         throw new ShardingException(String.format("没有找到逻辑表[%s]相关的配置", logicTableName));
     }
 
-    @EhCache
+    @LocalCache
     public String getPrimaryDimensionShardingColumn(final String logicTableName) {
         final Optional<TableProperty> first = this.shardingProperty.getTableProperties().stream().filter(p -> p.getName().equals(logicTableName)).findFirst();
         if (!first.isPresent()) {
@@ -149,19 +149,19 @@ public class ShardingService {
         return this.getTableDimensionInfo(logicTableName, dimensionName).getShardingColumn();
     }
 
-    @EhCache
+    @LocalCache
     public DimensionProperty getPrimaryDimensionProperty(final String logicTableName) {
         final String primaryDimensionShardingColumn = this.getPrimaryDimensionShardingColumn(logicTableName);
         return this.getDimensionByShardingColumn(logicTableName, primaryDimensionShardingColumn);
     }
 
-    @EhCache
+    @LocalCache
     public DimensionProperty getPrimaryDimension() {
         final Optional<DimensionProperty> first = this.shardingProperty.getDimensionProperties().values().stream().filter(p -> p.getPriority().equals(0)).findFirst();
         return first.orElse(null);
     }
 
-    @EhCache
+    @LocalCache
     public Set<String> listShardingColumns(final String logicTableName) {
         final Set<String> result = new HashSet<>();
         final List<TableProperty> tablePropertyList = listTableByName(logicTableName);
@@ -174,7 +174,7 @@ public class ShardingService {
         return result;
     }
 
-    @EhCache
+    @LocalCache
     public DimensionProperty getDimensionByShardingColumn(final String logicTableName,
                                                           final String shardingColumn) {
         final List<DimensionProperty> result = new ArrayList<>();
@@ -193,7 +193,7 @@ public class ShardingService {
         return result.get(0);
     }
 
-    @EhCache
+    @LocalCache
     public List<TableProperty> listTableByName(final String logicTableName) {
         List<TableProperty> result = this.shardingProperty.getTableProperties().stream().filter(p -> p.getName().equals(logicTableName)).collect(Collectors.toList());
         if (result.isEmpty()) {
@@ -202,12 +202,12 @@ public class ShardingService {
         return result;
     }
 
-    @EhCache
+    @LocalCache
     public List<String> listBroadcastTables() {
         return this.shardingProperty.getTableProperties().stream().filter(TableProperty::getBroadcast).map(TableProperty::getName).collect(Collectors.toList());
     }
 
-    @EhCache
+    @LocalCache
     public List<String> listBindingTables() {
         final List<String> result = new ArrayList<>();
         final Map<String, List<String>> bindingGroupMap = new HashMap<>();
@@ -226,7 +226,7 @@ public class ShardingService {
         return result;
     }
 
-    @EhCache
+    @LocalCache
     public List<String> listActualDataNodes(final String logicTableName) {
         final List<String> result = new ArrayList<>();
         final List<TableProperty> tablePropertyList = this.shardingProperty.getTableProperties().stream().filter(p -> p.getName().equals(logicTableName)).collect(Collectors.toList());
@@ -257,24 +257,24 @@ public class ShardingService {
         return result;
     }
 
-    @EhCache
+    @LocalCache
     public Map<String, DimensionProperty> listDimensionPropertyMap() {
         return this.shardingProperty.getDimensionProperties();
     }
 
-    @EhCache
+    @LocalCache
     public List<DimensionProperty> listDimensionProperties() {
         final List<DimensionProperty> dimensionProperties = new ArrayList<>(listDimensionPropertyMap().values());
         dimensionProperties.sort(Comparator.comparing(DimensionProperty::getPriority));
         return dimensionProperties;
     }
 
-    @EhCache
+    @LocalCache
     public Map<String, DataSourceProperty> listDataSourcePropertyMap() {
         return this.shardingProperty.getDataSourceProperties();
     }
 
-    @EhCache
+    @LocalCache
     public List<DataSourceProperty> listDataSourceProperties(String dimension) {
         final DimensionProperty dimensionProperty = listDimensionPropertyMap().get(dimension);
         if (null != dimensionProperty) {
@@ -285,12 +285,12 @@ public class ShardingService {
         return null;
     }
 
-    @EhCache
+    @LocalCache
     public List<TableProperty> listTableProperties() {
         return this.shardingProperty.getTableProperties();
     }
 
-    @EhCache
+    @LocalCache
     public TableProperty getTableProperty(final String logicTableName) {
         final List<TableProperty> tableProperties = this.shardingProperty.getTableProperties();
         for (final TableProperty tableProperty : tableProperties) {
@@ -301,7 +301,7 @@ public class ShardingService {
         return null;
     }
 
-    @EhCache
+    @LocalCache
     public List<TableProperty> listTableProperties(final String dimension,
                                                    final String datasource) {
         final List<TableProperty> result = new ArrayList<>();
@@ -320,17 +320,17 @@ public class ShardingService {
         return result;
     }
 
-    @EhCache
+    @LocalCache
     public boolean isShowSql() {
         return this.shardingProperty.isShowSql();
     }
 
-    @EhCache
+    @LocalCache
     public DataSourceProperty getDataSourcePropertyByIndex(final int index) {
         return this.shardingProperty.getDataSourceProperties().values().stream().sorted(Comparator.comparing(DataSourceProperty::getName)).collect(Collectors.toList()).get(index);
     }
 
-    @EhCache
+    @LocalCache
     public DataSourceProperty getDataSourcePropertyByName(final String name) {
         for (final Map.Entry<String, DataSourceProperty> pair : this.shardingProperty.getDataSourceProperties().entrySet()) {
             if (pair.getValue().getName().equals(name)) {
@@ -340,7 +340,7 @@ public class ShardingService {
         return null;
     }
 
-    @EhCache
+    @LocalCache
     public DataSource getDataSourceByName(final String name) {
         if (null == this.dataSourceMap || this.dataSourceMap.isEmpty()) {
             return null;
@@ -354,7 +354,7 @@ public class ShardingService {
         return null;
     }
 
-    @EhCache
+    @LocalCache
     public DataSource getDataSourceByDatabaseName(final String databaseName) {
         if (null == this.dataSourceMap || this.dataSourceMap.isEmpty()) {
             return null;

@@ -15,7 +15,7 @@ spring:
   application:
     name: ${auth_consul_name}
     group: ${auth_consul_group}
-    version: 1.0
+    version: 202101181606
     strategy:
       scan:
         packages: org.wyyt.springcloud.auth.controller

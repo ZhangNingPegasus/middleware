@@ -1,17 +1,17 @@
 package org.wyyt.tool.cache;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
-import org.wyyt.tool.exception.ExceptionTool;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * the wapper class of cache
  * <p>
+ * r
  *
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
@@ -23,13 +23,24 @@ import java.util.concurrent.ExecutionException;
 public class CacheService implements DisposableBean {
     private final Cache<String, Object> cache;
 
+    public CacheService(final Long expireAfterAccessInMinutes,
+                        final Integer initialCapacity,
+                        final Long maximumSize) {
+        final Caffeine<Object, Object> caffeine = Caffeine.newBuilder();
+        if (null != expireAfterAccessInMinutes) {
+            caffeine.expireAfterAccess(expireAfterAccessInMinutes, TimeUnit.MINUTES);  //多少分钟不访问就过期
+        }
+        if (null != initialCapacity) {
+            caffeine.initialCapacity(initialCapacity);   // 设置缓存容器的初始容
+        }
+        if (null != maximumSize) {
+            caffeine.maximumSize(maximumSize);    // 设置缓存最大容量，超过之后就会按照LRU最近虽少使用算法来移除缓存项
+        }
+        this.cache = caffeine.build();
+    }
+
     public CacheService() {
-        this.cache = CacheBuilder.newBuilder()
-                .concurrencyLevel(Runtime.getRuntime().availableProcessors()) // 设置并发级别为8，并发级别是指可以同时写缓存的线程数
-                .initialCapacity(64)   // 设置缓存容器的初始容量
-                .maximumSize(1024)    // 设置缓存最大容量，超过之后就会按照LRU最近虽少使用算法来移除缓存项
-                .removalListener(notification -> log.info(String.format("%s was removed, cause is %s", notification.getKey(), notification.getCause()))) //设置缓存的移除通知
-                .build();
+        this(30L, 64, 1024L);
     }
 
     public final void put(final String key,
@@ -46,14 +57,8 @@ public class CacheService implements DisposableBean {
     }
 
     public final <T> T get(final String key,
-                           final Callable<? extends T> callable) {
-        Object value;
-        try {
-            value = this.cache.get(key, callable);
-        } catch (ExecutionException e) {
-            log.error(ExceptionTool.getRootCauseMessage(e), e);
-            throw new RuntimeException(e);
-        }
+                           final Function<String, Object> function) {
+        final Object value = this.cache.get(key, function);
         if (null == value) {
             return null;
         }

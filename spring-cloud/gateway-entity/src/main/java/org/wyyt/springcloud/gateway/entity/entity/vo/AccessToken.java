@@ -1,4 +1,4 @@
-package org.wyyt.springcloud.auth.entity;
+package org.wyyt.springcloud.gateway.entity.entity.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
@@ -18,7 +18,6 @@ import java.io.Serializable;
 @Data
 @JsonSerialize
 public class AccessToken implements Serializable {
-    private Long appId;
     private String accessToken;
     private Long expiresTime;
 }

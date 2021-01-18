@@ -5,8 +5,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.rpc.Result;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -53,6 +55,11 @@ public class AFeignImpl implements AFeign {
             }
         });
         return Result.ok("Invoke Thread");
+    }
+
+    @Override
+    public Result<String> uploadFile(final MultipartFile file) throws IOException {
+        return Result.ok(String.valueOf(file.getBytes().length));
     }
 
     private String doInvoke(final String value) {

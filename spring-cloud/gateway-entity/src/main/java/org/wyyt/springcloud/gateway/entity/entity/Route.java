@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.springcloud.gateway.entity.entity.base.BaseDto;
 
 /**
@@ -46,7 +46,7 @@ public class Route extends BaseDto {
     private String serviceName;
 
     public String getPathPredicate() {
-        if (StringUtils.isEmpty(this.predicates)) {
+        if (ObjectUtils.isEmpty(this.predicates)) {
             return "";
         }
 

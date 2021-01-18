@@ -82,11 +82,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.sijibao.nacos</groupId>
             <artifactId>nacos-spring-config-ex</artifactId>
         </dependency>

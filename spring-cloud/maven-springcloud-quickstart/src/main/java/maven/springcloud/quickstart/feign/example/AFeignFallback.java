@@ -2,6 +2,7 @@ package maven.springcloud.quickstart.feign.example;
 
 import feign.hystrix.FallbackFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.rpc.Result;
 
@@ -61,6 +62,11 @@ public class AFeignFallback implements FallbackFactory<AFeign> {
 
             @Override
             public Result<String> invokeThread(final String value) {
+                return Result.error(ExceptionTool.getRootCauseMessage(throwable));
+            }
+
+            @Override
+            public Result<String> uploadFile(final MultipartFile file) {
                 return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
         };

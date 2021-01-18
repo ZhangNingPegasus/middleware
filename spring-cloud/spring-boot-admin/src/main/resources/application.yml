@@ -1,7 +1,7 @@
 app:
   id: spring-boot-admin
 apollo:
-  meta: ${apollo_meta:http://192.168.12.155:8080/}
+  meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
   bootstrap:
     enabled: true
     namespaces: Architecture.spring-cloud-common,Architecture.gateway,Architecture.gateway,application
@@ -46,6 +46,8 @@ spring:
         max-active: ${redis-max-active}
         max-idle: ${redis-max-idle}
         min-idle: ${redis-min-idle}
+  thymeleaf:
+    check-template-location: false
 
 server:
   port: ${app_port:83}

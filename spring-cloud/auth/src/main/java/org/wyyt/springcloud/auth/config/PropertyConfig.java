@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.wyyt.tool.rpc.RpcTool;
+import org.wyyt.tool.rpc.RpcService;
 
 /**
  * the configuration of proeprty
@@ -44,7 +44,7 @@ public class PropertyConfig {
     public int dbMaximum;
 
     @Bean
-    public RpcTool rpcTool() {
-        return new RpcTool();
+    public RpcService rpcService() {
+        return new RpcService();
     }
 }

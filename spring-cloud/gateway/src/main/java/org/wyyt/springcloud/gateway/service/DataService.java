@@ -12,6 +12,7 @@ import org.wyyt.tool.cache.CacheService;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Providing data service
@@ -29,6 +30,7 @@ public class DataService {
     private final IgnoreUrlService ignoreUrlService;
     private final CacheService cacheService;
 
+
     public DataService(final RedisService redisService,
                        final AuthService authService,
                        final AppService appService,
@@ -43,7 +45,7 @@ public class DataService {
 
     public Set<String> getIgnoreUrlSet() {
         final String key = Names.REDIS_IGNORE_URLS_KEY;
-        return this.cacheService.get(key, () -> {
+        return this.cacheService.get(key, p -> {
             final String distributedLockKey = Names.REDIS_DISTRIBUTED_LOCK_IGNORE_URLS_KEY;
             return this.redisService.getOrDefault(key, distributedLockKey, ignoreUrlService::getUrls);
         });
@@ -56,7 +58,7 @@ public class DataService {
 
     public App getApp(final String clientId) {
         final String key = Names.getAppOfClientId(clientId);
-        return this.cacheService.get(key, () -> {
+        return this.cacheService.get(key, p -> {
             final String distributedLockKey = String.format(Names.REDIS_DISTRIBUTED_LOCK_APP_OF_CLIENT_ID_KEY, clientId);
             return this.redisService.getOrDefault(key, distributedLockKey, () -> appService.getByClientId(clientId));
         });
@@ -69,10 +71,19 @@ public class DataService {
 
     public List<Api> getApiList(final String clientId) {
         final String key = Names.getApiListOfClientIdKey(clientId);
-        return this.cacheService.get(key, () -> {
+        return this.cacheService.get(key, p -> {
             final String distributedLockKey = String.format(Names.REDIS_DISTRIBUTED_LOCK_API_LIST_OF_CLIENT_ID_KEY, clientId);
             return this.redisService.getOrDefault(key, distributedLockKey, () -> authService.getApiByClientId(clientId));
         });
+    }
+
+    public List<Api> getApiList(final String clientId,
+                                final String serviceId) {
+        final List<Api> apiList = this.getApiList(clientId);
+        if (null == apiList) {
+            return null;
+        }
+        return apiList.stream().filter(f -> f.getServiceId().equals(serviceId)).collect(Collectors.toList());
     }
 
     public void removeApiListLocalCache(final String clientId) {

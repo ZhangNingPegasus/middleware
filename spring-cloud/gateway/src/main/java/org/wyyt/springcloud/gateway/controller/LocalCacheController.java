@@ -48,7 +48,7 @@ public class LocalCacheController {
                                                        final ServerWebExchange exchange) {
         return data.flatMap(d -> {
             final Object queryParamsObject = exchange.getAttributeOrDefault(Names.CACHED_REQUEST_BODY_OBJECT_KEY, null);
-            Map<String, Object> params = CommonTool.queryParamstoMap(queryParamsObject);
+            final Map<String, Object> params = CommonTool.queryParamstoMap(queryParamsObject);
             this.dataService.removeApiListLocalCache(params.get(Names.CLIENT_ID).toString());
             this.dataService.removeAppLocalCache(params.get(Names.CLIENT_ID).toString());
             return Mono.just(Result.ok());

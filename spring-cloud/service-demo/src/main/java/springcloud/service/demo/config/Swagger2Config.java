@@ -1,4 +1,5 @@
-package maven.springcloud.quickstart.config;
+package springcloud.service.demo.config;
+
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,16 +19,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Swagger配置类
- * <p>
- *
- * @author Ning.Zhang(Pegasus)
- * *****************************************************************
- * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
- * *****************************************************************
- */
 @Configuration
 @EnableSwagger2
 public class Swagger2Config {
@@ -39,7 +30,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("maven.springcloud.quickstart"))
+                .apis(RequestHandlerSelectors.basePackage("springcloud.service.demo"))
                 .paths(PathSelectors.any())
                 .build()
                 .globalOperationParameters(setHeaderToken());
@@ -47,8 +38,9 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("SpringCloud微服务接口说明文档")
-                .description("SpringCloud微服务接口说明文档")
+                .title("SpringCloud示例")
+                .description("SpringCloud示例")
+                .termsOfServiceUrl("https://www.sijibao.com/")
                 .contact(new Contact("Ning.Zhang(Pegasus)", "", "zhangning@sijibao.com"))
                 .version(this.version)
                 .build();

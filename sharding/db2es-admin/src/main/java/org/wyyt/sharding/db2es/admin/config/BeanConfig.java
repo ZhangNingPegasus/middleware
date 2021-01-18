@@ -2,7 +2,7 @@ package org.wyyt.sharding.db2es.admin.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.wyyt.tool.rpc.RpcTool;
+import org.wyyt.tool.rpc.RpcService;
 
 /**
  * the configuration of bean
@@ -17,7 +17,7 @@ import org.wyyt.tool.rpc.RpcTool;
 @Configuration
 public class BeanConfig {
     @Bean
-    public RpcTool rpcTool() {
-        return new RpcTool();
+    public RpcService rpcService() {
+        return new RpcService();
     }
 }

@@ -10,8 +10,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.rpc.Result;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -67,6 +69,11 @@ public class AFeignImpl implements AFeign {
         return Result.ok("Invoke ThreadPool");
     }
 
+    @Override
+    public Result<String> uploadFile(final MultipartFile file) throws IOException {
+        bFeign.uploadFile(file);
+        return Result.ok(String.valueOf(file.getBytes().length));
+    }
 
     private String doInvoke(String value) throws Throwable {
         log.info(strategyContextHolder.getHeader("access_token"));

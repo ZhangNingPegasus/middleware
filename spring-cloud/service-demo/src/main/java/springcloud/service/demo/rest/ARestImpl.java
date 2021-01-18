@@ -11,15 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.rpc.Result;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -72,6 +73,14 @@ public class ARestImpl {
             }
         });
         return Result.ok("Invoke ThreadPool");
+    }
+
+    @ApiOperation(value = "rest文件上传测试")
+    @ApiImplicitParam(name = "file", value = "参数D2", required = true, dataType = "MultipartFile")
+    @PostMapping(value = "/rest-uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Result<String> uploadFile(@RequestPart("file") MultipartFile file) throws IOException {
+        file.transferTo(new File("E:\\aaa.txt"));
+        return Result.ok(String.valueOf(file.getBytes().length));
     }
 
     private String doInvoke(String value) {

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <logger name="com.nepxion.discovery.plugin.configcenter.parser.xml.XmlConfigParser" level="OFF">
+    <logger name="com.nepxion.discovery.plugin.configcenter.parser.xml.XmlConfigParser" level="ERROR">
     </logger>
-    <logger name="com.nepxion.discovery.plugin.framework.util" level="OFF">
+    <logger name="com.nepxion.discovery.plugin.framework.util" level="ERROR">
     </logger>
-    <logger name="com.netflix.config.sources" level="OFF">
+    <logger name="com.netflix.config.sources" level="ERROR">
+    </logger>
+    <logger name="com.baomidou.mybatisplus.core.toolkit.ReflectionKit" level="ERROR">
+    </logger>
+    <logger name="org.springframework.boot.actuate.endpoint.EndpointId" level="ERROR">
     </logger>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">

@@ -1,7 +1,6 @@
 package org.wyyt.sharding.db2es.client.cache;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import org.wyyt.tool.cache.CacheService;
 
 import java.io.Closeable;
 
@@ -16,19 +15,19 @@ import java.io.Closeable;
  * *****************************************************************
  */
 public class CacheWrapper implements Closeable {
-    private final Cache<String, Object> cache;
+    private final CacheService cacheService;
 
     public CacheWrapper() {
-        this.cache = CacheBuilder.newBuilder().build();
+        this.cacheService = new CacheService();
     }
 
     public final void put(final String key,
                           final Object value) {
-        this.cache.put(key, value);
+        this.cacheService.put(key, value);
     }
 
     public final <T> T get(final String key) {
-        final Object value = this.cache.getIfPresent(key);
+        final Object value = this.cacheService.get(key);
         if (null == value) {
             return null;
         }
@@ -37,9 +36,6 @@ public class CacheWrapper implements Closeable {
 
     @Override
     public final void close() {
-        if (null != this.cache) {
-            this.cache.invalidateAll();
-            this.cache.cleanUp();
-        }
+        cacheService.destroy();
     }
 }

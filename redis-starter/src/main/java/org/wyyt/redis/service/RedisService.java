@@ -3,6 +3,7 @@ package org.wyyt.redis.service;
 import io.lettuce.core.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
@@ -12,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.io.Closeable;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +37,27 @@ public final class RedisService {
     protected RedisTemplate<String, Object> redisTemplateNoTransactional = null;
 
     // start============================Common=============================start
+
+    /**
+     * 根据表达式获取对应的key集合
+     *
+     * @param pattern key查询表达式
+     * @return 返回符合key查询表达式的key集合
+     */
+    public Set<String> scan(final String pattern) {
+        return this.redisTemplateNoTransactional.execute((RedisConnection connection) -> {
+            final Set<String> result = new HashSet<>();
+            try (final Cursor<byte[]> cursor = connection.scan(new ScanOptions.ScanOptionsBuilder().match(pattern).count(1000).build())) {
+                while (cursor.hasNext()) {
+                    result.add(new String(cursor.next(), StandardCharsets.UTF_8));
+                }
+            } catch (final Exception e) {
+                throw new RuntimeException(e);
+            }
+            return result;
+        });
+    }
+
 
     /**
      * 指定缓存过期时间
@@ -93,7 +116,7 @@ public final class RedisService {
         for (final String key : keys) {
             if (hasWildCard(key)) {
                 // 包含通配符
-                this.redisTemplateNoTransactional.delete(keys(key));
+                this.redisTemplateNoTransactional.delete(scan(key));
             } else {
                 // 不包含通配符
                 this.redisTemplateNoTransactional.delete(Collections.singletonList(key));
@@ -104,16 +127,6 @@ public final class RedisService {
     // end============================Common=============================end
 
     // start============================String=============================start
-
-    /**
-     * 根据表达式获取对应的key集合
-     *
-     * @param pattern 表达式
-     * @return 返回符合表达式的键集合
-     */
-    public final Set<String> keys(final String pattern) {
-        return this.redisTemplateNoTransactional.keys(pattern);
-    }
 
     /**
      * 缓存获取

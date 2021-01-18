@@ -4,14 +4,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.rpc.Result;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -68,6 +69,13 @@ public class ARestImpl {
             }
         });
         return Result.ok("Invoke ThreadPool");
+    }
+
+    @ApiOperation(value = "rest文件上传测试")
+    @ApiImplicitParam(name = "file", value = "参数D", required = true, dataType = "MultipartFile")
+    @PostMapping(value = "/rest-uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Result<String> uploadFile(@RequestPart("file") final MultipartFile file) throws IOException {
+        return Result.ok(String.valueOf(file.getBytes().length));
     }
 
     private String doInvoke(String value) {

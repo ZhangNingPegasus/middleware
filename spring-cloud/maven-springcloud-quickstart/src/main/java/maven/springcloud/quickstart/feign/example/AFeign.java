@@ -4,10 +4,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.rpc.Result;
 
+import java.io.IOException;
 import java.util.concurrent.Future;
 
 /**
@@ -37,4 +42,10 @@ public interface AFeign {
     @ApiImplicitParam(name = "value", value = "参数C", required = true, dataType = "String")
     @GetMapping(path = "/feign-thread/{value}")
     Result<String> invokeThread(@PathVariable(value = "value") final String value);
+
+    // 传文件
+    @ApiOperation(value = "feign文件上传测试")
+    @ApiImplicitParam(name = "file", value = "参数D", required = true, dataType = "MultipartFile")
+    @PostMapping(value = "feign-uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    Result<String> uploadFile(@RequestPart("file") MultipartFile file) throws IOException;
 }

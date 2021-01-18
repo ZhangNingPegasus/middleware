@@ -48,6 +48,10 @@
                         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
                                     class="layui-icon layui-icon-edit"></i>编辑</a>
                     </@update>
+                    <@update>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="clearCache"><i
+                                    class="layui-icon layui-icon-unlink"></i>清空缓存</a>
+                    </@update>
                     <@delete>
                         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
                                     class="layui-icon layui-icon-delete"></i>删除</a>
@@ -91,7 +95,7 @@
                     },
                     {field: 'description', title: '描述信息'}
                     <@select>
-                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 150}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 250}
                     </@select>
                 ]]
             });
@@ -102,7 +106,7 @@
                         type: 2,
                         title: '<i class="layui-icon layui-icon-add-1"></i>&nbsp;新增应用',
                         content: 'toadd',
-                        area: ['920px', '700px'],
+                        area: ['900px', '700px'],
                         btn: admin.BUTTONS,
                         resize: false,
                         yes: function (index, layero) {
@@ -137,7 +141,7 @@
                         type: 2,
                         title: '<i class="layui-icon layui-icon-edit" style="color: #1E9FFF;"></i>&nbsp;编辑应用',
                         content: 'toedit?id=' + data.id,
-                        area: ['920px', '700px'],
+                        area: ['900px', '700px'],
                         btn: admin.BUTTONS,
                         resize: false,
                         yes: function (index, layero) {
@@ -155,6 +159,13 @@
                             });
                             submit.trigger('click');
                         }
+                    });
+                } else if (obj.event === 'clearCache') {
+                    layer.confirm('确定要清空Client Id[' + data.clientId + ']的缓存吗?', function (index) {
+                        admin.post("clearCache", {'clientId': data.clientId}, function () {
+                            table.reload('grid');
+                            layer.close(index);
+                        });
                     });
                 }
             });

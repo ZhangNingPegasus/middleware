@@ -8,12 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.wyyt.admin.ui.exception.BusinessException;
+import org.wyyt.redis.service.RedisService;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.EndpointVo;
 import org.wyyt.springcloud.gateway.entity.ServiceVo;
@@ -21,7 +21,7 @@ import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.exception.GatewayException;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.rpc.Result;
-import org.wyyt.tool.rpc.RpcTool;
+import org.wyyt.tool.rpc.RpcService;
 import org.wyyt.tool.rpc.SignTool;
 
 import java.net.URI;
@@ -44,7 +44,8 @@ import java.util.stream.Collectors;
 public class GatewayService {
     private final DiscoveryClient discoveryClient;
     private final PropertyConfig propertyConfig;
-    private final RpcTool rpcTool;
+    private final RpcService rpcService;
+    private final RedisService redisService;
     private final static String REFRESH_URL = "/route/refresh";
     private final static String LIST_ROUTES_URL = "/route/listRoutes";
     private final static String REMOVE_IGNORE_URLS_LOCAL_CACHE = "cache/removeIngoreUrlSetLocalCache";
@@ -53,10 +54,12 @@ public class GatewayService {
 
     public GatewayService(final DiscoveryClient discoveryClient,
                           final PropertyConfig propertyConfig,
-                          final RpcTool rpcTool) {
+                          final RpcService rpcService,
+                          final RedisService redisService) {
         this.discoveryClient = discoveryClient;
         this.propertyConfig = propertyConfig;
-        this.rpcTool = rpcTool;
+        this.rpcService = rpcService;
+        this.redisService = redisService;
     }
 
     public URI getGatewayUri() throws Exception {
@@ -85,7 +88,7 @@ public class GatewayService {
                 this.propertyConfig.getConsulHost(),
                 this.propertyConfig.getConsulPort(),
                 serviceId);
-        final String json = this.rpcTool.get(url);
+        final String json = this.rpcService.get(url);
         final JSONArray allJsonArray = JSON.parseArray(json);
 
         if (null == allJsonArray || allJsonArray.isEmpty()) {
@@ -105,7 +108,7 @@ public class GatewayService {
                         if (obj instanceof JSONObject) {
                             final JSONObject jsonObj = (JSONObject) obj;
                             final String serviceID = jsonObj.getString("ServiceID");
-                            if (StringUtils.isEmpty(serviceID)) {
+                            if (ObjectUtils.isEmpty(serviceID)) {
                                 continue;
                             }
                             checksMap.put(serviceID, jsonObj);
@@ -189,8 +192,7 @@ public class GatewayService {
     public List<String> listServiceIds() {
         final List<String> ignoredServiceNames = Arrays.asList("consul",
                 this.propertyConfig.getServiceName(),
-                this.propertyConfig.getGatewayConsulName(),
-                this.propertyConfig.getAuthConsulName());
+                this.propertyConfig.getGatewayConsulName());
         final List<String> services = this.discoveryClient.getServices();
         return services.stream().filter(p -> !ignoredServiceNames.contains(p))
                 .sorted(Comparator.naturalOrder())
@@ -246,6 +248,13 @@ public class GatewayService {
         }
     }
 
+    public void clearAllCache(final String clientId) throws Exception {
+        this.redisService.del(Names.getApiListOfClientIdKey(clientId));
+        this.redisService.del(Names.getAppOfClientId(clientId));
+        this.removeClientIdLocalCache(clientId);
+        this.removeClientIdLocalCache(clientId);
+    }
+
     private Result<?> rpc(final URI uri,
                           final String serviceUrl,
                           Map<String, Object> params) throws Exception {
@@ -256,7 +265,7 @@ public class GatewayService {
         headers.put("sign", SignTool.sign(params, Names.API_KEY, Names.API_IV));
 
         final URI remoteAddress = UriComponentsBuilder.fromHttpUrl(uri.toString().concat(serviceUrl)).build().toUri();
-        final String responseText = this.rpcTool.post(remoteAddress.toString(), params, headers);
+        final String responseText = this.rpcService.post(remoteAddress.toString(), params, headers);
         return OBJECT_MAPPER.readValue(responseText, new TypeReference<Result<?>>() {
         });
     }

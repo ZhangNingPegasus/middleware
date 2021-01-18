@@ -13,11 +13,11 @@ import org.wyyt.kafka.monitor.entity.echarts.LineInfo;
 import org.wyyt.kafka.monitor.entity.echarts.Series;
 import org.wyyt.kafka.monitor.entity.po.TimeRange;
 import org.wyyt.kafka.monitor.entity.vo.KafkaConsumerVo;
-import org.wyyt.kafka.monitor.service.common.EhcacheService;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.dto.SysTopicLagService;
 import org.wyyt.kafka.monitor.service.dto.SysTopicSizeService;
 import org.wyyt.kafka.monitor.util.CommonUtil;
+import org.wyyt.tool.cache.CacheService;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.date.DateTool;
 import org.wyyt.tool.rpc.Result;
@@ -44,18 +44,18 @@ public class DashboardController {
     private final KafkaService kafkaService;
     private final SysTopicLagService sysTopicLagService;
     private final SysTopicSizeService sysTopicSizeService;
-    private final EhcacheService ehcacheService;
+    private final CacheService cacheService;
     private final PropertyConfig propertyConfig;
 
     public DashboardController(final KafkaService kafkaService,
                                final SysTopicLagService sysTopicLagService,
                                final SysTopicSizeService sysTopicSizeService,
-                               final EhcacheService ehcacheService,
+                               final CacheService cacheService,
                                final PropertyConfig propertyConfig) {
         this.kafkaService = kafkaService;
         this.sysTopicLagService = sysTopicLagService;
         this.sysTopicSizeService = sysTopicSizeService;
-        this.ehcacheService = ehcacheService;
+        this.cacheService = cacheService;
         this.propertyConfig = propertyConfig;
     }
 
@@ -82,7 +82,7 @@ public class DashboardController {
         }
 
         final String key = String.format("DashboardController::getTopicSendChart:%s:%s", topicName, createTimeRange);
-        final LineInfo cache = this.ehcacheService.get(key);
+        final LineInfo cache = this.cacheService.get(key);
         if (null != cache) {
             return Result.ok(cache);
         }
@@ -156,7 +156,7 @@ public class DashboardController {
             }
             series.setData(data);
         }
-        this.ehcacheService.put(key, result);
+        this.cacheService.put(key, result);
         return Result.ok(result);
     }
 
@@ -166,7 +166,7 @@ public class DashboardController {
                                         @RequestParam(name = "groupId") String groupId,
                                         @RequestParam(name = "createTimeRange") String createTimeRange) {
         final String key = String.format("DashboardController::getLagChart:%s:%s", groupId, createTimeRange);
-        final LineInfo cache = this.ehcacheService.get(key);
+        final LineInfo cache = this.cacheService.get(key);
         if (null != cache) {
             return Result.ok(cache);
         }
@@ -208,7 +208,7 @@ public class DashboardController {
             }
             series.setData(data);
         }
-        this.ehcacheService.put(key, result);
+        this.cacheService.put(key, result);
         return Result.ok(result);
     }
 
@@ -217,8 +217,8 @@ public class DashboardController {
     public Result<LineInfo> getConsumeTpsChart(@RequestParam(name = "topicName") String topicName,
                                                @RequestParam(name = "groupId") String groupId,
                                                @RequestParam(name = "createTimeRange") String createTimeRange) {
-        String key = String.format("DashboardController::getConsumeTpsChart:%s:%s", groupId, createTimeRange);
-        LineInfo cache = this.ehcacheService.get(key);
+        final String key = String.format("DashboardController::getConsumeTpsChart:%s:%s", groupId, createTimeRange);
+        final LineInfo cache = this.cacheService.get(key);
         if (null != cache) {
             return Result.ok(cache);
         }
@@ -291,7 +291,7 @@ public class DashboardController {
             }
             series.setData(data);
         }
-        this.ehcacheService.put(key, result);
+        this.cacheService.put(key, result);
         return Result.ok(result);
     }
 
@@ -300,7 +300,7 @@ public class DashboardController {
     @ResponseBody
     public Result<LineInfo> getTopicRankChart(@RequestParam(name = "createTimeRange") String createTimeRange) {
         final String key = String.format("DashboardController::getTopicRankChart:%s", createTimeRange);
-        final LineInfo cache = this.ehcacheService.get(key);
+        final LineInfo cache = this.cacheService.get(key);
         if (null != cache) {
             return Result.ok(cache);
         }
@@ -322,7 +322,7 @@ public class DashboardController {
 
         result.setTopicNames(topicNames);
         result.setSeries(seriesList);
-        this.ehcacheService.put(key, result);
+        this.cacheService.put(key, result);
         return Result.ok(result);
     }
 

@@ -6,6 +6,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.route.Route;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -83,10 +85,21 @@ public class AccessTokenFilter implements GlobalFilter {
                 return chain.filter(exchange);
             }
 
-            final List<Api> apiList = this.dataService.getApiList(app.getClientId());
+            Route route = null;
+            final Object attrRoute = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
+            if (attrRoute instanceof Route) {
+                route = (Route) attrRoute;
+            }
+            List<Api> apiList;
+            if (null == route) {
+                apiList = this.dataService.getApiList(app.getClientId());
+            } else {
+                apiList = this.dataService.getApiList(app.getClientId(), route.getId());
+            }
             if (apiList.stream().anyMatch(r -> PATH_MATCH.match(String.format("/**%s/**", r.getPath()), url))) {
                 return chain.filter(exchange);
             }
+
             return ResponseTool.unauthorized(exchange, "Access is denied");
         } catch (final SignatureException e) {
             return ResponseTool.unauthorized(exchange, String.format("%s is illegal", Names.ACCESS_TOKEN));

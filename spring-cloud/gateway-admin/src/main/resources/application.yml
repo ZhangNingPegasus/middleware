@@ -34,7 +34,7 @@ server:
 
 spring:
   application:
-    name: gateway-admin
+    name: ${gateway_admin_consul_name}
   cloud:
     consul:
       host: ${consul_host}

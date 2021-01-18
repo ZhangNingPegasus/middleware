@@ -38,6 +38,12 @@ public class PropertyConfig {
     @Value("${db_maximum}")
     public int dbMaximum;
 
+    @Value("${auth_consul_name}")
+    public String authConsulName;
+
     @Value("${gateway_consul_name}")
     public String gatewayConsulName;
+
+    @Value("${gateway_admin_consul_name}")
+    public String gatewayAdminConsulName;
 }

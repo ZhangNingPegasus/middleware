@@ -3,7 +3,7 @@ package org.wyyt.springcloud.gateway.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.wyyt.apollo.tool.ApolloTool;
-import org.wyyt.tool.rpc.RpcTool;
+import org.wyyt.tool.rpc.RpcService;
 
 /**
  * the configuration of bean
@@ -24,8 +24,8 @@ public class BeanConfig {
     }
 
     @Bean
-    public RpcTool rpcTool() {
-        return new RpcTool();
+    public RpcService rpcService() {
+        return new RpcService();
     }
 
     @Bean

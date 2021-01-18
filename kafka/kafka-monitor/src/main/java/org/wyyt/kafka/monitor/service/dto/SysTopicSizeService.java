@@ -18,8 +18,8 @@ import org.wyyt.kafka.monitor.entity.vo.KafkaConsumerVo;
 import org.wyyt.kafka.monitor.entity.vo.OffsetVo;
 import org.wyyt.kafka.monitor.entity.vo.TopicRecordCountVo;
 import org.wyyt.kafka.monitor.mapper.SysTopicSizeMapper;
-import org.wyyt.kafka.monitor.service.common.EhcacheService;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
+import org.wyyt.tool.cache.CacheService;
 import org.wyyt.tool.exception.ExceptionTool;
 
 import java.util.*;
@@ -35,16 +35,16 @@ import java.util.*;
 @Service
 public class SysTopicSizeService extends ServiceImpl<SysTopicSizeMapper, SysTopicSize> {
     private final static int BATCH_SIZE = 1024;
-    private final EhcacheService ehcacheService;
+    private final CacheService cacheService;
     private final SysTableNameService sysTableNameService;
     private final KafkaService kafkaService;
     private final PartitionService partitionService;
 
-    public SysTopicSizeService(final EhcacheService ehcacheService,
+    public SysTopicSizeService(final CacheService cacheService,
                                final SysTableNameService sysTableNameService,
                                final KafkaService kafkaService,
                                final PartitionService partitionService) {
-        this.ehcacheService = ehcacheService;
+        this.cacheService = cacheService;
         this.sysTableNameService = sysTableNameService;
         this.kafkaService = kafkaService;
         this.partitionService = partitionService;
@@ -59,7 +59,7 @@ public class SysTopicSizeService extends ServiceImpl<SysTopicSizeMapper, SysTopi
 
         final String key = String.format("SysTopicSizeService::getHistoryLogSize:%s:%s", topicName, pastDays);
 
-        Long result = this.ehcacheService.get(key);
+        Long result = this.cacheService.get(key);
         if (null == result) {
             final Calendar calendar = Calendar.getInstance();
             calendar.set(calendar.get(Calendar.YEAR),
@@ -74,7 +74,7 @@ public class SysTopicSizeService extends ServiceImpl<SysTopicSizeMapper, SysTopi
             final Date to = DateUtils.addDays(from, 1);
             result = this.getHistoryLogSize(topicName, from, to);
             if (pastDays != 0) {
-                this.ehcacheService.put(key, result);
+                this.cacheService.put(key, result);
             }
         }
         return result;

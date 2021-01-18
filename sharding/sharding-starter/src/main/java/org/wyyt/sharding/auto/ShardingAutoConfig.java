@@ -15,14 +15,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.ehcache.Cache;
-import org.ehcache.CacheManager;
-import org.ehcache.config.CacheConfiguration;
-import org.ehcache.config.builders.CacheConfigurationBuilder;
-import org.ehcache.config.builders.CacheManagerBuilder;
-import org.ehcache.config.builders.ExpiryPolicyBuilder;
-import org.ehcache.config.builders.ResourcePoolsBuilder;
-import org.ehcache.config.units.EntryUnit;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -40,8 +32,7 @@ import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.auto.property.DimensionProperty;
 import org.wyyt.sharding.auto.property.ShardingProperty;
 import org.wyyt.sharding.auto.property.TableProperty;
-import org.wyyt.sharding.cache.EhcacheService;
-import org.wyyt.sharding.cache.aop.EhCacheAop;
+import org.wyyt.sharding.cache.aop.LocalCacheAop;
 import org.wyyt.sharding.constant.Name;
 import org.wyyt.sharding.context.DbContext;
 import org.wyyt.sharding.entity.DbInfo;
@@ -50,6 +41,7 @@ import org.wyyt.sharding.interceptor.MainMybatisInterceptor;
 import org.wyyt.sharding.interceptor.plugin.impl.CheckSqlInterceptor;
 import org.wyyt.sharding.service.RewriteService;
 import org.wyyt.sharding.service.ShardingService;
+import org.wyyt.tool.cache.CacheService;
 import org.wyyt.tool.db.DataSourceTool;
 import org.wyyt.tool.sql.SqlTool;
 
@@ -123,28 +115,11 @@ public class ShardingAutoConfig implements DisposableBean {
         return new TableComplexShardingAlgorithm();
     }
 
-    @Bean
-    @Primary
-    @ConditionalOnMissingBean
-    public Cache<String, Object> cache() {
-        final CacheConfiguration<String, Object> cacheConfiguration = CacheConfigurationBuilder
-                .newCacheConfigurationBuilder(
-                        String.class, Object.class,
-                        ResourcePoolsBuilder
-                                .newResourcePoolsBuilder()
-                                .heap(128L, EntryUnit.ENTRIES)
-                )
-                .withExpiry(ExpiryPolicyBuilder.noExpiration())
-                .build();
-        final CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().withCache(EHCACHE_NAME, cacheConfiguration).build(true);
-        return cacheManager.getCache(EHCACHE_NAME, String.class, Object.class);
-    }
-
     @Bean(destroyMethod = "destroy")
     @Primary
     @ConditionalOnMissingBean
-    public EhcacheService ehcacheService(final Cache<String, Object> cache) {
-        return new EhcacheService(cache);
+    public CacheService cacheService() {
+        return new CacheService(null, 128, 1024L);
     }
 
     @Bean
@@ -157,8 +132,8 @@ public class ShardingAutoConfig implements DisposableBean {
     @Bean
     @Primary
     @ConditionalOnMissingBean
-    public EhCacheAop ehCacheAop(final EhcacheService ehcacheService) {
-        return new EhCacheAop(ehcacheService);
+    public LocalCacheAop ehCacheAop(final CacheService cacheService) {
+        return new LocalCacheAop(cacheService);
     }
 
     @Bean
@@ -221,7 +196,6 @@ public class ShardingAutoConfig implements DisposableBean {
         this.dataSourceMap = new HashMap<>();
     }
 
-    private static final String EHCACHE_NAME = "MIDDLEWARE_SHARDING_DEFAULT_EHCACHE";
     private final XmlConfig xmlConfig;
     private final Map<DbInfo, DataSource> dataSourceMap;
 
