@@ -59,7 +59,6 @@ public class ApiLoadService {
             final JSONObject jsonObject = JSON.parseObject(text);
             final Object pathsObj = jsonObject.get("paths");
 
-
             if (pathsObj instanceof JSONObject) {
                 final JSONObject paths = (JSONObject) pathsObj;
 

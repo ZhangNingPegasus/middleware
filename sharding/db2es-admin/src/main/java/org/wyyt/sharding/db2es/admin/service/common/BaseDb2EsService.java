@@ -1,7 +1,6 @@
 package org.wyyt.sharding.db2es.admin.service.common;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.shiro.util.Assert;
@@ -155,16 +154,11 @@ public abstract class BaseDb2EsService {
             params = new HashMap<>();
         }
         headers.put("sign", SignTool.sign(params, Names.API_KEY, Names.API_IV));
-
-        final String responseText = this.rpcService.post(url, params, headers);
-
-        if (ObjectUtils.isEmpty(responseText)) {
-            throw new Db2EsException(String.format("接口[%s]无法响应, 请检查该主机上db2es-client的运行状态", url));
-        }
-
-        final Result<?> respondResult = OBJECT_MAPPER.readValue(responseText, new TypeReference<Result<?>>() {
+        final Result<?> respondResult = this.rpcService.post(url, params, headers, new com.alibaba.fastjson.TypeReference<Result<?>>() {
         });
-
+        if (null == respondResult) {
+            return result;
+        }
         if (respondResult.getOk()) {
             final Object data = respondResult.getData();
             if (null != data) {

@@ -1,7 +1,6 @@
 package org.wyyt.springcloud.gateway.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -161,9 +160,13 @@ public class AppController {
         final Map<String, Object> params = new HashMap<>();
         params.put("clientId", app.getClientId());
         params.put("clientSecret", app.getClientSecret());
-        final String responseText = this.rpcService.post(this.getCreateAccessTokenUrl(), params);
-        final Result<AccessToken> result = OBJECT_MAPPER.readValue(responseText, new TypeReference<Result<AccessToken>>() {
-        });
+        final Result<AccessToken> result = this.rpcService.post(this.getCreateAccessTokenUrl(),
+                params,
+                new com.alibaba.fastjson.TypeReference<Result<AccessToken>>() {
+                });
+        if (null == result) {
+            return Result.ok(new AccessToken());
+        }
         return Result.ok(result.getData());
     }
 

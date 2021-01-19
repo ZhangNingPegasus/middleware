@@ -3,8 +3,6 @@ package org.wyyt.springcloud.gateway.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -50,7 +48,6 @@ public class GatewayService {
     private final static String LIST_ROUTES_URL = "/route/listRoutes";
     private final static String REMOVE_IGNORE_URLS_LOCAL_CACHE = "cache/removeIngoreUrlSetLocalCache";
     private final static String REMOVE_CLIENT_ID_LOCAL_CACHE = "cache/removeClientIdLocalCache";
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public GatewayService(final DiscoveryClient discoveryClient,
                           final PropertyConfig propertyConfig,
@@ -265,8 +262,8 @@ public class GatewayService {
         headers.put("sign", SignTool.sign(params, Names.API_KEY, Names.API_IV));
 
         final URI remoteAddress = UriComponentsBuilder.fromHttpUrl(uri.toString().concat(serviceUrl)).build().toUri();
-        final String responseText = this.rpcService.post(remoteAddress.toString(), params, headers);
-        return OBJECT_MAPPER.readValue(responseText, new TypeReference<Result<?>>() {
+
+        return this.rpcService.post(remoteAddress.toString(), params, headers, new com.alibaba.fastjson.TypeReference<Result<?>>() {
         });
     }
 }

@@ -1,5 +1,7 @@
 package org.wyyt.tool.rpc;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -16,6 +18,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.lang.Nullable;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.resource.ResourceTool;
 
@@ -71,6 +74,27 @@ public class RpcService {
         } else {
             return post(url, null, null, false);
         }
+    }
+
+    public <T> T post(final String url,
+                      final Map<String, Object> params,
+                      final TypeReference<T> type) throws Exception {
+        final String responseText = this.post(url, params);
+        if (ObjectUtils.isEmpty(responseText)) {
+            return null;
+        }
+        return JSONObject.parseObject(responseText, type);
+    }
+
+    public <T> T post(final String url,
+                      final Map<String, Object> params,
+                      final Map<String, String> headers,
+                      final TypeReference<T> type) throws Exception {
+        final String responseText = this.post(url, params, headers);
+        if (ObjectUtils.isEmpty(responseText)) {
+            return null;
+        }
+        return JSONObject.parseObject(responseText, type);
     }
 
     public String post(final String url,
