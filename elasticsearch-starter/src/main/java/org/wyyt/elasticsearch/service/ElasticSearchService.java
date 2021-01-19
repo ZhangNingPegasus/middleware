@@ -335,6 +335,8 @@ public final class ElasticSearchService implements InitializingBean, DisposableB
                     try {
                         connManager = new PoolingNHttpClientConnectionManager(new
                                 DefaultConnectingIOReactor(ioReactorConfig));
+                        connManager.setMaxTotal(20);
+                        connManager.setDefaultMaxPerRoute(5);
                     } catch (final IOReactorException e) {
                         log.error(String.format("ElasticSearchService: init Connection Manager meet error with %s", e.getMessage()), e);
                     }
