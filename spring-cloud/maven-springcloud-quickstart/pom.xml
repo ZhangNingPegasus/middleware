@@ -114,7 +114,7 @@
                     <archive>
                         <manifest>
                             <!-- 修改成项目启动类的全名称 -->
-                            <mainClass>${groupId}.Application</mainClass>
+                            <mainClass>${project.groupId}.Application</mainClass>
                             <classpathPrefix>../lib</classpathPrefix>
                             <addClasspath>true</addClasspath>
                         </manifest>
