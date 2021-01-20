@@ -9,10 +9,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.rpc.Result;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -43,8 +47,17 @@ public class AFeignImpl implements AFeign {
 
     @Override
     public Result<User> invoke(@PathVariable(value = "value") String value) {
+        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String s = headerNames.nextElement();
+            if (s.startsWith("n-d-")) {
+                System.out.println(s + " = " + request.getHeader(s));
+            }
+        }
+
         final User user = new User();
-        user.setUserName("userName");
+        user.setUserName(userName);
         user.setAge(RandomUtils.nextInt(18, 35));
         user.setMale(RandomUtils.nextBoolean());
         user.setDescription(doInvoke(value));

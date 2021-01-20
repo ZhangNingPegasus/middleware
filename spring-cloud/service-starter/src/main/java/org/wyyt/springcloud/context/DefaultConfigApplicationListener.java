@@ -41,6 +41,7 @@ public class DefaultConfigApplicationListener implements ApplicationListener<App
         this.addDefaultConfig(environment, properties, "spring.sleuth.sampler.probability", 1);
 
         // Ribbon config
+        this.addDefaultConfig(environment, properties, "ribbon.eager-load.enabled", true);
         this.addDefaultConfig(environment, properties, "ribbon.ServerListRefreshInterval", 10000);
         this.addDefaultConfig(environment, properties, "ribbon.ConnectTimeout", 10000);
         this.addDefaultConfig(environment, properties, "ribbon.ReadTimeout", 10000);
@@ -55,7 +56,7 @@ public class DefaultConfigApplicationListener implements ApplicationListener<App
         this.addDefaultConfig(environment, properties, "feign.client.config.default.ReadTimeOut", 10000);
 
         //hystrix config
-        this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.isolation.strategy", "THREAD");
+        this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.isolation.strategy", "SEMAPHORE");
         this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.timeout.enabled", false);
         this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds", 10000);
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.coreSize", "200");
