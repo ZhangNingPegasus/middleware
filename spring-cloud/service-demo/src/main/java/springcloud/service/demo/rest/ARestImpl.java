@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.rpc.Result;
+import springcloud.service.demo.feign.BFeign;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,14 +38,18 @@ public class ARestImpl {
     private final PluginAdapter pluginAdapter;
     private final RestTemplate restTemplate;
     private final Executor executor;
+    private final BFeign bFeign;
 
-    public ARestImpl(StrategyContextHolder strategyContextHolder, final PluginAdapter pluginAdapter,
+    public ARestImpl(final StrategyContextHolder strategyContextHolder,
+                     final PluginAdapter pluginAdapter,
                      final RestTemplate restTemplate,
-                     final Executor executor) {
+                     final Executor executor,
+                     final BFeign bFeign) {
         this.strategyContextHolder = strategyContextHolder;
         this.pluginAdapter = pluginAdapter;
         this.restTemplate = restTemplate;
         this.executor = executor;
+        this.bFeign = bFeign;
     }
 
     @ApiOperation(value = "rest同步调用示例")

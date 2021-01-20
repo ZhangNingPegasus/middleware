@@ -53,6 +53,7 @@
         <commons-io.version>2.8.0</commons-io.version>
         <guava.version>30.1-jre</guava.version>
         <dom4j.version>2.1.3</dom4j.version>
+        <swagger-annotations.version>1.6.2</swagger-annotations.version>
         <maven-archetype-plugin.version>3.2.0</maven-archetype-plugin.version>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <sharding-sphere.version>4.1.1</sharding-sphere.version>
@@ -123,6 +124,12 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
                 <version>${spring-tx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
             </dependency>
 
             <dependency>

@@ -1,7 +1,8 @@
 package org.wyyt.tool.rpc;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 import org.wyyt.tool.exception.ExceptionTool;
@@ -20,14 +21,23 @@ import java.util.List;
 @ToString
 @Data
 @JsonSerialize
-@JsonInclude
+@ApiModel(description = "统一数据接口")
 public final class Result<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("编码")
     private Long code;
+
+    @ApiModelProperty("当业务出现错误时才有的错误信息")
     private String error;
+
+    @ApiModelProperty("业务处理是否成功. true:成功; false:失败")
     private Boolean ok;
+
+    @ApiModelProperty("当数据是集合时, 返回集合总共的数据(用于分页)")
     private Long count;
+
+    @ApiModelProperty("返回给调用方的具体数据")
     private T data;
 
     public Result() {
@@ -55,12 +65,12 @@ public final class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> ok(final long code,
-                                        final T data) {
+                                   final T data) {
         return new Result<>(code, null, data, null, true);
     }
 
     public static <T> Result<List<T>> ok(final List<T> data,
-                                              final long count) {
+                                         final long count) {
         return new Result<>(ResultCode.SUCCESS.getCode(), null, data, count, ResultCode.SUCCESS.getSuccess());
     }
 

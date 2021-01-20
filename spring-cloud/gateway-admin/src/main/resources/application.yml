@@ -15,7 +15,7 @@ admin:
     short-name: Spring Cloud 智能网关
 
 server:
-  port: 81
+  port: ${gateway_admin_server_port:81}
   tomcat:
     uri-encoding: UTF-8
   compression:

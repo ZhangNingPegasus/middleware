@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>spring-cloud</artifactId>
+        <artifactId>maven-springcloud-quickstart</artifactId>
         <groupId>org.wyyt.springcloud</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>service-demo</artifactId>
+    <artifactId>service</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>${parent.groupId}</groupId>
+            <artifactId>api</artifactId>
+            <version>${parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>HdrHistogram</artifactId>
+                    <groupId>org.hdrhistogram</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>org.wyyt.springcloud</groupId>
             <artifactId>service-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>error_prone_annotations</artifactId>
+                    <groupId>com.google.errorprone</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>android-json</artifactId>
+                    <groupId>com.vaadin.external.google</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -24,7 +60,7 @@
 
         <!-- 资源文件配置 -->
         <resources>
-            <!-- 融合到启动jar包中的资源 -->
+            <!-- 融合到启动jar包中的资源(不会替换占位符) -->
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
@@ -34,7 +70,7 @@
                 </includes>
             </resource>
 
-            <!-- 融合到启动jar包中的资源 -->
+            <!-- 融合到启动jar包中的资源(会替换占位符) -->
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
@@ -49,14 +85,7 @@
                 <filtering>true</filtering>
                 <targetPath>config</targetPath>
                 <includes>
-                    <include>application-a1.yml</include>
-                    <include>application-a2.yml</include>
-                    <include>application-b1.yml</include>
-                    <include>application-b2.yml</include>
-                    <include>application-c1.yml</include>
-                    <include>application-c2.yml</include>
-                    <include>application-d1.yml</include>
-                    <include>application-d2.yml</include>
+                    <include>application.yml</include>
                     <include>bootstrap.properties</include>
                 </includes>
             </resource>
@@ -93,17 +122,12 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-archetype-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
                             <!-- 修改成项目启动类的全名称 -->
-                            <mainClass>springcloud.service.demo.ServiceA1</mainClass>
+                            <mainClass>${project.groupId}.Application</mainClass>
                             <classpathPrefix>../lib</classpathPrefix>
                             <addClasspath>true</addClasspath>
                         </manifest>

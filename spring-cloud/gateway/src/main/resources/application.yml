@@ -9,7 +9,7 @@ apollo:
       enabled: true
 
 server:
-  port: ${server_port}
+  port: ${gateway_server_port:80}
 
 spring:
   application:

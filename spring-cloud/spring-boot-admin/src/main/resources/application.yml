@@ -50,7 +50,7 @@ spring:
     check-template-location: false
 
 server:
-  port: ${app_port:83}
+  port: ${server_port:83}
 
 management:
   endpoints:

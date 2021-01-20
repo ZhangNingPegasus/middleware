@@ -53,15 +53,15 @@ public class DefaultConfigApplicationListener implements ApplicationListener<App
         this.addDefaultConfig(environment, properties, "feign.httpclient.enabled", true);
         this.addDefaultConfig(environment, properties, "feign.client.config.default.ConnectTimeOut", 10000);
         this.addDefaultConfig(environment, properties, "feign.client.config.default.ReadTimeOut", 10000);
+
+        //hystrix config
         this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.isolation.strategy", "THREAD");
+        this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.timeout.enabled", false);
         this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds", 10000);
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.coreSize", "200");
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.maximumSize", "500");
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.allowMaximumSizeToDivergeFromCoreSize", true);
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.keepAliveTimeInMinutes", 1);
-
-        //hystrix config
-        this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.timeout.enabled", false);
 
         // compression config
         this.addDefaultConfig(environment, properties, "server.compression.enabled", true);
