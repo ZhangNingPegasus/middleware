@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 import org.wyyt.springcloud.gateway.service.ApiServiceImpl;
 import org.wyyt.springcloud.gateway.service.GatewayService;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
-
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.wyyt.springcloud.gateway.controller.ApiController.PREFIX;
 
@@ -39,7 +42,10 @@ public class ApiController {
 
     @GetMapping("tolist")
     public String toList(final Model model) {
-        model.addAttribute("serviceIds", this.gatewayService.listServiceIds());
+        final Set<String> serviceIds = new HashSet<>();
+        serviceIds.addAll(this.gatewayService.listServiceIds());
+        serviceIds.addAll(this.apiServiceImpl.listServiceIds());
+        model.addAttribute("serviceIds", serviceIds.stream().sorted(String::compareTo).collect(Collectors.toList()));
         return String.format("%s/%s", PREFIX, "list");
     }
 
@@ -91,8 +97,9 @@ public class ApiController {
 
     @PostMapping("del")
     @ResponseBody
-    public Result<?> del(@RequestParam(value = "id") final Long id) throws Exception {
-        this.apiServiceImpl.del(id);
+    public Result<?> del(@RequestParam(value = "ids") final String ids) throws Exception {
+        final List<Long> idList = CommonTool.parseList(ids, ",", Long.class);
+        this.apiServiceImpl.del(new HashSet<>(idList));
         return Result.ok();
     }
 }

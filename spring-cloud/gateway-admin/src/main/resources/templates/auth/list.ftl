@@ -39,12 +39,12 @@
                                 <i class="layui-icon layui-icon-add-1"></i>&nbsp;&nbsp;新增权限
                             </button>
                         </@insert>
-                        <@insert>
+                        <@delete>
                             <button class="layui-btn layui-btn-sm layui-btn-danger"
                                     lay-event="del">
                                 <i class="layui-icon layui-icon-delete"></i>&nbsp;&nbsp;删除权限
                             </button>
-                        </@insert>
+                        </@delete>
                     </div>
                 </script>
             </div>

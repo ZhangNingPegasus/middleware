@@ -10,9 +10,9 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">
-                    <div class="layui-inline">路由标识</div>
+                    <div class="layui-inline">路由描述</div>
                     <div class="layui-inline" style="width:500px">
-                        <input type="text" name="routeId" placeholder="请输入路由标识" autocomplete="off"
+                        <input type="text" name="description" placeholder="请输入路由描述" autocomplete="off"
                                class="layui-input">
                     </div>
                     <div class="layui-inline">
@@ -28,32 +28,40 @@
 
                 <script type="text/html" id="grid-toolbar">
                     <div class="layui-btn-container">
-                        <@update>
-                            <button id="btnPublish"
-                                    class="layui-btn-disabled layui-btn layui-btn-sm layui-btn-normal layuiadmin-btn-admin"
-                                    lay-event="publish" style="margin-right: 50px">
-                                <i class="layui-icon layui-icon-release"></i>&nbsp;&nbsp;发布路由
-                                <span id="spanStatus" class="layui-badge layui-bg-orange"
-                                      style="display: none">有修改</span>
-                            </button>
-                        </@update>
                         <@insert>
                             <button class="layui-btn layui-btn-sm layuiadmin-btn-admin"
                                     lay-event="add"><i
                                         class="layui-icon layui-icon-add-1"></i>&nbsp;&nbsp;新增路由
                             </button>
                         </@insert>
+                        <@delete>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del">
+                                <i class="layui-icon layui-icon-delete"></i>&nbsp;&nbsp;删除路由
+                            </button>
+                        </@delete>
                         <@select>
                             <button class="layui-btn layui-btn-sm layui-btn-primary layuiadmin-btn-admin"
                                     lay-event="working"><i
                                         class="layui-icon layui-icon-read"></i>&nbsp;&nbsp;查看正在工作路由
                             </button>
                         </@select>
+                        <@update>
+                            <button id="btnPublish"
+                                    class="layui-btn-disabled layui-btn layui-btn-sm layui-btn-normal layuiadmin-btn-admin"
+                                    lay-event="publish" style="margin-left: 50px">
+                                <i class="layui-icon layui-icon-release"></i>&nbsp;&nbsp;发布路由
+                                <span id="spanStatus" class="layui-badge layui-bg-orange"
+                                      style="display: none">有修改</span>
+                            </button>
+                        </@update>
                     </div>
                 </script>
 
                 <script type="text/html" id="grid-bar">
                     <@update>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                                    class="layui-icon layui-icon-edit"></i>编辑</a>
+
                         {{#  if(d.enabled){ }}
                         <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="disable">
                             <i class="layui-icon layui-icon-logout"></i>禁用</a>
@@ -61,14 +69,7 @@
                         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="enable">
                             <i class="layui-icon layui-icon-ok"></i>启用</a>
                         {{#  } }}
-
-                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
-                                    class="layui-icon layui-icon-edit"></i>编辑</a>
                     </@update>
-                    <@delete>
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
-                                    class="layui-icon layui-icon-delete"></i>删除</a>
-                    </@delete>
                 </script>
             </div>
         </div>
@@ -98,9 +99,9 @@
                     none: '暂无相关数据'
                 },
                 cols: [[
+                    {type: 'checkbox'},
                     {type: 'numbers', title: '序号', width: 50},
-                    {field: 'routeId', title: '路由标识', width: 200},
-                    {field: 'description', title: '路由描述', width: 200},
+                    {field: 'description', title: '路由描述', width: 300},
                     {field: 'uri', title: '目标地址', width: 300},
                     {field: 'predicates', title: '断言器'},
                     {field: 'filters', title: '过滤器'},
@@ -111,7 +112,7 @@
                         }
                     }
                     <@select>
-                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 210}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 150}
                     </@select>
                 ]]
             });
@@ -150,6 +151,18 @@
                         shade: 0.8,
                         area: ['90%', '78%']
                     });
+                } else if (obj.event === 'del') {
+                    const checkedId = admin.getCheckedData(table, obj, "id");
+                    if (checkedId.length > 0) {
+                        layer.confirm(admin.DEL_QUESTION, function (index) {
+                            admin.post("del", {'ids': checkedId.join(",")}, function () {
+                                admin.closeDelete(table, obj, index);
+                                updateStatus(true);
+                            });
+                        });
+                    } else {
+                        admin.error(admin.SYSTEM_PROMPT, admin.DEL_ERROR);
+                    }
                 } else if (obj.event === 'publish') {
                     if (!$("#btnPublish").hasClass("layui-btn-disabled")) {
                         layer.confirm("确定要发布路由吗?", function (index) {
@@ -166,15 +179,7 @@
 
             table.on('tool(grid)', function (obj) {
                 const data = obj.data;
-                if (obj.event === 'del') {
-                    layer.confirm(admin.DEL_QUESTION, function (index) {
-                        admin.post("del", data, function () {
-                            table.reload('grid');
-                            updateStatus(true);
-                            layer.close(index);
-                        });
-                    });
-                } else if (obj.event === 'edit') {
+                if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
                         title: '<i class="layui-icon layui-icon-edit" style="color: #1E9FFF;"></i>&nbsp;编辑路由',
@@ -200,7 +205,7 @@
                         }
                     });
                 } else if (obj.event === 'disable') {
-                    layer.confirm("确定要禁用路由[" + data.routeName + "]吗", function (index) {
+                    layer.confirm("确定要禁用路由吗", function (index) {
                         admin.post('disable', {"id": data.id}, function () {
                             table.reload('grid');
                             updateStatus(true);
@@ -210,7 +215,7 @@
                         });
                     });
                 } else if (obj.event === 'enable') {
-                    layer.confirm("确定要启用路由[" + data.routeName + "]吗", function (index) {
+                    layer.confirm("确定要启用路由吗", function (index) {
                         admin.post('enable', {"id": data.id}, function () {
                             table.reload('grid');
                             updateStatus(true);
@@ -240,7 +245,6 @@
                 $("#btnPublish").addClass("layui-btn-disabled");
                 $("#spanStatus").hide();
             }
-
         });
     </script>
     </body>

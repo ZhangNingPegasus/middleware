@@ -4,14 +4,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.wyyt.admin.ui.common.Constants;
 import org.wyyt.admin.ui.entity.dto.SysAdmin;
 import org.wyyt.admin.ui.entity.dto.SysRole;
 import org.wyyt.admin.ui.service.SysAdminService;
 import org.wyyt.admin.ui.service.SysRoleService;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -84,18 +86,18 @@ public class RoleController {
 
     @PostMapping("del")
     @ResponseBody
-    public Result<?> del(@RequestParam(value = "id") final Long id,
-                         @RequestParam(value = "name") final String name) throws Exception {
-        if (Constants.SYSTEM_ROLE_NAME.equals(name)) {
-            return Result.error("系统内置角色不能删除");
+    public Result<?> del(@RequestParam(value = "ids") final String ids) throws Exception {
+        final List<Long> idList = CommonTool.parseList(ids, ",", Long.class);
+        final Set<Long> idSet = new HashSet<>();
+        for (final Long id : idList) {
+            final List<SysAdmin> sysAdminList = this.sysAdminService.getByRoleId(id);
+            if (null != sysAdminList && !sysAdminList.isEmpty()) {
+                final SysRole sysRole = this.sysRoleService.getById(id);
+                return Result.error(String.format("角色[%s]有管理员正在使用,无法删除", sysRole.getName()));
+            }
+            idSet.add(id);
         }
-
-        final List<SysAdmin> sysAdminList = this.sysAdminService.getByRoleId(id);
-        if (null != sysAdminList && !sysAdminList.isEmpty()) {
-            return Result.error("该角色有管理正在使用,无法删除");
-        }
-
-        this.sysRoleService.removeById(id);
+        this.sysRoleService.removeById(idSet);
         return Result.ok();
     }
 }

@@ -10,18 +10,19 @@
          style="padding: 20px 30px 0 0;">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">路由标识</label>
+            <label class="layui-form-label">路由描述</label>
             <div class="layui-input-inline">
-                <input type="text" name="routeId" lay-verify="required" class="layui-input" style="width: 740px"
-                       placeholder="请输入路由标识" autocomplete="off">
+                <input type="text" id="description" name="description" lay-verify="required" class="layui-input" style="width: 740px"
+                       placeholder="请输入路由描述" autocomplete="off">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">路由描述</label>
+            <label class="layui-form-label">服务名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="description" lay-verify="required" class="layui-input" style="width: 740px"
-                       placeholder="请输入路由描述" autocomplete="off">
+                <input type="text" id="serviceId" name="serviceId" lay-verify="required" class="layui-input"
+                       style="width: 740px"
+                       placeholder="请输入服务名称(即: 服务的spring.application.name值)" autocomplete="off">
             </div>
         </div>
 
@@ -84,10 +85,12 @@
                 const text = data.elem[data.elem.selectedIndex].text;
                 const name = $(data.elem[data.elem.selectedIndex]).attr('tag');
                 $("#uri").val(text);
+                $("#serviceId").val(name);
                 $("#predicates").val('Path=/' + name + '/**');
                 $("#filters").val('StripPrefix=1');
                 $("#uri1").next().find("dl").css({"display": "none"});
                 form.render();
+                $("#description").focus();
             });
 
             $('#uri').bind('input propertychange', function () {

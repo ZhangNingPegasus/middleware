@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.springcloud.gateway.entity.anno.TranRead;
@@ -13,6 +14,7 @@ import org.wyyt.springcloud.gateway.entity.exception.GatewayException;
 import org.wyyt.springcloud.gateway.entity.mapper.RouteMapper;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * The service of `t_route` table
@@ -27,12 +29,12 @@ import java.util.List;
 @Service
 public class RouteService extends ServiceImpl<RouteMapper, Route> {
     @TranRead
-    public IPage<Route> page(final String routeId,
+    public IPage<Route> page(final String description,
                              final Integer pageNum,
                              final Integer pageSize) {
         final QueryWrapper<Route> queryWrapper = new QueryWrapper<>();
-        if (!ObjectUtils.isEmpty(routeId)) {
-            queryWrapper.lambda().like(Route::getRouteId, routeId);
+        if (!ObjectUtils.isEmpty(description)) {
+            queryWrapper.lambda().like(Route::getDescription, description);
         }
         return this.page(new Page<>(pageNum, pageSize), queryWrapper);
     }
@@ -52,13 +54,14 @@ public class RouteService extends ServiceImpl<RouteMapper, Route> {
     }
 
     @TranSave
-    public void add(final String routeId,
-                    final String description,
+    public void add(final String description,
                     final String uri,
                     final String predicate,
                     final String filter,
                     final Integer orderNum,
+                    final String serviceId,
                     final Boolean enabled) {
+        final String routeId = RandomStringUtils.randomAlphanumeric(15);
         Route route = this.getByRouteId(routeId);
         if (null != route) {
             throw new GatewayException(String.format("RouteId=%s的路由已存在", routeId));
@@ -70,40 +73,40 @@ public class RouteService extends ServiceImpl<RouteMapper, Route> {
         route.setPredicates(predicate);
         route.setFilters(filter);
         route.setOrderNum(orderNum);
+        route.setServiceId(serviceId);
         route.setEnabled(enabled);
         this.save(route);
     }
 
     @TranSave
     public void edit(final long id,
-                     final String routeId,
                      final String description,
                      final String uri,
                      final String predicate,
                      final String filter,
                      final Integer orderNum,
+                     final String serviceId,
                      final Boolean enabled) {
         final Route route = this.getById(id);
         if (null == route) {
             throw new GatewayException(String.format("路由(id=%s)不存在", id));
         }
-        route.setRouteId(routeId);
         route.setDescription(description);
         route.setUri(uri);
         route.setPredicates(predicate);
         route.setFilters(filter);
         route.setOrderNum(orderNum);
+        route.setServiceId(serviceId);
         route.setEnabled(enabled);
         this.updateById(route);
     }
 
     @TranSave
-    public void delete(final long id) {
-        final Route route = this.getById(id);
-        if (null == route) {
-            throw new GatewayException(String.format("路由(id=%s)不存在", id));
+    public void delete(final Set<Long> ids) {
+        if (null == ids || ids.isEmpty()) {
+            return;
         }
-        this.removeById(id);
+        this.removeByIds(ids);
     }
 
     @TranSave

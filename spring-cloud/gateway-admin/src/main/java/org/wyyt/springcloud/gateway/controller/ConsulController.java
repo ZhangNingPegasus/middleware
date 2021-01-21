@@ -1,7 +1,6 @@
 package org.wyyt.springcloud.gateway.controller;
 
 import kong.unirest.Unirest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +8,7 @@ import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.EndpointVo;
 import org.wyyt.springcloud.gateway.entity.ServiceVo;
 import org.wyyt.springcloud.gateway.service.GatewayService;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
@@ -67,11 +67,14 @@ public class ConsulController {
         return Result.ok(result, filterEndpointVoList.size());
     }
 
-    @PostMapping("remove")
+    @PostMapping("del")
     @ResponseBody
-    public Result<String> remove(@RequestParam(value = "id") final String id) {
+    public Result<?> remove(@RequestParam(value = "ids") final String ids) {
+        final List<String> idList = CommonTool.parseList(ids, ",", String.class);
         final String url = String.format("http://%s:%s", this.propertyConfig.getConsulHost(), this.propertyConfig.getConsulPort());
-        final String result = Unirest.put(String.format("%s/v1/agent/service/deregister/%s", url, id)).asString().getBody();
-        return Result.ok(result);
+        for (final String id : idList) {
+            Unirest.put(String.format("%s/v1/agent/service/deregister/%s", url, id)).asString().getBody();
+        }
+        return Result.ok();
     }
 }

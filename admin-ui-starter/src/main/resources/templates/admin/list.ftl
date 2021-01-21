@@ -29,8 +29,15 @@
                 <script type="text/html" id="grid-toolbar">
                     <div class="layui-btn-container">
                         <@insert>
-                            <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="add">新增管理员</button>
+                            <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="add">
+                                <i class="layui-icon layui-icon-add-1"></i>&nbsp;&nbsp;新增管理员
+                            </button>
                         </@insert>
+                        <@delete>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del">
+                                <i class="layui-icon layui-icon-delete"></i>&nbsp;&nbsp;删除管理员
+                            </button>
+                        </@delete>
                     </div>
                 </script>
 
@@ -41,10 +48,6 @@
                         <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="repwd"><i
                                     class="layui-icon layui-icon-password"></i>密码重置</a>
                     </@update>
-                    <@delete>
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
-                                    class="layui-icon layui-icon-delete"></i>删除</a>
-                    </@delete>
                 </script>
             </div>
         </div>
@@ -72,6 +75,7 @@
                     none: '暂无相关数据'
                 },
                 cols: [[
+                    {type: 'checkbox'},
                     {type: 'numbers', title: '序号', width: 50},
                     {field: 'username', title: '登录名', width: 150},
                     {field: 'roleName', title: '角色名', width: 200},
@@ -80,7 +84,7 @@
                     {field: 'email', title: '邮箱地址', width: 200},
                     {field: 'remark', title: '备注'}
                     <@select>
-                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 235}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 180}
                     </@select>
                 ]]
             });
@@ -116,30 +120,23 @@
                             submit.trigger('click');
                         }
                     });
+                } else if (obj.event === 'del') {
+                    const checkedId = admin.getCheckedData(table, obj, "id");
+                    if (checkedId.length > 0) {
+                        layer.confirm(admin.DEL_QUESTION, function (index) {
+                            admin.post("del", {'ids': checkedId.join(",")}, function () {
+                                admin.closeDelete(table, obj, index);
+                            });
+                        });
+                    } else {
+                        admin.error(admin.SYSTEM_PROMPT, admin.DEL_ERROR);
+                    }
                 }
             });
 
             table.on('tool(grid)', function (obj) {
                 const data = obj.data;
-                if (obj.event === 'del') {
-                    layer.confirm(admin.DEL_QUESTION, function (index) {
-                        admin.post("del", data, function () {
-                            if (table.cache.grid.length < 2) {
-                                const skip = $(".layui-laypage-skip");
-                                const curPage = skip.find("input").val();
-                                let page = parseInt(curPage) - 1;
-                                if (page < 1) {
-                                    page = 1;
-                                }
-                                skip.find("input").val(page);
-                                $(".layui-laypage-btn").click();
-                            } else {
-                                table.reload('grid');
-                            }
-                            layer.close(index);
-                        });
-                    });
-                } else if (obj.event === 'edit') {
+                if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
                         title: '<i class="layui-icon layui-icon-edit" style="color: #1E9FFF;"></i>&nbsp;编辑管理员',

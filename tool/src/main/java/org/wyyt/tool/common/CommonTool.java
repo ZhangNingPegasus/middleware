@@ -1,6 +1,7 @@
 package org.wyyt.tool.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.tool.exception.ExceptionTool;
 
@@ -8,7 +9,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +32,20 @@ public final class CommonTool {
     private final static long TB_IN_BYTES = 1024 * GB_IN_BYTES;
     private final static long PB_IN_BYTES = 1024 * TB_IN_BYTES;
     private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
+
+    public static <T> List<T> parseList(final String value,
+                                        final String separate,
+                                        final Class<T> tClass) {
+        final String[] array = value.split(separate);
+        List<T> result = new ArrayList<>(array.length);
+        for (final String item : array) {
+            if (ObjectUtils.isEmpty(item)) {
+                continue;
+            }
+            result.add((T) ConvertUtils.convert(item, tClass));
+        }
+        return result;
+    }
 
     public static void sleep(final long milliseconds) {
         try {

@@ -11,8 +11,6 @@ package org.wyyt.admin.ui.common;
  * *****************************************************************
  */
 public class Constants {
-    public static final String DEFAULT_ADMIN_USER_NAME = "admin";
     public static final String CURRENT_ADMIN_LOGIN = "CURRENT_ADMIN_LOGIN";
     public static final String DEFAULT_ADMIN_PASSWORD = Utils.hash("admin");
-    public static final String SYSTEM_ROLE_NAME = "超级管理员";
 }

@@ -60,7 +60,6 @@
                                       style="resize: none;width: 740px;height:300px">${app.description}</textarea>
                         </div>
                     </div>
-
                 </div>
                 <div class="layui-tab-item">
                     <div class="layui-form-item">
@@ -74,8 +73,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label" style="width: 90px">过期时间(秒)</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="expire" lay-verify="required" class="layui-input"
-                                   style="width: 740px" autocomplete="off" value="${(ak.expiresTime)!''}">
+                            <input type="text" id="expire" readonly="readonly" class="layui-input"
+                                   style="width: 740px" value="${(ak.expiresTime)!''}">
                         </div>
                     </div>
 
@@ -95,7 +94,9 @@
                     </div>
 
                     <blockquote id="message" class="layui-elem-quote">
-                        <b>Access Token请求地址:</b> <span style="color: blue">${createTokenUrl}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <b>Access Token请求地址:</b> <span
+                                style="color: blue">${createTokenUrl!'<span style="color:red">无可用的SpringCloud网关, 请假检查网关是否正常开启</span></@compress>'}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <b>请求方式</b>: <span style="color: blue">POST</span> <br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>参数1</b>: <span
                                 style="color: blue">clientId</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -109,7 +110,9 @@
                                 style="color: blue">申请注册的client
                             secret</span><br/>
                         <br/>
-                        <b>Access Token注销地址</b>: <span style="color: blue">${logoutTokenUrl}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <b>Access Token注销地址</b>: <span
+                                style="color: blue">${logoutTokenUrl!'<span style="color:red">无可用的SpringCloud网关, 请假检查网关是否正常开启</span></@compress>'}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <b>请求方式:</b> <span style="color: blue">POST</span> <br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>参数1:</b> <span
                                 style="color: blue">clientId</span>
@@ -118,7 +121,8 @@
                                 style="color: blue">申请注册的client id</span> <br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>参数2:</b> <span
                                 style="color: blue">accessToken</span> &nbsp;&nbsp;&nbsp;&nbsp; <b>类型:</b>
-                        <span style="color: blue">String</span> &nbsp;&nbsp;&nbsp;&nbsp; <b>解释:</b> <span style="color: blue">授权获取的access token</span><br/>
+                        <span style="color: blue">String</span> &nbsp;&nbsp;&nbsp;&nbsp; <b>解释:</b> <span
+                                style="color: blue">授权获取的access token</span><br/>
                     </blockquote>
                 </div>
             </div>
@@ -151,11 +155,13 @@
             });
 
             $("#btnLogoutAccessToken").click(function () {
-                admin.post("logoutAccessToken", {'clientId': '${app.clientId}'}, function (data) {
-                        $("#accessToken").html(data.data.accessToken);
-                        $("#expire").val(data.data.expiresTime);
-                    }
-                );
+                layer.confirm("确定要注销Client Id=[${app.clientId}]的Access Token吗?", function (index) {
+                    admin.post("logoutAccessToken", {'clientId': '${app.clientId}'}, function (data) {
+                            $("#accessToken").html(data.data.accessToken);
+                            $("#expire").val(data.data.expiresTime);
+                        }
+                    );
+                });
             });
         });
     </script>

@@ -13,9 +13,9 @@
 
                 <script type="text/html" id="colWeight">
                     {{#  if(d.weight == 0){ }}
-                    <span class="layui-badge layui-bg-orange"><b>{{d.weight}}%</span>
+                    <span class="layui-badge layui-bg-orange"><b>{{d.weight}}%</b></span>
                     {{#  } else { }}
-                    <span class="layui-badge layui-bg-green"><b>{{d.weight}}%</span>
+                    <span class="layui-badge layui-bg-green"><b>{{d.weight}}%</b></span>
                     {{#  } }}
                 </script>
 

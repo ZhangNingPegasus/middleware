@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.wyyt.admin.ui.common.Constants;
 import org.wyyt.admin.ui.entity.vo.AdminVo;
 import org.wyyt.admin.ui.service.SysAdminService;
 import org.wyyt.admin.ui.service.SysRoleService;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
 import java.util.List;
@@ -100,12 +100,9 @@ public class AdminController {
 
     @PostMapping("del")
     @ResponseBody
-    public Result<?> del(@RequestParam(value = "id") final Long id,
-                         @RequestParam(value = "username") final String username) throws Exception {
-        if (Constants.DEFAULT_ADMIN_USER_NAME.equals(username)) {
-            return Result.error("系统内置账户不能删除");
-        }
-        this.sysAdminService.removeById(id);
+    public Result<?> del(@RequestParam(value = "ids") final String ids) throws Exception {
+        final List<Long> idList = CommonTool.parseList(ids, ",", Long.class);
+        this.sysAdminService.removeById(idList);
         return Result.ok();
     }
 }

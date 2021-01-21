@@ -8,9 +8,11 @@ import org.wyyt.springcloud.gateway.entity.WorkingVo;
 import org.wyyt.springcloud.gateway.entity.entity.Route;
 import org.wyyt.springcloud.gateway.entity.service.RouteService;
 import org.wyyt.springcloud.gateway.service.GatewayService;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.wyyt.springcloud.gateway.controller.RouteController.PREFIX;
@@ -68,8 +70,8 @@ public class RouteController {
     @ResponseBody
     public Result<List<Route>> list(@RequestParam(value = "page") final Integer pageNum,
                                     @RequestParam(value = "limit") final Integer pageSize,
-                                    @RequestParam(value = "routeId", required = false) final String routeId) {
-        final IPage<Route> page = this.routeService.page(routeId, pageNum, pageSize);
+                                    @RequestParam(value = "description", required = false) final String description) {
+        final IPage<Route> page = this.routeService.page(description, pageNum, pageSize);
         return Result.ok(page.getRecords(), page.getTotal());
     }
 
@@ -96,14 +98,14 @@ public class RouteController {
 
     @PostMapping("add")
     @ResponseBody
-    public Result<?> add(@RequestParam(value = "routeId") final String routeId,
-                         @RequestParam(value = "description") final String description,
+    public Result<?> add(@RequestParam(value = "description") final String description,
                          @RequestParam(value = "uri") final String uri,
                          @RequestParam(value = "predicates") final String predicates,
                          @RequestParam(value = "filters") final String filters,
                          @RequestParam(value = "orderNum") final Integer orderNum,
+                         @RequestParam(value = "serviceId") final String serviceId,
                          @RequestParam(value = "enabled") final Boolean enabled) {
-        this.routeService.add(routeId, description, uri, predicates, filters, orderNum, enabled);
+        this.routeService.add(description, uri, predicates, filters, orderNum, serviceId, enabled);
         return Result.ok();
     }
 
@@ -111,20 +113,21 @@ public class RouteController {
     @ResponseBody
     public Result<?> edit(@RequestParam(value = "id") final Long id,
                           @RequestParam(value = "description") final String description,
-                          @RequestParam(value = "routeName") final String routeName,
                           @RequestParam(value = "uri") final String uri,
                           @RequestParam(value = "predicates") final String predicates,
                           @RequestParam(value = "filters") final String filters,
                           @RequestParam(value = "orderNum") final Integer orderNum,
+                          @RequestParam(value = "serviceId") final String serviceId,
                           @RequestParam(value = "enabled") final Boolean enabled) {
-        this.routeService.edit(id, description, routeName, uri, predicates, filters, orderNum, enabled);
+        this.routeService.edit(id, description, uri, predicates, filters, orderNum, serviceId, enabled);
         return Result.ok();
     }
 
     @PostMapping("del")
     @ResponseBody
-    public Result<?> del(@RequestParam(value = "id") final Long id) {
-        this.routeService.delete(id);
+    public Result<?> del(@RequestParam(value = "ids") final String ids) {
+        final List<Long> idList = CommonTool.parseList(ids, ",", Long.class);
+        this.routeService.delete(new HashSet<>(idList));
         return Result.ok();
     }
 

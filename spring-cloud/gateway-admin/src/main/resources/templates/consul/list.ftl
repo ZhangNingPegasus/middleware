@@ -43,14 +43,12 @@
                                 <i class="layui-icon layui-icon-refresh-3"></i>&nbsp;&nbsp;刷新服务列表
                             </button>
                         </@select>
+                        <@delete>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del">
+                                <i class="layui-icon layui-icon-delete"></i>&nbsp;&nbsp;删除服务实例
+                            </button>
+                        </@delete>
                     </div>
-                </script>
-
-                <script type="text/html" id="grid-bar">
-                    <@delete>
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
-                                    class="layui-icon layui-icon-delete"></i>删除</a>
-                    </@delete>
                 </script>
             </div>
         </div>
@@ -58,7 +56,7 @@
 
     <script>
         layui.config({base: '../../..${ctx}/layuiadmin/'}).extend({index: 'lib/index'}).use(['index', 'table'], function () {
-            const admin = layui.admin, $ = layui.$, form = layui.form, table = layui.table;
+            const admin = layui.admin, form = layui.form, table = layui.table;
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
@@ -78,6 +76,7 @@
                     none: '暂无相关数据'
                 },
                 cols: [[
+                    {type: 'checkbox'},
                     {type: 'numbers', title: '序号', width: 50},
                     {field: 'id', title: '服务实例ID'},
                     {field: 'host', title: '主机地址', width: 200},
@@ -85,29 +84,23 @@
                     {field: 'version', title: '服务版本', width: 200},
                     {field: 'group', title: '服务组名', width: 200},
                     {field: 'alive', title: '是否运行', align: "center", templet: '#colAlive', width: 200}
-                    <@select>
-                    , {fixed: 'right', title: '操作', align: "center", align: "center", toolbar: '#grid-bar', width: 150}
-                    </@select>
                 ]]
             });
 
             table.on('toolbar(grid)', function (obj) {
                 if (obj.event === 'refresh') {
                     table.reload('grid');
-                }
-            });
-
-            table.on('tool(grid)', function (obj) {
-                const data = obj.data;
-                if (obj.event === 'del') {
-                    layer.confirm(admin.DEL_QUESTION, function (index) {
-                        admin.post("remove", {"id": data.id}, function () {
-                            admin.success("系统提示", "删除成功", function () {
-                                table.reload('grid');
-                                layer.close(index);
+                } else if (obj.event === 'del') {
+                    const checkedId = admin.getCheckedData(table, obj, "id");
+                    if (checkedId.length > 0) {
+                        layer.confirm(admin.DEL_QUESTION, function (index) {
+                            admin.post("del", {'ids': checkedId.join(",")}, function () {
+                                admin.closeDelete(table, obj, index);
                             });
                         });
-                    });
+                    } else {
+                        admin.error(admin.SYSTEM_PROMPT, admin.DEL_ERROR);
+                    }
                 }
             });
         });

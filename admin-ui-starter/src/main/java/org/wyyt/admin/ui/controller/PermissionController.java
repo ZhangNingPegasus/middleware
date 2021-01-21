@@ -11,9 +11,9 @@ import org.wyyt.admin.ui.entity.vo.PermissionVo;
 import org.wyyt.admin.ui.service.SysPageService;
 import org.wyyt.admin.ui.service.SysPermissionService;
 import org.wyyt.admin.ui.service.SysRoleService;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,14 +124,8 @@ public class PermissionController {
     @PostMapping("del")
     @ResponseBody
     public Result<?> del(@RequestParam(value = "ids") final String ids) throws Exception {
-        final String[] idsArray = ids.split(",");
-        final List<Long> idsList = new ArrayList<>(idsArray.length);
-        for (final String id : idsArray) {
-            if (null != id && !ObjectUtils.isEmpty(id.trim())) {
-                idsList.add(Long.parseLong(id));
-            }
-        }
-        this.sysPermissionService.removeByIds(idsList);
+        final List<Long> idList = CommonTool.parseList(ids, ",", Long.class);
+        this.sysPermissionService.removeByIds(idList);
         return Result.ok();
     }
 }

@@ -107,4 +107,29 @@
         admin.initPage();
         location.href = "/"
     }
+
+    admin.getCheckedData = function (table, obj, field) {
+        const checkStatus = table.checkStatus(obj.config.id);
+        const data = checkStatus.data;
+        const result = new Array();
+        if (data.length > 0) {
+            for (let j = 0, len = data.length; j < len; j++) {
+                result.push(data[j][field]);
+            }
+        }
+        return result;
+    }
+
+    admin.closeDelete = function (table, obj, index) {
+        table.reload(obj.config.id, {
+            done: function (result, page) {
+                if (table.cache.grid.length < 1 && page > 1) {
+                    table.reload(obj.config.id, {
+                        page: {curr: 1}
+                    });
+                }
+                layer.close(index);
+            }
+        });
+    }
 });

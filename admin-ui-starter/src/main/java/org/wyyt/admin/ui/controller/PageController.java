@@ -1,15 +1,15 @@
 package org.wyyt.admin.ui.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.admin.ui.entity.dto.SysPage;
 import org.wyyt.admin.ui.entity.vo.PageVo;
 import org.wyyt.admin.ui.service.SysPageService;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -56,7 +56,8 @@ public class PageController {
     public Result<List<PageVo>> list(@RequestParam(value = "page") final Integer pageNum,
                                      @RequestParam(value = "limit") final Integer pageSize,
                                      @RequestParam(value = "name", required = false) final String name) throws Exception {
-        return Result.ok(this.sysPageService.list(name, pageNum, pageSize).getRecords());
+        final IPage<PageVo> page = this.sysPageService.list(name, pageNum, pageSize);
+        return Result.ok(page.getRecords(), page.getTotal());
     }
 
     @PostMapping("add")
@@ -99,14 +100,8 @@ public class PageController {
     @PostMapping("del")
     @ResponseBody
     public Result<?> del(@RequestParam(value = "ids") final String ids) throws Exception {
-        final String[] idsArray = ids.split(",");
-        final List<Long> idsList = new ArrayList<>(idsArray.length);
-        for (final String id : idsArray) {
-            if (null != id && !ObjectUtils.isEmpty(id.trim())) {
-                idsList.add(Long.parseLong(id));
-            }
-        }
-        this.sysPageService.removeByIds(idsList);
+        final List<Long> idList = CommonTool.parseList(ids, ",", Long.class);
+        this.sysPageService.removeByIds(idList);
         return Result.ok();
     }
 }

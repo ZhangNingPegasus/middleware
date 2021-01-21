@@ -36,6 +36,9 @@ public class Route extends BaseDto {
     @TableField(value = "`order_num`")
     private Integer orderNum;
 
+    @TableField(value = "`service_id`")
+    private String serviceId;
+
     @TableField(value = "`enabled`")
     private Boolean enabled;
 
@@ -49,7 +52,6 @@ public class Route extends BaseDto {
         if (ObjectUtils.isEmpty(this.predicates)) {
             return "";
         }
-
         return predicates.replaceAll("Path=/", "").replace("/**", "");
     }
 }

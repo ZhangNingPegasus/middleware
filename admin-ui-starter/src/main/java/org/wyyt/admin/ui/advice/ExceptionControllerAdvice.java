@@ -47,7 +47,7 @@ public class ExceptionControllerAdvice {
             }
         } else {
             model.addAttribute("error", getStackTrace(exception));
-            return new ModelAndView("common/500");
+            return new ModelAndView("error/500");
         }
     }
 

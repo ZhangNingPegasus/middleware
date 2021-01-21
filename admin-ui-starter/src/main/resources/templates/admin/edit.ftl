@@ -25,7 +25,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-inline">
-                <input type="text" name="username" lay-verify="required" class="layui-input" autocomplete="off"
+                <input type="text" name="username" lay-verify="required" class="layui-input layui-disabled" autocomplete="off"
                        value="${admin.username}" readonly>
             </div>
             <div class="layui-form-mid layui-word-aux">不可修改。用于后台登入名</div>

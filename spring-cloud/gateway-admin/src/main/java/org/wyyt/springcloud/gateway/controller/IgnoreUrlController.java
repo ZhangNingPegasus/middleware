@@ -2,16 +2,16 @@ package org.wyyt.springcloud.gateway.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.springcloud.gateway.entity.ClientVo;
 import org.wyyt.springcloud.gateway.entity.entity.IgnoreUrl;
 import org.wyyt.springcloud.gateway.service.IgnoreUrlServiceImpl;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static org.wyyt.springcloud.gateway.controller.IgnoreUrlController.PREFIX;
@@ -84,8 +84,9 @@ public class IgnoreUrlController {
 
     @PostMapping("del")
     @ResponseBody
-    public Result<?> del(@RequestParam(value = "id") final Long id) throws Exception {
-        this.ignoreUrlServiceImpl.del(id);
+    public Result<?> del(@RequestParam(value = "ids") final String ids) throws Exception {
+        final List<Long> idList = CommonTool.parseList(ids, ",", Long.class);
+        this.ignoreUrlServiceImpl.del(new HashSet<>(idList));
         return Result.ok();
     }
 

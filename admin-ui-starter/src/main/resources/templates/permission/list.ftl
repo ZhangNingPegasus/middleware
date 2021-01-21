@@ -39,10 +39,14 @@
             <script type="text/html" id="grid-toolbar">
                 <div class="layui-btn-container">
                     <@insert>
-                        <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="add">添加</button>
+                        <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="add">
+                            <i class="layui-icon layui-icon-add-1"></i>&nbsp;&nbsp;添加权限
+                        </button>
                     </@insert>
                     <@delete>
-                        <button class="layui-btn layui-btn-sm" lay-event="batchDel">删除</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">
+                            <i class="layui-icon layui-icon-delete"></i>&nbsp;&nbsp;删除权限
+                        </button>
                     </@delete>
                 </div>
             </script>

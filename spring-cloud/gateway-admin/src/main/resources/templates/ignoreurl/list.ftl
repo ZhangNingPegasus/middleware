@@ -35,6 +35,11 @@
                                 <i class="layui-icon layui-icon-add-1"></i>&nbsp;&nbsp;新增白名单
                             </button>
                         </@insert>
+                        <@delete>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del">
+                                <i class="layui-icon layui-icon-delete"></i>&nbsp;&nbsp;删除白名单
+                            </button>
+                        </@delete>
                     </div>
                 </script>
 
@@ -43,10 +48,6 @@
                         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
                                     class="layui-icon layui-icon-edit"></i>编辑</a>
                     </@update>
-                    <@delete>
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
-                                    class="layui-icon layui-icon-delete"></i>删除</a>
-                    </@delete>
                 </script>
             </div>
         </div>
@@ -74,11 +75,12 @@
                     none: '暂无相关数据'
                 },
                 cols: [[
+                    {type: 'checkbox'},
                     {type: 'numbers', title: '序号', width: 50},
                     {field: 'url', title: '路径'},
                     {field: 'description', title: '描述信息', width: 450}
                     <@select>
-                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 150}
+                    , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 80}
                     </@select>
                 ]]
             });
@@ -107,19 +109,23 @@
                             submit.trigger('click');
                         }
                     });
+                } else if (obj.event === 'del') {
+                    const checkedId = admin.getCheckedData(table, obj, "id");
+                    if (checkedId.length > 0) {
+                        layer.confirm(admin.DEL_QUESTION, function (index) {
+                            admin.post("del", {'ids': checkedId.join(",")}, function () {
+                                admin.closeDelete(table, obj, index);
+                            });
+                        });
+                    } else {
+                        admin.error(admin.SYSTEM_PROMPT, admin.DEL_ERROR);
+                    }
                 }
             });
 
             table.on('tool(grid)', function (obj) {
                 const data = obj.data;
-                if (obj.event === 'del') {
-                    layer.confirm(admin.DEL_QUESTION, function (index) {
-                        admin.post("del", data, function () {
-                            table.reload('grid');
-                            layer.close(index);
-                        });
-                    });
-                } else if (obj.event === 'edit') {
+                if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
                         title: '<i class="layui-icon layui-icon-edit" style="color: #1E9FFF;"></i>&nbsp;编辑白名单',

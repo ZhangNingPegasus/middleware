@@ -14,6 +14,9 @@ import org.wyyt.tool.sql.SqlTool;
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -103,10 +106,14 @@ public final class CrudService implements DisposableBean {
                         continue;
                     }
                     field.setAccessible(true);
-                    final Object value = kv.get(SqlTool.removeMySqlQualifier(columnName));
+                    Object value = kv.get(SqlTool.removeMySqlQualifier(columnName));
                     if (null == value) {
                         field.set(t, null);
                     } else {
+                        if (value.getClass().isAssignableFrom(LocalDateTime.class)) {
+                            final LocalDateTime localDateTime = (LocalDateTime) value;
+                            value = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                        }
                         field.set(t, ConvertUtils.convert(value, field.getType()));
                     }
                 }
@@ -128,8 +135,13 @@ public final class CrudService implements DisposableBean {
                                       final String sql,
                                       final Object... params) throws Exception {
         final int startIndex = (Math.max(pageNum, 1) - 1) * pageSize;
-        final List<T> records = this.select(cls, sql, params);
-        final Long total = this.executeScalar(Long.class, String.format("SELECT COUNT(*) FROM (%s) crud_service_count LIMIT %s, %s", sql, startIndex, pageSize), params);
+
+
+        final String querySql = String.format("SELECT * FROM (%s) crud_service_query LIMIT %s, %s", sql, startIndex, pageSize);
+        final String totalSql = String.format("SELECT COUNT(*) FROM (%s) crud_service_count", sql);
+
+        final List<T> records = this.select(cls, querySql, params);
+        final Long total = this.executeScalar(Long.class, totalSql, params);
         final CrudPage<T> crudPage = new CrudPage<>();
         crudPage.setRecrods(records);
         crudPage.setTotal(total);

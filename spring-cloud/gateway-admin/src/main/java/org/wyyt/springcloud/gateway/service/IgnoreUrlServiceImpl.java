@@ -7,6 +7,8 @@ import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.IgnoreUrl;
 import org.wyyt.springcloud.gateway.entity.service.IgnoreUrlService;
 
+import java.util.Set;
+
 /**
  * The service of `t_ignore_url` table
  * <p>
@@ -60,12 +62,8 @@ public class IgnoreUrlServiceImpl extends IgnoreUrlService {
     }
 
     @TranSave
-    public void del(final Long id) throws Exception {
-        final IgnoreUrl ignoreUrl = this.getById(id);
-        if (null == ignoreUrl) {
-            throw new RuntimeException(String.format("Url[id=%s]不存在", id));
-        }
-        this.removeById(id);
+    public void del(final Set<Long> idSet) throws Exception {
+        this.removeByIds(idSet);
         this.removeRedis();
     }
 

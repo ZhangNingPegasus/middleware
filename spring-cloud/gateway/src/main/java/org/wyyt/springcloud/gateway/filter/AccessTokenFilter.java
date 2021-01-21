@@ -86,20 +86,25 @@ public class AccessTokenFilter implements GlobalFilter {
             }
 
             Route route = null;
+            String serviceId = null;
             final Object attrRoute = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
             if (attrRoute instanceof Route) {
                 route = (Route) attrRoute;
+                final Object serviceIdObj = route.getMetadata().get(Names.SERVICE_ID);
+                if (null == serviceIdObj) {
+                    return ResponseTool.unauthorized(exchange, String.format("%s is missing", Names.SERVICE_ID));
+                }
+                serviceId = serviceIdObj.toString();
             }
             List<Api> apiList;
             if (null == route) {
                 apiList = this.dataService.getApiList(app.getClientId());
             } else {
-                apiList = this.dataService.getApiList(app.getClientId(), route.getId());
+                apiList = this.dataService.getApiList(app.getClientId(), serviceId);
             }
             if (apiList.stream().anyMatch(r -> PATH_MATCH.match(String.format("/**%s/**", r.getPath()), url))) {
                 return chain.filter(exchange);
             }
-
             return ResponseTool.unauthorized(exchange, "Access is denied");
         } catch (final SignatureException e) {
             return ResponseTool.unauthorized(exchange, String.format("%s is illegal", Names.ACCESS_TOKEN));

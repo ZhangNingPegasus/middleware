@@ -10,6 +10,7 @@ import org.wyyt.admin.ui.exception.BusinessException;
 import org.wyyt.tool.db.CrudPage;
 import org.wyyt.tool.db.CrudService;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -86,8 +87,10 @@ public class SysRoleService {
                 id);
     }
 
-    public void removeById(final Long id) throws Exception {
-        this.crudService.execute("DELETE FROM `sys_role` WHERE `id`=?", id);
+    public void removeById(final Collection<Long> ids) throws Exception {
+        for (final Long id : ids) {
+            this.crudService.execute("DELETE FROM `sys_role` WHERE `id`=?", id);
+        }
     }
 
     public List<SysRole> getNotSuperAdmin() throws Exception {

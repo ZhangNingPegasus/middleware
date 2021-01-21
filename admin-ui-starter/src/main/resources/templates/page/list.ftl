@@ -25,10 +25,14 @@
             <script type="text/html" id="grid-toolbar">
                 <div class="layui-btn-container">
                     <@insert>
-                        <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="add">添加</button>
+                        <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="add">
+                            <i class="layui-icon layui-icon-add-1"></i>&nbsp;&nbsp;新增页面
+                        </button>
                     </@insert>
                     <@delete>
-                        <button class="layui-btn layui-btn-sm" lay-event="batchDel">删除</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">
+                            <i class="layui-icon layui-icon-delete"></i>&nbsp;&nbsp;删除页面
+                        </button>
                     </@delete>
                 </div>
             </script>
@@ -38,10 +42,6 @@
                     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
                                 class="layui-icon layui-icon-edit"></i>编辑</a>
                 </@update>
-                <@delete>
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
-                                class="layui-icon layui-icon-delete"></i>删除</a>
-                </@delete>
             </script>
         </div>
 
@@ -63,13 +63,14 @@
             cellMinWidth: 80,
             page: true,
             limit: 15,
+            limits: [15],
             even: true,
             cols: [[
                 {type: 'checkbox'},
                 {type: 'numbers', title: '序号'},
                 {field: 'name', title: '页面名称', width: 150},
                 {field: 'parentName', title: '父级菜单', width: 150},
-                {field: 'url', title: 'URL地址', width: 200},
+                {field: 'url', title: 'URL地址', width: 250},
                 {field: 'orderNum', title: '排序号', width: 150},
                 {
                     title: '菜单图标', width: 100, templet: function (d) {
@@ -93,25 +94,19 @@
                 },
                 {field: 'description', title: '描述信息'}
                 <@select>
-                , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 160}
+                , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 80}
                 </@select>
             ]]
         });
 
         table.on('toolbar(grid)', function (obj) {
-            const checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
                 case 'batchDel':
-                    const data = checkStatus.data;
-                    if (data.length > 0) {
+                    const checkedId = admin.getCheckedData(table, obj, "id");
+                    if (checkedId.length > 0) {
                         layer.confirm(admin.DEL_QUESTION, function (index) {
-                            let keys = "";
-                            for (let j = 0, len = data.length; j < len; j++) {
-                                keys = keys + data[j].id + ","
-                            }
-                            admin.post("del", {ids: keys}, function () {
-                                table.reload('grid');
-                                layer.close(index);
+                            admin.post("del", {'ids': checkedId.join(",")}, function () {
+                                admin.closeDelete(table, obj, index);
                             });
                         });
                     } else {
@@ -148,14 +143,7 @@
 
         table.on('tool(grid)', function (obj) {
             const data = obj.data;
-            if (obj.event === 'del') {
-                layer.confirm(admin.DEL_QUESTION, function (index) {
-                    admin.post("del", {ids: data.id}, function () {
-                        table.reload('grid');
-                        layer.close(index);
-                    });
-                });
-            } else if (obj.event = 'edit') {
+            if (obj.event = 'edit') {
                 layer.open({
                     type: 2,
                     title: '<i class="layui-icon layui-icon-edit"></i>&nbsp;编辑页面',

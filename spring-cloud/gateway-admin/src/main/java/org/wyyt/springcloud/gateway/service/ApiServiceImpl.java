@@ -5,6 +5,8 @@ import org.wyyt.springcloud.gateway.entity.anno.TranSave;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 import org.wyyt.springcloud.gateway.entity.service.ApiService;
 
+import java.util.Set;
+
 /**
  * The service of `t_api` table
  * <p>
@@ -55,6 +57,14 @@ public class ApiServiceImpl extends ApiService {
         api.setServiceId(serviceId);
         api.setPath(path);
         this.updateById(api);
+    }
+
+    @TranSave
+    public void del(final Set<Long> idSet) throws Exception {
+        this.removeByIds(idSet);
+        for (final Long apiId : idSet) {
+            this.authServiceImpl.removeByApiId(apiId);
+        }
     }
 
     @TranSave

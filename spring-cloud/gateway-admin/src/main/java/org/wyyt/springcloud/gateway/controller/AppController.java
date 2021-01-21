@@ -1,7 +1,6 @@
 package org.wyyt.springcloud.gateway.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,11 +17,13 @@ import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.vo.AccessToken;
 import org.wyyt.springcloud.gateway.service.AppServiceImpl;
 import org.wyyt.springcloud.gateway.service.GatewayService;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 import org.wyyt.tool.rpc.RpcService;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,6 @@ import static org.wyyt.springcloud.gateway.controller.AppController.PREFIX;
 @RequestMapping(PREFIX)
 public class AppController {
     public static final String PREFIX = "app";
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final PropertyConfig propertyConfig;
     private final AppServiceImpl appServiceImpl;
@@ -130,8 +130,9 @@ public class AppController {
 
     @PostMapping("del")
     @ResponseBody
-    public Result<?> del(@RequestParam(value = "id") final Long id) throws Exception {
-        this.appServiceImpl.del(id);
+    public Result<?> del(@RequestParam(value = "ids") final String ids) throws Exception {
+        final List<Long> idList = CommonTool.parseList(ids, ",", Long.class);
+        this.appServiceImpl.del(new HashSet<>(idList));
         return Result.ok();
     }
 
@@ -156,11 +157,16 @@ public class AppController {
         if (null == app) {
             throw new BusinessException(String.format("Client Id[%s]不存在", clientId));
         }
+        final String createAccessTokenUrl = this.getCreateAccessTokenUrl();
+        if (null == createAccessTokenUrl) {
+            return Result.error("无可用的SpringCloud网关, 请假检查网关是否正常开启");
+        }
 
         final Map<String, Object> params = new HashMap<>();
         params.put("clientId", app.getClientId());
         params.put("clientSecret", app.getClientSecret());
-        final Result<AccessToken> result = this.rpcService.post(this.getCreateAccessTokenUrl(),
+
+        final Result<AccessToken> result = this.rpcService.post(createAccessTokenUrl,
                 params,
                 new com.alibaba.fastjson.TypeReference<Result<AccessToken>>() {
                 });
@@ -177,6 +183,10 @@ public class AppController {
         if (null == app) {
             throw new BusinessException(String.format("Client Id[%s]不存在", clientId));
         }
+        final String logoutAccessTokenUrl = this.getLogoutAccessTokenUrl();
+        if (null == logoutAccessTokenUrl) {
+            return Result.error("无可用的SpringCloud网关, 请假检查网关是否正常开启");
+        }
 
         final Object accessToken = this.redisService.get(Names.getAccessTokenRedisKey(clientId));
         if (ObjectUtils.isEmpty(accessToken)) {
@@ -186,7 +196,8 @@ public class AppController {
         final Map<String, Object> params = new HashMap<>();
         params.put("clientId", app.getClientId());
         params.put("accessToken", accessToken.toString());
-        this.rpcService.post(this.getLogoutAccessTokenUrl(), params);
+
+        this.rpcService.post(logoutAccessTokenUrl, params);
         return Result.ok(this.getAccessToken(clientId));
     }
 
@@ -207,29 +218,34 @@ public class AppController {
         return Result.ok();
     }
 
-    private String getGatewayUrl() throws Exception {
-        final URI result = this.gatewayService.getAvaiableServiceUri(this.propertyConfig.getGatewayConsulName());
-        if (null == result) {
-            throw new BusinessException("无可用的网关, 请检查网关是否运行正常");
-        }
-        return result.toString();
+    private URI getGatewayUrl() throws Exception {
+        return this.gatewayService.getAvaiableServiceUri(this.propertyConfig.getGatewayConsulName());
     }
 
     private String getCreateAccessTokenUrl() throws Exception {
-        return String.format("%s/auth/v1/oauth/token", this.getGatewayUrl());
+        final URI gatewayUrl = this.getGatewayUrl();
+        if (null == gatewayUrl) {
+            return null;
+        }
+        return String.format("%s/auth/v1/oauth/token", gatewayUrl);
     }
 
     private String getLogoutAccessTokenUrl() throws Exception {
-        return String.format("%s/auth/v1/oauth/logout", this.getGatewayUrl());
+        final URI gatewayUrl = this.getGatewayUrl();
+        if (null == gatewayUrl) {
+            return null;
+        }
+        return String.format("%s/auth/v1/oauth/logout", gatewayUrl);
     }
 
     private AccessToken getAccessToken(final String clientId) {
         final String key = Names.getAccessTokenRedisKey(clientId);
         final AccessToken result = new AccessToken();
         final Object accessToken = this.redisService.get(key);
-        if (!ObjectUtils.isEmpty(accessToken)) {
+        final Long expire = this.redisService.getExpire(key);
+        if (!ObjectUtils.isEmpty(accessToken) && null != expire) {
             result.setAccessToken(accessToken.toString());
-            result.setExpiresTime(this.redisService.getExpire(key) / 1000);
+            result.setExpiresTime(expire / 1000);
         }
         return result;
     }

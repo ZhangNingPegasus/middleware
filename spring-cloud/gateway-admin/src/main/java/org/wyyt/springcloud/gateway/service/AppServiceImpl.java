@@ -8,6 +8,8 @@ import org.wyyt.springcloud.gateway.entity.entity.OauthClientDetails;
 import org.wyyt.springcloud.gateway.entity.entity.enums.GrantType;
 import org.wyyt.springcloud.gateway.entity.service.AppService;
 
+import java.util.Set;
+
 /**
  * The service of `t_app` table
  * <p>
@@ -75,16 +77,18 @@ public class AppServiceImpl extends AppService {
     }
 
     @TranSave
-    public void del(final Long appId) throws Exception {
-        final App app = this.getById(appId);
-        if (null == app) {
-            return;
+    public void del(final Set<Long> appIdSet) throws Exception {
+        for (final Long appId : appIdSet) {
+            final App app = this.getById(appId);
+            if (null == app) {
+                return;
+            }
+            this.removeById(appId);
+            this.authServiceImpl.removeByAppId(app.getId());
+            this.oauthClientDetailsService.removeById(app.getClientId());
+            this.redisService.del(Names.getAccessTokenRedisKey(app.getClientId()));
+            this.removeRedis(app.getClientId());
         }
-        this.removeById(appId);
-        this.authServiceImpl.removeByAppId(app.getId());
-        this.oauthClientDetailsService.removeById(app.getClientId());
-        this.redisService.del(Names.getAccessTokenRedisKey(app.getClientId()));
-        this.removeRedis(app.getClientId());
     }
 
     private void removeRedis(final String clientId) throws Exception {

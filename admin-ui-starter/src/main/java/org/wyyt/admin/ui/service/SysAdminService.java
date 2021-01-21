@@ -11,6 +11,7 @@ import org.wyyt.admin.ui.common.Utils;
 import org.wyyt.admin.ui.entity.dto.SysAdmin;
 import org.wyyt.admin.ui.entity.vo.AdminVo;
 import org.wyyt.admin.ui.exception.BusinessException;
+import org.wyyt.tool.anno.TranSave;
 import org.wyyt.tool.db.CrudPage;
 import org.wyyt.tool.db.CrudService;
 
@@ -125,17 +126,17 @@ public class SysAdminService {
         return this.changePwd(id, Constants.DEFAULT_ADMIN_PASSWORD);
     }
 
-    public boolean updateInfo(final Long id,
-                              final String name,
-                              final String phoneNumber,
-                              final String email,
-                              final String remark) throws Exception {
+    public void updateInfo(final Long id,
+                           final String name,
+                           final String phoneNumber,
+                           final String email,
+                           final String remark) throws Exception {
         if (null == id) {
-            return false;
+            return;
         }
         final SysAdmin sysAdmin = this.getById(id);
         if (null == sysAdmin) {
-            return false;
+            return;
         }
 
         this.crudService.execute("UPDATE `sys_admin` SET `name`=?,`phone_number`=?,`email`=?,`remark`=? WHERE `id`=?",
@@ -150,7 +151,6 @@ public class SysAdminService {
         currentAdminVo.setPhoneNumber(phoneNumber);
         currentAdminVo.setEmail(email);
         currentAdminVo.setRemark(remark);
-        return true;
     }
 
     public void add(final Long roleId,
@@ -167,7 +167,7 @@ public class SysAdminService {
         this.crudService.execute("INSERT INTO `sys_admin`(`sys_role_id`,`username`,`password`,`name`,`phone_number`,`email`,`remark`) VALUES(?,?,?,?,?,?,?)",
                 roleId,
                 username,
-                password,
+                Utils.hash(password),
                 name,
                 phoneNumber,
                 email,
@@ -191,8 +191,10 @@ public class SysAdminService {
                 id);
     }
 
-    public void removeById(final Long id) throws Exception {
-        this.crudService.execute("DELETE FROM `sys_admin` WHERE `id`=?", id);
+    @TranSave
+    public void removeById(final List<Long> idList) throws Exception {
+        for (final Long id : idList) {
+            this.crudService.execute("DELETE FROM `sys_admin` WHERE `id`=?", id);
+        }
     }
-
 }
