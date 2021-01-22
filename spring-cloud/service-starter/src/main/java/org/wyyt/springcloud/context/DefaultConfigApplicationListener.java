@@ -6,6 +6,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.util.ObjectUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -36,6 +37,10 @@ public class DefaultConfigApplicationListener implements ApplicationListener<App
         this.addDefaultConfig(environment, properties, "spring.cloud.gateway.discovery.locator.lower-case-service-id", true);
         this.addDefaultConfig(environment, properties, "spring.cloud.gateway.discovery.locator.enabled", false);
         this.addDefaultConfig(environment, properties, "spring.cloud.loadbalancer.ribbon.enabled", true);
+        this.addDefaultConfig(environment, properties, "server.tomcat.uri-encoding", StandardCharsets.UTF_8.name());
+        this.addDefaultConfig(environment, properties, "server.servlet.encoding.charset", StandardCharsets.UTF_8.name());
+        this.addDefaultConfig(environment, properties, "server.servlet.encoding.enabled", true);
+        this.addDefaultConfig(environment, properties, "server.servlet.encoding.force", true);
 
         // sleuth config
         this.addDefaultConfig(environment, properties, "spring.sleuth.sampler.probability", 1);

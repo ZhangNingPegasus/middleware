@@ -15,6 +15,16 @@
                     <input type="text" name="instanceId" placeholder="请输入服务实例ID" autocomplete="off"
                            class="layui-input">
                 </div>
+
+                <div class="layui-inline">是否运行</div>
+                <div class="layui-inline" style="width:200px">
+                    <select name="alive" lay-filter="roleId" lay-search>
+                        <option value="">请选择是否运行</option>
+                        <option value="true">正在运行</option>
+                        <option value="false">停止运行</option>
+                    </select>
+                </div>
+
                 <div class="layui-inline">
                     <button id="search" class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>

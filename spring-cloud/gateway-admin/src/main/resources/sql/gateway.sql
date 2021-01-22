@@ -216,7 +216,7 @@ INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_
 
 INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (11, '监控中心', 'http://springadmin.wyyt.com', b'1', b'0', b'1', 'layui-icon-chart-screen', 0, 7, 'SpringBootAdmin监控中心');
 
-INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (12, '文档中心', 'http://127.0.0.1:80/doc.html', b'1', b'0', b'1', 'layui-icon-read', 0, 8, '接口文档中心');
+INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (12, '文档中心', 'http://127.0.0.1:10010/doc.html', b'1', b'0', b'1', 'layui-icon-read', 0, 8, '接口文档中心');
 
 INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (13, '工具集合', '', b'1', b'0', b'0', 'layui-icon-util', 0, 9, '工具集合');
 INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (14, '注册中心管理', '/consul/tolist', b'1', b'0', b'0', '', 13, 1, '注册中心管理');

@@ -156,7 +156,7 @@ public final class TableController {
         response.reset();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("multipart/form-data");
-        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("建表SQL.sql", "UTF-8"));
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("建表SQL.sql", StandardCharsets.UTF_8.name()));
 
         final FieldVo[] fieldVos = JSON.parseObject(data, FieldVo[].class);
         final IndexVo[] indexVos = JSON.parseObject(index, IndexVo[].class);

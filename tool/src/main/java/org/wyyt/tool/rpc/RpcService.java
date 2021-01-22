@@ -23,6 +23,7 @@ import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.resource.ResourceTool;
 
 import javax.net.ssl.SSLContext;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -193,7 +194,7 @@ public class RpcService {
                 }
                 final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(_params, "utf-8");
                 entity.setContentType("application/x-www-form-urlencoded");
-                entity.setContentEncoding("UTF-8");
+                entity.setContentEncoding(StandardCharsets.UTF_8.name());
                 request.setEntity(entity);
             }
             if (null != headers && headers.size() > 0) {

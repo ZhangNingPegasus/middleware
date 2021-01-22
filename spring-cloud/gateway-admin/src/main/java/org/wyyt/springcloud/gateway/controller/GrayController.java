@@ -19,7 +19,6 @@ import java.util.Map;
 
 import static org.wyyt.springcloud.gateway.controller.GrayController.PREFIX;
 
-
 /**
  * The controller of gray publish
  * <p>

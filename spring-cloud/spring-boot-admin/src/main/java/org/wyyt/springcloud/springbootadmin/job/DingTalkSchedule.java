@@ -52,8 +52,9 @@ public class DingTalkSchedule {
                 content.append(one.getText().getContent());
                 content.append("\n");
                 content.append("\n");
+                content.append("\n");
             }
-            message.setText(new Message.Text(content.toString()));
+            message.setText(new Message.Text(content.delete(content.length() - 3, content.length()).toString()));
             DingTalkTool.send(message, this.accessToken, this.secret);
         }
     }

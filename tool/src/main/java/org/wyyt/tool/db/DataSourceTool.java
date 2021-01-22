@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ObjectUtils;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -23,7 +24,7 @@ import java.util.Collections;
  */
 @Slf4j
 public final class DataSourceTool {
-    private static final String DATA_BASE_URL = "jdbc:mysql://%s:%s/%s?allowPublicKeyRetrieval=true&serverTimezone=GMT%%2B8&characterEncoding=UTF-8&useUnicode=true&autoReconnect=true&allowMultiQueries=true&useSSL=false&rewriteBatchedStatements=true&zeroDateTimeBehavior=CONVERT_TO_NULL";
+    private static final String DATA_BASE_URL = "jdbc:mysql://%s/%s?allowPublicKeyRetrieval=true&serverTimezone=GMT%%2B8&characterEncoding=UTF-8&useUnicode=true&autoReconnect=true&allowMultiQueries=true&useSSL=false&rewriteBatchedStatements=true&zeroDateTimeBehavior=CONVERT_TO_NULL";
     private static final String CONNECTION_TEST_QUERY = "SELECT 1";
     private static final String CONNECTION_INIT_SQL = "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci";
 
@@ -41,7 +42,7 @@ public final class DataSourceTool {
             result.setName(poolName); //连接池名称
         }
         result.setDriverClassName(com.mysql.cj.jdbc.Driver.class.getCanonicalName());
-        result.setUrl(String.format(DATA_BASE_URL, host, port, databaseName));
+        result.setUrl(String.format(DATA_BASE_URL, getDbUrl(host, port), databaseName));
         result.setUsername(userName);
         result.setPassword(password);
         result.setInitialSize(initialSize); //配置初始化大小
@@ -83,7 +84,7 @@ public final class DataSourceTool {
             result.setPoolName(poolName); //连接池名称
         }
         result.setDriverClassName(com.mysql.cj.jdbc.Driver.class.getCanonicalName());
-        result.setJdbcUrl(String.format(DATA_BASE_URL, host, port, databaseName));
+        result.setJdbcUrl(String.format(DATA_BASE_URL, getDbUrl(host, port), databaseName));
         result.setUsername(userName);
         result.setPassword(password);
         result.setMinimumIdle(minIdle);     //最小空闲连接数量
@@ -130,9 +131,6 @@ public final class DataSourceTool {
         }
     }
 
-
-
-
     public static void close(final Connection connection) {
         if (null != connection) {
             try {
@@ -160,6 +158,19 @@ public final class DataSourceTool {
             } catch (final Exception exception) {
                 log.error(exception.getMessage(), exception);
             }
+        }
+    }
+
+    private static String getDbUrl(final String host,
+                                   final String port) {
+        if (ObjectUtils.isEmpty(host)) {
+            throw new RuntimeException("host is required");
+        }
+
+        if (ObjectUtils.isEmpty(port)) {
+            return host.trim();
+        } else {
+            return String.format("%s:%s", host.trim(), port.trim());
         }
     }
 }

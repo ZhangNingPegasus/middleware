@@ -21,15 +21,6 @@
 
                 <script type="text/html" id="grid-toolbar">
                     <div class="layui-btn-container">
-                        <@update>
-                            <button id="btnPublish"
-                                    class="layui-btn-disabled layui-btn layui-btn-sm layui-btn-normal layuiadmin-btn-admin"
-                                    lay-event="publish" style="margin-right: 50px">
-                                <i class="layui-icon layui-icon-release"></i>&nbsp;&nbsp;发布灰度策略
-                                <span id="spanStatus" class="layui-badge layui-bg-orange"
-                                      style="display: none">有修改</span>
-                            </button>
-                        </@update>
                         <@insert>
                             <button class="layui-btn layui-btn-sm layuiadmin-btn-admin" lay-event="add">
                                 <i class="layui-icon layui-icon-add-1"></i>&nbsp;&nbsp;新增调用分支
@@ -46,6 +37,15 @@
                                 <i class="layui-icon layui-icon-refresh-3"></i>&nbsp;&nbsp;刷新服务列表
                             </button>
                         </@select>
+                        <@update>
+                            <button id="btnPublish"
+                                    class="layui-btn-disabled layui-btn layui-btn-sm layui-btn-normal layuiadmin-btn-admin"
+                                    lay-event="publish" style="margin-left: 50px">
+                                <i class="layui-icon layui-icon-release"></i>&nbsp;&nbsp;发布灰度策略
+                                <span id="spanStatus" class="layui-badge layui-bg-orange"
+                                      style="display: none">有修改</span>
+                            </button>
+                        </@update>
                     </div>
                 </script>
 
@@ -94,8 +94,8 @@
                 },
                 cols: [[
                     {type: 'numbers', title: '序号', width: 50},
-                    {field: 'id', title: '分支标识', width: 150},
-                    {field: 'description', title: '描述信息', width: 200},
+                    {field: 'grayId', hide: true, title: '路由标识'},
+                    {field: 'description', title: '描述信息', width: 300},
                     {
                         title: '流量比例',
                         align: "center",
@@ -129,37 +129,28 @@
                                     error = true;
                                     return;
                                 }
-
                                 const branch = {};
                                 $.each(gridData, function (index, item) {
                                     if (item.version) {
                                         eval('branch["' + item.name + '"]=' + '"' + item.version + '"');
                                     }
                                 });
-
                                 if (JSON.stringify(branch) === "{}") {
                                     error = true;
                                     admin.error("系统提示", "请选择服务对应的版本号");
                                     return;
                                 }
-
                                 const data = table.cache['grid'];
                                 $.each(data, function (index, item) {
-                                    if (item.id === field.id) {
-                                        error = true;
-                                        admin.error("系统提示", "分支标识[" + item.id + "]重复");
-                                        return;
-                                    }
                                     if (item.value === JSON.stringify(branch)) {
                                         error = true;
                                         admin.error("系统提示", "调用分支[" + item.value + "]重复");
                                         return;
                                     }
                                 });
-
                                 if (!error) {
                                     data.push({
-                                        "id": field.id,
+                                        "grayId": 'route_' + (data.length + 1),
                                         "description": field.description,
                                         "weight": field.weight,
                                         "value": JSON.stringify(branch)
@@ -219,7 +210,7 @@
                         const d = table.cache['grid'];
                         $.each(d, function (index, item) {
                             if (item) {
-                                if (item.id === data.id) {
+                                if (item.grayId === data.grayId) {
                                     d.remove(item);
                                     return;
                                 }
@@ -258,12 +249,12 @@
 
                                     if (JSON.stringify(branch) === "{}") {
                                         error = true;
-                                        admin.error("系统提示", "请选择服务对应的版本号");
+                                        admin.error("系统提示", "至少选择一个服务以及对应的版本号");
                                         return;
                                     }
                                     const data = table.cache['grid'];
                                     $.each(data, function (index, item) {
-                                        if (item.id !== field.id) {
+                                        if (item.grayId !== field.grayId) {
                                             if (item.value === JSON.stringify(branch)) {
                                                 error = true;
                                                 admin.error("系统提示", "调用分支[" + item.value + "]重复");
@@ -276,7 +267,7 @@
 
                                     if (!error) {
                                         data[updateIndex] = {
-                                            "id": field.id,
+                                            "grayId": field.grayId,
                                             "description": field.description,
                                             "weight": field.weight,
                                             "value": JSON.stringify(branch)
@@ -311,7 +302,6 @@
                 $("#btnPublish").addClass("layui-btn-disabled");
                 $("#spanStatus").hide();
             }
-
         });
     </script>
     </body>

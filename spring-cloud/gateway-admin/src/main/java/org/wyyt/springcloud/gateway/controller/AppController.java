@@ -159,7 +159,7 @@ public class AppController {
         }
         final String createAccessTokenUrl = this.getCreateAccessTokenUrl();
         if (null == createAccessTokenUrl) {
-            return Result.error("无可用的SpringCloud网关, 请假检查网关是否正常开启");
+            return Result.error("无可用的网关或鉴权中心, 请假检查网关和鉴权中心是否正常开启");
         }
 
         final Map<String, Object> params = new HashMap<>();
@@ -185,7 +185,7 @@ public class AppController {
         }
         final String logoutAccessTokenUrl = this.getLogoutAccessTokenUrl();
         if (null == logoutAccessTokenUrl) {
-            return Result.error("无可用的SpringCloud网关, 请假检查网关是否正常开启");
+            return Result.error("无可用的网关或鉴权中心, 请假检查网关和鉴权中心是否正常开启");
         }
 
         final Object accessToken = this.redisService.get(Names.getAccessTokenRedisKey(clientId));
@@ -227,7 +227,11 @@ public class AppController {
         if (null == gatewayUrl) {
             return null;
         }
-        return String.format("%s/auth/v1/oauth/token", gatewayUrl);
+        final URI authUri = this.gatewayService.getAvaiableServiceUri(this.propertyConfig.getAuthConsulName());
+        if (null == authUri) {
+            return null;
+        }
+        return String.format("%s/%s/v1/oauth/token", gatewayUrl, this.propertyConfig.getAuthConsulName());
     }
 
     private String getLogoutAccessTokenUrl() throws Exception {
@@ -235,7 +239,11 @@ public class AppController {
         if (null == gatewayUrl) {
             return null;
         }
-        return String.format("%s/auth/v1/oauth/logout", gatewayUrl);
+        final URI authUri = this.gatewayService.getAvaiableServiceUri(this.propertyConfig.getAuthConsulName());
+        if (null == authUri) {
+            return null;
+        }
+        return String.format("%s/%s/v1/oauth/logout", gatewayUrl, this.propertyConfig.getAuthConsulName());
     }
 
     private AccessToken getAccessToken(final String clientId) {

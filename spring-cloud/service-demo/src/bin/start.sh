@@ -21,7 +21,7 @@ for fileName in $(ls ${AGENT_DIR}); do
   fi
 done
 
-LOG_DIR="/wyyt/logs/springcloud/${APPLICATION}"
+LOG_DIR="/wyyt/logs/tomcat/springcloud/${APPLICATION}"
 LOGS_HEAPDUMP="${LOG_DIR}/heapdump"
 
 STARTUP_LOG="================================================ $(date +'%Y-%m-%m %H:%M:%S') ================================================\n"

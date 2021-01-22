@@ -21,12 +21,11 @@ import org.springframework.cloud.security.oauth2.SpringCloudSecurityAutoConfigur
  * *****************************************************************
  */
 @SuppressWarnings("deprecation")
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class, SpringCloudSecurityAutoConfiguration.class})
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableApolloConfig
 @EnableCircuitBreaker
-@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, SpringCloudSecurityAutoConfiguration.class})
 public class AuthApplication {
     public static void main(String[] args) {
         SpringApplication.run(AuthApplication.class, args);

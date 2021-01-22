@@ -39,6 +39,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
+                //扫描的包名称
                 .apis(RequestHandlerSelectors.basePackage("maven.springcloud.quickstart"))
                 .paths(PathSelectors.any())
                 .build()
@@ -49,7 +50,8 @@ public class Swagger2Config {
         return new ApiInfoBuilder()
                 .title("SpringCloud微服务接口说明文档")
                 .description("SpringCloud微服务接口说明文档")
-                .contact(new Contact("Ning.Zhang(Pegasus)", "", "zhangning@sijibao.com"))
+                //项目作者  项目地址  作者邮箱
+                .contact(new Contact("Ning.Zhang(Pegasus)", "", "zhangningkid@163.com"))
                 .version(this.version)
                 .build();
     }

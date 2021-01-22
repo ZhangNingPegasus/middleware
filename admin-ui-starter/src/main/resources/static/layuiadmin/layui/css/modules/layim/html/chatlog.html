@@ -82,9 +82,7 @@ layui.use(['layim', 'laypage'], function(){
       ,content: '注意：这些都是模拟数据，实际使用时，需将其中的模拟接口改为你的项目真实接口。\n该模版文件所在目录（相对于layui.js）：\n/css/modules/layim/html/chatlog.html'
     }]
   }
-  
-  //console.log(param)
-  
+
   var html = laytpl(LAY_tpl.value).render({
     data: res.data
   });

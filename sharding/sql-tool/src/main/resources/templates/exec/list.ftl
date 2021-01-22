@@ -229,7 +229,6 @@
 
             if (sql !== '') {
                 admin.post("exec", {"sql": sql, 'limit': limit}, function (res) {
-                    console.log(res);
                     $('div[lay-filter="result"]').find(".layui-tab-title > li").each(function (i, o) {
                         element.tabDelete('result', $(o).attr("lay-id"));
                     });

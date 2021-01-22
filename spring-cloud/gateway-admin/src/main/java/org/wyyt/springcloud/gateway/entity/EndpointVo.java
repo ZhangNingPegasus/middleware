@@ -19,5 +19,5 @@ public class EndpointVo {
     private Integer port;
     private String version;
     private String group;
-    private boolean alive;
+    private Boolean alive;
 }

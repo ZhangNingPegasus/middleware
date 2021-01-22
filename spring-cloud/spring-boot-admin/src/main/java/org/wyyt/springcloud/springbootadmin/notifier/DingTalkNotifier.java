@@ -69,43 +69,49 @@ public class DingTalkNotifier extends AbstractEventNotifier {
             Boolean isOk = null;
             final String serviceName = instance.getRegistration().getName();
             String instanceName = null;
+            String group = null;
+            String version = null;
             Api.Result apiResult = null;
             if (event instanceof InstanceStatusChangedEvent) {
                 final InstanceStatusChangedEvent instanceStatusChangedEvent = (InstanceStatusChangedEvent) event;
                 final String status = instanceStatusChangedEvent.getStatusInfo().getStatus();
+
+                if (!serviceName.equals(this.propertyConfig.getGatewayConsulName()) &&
+                        !serviceName.equals(this.propertyConfig.getGatewayAdminConsulName()) &&
+                        !serviceName.equals(this.propertyConfig.getAuthConsulName())) {
+                    apiResult = this.apiLoadService.updateApi(instance.getRegistration().getName(),
+                            instance.getRegistration().getServiceUrl());
+                    group = instance.getRegistration().getMetadata().get("group");
+                    version = instance.getRegistration().getMetadata().get("version");
+                }
+
                 switch (status) {
                     // 健康检查没通过
                     case "DOWN":
                         instanceName = instanceStatusChangedEvent.getInstance().getValue();
                         checkTime = this.dateFormat.format(instanceStatusChangedEvent.getTimestamp());
-                        content = "健康检查没有通过, 请立刻检查.";
+                        content = "健康检查没有通过, 请立刻检查";
                         isOk = false;
                         break;
                     // 服务离线
                     case "OFFLINE":
                         instanceName = instanceStatusChangedEvent.getInstance().getValue();
                         checkTime = this.dateFormat.format(instanceStatusChangedEvent.getTimestamp());
-                        content = "已离线, 请立刻检查.";
+                        content = "已离线, 请立刻检查";
                         isOk = false;
                         break;
                     //服务上线
                     case "UP":
                         instanceName = instanceStatusChangedEvent.getInstance().getValue();
                         checkTime = this.dateFormat.format(instanceStatusChangedEvent.getTimestamp());
-                        content = "已成功上线.";
+                        content = "已成功上线";
                         isOk = true;
-                        if (!serviceName.equals(this.propertyConfig.getGatewayConsulName()) &&
-                                !serviceName.equals(this.propertyConfig.getGatewayAdminConsulName()) &&
-                                !serviceName.equals(this.propertyConfig.getAuthConsulName())) {
-                            apiResult = this.apiLoadService.updateApi(instance.getRegistration().getName(),
-                                    instance.getRegistration().getServiceUrl());
-                        }
                         break;
                     // 服务未知异常
                     case "UNKNOWN":
                         instanceName = instanceStatusChangedEvent.getInstance().getValue();
                         checkTime = this.dateFormat.format(instanceStatusChangedEvent.getTimestamp());
-                        content = "发现未知异常, 请立刻检查.";
+                        content = "发现未知异常, 请立刻检查";
                         isOk = false;
                         break;
                     default:
@@ -126,32 +132,40 @@ public class DingTalkNotifier extends AbstractEventNotifier {
 
                 final StringBuilder stringBuilder = new StringBuilder();
                 if (!ObjectUtils.isEmpty(urlAndPort)) {
-                    stringBuilder.append(String.format("主机地址：%s\n", urlAndPort));
+                    stringBuilder.append(String.format("主机地址: %s (%s)\n", urlAndPort, instanceName));
+                    stringBuilder.append("---------------------------\n");
                 }
 
                 if (!ObjectUtils.isEmpty(serviceName)) {
-                    stringBuilder.append(String.format("服务名称：%s\n", serviceName));
+                    stringBuilder.append(String.format("实例名称: %s\n", serviceName));
                 }
 
-                if (!ObjectUtils.isEmpty(instanceName)) {
-                    stringBuilder.append(String.format("实例名称：%s\n", instanceName));
+                if (!ObjectUtils.isEmpty(version)) {
+                    stringBuilder.append(String.format("实例组名: %s\n", group));
+                }
+
+                if (!ObjectUtils.isEmpty(version)) {
+                    stringBuilder.append(String.format("实例版本: %s\n", version));
+                }
+
+                if (null != apiResult) {
+                    stringBuilder.append("---------------------------\n");
+                    stringBuilder.append(String.format("新增接口: %s个\n", apiResult.getInsertNum()));
+                    stringBuilder.append(String.format("更新接口: %s个\n", apiResult.getUpdateNum()));
+                    stringBuilder.append("---------------------------\n");
                 }
 
                 if (isOk) {
                     stringBuilder.append("当前状态：OK\n");
-                    stringBuilder.append(String.format("消息详情：%s\n", content));
+                    stringBuilder.append(String.format("消息详情: %s\n", content));
                 } else {
                     stringBuilder.append("告警等级：严重\n");
-                    stringBuilder.append(String.format("问题详情：%s\n", content));
-                }
-
-                if (null != apiResult) {
-                    stringBuilder.append(String.format("新增接口：%s个\n", apiResult.getInsertNum()));
-                    stringBuilder.append(String.format("更新接口：%s个\n", apiResult.getUpdateNum()));
+                    stringBuilder.append(String.format("问题详情: %s\n", content));
                 }
 
                 if (!ObjectUtils.isEmpty(checkTime)) {
-                    stringBuilder.append(String.format("检查时间：%s", checkTime));
+                    stringBuilder.append("---------------------------\n");
+                    stringBuilder.append(String.format("检查时间: %s", checkTime));
                 }
 
                 message.setText(new Message.Text(stringBuilder.toString()));
@@ -174,7 +188,7 @@ public class DingTalkNotifier extends AbstractEventNotifier {
     private String getUrlAndPort(final String strUrl) {
         try {
             final URL url = new URL(strUrl);
-            return String.format("%s : %s", url.getHost(), url.getPort());
+            return String.format("%s:%s", url.getHost(), url.getPort());
         } catch (MalformedURLException e) {
             return "";
         }

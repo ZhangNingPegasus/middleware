@@ -14,7 +14,7 @@ import lombok.Data;
  */
 @Data
 public class GrayVo {
-    private String id;
+    private String grayId;
     private String value;
     private Integer weight;
     private String description;

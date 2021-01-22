@@ -45,11 +45,6 @@ spring:
     loadbalancer:
       ribbon:
         enabled: false
-  http:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
   servlet:
     multipart:
       enabled: true

@@ -48,12 +48,12 @@ public final class DingTalkTool {
         final Mac mac = Mac.getInstance("HmacSHA256");
         mac.init(new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
         final byte[] signData = mac.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8));
-        final String sign = URLEncoder.encode(new String(Base64.encodeBase64(signData)), "UTF-8");
+        final String sign = URLEncoder.encode(new String(Base64.encodeBase64(signData)), StandardCharsets.UTF_8.name());
         final String WEBHOOK_TOKEN = String.format(URL, accessToken, timestamp, sign);
         try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
             final HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
-            httppost.addHeader("Content-Type", "application/json; charset=UTF-8");
-            final StringEntity se = new StringEntity(JSON.toJSONString(message), "UTF-8");
+            httppost.addHeader("Content-Type", String.format("application/json; charset=%s",StandardCharsets.UTF_8.name()));
+            final StringEntity se = new StringEntity(JSON.toJSONString(message), StandardCharsets.UTF_8.name());
             httppost.setEntity(se);
             final HttpResponse response = httpclient.execute(httppost);
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {

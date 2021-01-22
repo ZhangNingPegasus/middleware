@@ -566,10 +566,6 @@
                         resize: false
                     });
                 });
-            } else {
-                console.log(inserts);
-                console.log(updates);
-                console.log(deletes);
             }
         });
 
@@ -588,10 +584,6 @@
                 }, function () {
                     $("#fileForm").attr('action', 'download').submit();
                 });
-            } else {
-                console.log(inserts);
-                console.log(updates);
-                console.log(deletes);
             }
         });
     });

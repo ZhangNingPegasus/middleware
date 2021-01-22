@@ -30,6 +30,7 @@ import org.wyyt.tool.sql.SqlTool;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -86,10 +87,10 @@ public class GrayPublishService {
         final List<StrategyRouteEntity> strategyRouteEntityList = strategyCustomizationEntity.getStrategyRouteEntityList();
         for (final StrategyRouteEntity strategyRouteEntity : strategyRouteEntityList) {
             final GrayVo grayVo = new GrayVo();
-            grayVo.setId(strategyRouteEntity.getId());
+            grayVo.setGrayId(strategyRouteEntity.getId());
             grayVo.setValue(strategyRouteEntity.getValue());
             grayVo.setWeight(versionWeight.get(strategyRouteEntity.getId()));
-            grayVo.setDescription(grayMap.containsKey(grayVo.getId()) ? grayMap.get(grayVo.getId()).getDescription() : "");
+            grayVo.setDescription(grayMap.containsKey(grayVo.getGrayId()) ? grayMap.get(grayVo.getGrayId()).getDescription() : "");
             result.add(grayVo);
         }
         return result;
@@ -98,9 +99,11 @@ public class GrayPublishService {
     @TranSave
     public void publish(final List<GrayVo> grayVoList) throws IOException {
         final List<Gray> grayList = new ArrayList<>();
+        int i = 1;
         for (final GrayVo grayVo : grayVoList) {
             final Gray gray = new Gray();
-            gray.setGrayId(grayVo.getId());
+            gray.setGrayId(String.format("route_%s", i++));
+            grayVo.setGrayId(gray.getGrayId());
             gray.setDescription(grayVo.getDescription());
             grayList.add(gray);
         }
@@ -216,10 +219,10 @@ public class GrayPublishService {
 
         final List<String> conditionList = new ArrayList<>();
         for (final GrayVo grayVo : grayVoList) {
-            conditionList.add(String.format("%s=%s", grayVo.getId(), grayVo.getWeight()));
+            conditionList.add(String.format("%s=%s", grayVo.getGrayId(), grayVo.getWeight()));
             routes
                     .addElement("route")
-                    .addAttribute("id", grayVo.getId())
+                    .addAttribute("id", grayVo.getGrayId())
                     .addAttribute("type", "version")
                     .addText(grayVo.getValue());
         }
@@ -247,7 +250,7 @@ public class GrayPublishService {
     private static String formatXml(final Document document) throws IOException {
         try (final StringWriter out = new StringWriter()) {
             final OutputFormat formater = OutputFormat.createPrettyPrint();
-            formater.setEncoding("UTF-8");
+            formater.setEncoding(StandardCharsets.UTF_8.name());
             XMLWriter writer = null;
             try {
                 writer = new XMLWriter(out, formater);

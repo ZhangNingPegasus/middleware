@@ -263,7 +263,7 @@ sharding:
       group: SIJIBAO_ORDER_CENTER_GROUP
     acmConfigPath: acmConfig.properties
     nacosLocalSnapshotPath: /wyyt/etc/acm/sql_tool
-    nacosLogPath: /wyyt/logs/tomcat/sql_tool/
+    nacosLogPath: /wyyt/logs/tomcat/springcloud/sql_tool/
 </pre>
 其中, scfs.tool配置如下:
 <pre>

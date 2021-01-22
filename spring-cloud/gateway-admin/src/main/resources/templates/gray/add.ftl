@@ -40,22 +40,16 @@
     <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin"
          style="padding: 5px 5px 5px 5px;">
 
-        <div class="layui-form-item">
-            <div class="layui-inline">&nbsp;&nbsp;&nbsp;&nbsp;分支标识</div>
-            <div class="layui-inline" style="width:150px">
-                <input type="text" name="id" class="layui-input" placeholder="请填写分支标识" autocomplete="off"
-                       lay-verify="required">
-            </div>
-
+        <div class="layui-form-item" style="margin-top: 20px">
             <div class="layui-inline" style="margin-left: 50px">流量比例</div>
-            <div class="layui-inline" style="width:130px">
-                <input type="number" name="weight" class="layui-input" placeholder="请填写流量比例" autocomplete="off"
-                       lay-verify="required" value="0">
+            <div class="layui-inline" style="width:300px">
+                <div id="weightSlider" class="demo-slider"></div>
             </div>
             <div class="layui-inline" style="margin-left: -10px"><b>%</b></div>
+            <input type="hidden" id="weight" name="weight" value="0">
 
-            <div class="layui-inline" style="margin-left: 50px">描述信息</div>
-            <div class="layui-inline" style="width:300px">
+            <div class="layui-inline" style="margin-left: 30px">描述信息</div>
+            <div class="layui-inline" style="width:500px">
                 <input type="text" name="description" class="layui-input" placeholder="请填写描述信息" autocomplete="off"
                        lay-verify="required">
             </div>
@@ -123,8 +117,23 @@
         </div>
     </div>
     <script>
-        layui.config({base: '../../..${ctx}/layuiadmin/'}).extend({index: 'lib/index'}).use(['index', 'table', 'form'], function () {
-            const table = layui.table, form = layui.form, $ = layui.$, admin = layui.admin;
+        layui.config({base: '../../..${ctx}/layuiadmin/'}).extend({index: 'lib/index'}).use(['index', 'slider', 'table', 'form'], function () {
+            const table = layui.table, form = layui.form, $ = layui.$, slider = layui.slider, admin = layui.admin;
+
+            slider.render({
+                elem: '#weightSlider',
+                min: 0,
+                max: 100,
+                step: 1,
+                value: 0,
+                input: true,
+                setTips: function (value) {
+                    return value + '%';
+                },
+                change: function (value) {
+                    $('#weight').val(value.replace(/%/, ''));
+                }
+            });
 
             function reload(data) {
                 table.reload('grid', {url: null, 'data': data});

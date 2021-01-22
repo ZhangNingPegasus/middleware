@@ -49,6 +49,7 @@ public class ConsulController {
     @PostMapping("list")
     @ResponseBody
     public Result<List<EndpointVo>> list(@RequestParam(value = "instanceId", required = false) final String instanceId,
+                                         @RequestParam(value = "alive", required = false) final Boolean alive,
                                          @RequestParam(value = "page") final Integer pageNum,
                                          @RequestParam(value = "limit") final Integer pageSize) throws Exception {
         final List<EndpointVo> endpointVoList = new ArrayList<>();
@@ -58,7 +59,11 @@ public class ConsulController {
         }
 
         final List<EndpointVo> filterEndpointVoList = endpointVoList.stream()
-                .filter(p -> ObjectUtils.isEmpty(instanceId) || p.getId().contains(instanceId)).collect(Collectors.toList());
+                .filter(endpointVo ->
+                        (ObjectUtils.isEmpty(instanceId) || endpointVo.getId().contains(instanceId))
+                                &&
+                                (ObjectUtils.isEmpty(alive) || endpointVo.getAlive().equals(alive))
+                ).collect(Collectors.toList());
 
         final List<EndpointVo> result = filterEndpointVoList.stream().skip((pageNum - 1L) * pageSize)
                 .limit(pageSize)

@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 
 /**
  * SpringCloud服务接口, 其中@FeignClient的value属性设置成服务名称(即: spring.application.name名称, 全部小写)
+ * 注意： @FeignClient和@RequestMapping注解不能同时使用, 因为两个注解都会被扫描并生成代理类, 此时就会冲突
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

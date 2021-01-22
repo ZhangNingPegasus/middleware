@@ -27,16 +27,16 @@ public class Names {
     public final static String CLIENT_SECRET = "client_secret";
     public final static String GRANT_TYPE = "grant_type";
 
-    public static final String REDIS_ACCESS_TOKEN_KEY = "access_token_of_%s";
+    public static final String REDIS_ACCESS_TOKEN_KEY = "scg_access_token_%s";
 
-    public static final String REDIS_IGNORE_URLS_KEY = "ignore_urls";
-    public static final String REDIS_DISTRIBUTED_LOCK_IGNORE_URLS_KEY = "distributed_lock_ignore_urls";
+    public static final String REDIS_IGNORE_URLS_KEY = "scg_ignore_urls";
+    public static final String REDIS_DISTRIBUTED_LOCK_IGNORE_URLS_KEY = "scg_lock_ignore_urls";
 
-    public static final String REDIS_APP_OF_CLIENT_ID_KEY = "app_of_client_id_%s";
-    public static final String REDIS_DISTRIBUTED_LOCK_APP_OF_CLIENT_ID_KEY = "distributed_lock_app_of_client_id_%s";
+    public static final String REDIS_APP_OF_CLIENT_ID_KEY = "scg_app_%s";
+    public static final String REDIS_DISTRIBUTED_LOCK_APP_OF_CLIENT_ID_KEY = "scg_lock_app_%s";
 
-    public static final String REDIS_API_LIST_OF_CLIENT_ID_KEY = "api_list_of_client_id_%s";
-    public static final String REDIS_DISTRIBUTED_LOCK_API_LIST_OF_CLIENT_ID_KEY = "distributed_lock_api_list_of_client_id_%s";
+    public static final String REDIS_API_LIST_OF_CLIENT_ID_KEY = "scg_api_%s";
+    public static final String REDIS_DISTRIBUTED_LOCK_API_LIST_OF_CLIENT_ID_KEY = "scg_lock_api_%s";
 
     public static String getAccessTokenRedisKey(final String clientId) {
         return String.format(Names.REDIS_ACCESS_TOKEN_KEY, clientId);

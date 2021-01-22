@@ -35,7 +35,7 @@
 
     <appender name="elkLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <append>true</append>
-        <file>/wyyt/logs/springcloud/@project.artifactId@/filebeat.log</file>
+        <file>/wyyt/logs/tomcat/springcloud/@project.artifactId@/filebeat.log</file>
         <encoder class="org.wyyt.logback.encoder.LogstashEncoderZipkin">
             <includeCallerData>true</includeCallerData>
         </encoder>
@@ -43,7 +43,7 @@
             <level>INFO</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>/wyyt/logs/springcloud/@project.artifactId@/filebeat.%d{yyyy-MM-dd-HH}.%i.log.gz
+            <fileNamePattern>/wyyt/logs/tomcat/springcloud/@project.artifactId@/filebeat.%d{yyyy-MM-dd-HH}.%i.log.gz
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
         </rollingPolicy>

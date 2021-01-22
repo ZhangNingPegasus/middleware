@@ -198,7 +198,7 @@ public final class CrudService implements DisposableBean {
             resultSet = preparedStatement.executeQuery();
             final ResultSetMetaData metaData = resultSet.getMetaData();
             final int columnCount = metaData.getColumnCount();
-            kv = new ArrayList<>(resultSet.getRow());
+            kv = new ArrayList<>();
             final List<String> columnLabelList = new ArrayList<>(columnCount);
             for (int i = 0; i < columnCount; i++) {
                 columnLabelList.add(metaData.getColumnLabel(i + 1));
@@ -252,7 +252,7 @@ public final class CrudService implements DisposableBean {
             resultSet = preparedStatement.executeQuery();
             final ResultSetMetaData metaData = resultSet.getMetaData();
             final int columnCount = metaData.getColumnCount();
-            kv = new ArrayList<>(resultSet.getRow());
+            kv = new ArrayList<>();
             final List<String> columnLabelList = new ArrayList<>(columnCount);
             for (int i = 0; i < columnCount; i++) {
                 columnLabelList.add(metaData.getColumnLabel(i + 1));

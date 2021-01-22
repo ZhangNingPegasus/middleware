@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.lang.StringUtils;
 import org.reflections.ReflectionUtils;
 import org.wyyt.sharding.db2es.client.entity.Db2EsLog;
 import org.wyyt.sharding.db2es.core.entity.domain.Config;
@@ -37,7 +36,6 @@ import java.util.*;
  */
 @Slf4j
 public final class DbWrapper implements Closeable {
-    private static final String DATA_BASE_URL = "jdbc:mysql://%s:%s/%s?allowPublicKeyRetrieval=true&serverTimezone=GMT%%2B8&characterEncoding=utf8&useUnicode=true&autoReconnect=true&allowMultiQueries=true&useSSL=false&rewriteBatchedStatements=true&zeroDateTimeBehavior=CONVERT_TO_NULL";
     private static final String DB2ES_LOG_INSERT_SQL = "INSERT IGNORE INTO `t_error_log`(`primary_key_value`, `database_name`, `table_name`, `index_name`, `error_message`, `consumer_record`, `topic_name`, `partition`, `offset`, `is_resolved`) VALUES (?,?,?,?,?,?,?,?,?,?)";
     private final DataSource dataSource;
 
@@ -182,7 +180,7 @@ public final class DbWrapper implements Closeable {
             resultSet = preparedStatement.executeQuery();
             final ResultSetMetaData metaData = resultSet.getMetaData();
             final int columnCount = metaData.getColumnCount();
-            kv = new ArrayList<>(resultSet.getRow());
+            kv = new ArrayList<>();
             final List<String> columnLabelList = new ArrayList<>(columnCount);
             for (int i = 0; i < columnCount; i++) {
                 columnLabelList.add(metaData.getColumnLabel(i + 1));
@@ -191,7 +189,7 @@ public final class DbWrapper implements Closeable {
                 final Map<String, Object> row = new HashMap<>();
                 for (final String columnLabel : columnLabelList) {
                     Object value = resultSet.getObject(columnLabel);
-                    if (resultSet.getObject(columnLabel).getClass().isAssignableFrom(Timestamp.class)) {
+                    if (null != value && value.getClass().isAssignableFrom(Timestamp.class)) {
                         value = DateTool.parse(resultSet.getString(columnLabel));
                     }
                     row.put(columnLabel, value);

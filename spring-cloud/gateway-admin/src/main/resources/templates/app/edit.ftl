@@ -82,12 +82,12 @@
                         <label class="layui-form-label"></label>
                         <div class="layui-input-inline" style="width:600px">
                             <button id="btnRefresh" class="layui-btn layui-btn-sm">
-                                刷新页面
+                                刷新Token
                             </button>
-                            <button id="btnRefreshAccessToken" class="layui-btn layui-btn-sm layui-btn-normal">
+                            <button id="btnRefreshAccessToken" ${((createTokenUrl!'')=='')?string('disabled="disabled"','')} class="${((createTokenUrl!'')=='')?string('layui-btn-disabled','')} layui-btn layui-btn-sm layui-btn-normal">
                                 生成Token
                             </button>
-                            <button id="btnLogoutAccessToken" class="layui-btn layui-btn-sm layui-btn-danger">
+                            <button id="btnLogoutAccessToken" ${((createTokenUrl!'')=='')?string('disabled="disabled"','')} class="${((createTokenUrl!'')=='')?string('layui-btn-disabled','')} layui-btn layui-btn-sm layui-btn-danger">
                                 注销Token
                             </button>
                         </div>
@@ -95,7 +95,7 @@
 
                     <blockquote id="message" class="layui-elem-quote">
                         <b>Access Token请求地址:</b> <span
-                                style="color: blue">${createTokenUrl!'<span style="color:red">无可用的SpringCloud网关, 请假检查网关是否正常开启</span></@compress>'}</span>
+                                style="color: blue">${createTokenUrl!'<span style="color:red">无可用的网关或鉴权中心, 请假检查网关和鉴权中心是否正常开启</span></@compress>'}</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <b>请求方式</b>: <span style="color: blue">POST</span> <br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>参数1</b>: <span
@@ -111,7 +111,7 @@
                             secret</span><br/>
                         <br/>
                         <b>Access Token注销地址</b>: <span
-                                style="color: blue">${logoutTokenUrl!'<span style="color:red">无可用的SpringCloud网关, 请假检查网关是否正常开启</span></@compress>'}</span>
+                                style="color: blue">${logoutTokenUrl!'<span style="color:red">无可用的网关或鉴权中心, 请假检查网关和鉴权中心是否正常开启</span></@compress>'}</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <b>请求方式:</b> <span style="color: blue">POST</span> <br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>参数1:</b> <span
