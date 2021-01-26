@@ -20,7 +20,7 @@ public class ResponseTool {
         final ServerHttpResponse serverHttpResponse = exchange.getResponse();
         handleHeaders(serverHttpResponse.getHeaders());
         serverHttpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
-        Result<?> result = Result.error(errorMsg);
+        final Result<?> result = Result.error(errorMsg);
         final byte[] bytes = JSON.toJSONString(result).getBytes(StandardCharsets.UTF_8);
         final DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
         return exchange.getResponse().writeWith(Flux.just(buffer));

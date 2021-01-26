@@ -47,9 +47,9 @@ public class DefaultConfigApplicationListener implements ApplicationListener<App
 
         // Ribbon config
         this.addDefaultConfig(environment, properties, "ribbon.eager-load.enabled", true);
-        this.addDefaultConfig(environment, properties, "ribbon.ServerListRefreshInterval", 10000);
-        this.addDefaultConfig(environment, properties, "ribbon.ConnectTimeout", 10000);
-        this.addDefaultConfig(environment, properties, "ribbon.ReadTimeout", 10000);
+        this.addDefaultConfig(environment, properties, "ribbon.ServerListRefreshInterval", 5000);
+        this.addDefaultConfig(environment, properties, "ribbon.ConnectTimeout", 15000);
+        this.addDefaultConfig(environment, properties, "ribbon.ReadTimeout", 15000);
         this.addDefaultConfig(environment, properties, "ribbon.maxAutoRetries", 3);
         this.addDefaultConfig(environment, properties, "ribbon.maxAutoRetriesNextServer", 3);
         this.addDefaultConfig(environment, properties, "ribbon.okToRetryOnAllOperations", true);
@@ -57,12 +57,12 @@ public class DefaultConfigApplicationListener implements ApplicationListener<App
         // feign config
         this.addDefaultConfig(environment, properties, "feign.hystrix.enabled", true);
         this.addDefaultConfig(environment, properties, "feign.httpclient.enabled", true);
-        this.addDefaultConfig(environment, properties, "feign.client.config.default.ConnectTimeOut", 10000);
-        this.addDefaultConfig(environment, properties, "feign.client.config.default.ReadTimeOut", 10000);
+        this.addDefaultConfig(environment, properties, "feign.client.config.default.ConnectTimeOut", 15000);
+        this.addDefaultConfig(environment, properties, "feign.client.config.default.ReadTimeOut", 15000);
 
         //hystrix config
         this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.isolation.strategy", "SEMAPHORE");
-        this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.timeout.enabled", false);
+        this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.timeout.enabled", true);
         this.addDefaultConfig(environment, properties, "hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds", 10000);
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.coreSize", "200");
         this.addDefaultConfig(environment, properties, "hystrix.threadpool.default.maximumSize", "500");

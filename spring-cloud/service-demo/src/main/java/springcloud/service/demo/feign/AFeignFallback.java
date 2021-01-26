@@ -15,12 +15,18 @@ public class AFeignFallback implements FallbackFactory<AFeign> {
     public AFeign create(Throwable throwable) {
         return new AFeign() {
             @Override
-            public Result<String> invoke(String value) {
+            public Result<String> invoke(String value,
+                                         String a,
+                                         String b,
+                                         String c) {
                 return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
 
             @Override
-            public Future<Result<String>> invokeAsync(String value) {
+            public Future<Result<String>> invokeAsync(String value,
+                                                      String a,
+                                                      String b,
+                                                      String c) {
                 return new Future<Result<String>>() {
                     @Override
                     public boolean cancel(boolean mayInterruptIfRunning) {
@@ -50,7 +56,10 @@ public class AFeignFallback implements FallbackFactory<AFeign> {
             }
 
             @Override
-            public Result<String> invokeThreadPool(String value) {
+            public Result<String> invokeThreadPool(String value,
+                                                   String a,
+                                                   String b,
+                                                   String c) {
                 return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
 

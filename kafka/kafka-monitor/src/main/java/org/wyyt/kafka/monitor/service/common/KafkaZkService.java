@@ -9,7 +9,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.wyyt.admin.ui.exception.BusinessException;
+import org.wyyt.tool.exception.BusinessException;
 import org.wyyt.kafka.monitor.config.PropertyConfig;
 import org.wyyt.kafka.monitor.entity.dto.SysKpi;
 import org.wyyt.kafka.monitor.entity.po.ZkStatus;

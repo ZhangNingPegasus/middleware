@@ -22,6 +22,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.wyyt.redis.aop.DistributedLockAop;
 import org.wyyt.redis.service.RedisService;
 
 import java.time.Duration;
@@ -45,6 +46,13 @@ public class RedisAutoConfig {
     @ConditionalOnMissingBean
     public RedisService redisService() {
         return new RedisService();
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
+    public DistributedLockAop distributedLockAop(final RedisService redisService) {
+        return new DistributedLockAop(redisService);
     }
 
     @Bean(name = "redisSerializer")

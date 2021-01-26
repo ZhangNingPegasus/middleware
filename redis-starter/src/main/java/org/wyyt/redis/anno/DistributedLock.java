@@ -1,9 +1,9 @@
-package org.wyyt.kafka.tran.anno;
+package org.wyyt.redis.anno;
 
 import java.lang.annotation.*;
 
 /**
- * The annotation of transactional for Kafka
+ * The annotation of redis's distributed lock
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
@@ -15,5 +15,5 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface TranKafka {
+public @interface DistributedLock {
 }

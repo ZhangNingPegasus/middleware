@@ -1,6 +1,7 @@
 package org.wyyt.redis.service;
 
 import io.lettuce.core.RedisException;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -136,6 +137,15 @@ public final class RedisService {
      */
     public final Object get(final String key) {
         return ObjectUtils.isEmpty(key) ? null : this.redisTemplateNoTransactional.opsForValue().get(key);
+    }
+
+    public final <T> T get(final String key,
+                           final Class<T> tClass) {
+        final Object value = this.get(key);
+        if (null == value) {
+            return null;
+        }
+        return (T) ConvertUtils.convert(value, tClass);
     }
 
     /**
@@ -716,7 +726,9 @@ public final class RedisService {
                 this,
                 lockKey,
                 requestId,
-                !ObjectUtils.isEmpty(requestId)
+                !ObjectUtils.isEmpty(requestId),
+                expireInMillSeconds,
+                timeoutInMillSeconds
         );
     }
 
@@ -827,15 +839,21 @@ public final class RedisService {
         private final String lockKey;
         private final String requestId;
         private final Boolean hasLock;
+        private long expireInMillSeconds;
+        private long timeoutInMillSeconds;
 
         public Lock(final RedisService redisService,
                     final String lockKey,
                     final String requestId,
-                    final Boolean hasLock) {
+                    final Boolean hasLock,
+                    final long expireInMillSeconds,
+                    final long timeoutInMillSeconds) {
             this.redisService = redisService;
             this.lockKey = lockKey;
             this.requestId = requestId;
             this.hasLock = hasLock;
+            this.expireInMillSeconds = expireInMillSeconds;
+            this.timeoutInMillSeconds = timeoutInMillSeconds;
         }
 
         public final String lockKey() {

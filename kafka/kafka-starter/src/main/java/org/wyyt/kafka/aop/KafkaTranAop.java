@@ -1,4 +1,4 @@
-package org.wyyt.kafka.tran;
+package org.wyyt.kafka.aop;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -7,7 +7,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.wyyt.kafka.tran.anno.TranKafka;
+import org.wyyt.kafka.anno.TranKafka;
 
 import java.util.HashMap;
 import java.util.Map;

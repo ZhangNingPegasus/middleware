@@ -11,7 +11,7 @@
             <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">
                     <div class="layui-inline">主题名称</div>
-                    <div class="layui-inline" style="width:430px">
+                    <div class="layui-inline" style="width:420px">
                         <select name="topicName" lay-filter="topicName" lay-verify="required" lay-search>
                             <option value="">请选择主题</option>
                             <#list topics as topic >

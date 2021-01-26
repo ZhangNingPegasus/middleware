@@ -58,7 +58,7 @@
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <sharding-sphere.version>4.1.1</sharding-sphere.version>
         <mybatis.version>3.5.6</mybatis.version>
-        <HikariCP.version>3.4.5</HikariCP.version>
+        <HikariCP.version>4.0.0</HikariCP.version>
         <druid-spring-boot-starter.version>1.2.4</druid-spring-boot-starter.version>
         <shiro.version>1.7.0</shiro.version>
         <LatencyUtils.version>2.0.3</LatencyUtils.version>

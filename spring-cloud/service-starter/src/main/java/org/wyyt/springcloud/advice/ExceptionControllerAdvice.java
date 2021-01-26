@@ -23,6 +23,8 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     public Object handleOtherException(final Exception e) {
-        return Result.error(ExceptionTool.getRootCauseMessage(e));
+        final String errMsg = ExceptionTool.getRootCauseMessage(e);
+        log.error(errMsg, e);
+        return Result.error(errMsg);
     }
 }

@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.wyyt.admin.ui.exception.BusinessException;
 import org.wyyt.kafka.monitor.anno.TranRead;
 import org.wyyt.kafka.monitor.anno.TranSave;
 import org.wyyt.kafka.monitor.common.Constants;
@@ -20,6 +19,7 @@ import org.wyyt.kafka.monitor.entity.vo.TopicRecordCountVo;
 import org.wyyt.kafka.monitor.mapper.SysTopicSizeMapper;
 import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.tool.cache.CacheService;
+import org.wyyt.tool.exception.BusinessException;
 import org.wyyt.tool.exception.ExceptionTool;
 
 import java.util.*;
@@ -143,7 +143,6 @@ public class SysTopicSizeService extends ServiceImpl<SysTopicSizeMapper, SysTopi
                 if (Constants.KAFKA_SYSTEM_TOPIC.contains(topicName)) {
                     continue;
                 }
-                Long logSize = 0L;
                 long lag = 0L;
                 long offset = 0L;
                 try {
@@ -155,7 +154,6 @@ public class SysTopicSizeService extends ServiceImpl<SysTopicSizeMapper, SysTopi
                         if (null != offsetVo.getOffset() && offsetVo.getOffset() > 0) {
                             offset += offsetVo.getOffset();
                         }
-                        logSize += offsetVo.getLogSize();
                     }
                     final SysTopicLag sysTopicLag = new SysTopicLag();
                     sysTopicLag.setGroupId(kafkaConsumerVo.getGroupId());

@@ -8,16 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.rpc.Result;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -30,7 +25,10 @@ public class AFeignImpl implements AFeign {
     private final BFeign bFeign;
     private final Executor executor;
 
-    public AFeignImpl(StrategyContextHolder strategyContextHolder, PluginAdapter pluginAdapter, BFeign bFeign, Executor executor) {
+    public AFeignImpl(final StrategyContextHolder strategyContextHolder,
+                      final PluginAdapter pluginAdapter,
+                      final BFeign bFeign,
+                      final Executor executor) {
         this.strategyContextHolder = strategyContextHolder;
         this.pluginAdapter = pluginAdapter;
         this.bFeign = bFeign;
@@ -38,16 +36,23 @@ public class AFeignImpl implements AFeign {
     }
 
     @Override
-    public Result<String> invoke(@PathVariable(value = "value") String value) throws Throwable {
-        value = doInvoke(value);
+    public Result<String> invoke(String value,
+                                 String a,
+                                 String b,
+                                 String c) throws Throwable {
+//        this.studentServiceA.save(value);
+        value = doInvoke(value, a, b, c);
         return Result.ok(value);
     }
 
     @Override
     @Async
-    public Future<Result<String>> invokeAsync(@PathVariable(value = "value") String value) {
+    public Future<Result<String>> invokeAsync(String value,
+                                              String a,
+                                              String b,
+                                              String c) {
         try {
-            value = doInvoke(value);
+            value = doInvoke(value, a, b, c);
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -62,12 +67,15 @@ public class AFeignImpl implements AFeign {
     }
 
     @Override
-    public Result<String> invokeThreadPool(@PathVariable(value = "value") String value) {
+    public Result<String> invokeThreadPool(String value,
+                                           String a,
+                                           String b,
+                                           String c) {
         this.executor.execute(new Runnable() {
             @SneakyThrows
             @Override
             public void run() {
-                doInvoke(value);
+                doInvoke(value, a, b, c);
             }
         });
         return Result.ok("Invoke ThreadPool");
@@ -79,19 +87,13 @@ public class AFeignImpl implements AFeign {
         return Result.ok(String.valueOf(file.getBytes().length));
     }
 
-    private String doInvoke(String value) throws Throwable {
-        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String s = headerNames.nextElement();
-            if (s.startsWith("n-d-")) {
-                System.out.println(s + " = " + request.getHeader(s));
-            }
-        }
-        log.info(strategyContextHolder.getHeader("access_token"));
-
-        value = pluginAdapter.getPluginInfo(value);
-        Result<String> invoke = bFeign.invoke(value);
+    private String doInvoke(String value,
+                            String a,
+                            String b,
+                            String c) throws Throwable {
+//        log.info(strategyContextHolder.getHeader("access_token"));
+//        value = pluginAdapter.getPluginInfo(value);
+        Result<String> invoke = bFeign.invoke(value, a, b, c);
         if (invoke.getOk()) {
             value = invoke.getData();
             log.info(String.format("调用路径：{%s}", value));

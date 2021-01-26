@@ -23,6 +23,11 @@ import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.resource.ResourceTool;
 
 import javax.net.ssl.SSLContext;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +46,26 @@ public class RpcService {
     private static final Integer CONNECTION_TIMEOUT = 30000;
     private static final Integer REQUEST_TIMEOUT = 30000;
     private static final Integer SOCKET_TIMEOUT = 30000;
+
+    public byte[] getFileBytes(final String url) throws IOException {
+        final URL httpUrl = new URL(url);
+        final HttpURLConnection conn = (HttpURLConnection) httpUrl.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setConnectTimeout(CONNECTION_TIMEOUT);
+        conn.setReadTimeout(REQUEST_TIMEOUT);
+        byte[] result;
+        try (final InputStream inStream = conn.getInputStream();
+             final ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
+            final byte[] buffer = new byte[2048];
+            int len;
+            while (-1 != (len = inStream.read(buffer))) {
+                outStream.write(buffer, 0, len);
+            }
+            result = outStream.toByteArray();
+        }
+        return result;
+    }
+
 
     public String get(final String url) throws Exception {
         if (url.toLowerCase().startsWith("https:")) {

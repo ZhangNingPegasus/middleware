@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.redis.service.RedisService;
 import org.wyyt.springcloud.auth.config.PropertyConfig;
-import org.wyyt.springcloud.exception.BusinessException;
+import org.wyyt.tool.exception.BusinessException;
 import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.enums.GrantType;

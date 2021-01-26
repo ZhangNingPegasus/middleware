@@ -25,7 +25,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.wyyt.admin.ui.exception.BusinessException;
+import org.wyyt.tool.exception.BusinessException;
 import org.wyyt.kafka.monitor.common.Constants;
 import org.wyyt.kafka.monitor.common.JMX;
 import org.wyyt.kafka.monitor.entity.dto.SysKpi;

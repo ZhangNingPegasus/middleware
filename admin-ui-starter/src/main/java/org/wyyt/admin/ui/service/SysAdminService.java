@@ -10,10 +10,10 @@ import org.wyyt.admin.ui.common.Constants;
 import org.wyyt.admin.ui.common.Utils;
 import org.wyyt.admin.ui.entity.dto.SysAdmin;
 import org.wyyt.admin.ui.entity.vo.AdminVo;
-import org.wyyt.admin.ui.exception.BusinessException;
 import org.wyyt.tool.anno.TranSave;
 import org.wyyt.tool.db.CrudPage;
 import org.wyyt.tool.db.CrudService;
+import org.wyyt.tool.exception.BusinessException;
 
 import java.util.List;
 

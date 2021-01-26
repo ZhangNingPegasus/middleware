@@ -7,7 +7,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
-import org.wyyt.kafka.tran.TranProducerContext;
+import org.wyyt.kafka.aop.TranProducerContext;
 
 import java.util.concurrent.Future;
 
@@ -28,11 +28,11 @@ public final class KafkaService implements DisposableBean {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public final Future sendAsync(final String topic,
-                                  final Integer partition,
-                                  final String key,
-                                  final String data,
-                                  final Callback callback) {
+    public final Future<?> sendAsync(final String topic,
+                                     final Integer partition,
+                                     final String key,
+                                     final String data,
+                                     final Callback callback) {
         final Producer<String, String> tranProducer = TranProducerContext.get();
         if (null == tranProducer) {
             final ListenableFuture<SendResult<String, String>> result = this.kafkaTemplate.send(topic, partition, key, data);
@@ -54,7 +54,7 @@ public final class KafkaService implements DisposableBean {
         }
     }
 
-    public final Future sendAsync(final String topic,
+    public final Future<?> sendAsync(final String topic,
                                   final String key,
                                   final String data,
                                   final Callback callback) {

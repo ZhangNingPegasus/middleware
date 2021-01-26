@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.admin.ui.entity.dto.SysRole;
-import org.wyyt.admin.ui.exception.BusinessException;
 import org.wyyt.tool.db.CrudPage;
 import org.wyyt.tool.db.CrudService;
+import org.wyyt.tool.exception.BusinessException;
 
 import java.util.Collection;
 import java.util.List;

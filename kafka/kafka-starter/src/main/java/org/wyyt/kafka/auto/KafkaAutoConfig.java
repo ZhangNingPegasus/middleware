@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.wyyt.kafka.aop.KafkaTranAop;
 import org.wyyt.kafka.service.KafkaService;
-import org.wyyt.kafka.tran.KafkaTranAop;
 
 /**
  * Auto-configuration of ShardingSphere property
