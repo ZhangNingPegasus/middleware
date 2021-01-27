@@ -5,7 +5,7 @@ Xmn=1G
 APPLICATION="@project.name@"
 APPLICATION_JAR="@build.finalName@.jar"
 VERSION="@project.version@"
-LOG_DIR="/wyyt/logs/tomcat/springcloud/auth/${APPLICATION}"
+LOG_DIR="/wyyt/logs/tomcat/springcloud/${APPLICATION}"
 LOGS_HEAPDUMP="${LOG_DIR}/heapdump"
 LOGS_GC="${LOG_DIR}/gc"
 

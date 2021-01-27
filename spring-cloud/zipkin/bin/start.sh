@@ -21,7 +21,7 @@ VERSION="2.22.1"
 cd $(dirname $0)
 cd ..
 BASE_PATH=$(pwd)
-LOG_DIR="/wyyt/logs/tomcat/springcloud/zipkin/${APPLICATION}"
+LOG_DIR="/wyyt/logs/tomcat/springcloud/${APPLICATION}"
 LOGS_HEAPDUMP="${LOG_DIR}/heapdump"
 LOGS_GC="${LOG_DIR}/gc"
 
