@@ -34,6 +34,7 @@ spring:
       host: ${consul_host}
       port: ${consul_port}
   zipkin:
-    base-url: ${zipkin_url}
     sender:
-      type: web
+      type: kafka
+  kafka:
+    bootstrap-servers: ${zipkin_kafka_servers}

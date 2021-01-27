@@ -31,10 +31,10 @@ public class BFeignImpl implements BFeign {
                                  String b,
                                  String c) {
 //        this.studentServiceB.save(value);
-//        log.info(strategyContextHolder.getHeader("access_token"));
-//        value = pluginAdapter.getPluginInfo(value);
+        log.info(strategyContextHolder.getHeader("access_token"));
+        value = pluginAdapter.getPluginInfo(value);
         log.info(String.format("调用路径：{%s}", value));
-        return Result.ok(value);
+        return Result.ok("服务B的执行方法:" + value);
     }
 
     @Override

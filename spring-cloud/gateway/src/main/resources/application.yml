@@ -37,3 +37,8 @@ spring:
         max-active: ${redis-max-active}
         max-idle: ${redis-max-idle}
         min-idle: ${redis-min-idle}
+  zipkin:
+    sender:
+      type: kafka
+  kafka:
+    bootstrap-servers: ${zipkin_kafka_servers}

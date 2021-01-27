@@ -91,13 +91,13 @@ public class AFeignImpl implements AFeign {
                             String a,
                             String b,
                             String c) throws Throwable {
-//        log.info(strategyContextHolder.getHeader("access_token"));
-//        value = pluginAdapter.getPluginInfo(value);
+        log.info(strategyContextHolder.getHeader("access_token"));
+        value = pluginAdapter.getPluginInfo(value);
         Result<String> invoke = bFeign.invoke(value, a, b, c);
         if (invoke.getOk()) {
             value = invoke.getData();
             log.info(String.format("调用路径：{%s}", value));
-            return value;
+            return "服务A的执行方法: " + value;
         } else {
             throw new Exception(invoke.getError());
         }
