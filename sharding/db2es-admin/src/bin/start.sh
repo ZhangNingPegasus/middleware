@@ -5,25 +5,32 @@ Xmn=1G
 APPLICATION="@project.name@"
 APPLICATION_JAR="@build.finalName@.jar"
 VERSION="@project.version@"
+LOG_DIR="/wyyt/logs/db2es-admin/${APPLICATION}"
+LOGS_HEAPDUMP="${LOG_DIR}/heapdump"
+LOGS_GC="${LOG_DIR}/gc"
+
 cd $(dirname $0)
 cd ..
 BASE_PATH=$(pwd)
 CONFIG_DIR=${BASE_PATH}"/config/"
-
-LOG_DIR="/wyyt/logs/db2es-admin/${APPLICATION}"
-LOGS_HEAPDUMP="${LOG_DIR}/heapdump"
 
 STARTUP_LOG="================================================ $(date +'%Y-%m-%m %H:%M:%S') ================================================\n"
 
 if [[ ! -d "${LOG_DIR}" ]]; then
   mkdir -p "${LOG_DIR}"
 fi
+if [[ ! -d "${LOGS_HEAPDUMP}" ]]; then
+  mkdir -p "${LOGS_HEAPDUMP}"
+fi
+if [[ ! -d "${LOGS_GC}" ]]; then
+  mkdir -p "${LOGS_GC}"
+fi
 
 JAVA_OPT="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -XX:-OmitStackTraceInFastThrow "
-JAVA_GC="-Xloggc:$COMMON_LOG_DIR/$JAR_NAME-gc.log -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCApplicationStoppedTime -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=10M "
+JAVA_GC="-Xloggc:${LOGS_GC}/gc.log -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCApplicationStoppedTime -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=10M "
 JAVA_MEM_OPT="-server -Xms${Xms} -Xmx${Xmx} -Xmn${Xmn} -XX:NewRatio=1 -Xss256k -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m -XX:MaxDirectMemorySize=512m -XX:+HeapDumpOnOutOfMemoryError "
-JAVA_MEM_OPT="${JAVA_MEM_OPT} -XX:HeapDumpPath=$LOGS_HEAPDUMP/ "
-JAVA_PARAMETER_OPT="-Dversion=$VERSION -Dwork.dir=${BASE_PATH}"
+JAVA_MEM_OPT="${JAVA_MEM_OPT} -XX:HeapDumpPath=${LOGS_HEAPDUMP}/ "
+JAVA_PARAMETER_OPT="-Dversion=${VERSION} -Dwork.dir=${BASE_PATH}"
 
 STARTUP_LOG="${STARTUP_LOG}application name: ${APPLICATION}\n"
 STARTUP_LOG="${STARTUP_LOG}application jar name: ${APPLICATION_JAR}\n"
