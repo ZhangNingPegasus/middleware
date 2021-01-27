@@ -68,7 +68,7 @@ public class GrayPublishService {
         this.pluginConfigParser = pluginConfigParser;
     }
 
-    public List<GrayVo> listGrayVo() {
+    public List<GrayVo> listGrayVo() throws Exception {
         final List<GrayVo> result = new ArrayList<>();
         final String grayConfig = this.getGrayConfig();
         if (StringUtils.isEmpty(grayConfig)) {
@@ -239,12 +239,8 @@ public class GrayPublishService {
         this.apolloTool.updateConfig(this.grayKey, config);
     }
 
-    private String getGrayConfig() {
-        try {
-            return this.apolloTool.getConfig(this.grayKey);
-        } catch (Exception exception) {
-            return null;
-        }
+    private String getGrayConfig() throws Exception {
+        return this.apolloTool.getConfig(this.grayKey);
     }
 
     private static String formatXml(final Document document) throws IOException {

@@ -75,7 +75,7 @@ public class GrayController {
 
     @PostMapping("list")
     @ResponseBody
-    public Result<List<GrayVo>> list() {
+    public Result<List<GrayVo>> list() throws Exception {
         return Result.ok(this.grayPublishService.listGrayVo());
     }
 
