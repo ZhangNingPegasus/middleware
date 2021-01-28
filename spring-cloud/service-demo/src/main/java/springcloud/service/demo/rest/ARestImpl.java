@@ -52,6 +52,12 @@ public class ARestImpl {
         this.bFeign = bFeign;
     }
 
+    @GetMapping(path = "/test/{value}")
+    public Result<String> test(@PathVariable(value = "value") final String value) throws Throwable {
+        log.info("调用者");
+        return bFeign.invoke(value, "", "", "");
+    }
+
     @ApiOperation(value = "rest同步调用示例")
     @ApiImplicitParam(name = "value", value = "参数1", required = true, dataType = "String")
     @GetMapping(path = "/rest/{value}")

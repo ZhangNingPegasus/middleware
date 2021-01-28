@@ -77,8 +77,8 @@
                 cols: [[
                     {type: 'checkbox'},
                     {type: 'numbers', title: '序号', width: 50},
-                    {field: 'url', title: '路径'},
-                    {field: 'description', title: '描述信息', width: 450}
+                    {field: 'url', title: '路径', width: 450},
+                    {field: 'description', title: '描述信息'}
                     <@select>
                     , {fixed: 'right', title: '操作', align: "center", toolbar: '#grid-bar', width: 80}
                     </@select>

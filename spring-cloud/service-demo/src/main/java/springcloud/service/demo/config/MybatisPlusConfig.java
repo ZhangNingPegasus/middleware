@@ -9,7 +9,6 @@ import javax.sql.DataSource;
 
 @Configuration
 public class MybatisPlusConfig {
-
     @Primary
     @Bean(name = "dataSource")
     public DataSource dataSource() {

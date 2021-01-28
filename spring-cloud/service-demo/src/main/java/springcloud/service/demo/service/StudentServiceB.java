@@ -8,7 +8,7 @@ import springcloud.service.demo.entity.Student;
 import springcloud.service.demo.mapper.StudentMapper;
 
 @Service
-@ConditionalOnProperty(name = DiscoveryConstant.SPRING_APPLICATION_NAME, havingValue = "c")
+@ConditionalOnProperty(name = DiscoveryConstant.SPRING_APPLICATION_NAME, havingValue = "b")
 public class StudentServiceB extends ServiceImpl<StudentMapper, Student> {
     //    @GlobalTransactional
     public void save(final String name) {

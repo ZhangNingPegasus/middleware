@@ -10,7 +10,7 @@ import springcloud.service.demo.mapper.StudentMapper;
 
 @Service
 //@GlobalTransactional
-@ConditionalOnProperty(name = DiscoveryConstant.SPRING_APPLICATION_NAME, havingValue = "c")
+@ConditionalOnProperty(name = DiscoveryConstant.SPRING_APPLICATION_NAME, havingValue = "a")
 public class StudentServiceA extends ServiceImpl<StudentMapper, Student> {
 
 //    @GlobalTransactional
