@@ -23,7 +23,7 @@ spring:
   application:
     name: @project.artifactId@
     group: @project.artifactId@
-    # 版本号, 使用发布的时间作为版本号, 精确到分钟, 格式: yyyyMMddHHmm
+    # 版本号, 每次发布必须填写不同的版本号, 且建议版本号是递增
     version: 1.0
     strategy:
       scan:

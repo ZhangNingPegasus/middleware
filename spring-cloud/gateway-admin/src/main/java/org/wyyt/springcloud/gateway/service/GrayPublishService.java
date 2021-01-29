@@ -16,15 +16,19 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.apollo.tool.ApolloTool;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.GrayVo;
 import org.wyyt.springcloud.gateway.entity.InspectVo;
 import org.wyyt.springcloud.gateway.entity.anno.TranSave;
+import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.Gray;
 import org.wyyt.springcloud.gateway.entity.entity.Route;
 import org.wyyt.springcloud.gateway.entity.service.GrayService;
 import org.wyyt.springcloud.gateway.entity.service.RouteService;
+import org.wyyt.tool.date.DateTool;
+import org.wyyt.tool.dingtalk.Message;
 import org.wyyt.tool.sql.SqlTool;
 
 import java.io.IOException;
@@ -53,19 +57,22 @@ public class GrayPublishService {
     private final RouteService routeService;
     private final GatewayService gatewayService;
     private final PluginConfigParser pluginConfigParser;
+    private final DingTalkService dingTalkService;
 
     public GrayPublishService(final ApolloTool apolloTool,
                               final PropertyConfig propertyConfig,
                               final GrayService grayService,
                               RouteService routeService,
                               final GatewayService gatewayService,
-                              final PluginConfigParser pluginConfigParser) {
+                              final PluginConfigParser pluginConfigParser,
+                              final DingTalkService dingTalkService) {
         this.apolloTool = apolloTool;
         this.grayKey = String.format("%s-%s", propertyConfig.getGatewayConsulGroup(), propertyConfig.getGatewayConsulGroup());
         this.grayService = grayService;
         this.routeService = routeService;
         this.gatewayService = gatewayService;
         this.pluginConfigParser = pluginConfigParser;
+        this.dingTalkService = dingTalkService;
     }
 
     public List<GrayVo> listGrayVo() throws Exception {
@@ -97,7 +104,8 @@ public class GrayPublishService {
     }
 
     @TranSave
-    public void publish(final List<GrayVo> grayVoList) throws IOException {
+    public void publish(final List<GrayVo> grayVoList) throws Exception {
+        final StringBuilder content = new StringBuilder();
         final List<Gray> grayList = new ArrayList<>();
         int i = 1;
         for (final GrayVo grayVo : grayVoList) {
@@ -106,6 +114,7 @@ public class GrayPublishService {
             grayVo.setGrayId(gray.getGrayId());
             gray.setDescription(grayVo.getDescription());
             grayList.add(gray);
+            content.append(toRouteStr(grayVo));
         }
         this.grayService.update(grayList);
 
@@ -115,6 +124,17 @@ public class GrayPublishService {
             final String xml = this.toGlobalHeaderConfig(grayVoList);
             this.updateGrayConfig(xml);
         }
+
+        final Message message = new Message();
+        message.setMsgtype("text");
+        if (ObjectUtils.isEmpty(content.toString())) {
+            message.setText(new Message.Text(String.format("灰度发布已全部撤销, 将会轮询调用所有版本\n发布时间: %s", DateTool.format(new Date()))));
+        } else {
+            final String prefix = String.format("灰度发布已生效, 详情如下:\n发布时间: %s\n\n---------------------------\n\n", DateTool.format(new Date()));
+            content.append("当前状态: OK");
+            message.setText(new Message.Text(prefix.concat(content.toString().trim())));
+        }
+        this.dingTalkService.send(message);
     }
 
     public String inspect(final List<InspectVo> inspectVos) throws Exception {
@@ -133,7 +153,7 @@ public class GrayPublishService {
         }
 
         final Map<String, String> headers = new HashMap<>();
-        headers.put("n-d-version", String.format("{%s}", StringUtils.join(ndVersionList, ",")));
+        headers.put(Names.N_D_VERSION, String.format("{%s}", StringUtils.join(ndVersionList, ",")));
 
         final URI gatewayUri = this.gatewayService.getGatewayUri();
         if (null == gatewayUri) {
@@ -303,5 +323,20 @@ public class GrayPublishService {
         }
 
         return SqlTool.removeQualifier(result.toString(), "-><br/>");
+    }
+
+    private static String toRouteStr(final GrayVo grayVo) {
+        if (null == grayVo) {
+            return "";
+        }
+        final StringBuilder result = new StringBuilder();
+        final JSONObject jsonObject = JSON.parseObject(grayVo.getValue());
+        result.append(String.format("描述信息: %s\n", grayVo.getDescription()));
+        for (Map.Entry<String, Object> pair : jsonObject.entrySet()) {
+            result.append(String.format("服务名: %s;    版本号: %s\n", pair.getKey(), pair.getValue()));
+        }
+        result.append(String.format("流量比例: %s%%\n", grayVo.getWeight()));
+        result.append("\n---------------------------\n\n");
+        return result.toString();
     }
 }

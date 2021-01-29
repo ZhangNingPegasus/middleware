@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import org.wyyt.tool.rpc.Result;
+import org.wyyt.tool.rpc.ResultCode;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -20,7 +21,7 @@ public class ResponseTool {
         final ServerHttpResponse serverHttpResponse = exchange.getResponse();
         handleHeaders(serverHttpResponse.getHeaders());
         serverHttpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
-        final Result<?> result = Result.error(errorMsg);
+        final Result<?> result = Result.error(ResultCode.UN_AUTHORIZED.getCode(), errorMsg);
         final byte[] bytes = JSON.toJSONString(result).getBytes(StandardCharsets.UTF_8);
         final DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
         return exchange.getResponse().writeWith(Flux.just(buffer));
@@ -38,7 +39,7 @@ public class ResponseTool {
         final ServerHttpResponse serverHttpResponse = exchange.getResponse();
         handleHeaders(serverHttpResponse.getHeaders());
         serverHttpResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-        Result<?> result = Result.error(errorMsg);
+        Result<?> result = Result.error(ResultCode.CUSTOMIZE_ERROR.getCode(), errorMsg);
         final byte[] bytes = JSON.toJSONString(result).getBytes(StandardCharsets.UTF_8);
         final DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
         return exchange.getResponse().writeWith(Flux.just(buffer));

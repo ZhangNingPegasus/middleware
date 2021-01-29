@@ -22,11 +22,11 @@ import java.util.List;
 @Slf4j
 @Component
 public class DingTalkSchedule {
-    @Value("${dingtalk.enabled}")
+    @Value("${dingtalk_enabled}")
     private Boolean enabled;
-    @Value("${dingtalk.accessToken}")
+    @Value("${dingtalk_accessToken}")
     private String accessToken;
-    @Value("${dingtalk.secret}")
+    @Value("${dingtalk_secret}")
     private String secret;
 
     private final DingTalkNotifier dingTalkNotifier;

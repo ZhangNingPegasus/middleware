@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.wyyt.tool.rpc.Result;
-import springcloud.service.demo.service.StudentServiceB;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,14 +18,13 @@ import java.io.IOException;
 public class BFeignImpl implements BFeign {
     private final PluginAdapter pluginAdapter;
     private final StrategyContextHolder strategyContextHolder;
-    private final StudentServiceB studentServiceB;
+//    private final StudentServiceB studentServiceB;
 
     public BFeignImpl(final PluginAdapter pluginAdapter,
-                      final StrategyContextHolder strategyContextHolder,
-                      final StudentServiceB studentServiceB) {
+                      final StrategyContextHolder strategyContextHolder) {
         this.pluginAdapter = pluginAdapter;
         this.strategyContextHolder = strategyContextHolder;
-        this.studentServiceB = studentServiceB;
+//        this.studentServiceB = studentServiceB;
     }
 
     @Override
@@ -34,7 +32,7 @@ public class BFeignImpl implements BFeign {
                                  String a,
                                  String b,
                                  String c) {
-        this.studentServiceB.save(value);
+//        this.studentServiceB.save(value);
         log.info(strategyContextHolder.getHeader("access_token"));
         value = pluginAdapter.getPluginInfo(value);
         log.info(String.format("调用路径：{%s}", value));

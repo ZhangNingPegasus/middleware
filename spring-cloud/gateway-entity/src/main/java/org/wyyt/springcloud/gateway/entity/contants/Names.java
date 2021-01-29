@@ -17,6 +17,7 @@ public class Names {
     public static final String CACHED_REQUEST_BODY_OBJECT_KEY = "cached_request_body_object_key";
     public final static String ACCESS_TOKEN = "access_token";
     public final static String JWT_SIGNING_KEY = "npegnaskugsihazgdni";
+    public final static String N_D_VERSION = "n-d-version";
 
     public final static String OAUTH_TOKEN = "oauth/token";
     public final static String API_DOCS = "v2/api-docs";

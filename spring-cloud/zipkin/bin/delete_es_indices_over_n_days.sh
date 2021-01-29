@@ -31,12 +31,11 @@ do
      if [[ $del_index == $PREFIX_IDX_NAME* ]];then
        timeString=${del_index//${PREFIX_IDX_NAME}/}
        t2=`date -d "$timeString" +%s`
-        
+
        if [ $t1 -gt $t2 ]; then
            delResult=`curl -s -u ${ES_UID}:${ES_PWD}  -XDELETE "${SERVER_PORT}/"${del_index}"?pretty" |sed -n '2p'`
            echo "delete index:$del_index result:$delResult" >>${CLEAN_LOG}
        fi
-
      fi
   done
 

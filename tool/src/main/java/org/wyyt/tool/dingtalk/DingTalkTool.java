@@ -52,7 +52,7 @@ public final class DingTalkTool {
         final String WEBHOOK_TOKEN = String.format(URL, accessToken, timestamp, sign);
         try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
             final HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
-            httppost.addHeader("Content-Type", String.format("application/json; charset=%s",StandardCharsets.UTF_8.name()));
+            httppost.addHeader("Content-Type", String.format("application/json; charset=%s", StandardCharsets.UTF_8.name()));
             final StringEntity se = new StringEntity(JSON.toJSONString(message), StandardCharsets.UTF_8.name());
             httppost.setEntity(se);
             final HttpResponse response = httpclient.execute(httppost);
