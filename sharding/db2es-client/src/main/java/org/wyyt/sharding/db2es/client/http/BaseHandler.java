@@ -110,7 +110,7 @@ public abstract class BaseHandler implements HttpAsyncRequestHandler<HttpRequest
                     }
                 } else {
                     response.setStatusCode(HttpStatus.SC_BAD_REQUEST);
-                    response.setEntity(stringEntity(Result.error(String.format("service for path[%s] is not implemented", requestMethod))));
+                    response.setEntity(stringEntity(Result.error(String.format("service for path[%s] is not implemented", path))));
                 }
             }
         } else {
