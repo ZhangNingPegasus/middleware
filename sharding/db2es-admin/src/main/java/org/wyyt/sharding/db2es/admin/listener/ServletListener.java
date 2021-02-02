@@ -1,11 +1,11 @@
 package org.wyyt.sharding.db2es.admin.listener;
 
 import org.springframework.stereotype.Component;
+import org.wyyt.sharding.auto.property.TableProperty;
 import org.wyyt.sharding.db2es.admin.service.TableService;
 import org.wyyt.sharding.db2es.core.entity.domain.TableInfo;
 import org.wyyt.sharding.db2es.core.entity.domain.TableMap;
 import org.wyyt.sharding.db2es.core.entity.domain.TableNameInfo;
-import org.wyyt.sharding.auto.property.TableProperty;
 import org.wyyt.sharding.service.ShardingService;
 
 import javax.servlet.ServletContextEvent;
@@ -17,9 +17,11 @@ import java.util.Set;
 /**
  * The servlet context listener
  * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Component

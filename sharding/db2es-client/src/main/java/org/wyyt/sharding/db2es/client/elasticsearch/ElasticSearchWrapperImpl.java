@@ -19,7 +19,7 @@ import java.util.List;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -48,7 +48,7 @@ public class ElasticSearchWrapperImpl extends ElasticSearchWrapper {
     }
 
     @Override
-    public final List<DocWriteRequest> toUpdateRequest(final FlatMessge flatMessage) throws Exception {
+    public final List<DocWriteRequest<?>> toUpdateRequest(final FlatMessge flatMessage) throws Exception {
         return new ArrayList<>(toInsertRequest(flatMessage));
     }
 }

@@ -18,14 +18,13 @@ import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.wyyt.sharding.db2es.core.entity.domain.*;
-import org.wyyt.sharding.db2es.core.util.flatmsg.Operation;
 import org.wyyt.sharding.db2es.admin.entity.vo.DataSourceVo;
 import org.wyyt.sharding.db2es.admin.service.PropertyService;
 import org.wyyt.sharding.db2es.admin.service.TopicService;
 import org.wyyt.sharding.db2es.admin.service.common.Db2EsHttpService;
 import org.wyyt.sharding.db2es.admin.service.common.EsService;
 import org.wyyt.sharding.db2es.admin.service.common.ZooKeeperService;
+import org.wyyt.sharding.db2es.core.entity.domain.*;
 import org.wyyt.sharding.db2es.core.entity.persistent.Topic;
 import org.wyyt.sharding.db2es.core.entity.view.IndexVo;
 import org.wyyt.sharding.db2es.core.entity.view.NodeVo;
@@ -33,6 +32,7 @@ import org.wyyt.sharding.db2es.core.exception.Db2EsException;
 import org.wyyt.sharding.db2es.core.util.CommonUtils;
 import org.wyyt.sharding.db2es.core.util.elasticsearch.ElasticSearchUtils;
 import org.wyyt.sharding.db2es.core.util.flatmsg.FlatMsgUtils;
+import org.wyyt.sharding.db2es.core.util.flatmsg.Operation;
 import org.wyyt.sharding.db2es.core.util.kafka.KafkaUtils;
 import org.wyyt.sharding.db2es.core.util.metastore.MetaStoreUtils;
 import org.wyyt.tool.common.CommonTool;
@@ -55,10 +55,11 @@ import java.util.stream.Collectors;
 
 /**
  * The service for ES' index rebuilding.
- * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -614,7 +615,7 @@ public class RebuildService {
 
             @Override
             public void update(final FlatMsg flatMsg) throws Exception {
-                final List<DocWriteRequest> updateRequestList = ElasticSearchUtils.toUpdateRequest(
+                final List<DocWriteRequest<?>> updateRequestList = ElasticSearchUtils.toUpdateRequest(
                         esService.getElasticSearchService().getRestHighLevelClient(),
                         flatMsg,
                         config,

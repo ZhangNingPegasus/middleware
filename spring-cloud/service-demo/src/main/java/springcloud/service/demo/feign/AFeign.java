@@ -19,28 +19,19 @@ public interface AFeign {
     @ApiOperation(value = "feign同步调用示例")
     @ApiImplicitParam(name = "value", value = "参数1", required = true, dataType = "String")
     @RequestMapping(path = "/feign/{value}")
-    Result<String> invoke(@PathVariable(value = "value") String value,
-                          @RequestParam(value = "a", required = false) String a,
-                          @RequestParam(value = "b", required = false) String b,
-                          @RequestParam(value = "c", required = false) String c) throws Throwable;
+    Result<String> invoke(@PathVariable(value = "value") String value) throws Throwable;
 
     // @Async注解方式的异步调用
     @ApiOperation(value = "feign异步调用示例")
     @ApiImplicitParam(name = "value", value = "参数1", required = true, dataType = "String")
     @GetMapping(path = "/feign-async/{value}")
-    Future<Result<String>> invokeAsync(@PathVariable(value = "value") String value,
-                                       @RequestParam("a") String a,
-                                       @RequestParam("b") String b,
-                                       @RequestParam("c") String c);
+    Future<Result<String>> invokeAsync(@PathVariable(value = "value") String value);
 
     // 线程池方式的异步调用
     @ApiOperation(value = "feign线程调用示例")
     @ApiImplicitParam(name = "value", value = "参数1", required = true, dataType = "String")
     @GetMapping(path = "/feign-thread/{value}")
-    Result<String> invokeThreadPool(@PathVariable(value = "value") String value,
-                                    @RequestParam("a") String a,
-                                    @RequestParam("b") String b,
-                                    @RequestParam("c") String c);
+    Result<String> invokeThreadPool(@PathVariable(value = "value") String value);
 
     // 传文件
     @PostMapping(value = "feign-uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -13,10 +13,10 @@
             <div class="layui-form-item">
                 <div class="layui-inline">服务名称</div>
                 <div class="layui-inline" style="width:260px">
-                    <select name="serviceId" autocomplete="off" class="layui-select" lay-search>
+                    <select name="serviceName" autocomplete="off" class="layui-select" lay-search>
                         <option value="">请选择服务名称</option>
-                        <#list serviceIds as serviceId>
-                            <option value="${serviceId}">${serviceId}</option>
+                        <#list serviceNames as serviceName>
+                            <option value="${serviceName}">${serviceName}</option>
                         </#list>
                     </select>
 
@@ -77,7 +77,7 @@
                 cols: [[
                     {type: 'checkbox'},
                     {type: 'numbers', title: '序号', width: 50},
-                    {field: 'serviceId', title: '服务名称', width: 250},
+                    {field: 'serviceName', title: '服务名称', width: 250},
                     {field: 'name', title: '接口名称', width: 300},
                     {field: 'method', title: '请求方式', width: 200},
                     {field: 'path', title: '接口路径'}

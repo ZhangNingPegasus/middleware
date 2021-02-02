@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Configuration
@@ -98,7 +98,6 @@ public class ShiroConfig {
         // 只能通过http访问，javascript无法访问
         // 防止xss读取cookie
         simpleCookie.setHttpOnly(true);
-        simpleCookie.setPath("/db2es_admin");
         // maxAge=-1表示浏览器关闭时失效此Cookie
         simpleCookie.setMaxAge(-1);
         return simpleCookie;

@@ -8,9 +8,11 @@ import java.util.Date;
 /**
  * the entity class for partition table
  * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Data

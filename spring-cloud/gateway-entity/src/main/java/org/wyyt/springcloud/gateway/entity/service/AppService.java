@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.wyyt.redis.service.RedisService;
 import org.wyyt.springcloud.gateway.entity.anno.TranRead;
 import org.wyyt.springcloud.gateway.entity.entity.App;
@@ -21,12 +20,11 @@ import org.wyyt.springcloud.gateway.entity.mapper.AppMapper;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Service
 public class AppService extends ServiceImpl<AppMapper, App> {
-
     @Autowired
     protected OauthClientDetailsService oauthClientDetailsService;
     @Autowired
@@ -36,7 +34,7 @@ public class AppService extends ServiceImpl<AppMapper, App> {
 
     @TranRead
     public App getByClientId(final String clientId) {
-        if (StringUtils.isEmpty(clientId)) {
+        if (ObjectUtils.isEmpty(clientId)) {
             return null;
         }
         final QueryWrapper<App> queryWrapper = new QueryWrapper<>();
@@ -49,19 +47,14 @@ public class AppService extends ServiceImpl<AppMapper, App> {
                            final Integer pageSize,
                            final String clientId,
                            final String name) {
-
         final Page<App> page = new Page<>(pageNum, pageSize);
         final QueryWrapper<App> queryWrapper = new QueryWrapper<>();
-        LambdaQueryWrapper<App> lambda = queryWrapper.lambda();
-
+        final LambdaQueryWrapper<App> lambda = queryWrapper.lambda();
         if (!ObjectUtils.isEmpty(name)) {
             lambda.like(App::getName, name);
         }
         if (!ObjectUtils.isEmpty(clientId)) {
             lambda.eq(App::getClientId, clientId);
-        }
-        if (!ObjectUtils.isEmpty(name)) {
-            lambda.like(App::getName, name);
         }
         return this.page(page, queryWrapper);
     }

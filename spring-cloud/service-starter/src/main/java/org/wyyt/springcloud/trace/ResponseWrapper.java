@@ -7,6 +7,16 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ * The wrapper of HttpResponse
+ * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
+ * *****************************************************************
+ */
 public class ResponseWrapper extends HttpServletResponseWrapper {
 
     private final ByteArrayOutputStream buffer;

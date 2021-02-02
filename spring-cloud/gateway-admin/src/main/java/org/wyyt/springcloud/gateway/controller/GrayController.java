@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import org.wyyt.springcloud.gateway.entity.GrayVo;
 import org.wyyt.springcloud.gateway.entity.InspectVo;
 import org.wyyt.springcloud.gateway.entity.ServiceVo;
-import org.wyyt.springcloud.gateway.service.GatewayService;
+import org.wyyt.springcloud.gateway.service.ConsulService;
 import org.wyyt.springcloud.gateway.service.GrayPublishService;
 import org.wyyt.tool.rpc.Result;
 
 import javax.servlet.http.HttpSession;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import static org.wyyt.springcloud.gateway.controller.GrayController.PREFIX;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -33,12 +34,12 @@ import static org.wyyt.springcloud.gateway.controller.GrayController.PREFIX;
 public class GrayController {
     private static final String SESSION_EDIT_DATA = "SESSION_EDIT_DATA";
     public static final String PREFIX = "gray";
-    private final GatewayService gatewayService;
+    private final ConsulService consulService;
     private final GrayPublishService grayPublishService;
 
-    public GrayController(final GatewayService gatewayService,
+    public GrayController(final ConsulService consulService,
                           final GrayPublishService grayPublishService) {
-        this.gatewayService = gatewayService;
+        this.consulService = consulService;
         this.grayPublishService = grayPublishService;
     }
 
@@ -80,8 +81,8 @@ public class GrayController {
 
     @PostMapping("listServices")
     @ResponseBody
-    public Result<List<ServiceVo>> listServices(@RequestParam(value = "value", required = false) String value) throws Exception {
-        final List<ServiceVo> result = this.gatewayService.listService();
+    public Result<List<ServiceVo>> listServices(@RequestParam(value = "value", required = false) String value) {
+        final List<ServiceVo> result = this.consulService.listService();
         if (!ObjectUtils.isEmpty(value)) {
             final Map<String, String> map = JSON.parseObject(value, Map.class);
             for (final ServiceVo serviceVo : result) {
@@ -93,7 +94,7 @@ public class GrayController {
 
     @PostMapping("inspect")
     @ResponseBody
-    public Result<String> inspect(@RequestParam("data") String data) throws Exception {
+    public Result<String> inspect(@RequestParam("data") String data) throws URISyntaxException {
         final List<InspectVo> inspectVos = JSON.parseArray(data, InspectVo.class);
         return Result.ok(this.grayPublishService.inspect(inspectVos));
     }

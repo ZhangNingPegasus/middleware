@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Data
@@ -27,8 +27,8 @@ public class Api extends BaseDto {
     @TableField(value = "`method`")
     private String method;
 
-    @TableField(value = "`service_id`")
-    private String serviceId;
+    @TableField(value = "`service_name`")
+    private String serviceName;
 
     @TableField(value = "`path`")
     private String path;
@@ -38,12 +38,12 @@ public class Api extends BaseDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final Api api = (Api) o;
-        return name.equals(api.name) && method.equals(api.method) && serviceId.equals(api.serviceId) && path.equals(api.path);
+        return name.equals(api.name) && method.equals(api.method) && serviceName.equals(api.serviceName) && path.equals(api.path);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, method, serviceId, path);
+        return Objects.hash(super.hashCode(), name, method, serviceName, path);
     }
 
     @Data

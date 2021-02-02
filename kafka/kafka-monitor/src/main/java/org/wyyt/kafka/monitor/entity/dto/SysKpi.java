@@ -13,9 +13,11 @@ import java.util.Date;
 /**
  * The entity for table sys_kpi. Using for saving zookeeper and kafka's kpi information.
  * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @EqualsAndHashCode(callSuper = true)

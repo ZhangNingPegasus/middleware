@@ -19,11 +19,12 @@ import java.util.*;
  * <p>
  * Database splitting algorithm: [murmur3_128(X) / P] % M
  * Table splitting algorithm: murmur3_128(X) % N
+ * <p>
  *
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 public abstract class AbstractComplextShardingAlgorithm {

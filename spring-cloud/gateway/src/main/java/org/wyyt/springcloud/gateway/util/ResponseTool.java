@@ -1,6 +1,5 @@
 package org.wyyt.springcloud.gateway.util;
 
-
 import com.alibaba.fastjson.JSON;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +14,16 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * The tool of Response
+ * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
+ * *****************************************************************
+ */
 public class ResponseTool {
     public static Mono<Void> unauthorized(final ServerWebExchange exchange,
                                           final String errorMsg) {

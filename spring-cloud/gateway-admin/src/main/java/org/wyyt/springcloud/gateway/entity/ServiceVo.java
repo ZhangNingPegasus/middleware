@@ -15,11 +15,11 @@ import java.util.Set;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
-@ToString
 @Data
+@ToString
 public class ServiceVo {
     private String name;
     private String version;
@@ -36,5 +36,4 @@ public class ServiceVo {
         }
         return result;
     }
-
 }

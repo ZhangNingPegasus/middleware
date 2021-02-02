@@ -31,19 +31,19 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
 
-        <springboot.version>2.3.7.RELEASE</springboot.version>
+        <springboot.version>2.3.8.RELEASE</springboot.version>
         <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
         <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
         <spring-tx.version>5.3.3</spring-tx.version>
         <spring-cloud-starter-zipkin.version>2.2.6.RELEASE</spring-cloud-starter-zipkin.version>
-        <com.nepxion.discovery.version>6.5.0</com.nepxion.discovery.version>
+        <com.nepxion.discovery.version>6.6.0</com.nepxion.discovery.version>
         <caffeine.version>2.8.8</caffeine.version>
         <checker-qual.version>3.9.1</checker-qual.version>
         <mysql-connector-java.version>8.0.23</mysql-connector-java.version>
-        <lombok.version>1.18.16</lombok.version>
+        <lombok.version>1.18.18</lombok.version>
         <unirest-java.version>3.11.10</unirest-java.version>
         <feign-httpclient.version>11.0</feign-httpclient.version>
-        <hutool-all.version>5.5.7</hutool-all.version>
+        <hutool-all.version>5.5.8</hutool-all.version>
         <fastjson.version>1.2.75</fastjson.version>
         <json.version>20201115</json.version>
         <jackson-databind.version>2.12.1</jackson-databind.version>
@@ -60,7 +60,7 @@
         <mybatis.version>3.5.6</mybatis.version>
         <HikariCP.version>4.0.1</HikariCP.version>
         <druid-spring-boot-starter.version>1.2.4</druid-spring-boot-starter.version>
-        <shiro.version>1.7.0</shiro.version>
+        <shiro.version>1.7.1</shiro.version>
         <LatencyUtils.version>2.0.3</LatencyUtils.version>
         <netflix-commons-util.version>0.3.0</netflix-commons-util.version>
         <servo-core.version>0.13.0</servo-core.version>

@@ -28,9 +28,11 @@ import java.util.List;
 /**
  * The filter used for checking access token which client provided.
  * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -86,21 +88,21 @@ public class AccessTokenFilter implements GlobalFilter {
             }
 
             Route route = null;
-            String serviceId = null;
+            String serviceName = null;
             final Object attrRoute = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
             if (attrRoute instanceof Route) {
                 route = (Route) attrRoute;
-                final Object serviceIdObj = route.getMetadata().get(Names.SERVICE_ID);
-                if (null == serviceIdObj) {
-                    return ResponseTool.unauthorized(exchange, String.format("%s is missing", Names.SERVICE_ID));
+                final Object serviceNameObj = route.getMetadata().get(Names.SERVICE_NAME);
+                if (null == serviceNameObj) {
+                    return ResponseTool.unauthorized(exchange, String.format("%s is missing", Names.SERVICE_NAME));
                 }
-                serviceId = serviceIdObj.toString();
+                serviceName = serviceNameObj.toString();
             }
             List<Api> apiList;
             if (null == route) {
                 apiList = this.dataService.getApiList(app.getClientId());
             } else {
-                apiList = this.dataService.getApiList(app.getClientId(), serviceId);
+                apiList = this.dataService.getApiList(app.getClientId(), serviceName);
             }
             if (apiList.stream().anyMatch(r -> PATH_MATCH.match(String.format("/**%s/**", r.getPath()), url))) {
                 return chain.filter(exchange);

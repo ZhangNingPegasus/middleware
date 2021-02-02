@@ -2,7 +2,7 @@ package org.wyyt.sharding.db2es.core.util;
 
 import cn.hutool.core.date.DateUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.wyyt.sharding.db2es.core.entity.domain.Config;
 import org.wyyt.sharding.db2es.core.entity.domain.TableMap;
 import org.wyyt.sharding.db2es.core.entity.persistent.Property;
@@ -22,7 +22,7 @@ import static org.wyyt.sharding.db2es.core.entity.domain.Names.*;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 public final class CommonUtils {
@@ -71,7 +71,7 @@ public final class CommonUtils {
                 final String[] mobileArray = value.split(",");
                 final List<String> mobileList = new ArrayList<>(mobileArray.length);
                 for (final String mobile : mobileArray) {
-                    if (StringUtils.isEmpty(mobile.trim())) {
+                    if (ObjectUtils.isEmpty(mobile.trim())) {
                         continue;
                     }
                     mobileList.add(mobile);

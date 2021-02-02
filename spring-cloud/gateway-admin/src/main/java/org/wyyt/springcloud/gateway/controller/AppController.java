@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-import org.wyyt.tool.exception.BusinessException;
 import org.wyyt.redis.service.RedisService;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.ClientVo;
@@ -16,12 +15,15 @@ import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.vo.AccessToken;
 import org.wyyt.springcloud.gateway.service.AppServiceImpl;
+import org.wyyt.springcloud.gateway.service.ConsulService;
 import org.wyyt.springcloud.gateway.service.GatewayService;
 import org.wyyt.tool.common.CommonTool;
+import org.wyyt.tool.exception.BusinessException;
 import org.wyyt.tool.rpc.Result;
 import org.wyyt.tool.rpc.RpcService;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +39,7 @@ import static org.wyyt.springcloud.gateway.controller.AppController.PREFIX;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021        Initialize  *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -47,17 +49,20 @@ public class AppController {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final PropertyConfig propertyConfig;
     private final AppServiceImpl appServiceImpl;
+    private final ConsulService consulService;
     private final RedisService redisService;
     private final GatewayService gatewayService;
     private final RpcService rpcService;
 
     public AppController(final PropertyConfig propertyConfig,
                          final AppServiceImpl appServiceImpl,
+                         final ConsulService consulService,
                          final RedisService redisService,
                          final GatewayService gatewayService,
                          final RpcService rpcService) {
         this.propertyConfig = propertyConfig;
         this.appServiceImpl = appServiceImpl;
+        this.consulService = consulService;
         this.redisService = redisService;
         this.gatewayService = gatewayService;
         this.rpcService = rpcService;
@@ -218,32 +223,25 @@ public class AppController {
         return Result.ok();
     }
 
-    private URI getGatewayUrl() throws Exception {
-        return this.gatewayService.getAvaiableServiceUri(this.propertyConfig.getGatewayConsulName());
+    private String getCreateAccessTokenUrl() throws URISyntaxException {
+        return this.getRemoteUrl(this.propertyConfig.getAuthConsulName(), "v1/oauth/token");
     }
 
-    private String getCreateAccessTokenUrl() throws Exception {
-        final URI gatewayUrl = this.getGatewayUrl();
+    private String getLogoutAccessTokenUrl() throws URISyntaxException {
+        return this.getRemoteUrl(this.propertyConfig.getAuthConsulName(), "v1/oauth/logout");
+    }
+
+    private String getRemoteUrl(final String serviceName,
+                                final String path) throws URISyntaxException {
+        final URI gatewayUrl = this.consulService.getGatewayUri();
         if (null == gatewayUrl) {
             return null;
         }
-        final URI authUri = this.gatewayService.getAvaiableServiceUri(this.propertyConfig.getAuthConsulName());
+        final URI authUri = this.consulService.getServiceUri(serviceName);
         if (null == authUri) {
             return null;
         }
-        return String.format("%s/%s/v1/oauth/token", gatewayUrl, this.propertyConfig.getAuthConsulName());
-    }
-
-    private String getLogoutAccessTokenUrl() throws Exception {
-        final URI gatewayUrl = this.getGatewayUrl();
-        if (null == gatewayUrl) {
-            return null;
-        }
-        final URI authUri = this.gatewayService.getAvaiableServiceUri(this.propertyConfig.getAuthConsulName());
-        if (null == authUri) {
-            return null;
-        }
-        return String.format("%s/%s/v1/oauth/logout", gatewayUrl, this.propertyConfig.getAuthConsulName());
+        return String.format("%s/%s/%s", gatewayUrl, serviceName, path);
     }
 
     private AccessToken getAccessToken(final String clientId) {

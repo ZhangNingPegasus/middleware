@@ -5,10 +5,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.db2es.admin.service.PropertyService;
 import org.wyyt.sharding.db2es.core.entity.domain.TableInfo;
 import org.wyyt.sharding.db2es.core.exception.Db2EsException;
-import org.wyyt.sharding.auto.property.DataSourceProperty;
 import org.wyyt.sharding.entity.DbInfo;
 import org.wyyt.sharding.entity.ShardingResult;
 import org.wyyt.sharding.service.ShardingService;
@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Service

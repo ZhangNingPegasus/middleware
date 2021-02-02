@@ -12,7 +12,7 @@ apollo:
       enabled: true
 
 server:
-  port: 2001
+  port: 2002
 
 spring:
   servlet:
@@ -22,7 +22,7 @@ spring:
   application:
     name: b
     group: sample-group
-    version: 1.0
+    version: 2.0
     strategy:
       scan:
         # RestController类的扫描路径

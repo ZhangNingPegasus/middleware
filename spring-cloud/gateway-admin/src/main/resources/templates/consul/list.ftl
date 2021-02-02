@@ -88,11 +88,11 @@
                 cols: [[
                     {type: 'checkbox'},
                     {type: 'numbers', title: '序号', width: 50},
-                    {field: 'id', title: '服务实例ID'},
-                    {field: 'host', title: '主机地址', width: 200},
+                    {field: 'group', title: '服务组名', width: 225},
+                    {field: 'version', title: '服务版本', width: 150},
+                    {field: 'address', title: '主机地址', width: 200},
                     {field: 'port', title: '主机端口', width: 200},
-                    {field: 'version', title: '服务版本', width: 200},
-                    {field: 'group', title: '服务组名', width: 200},
+                    {field: 'id', title: '服务实例ID'},
                     {field: 'alive', title: '是否运行', align: "center", templet: '#colAlive', width: 200}
                 ]]
             });

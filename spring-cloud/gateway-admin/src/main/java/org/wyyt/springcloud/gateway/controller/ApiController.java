@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 import org.wyyt.springcloud.gateway.service.ApiServiceImpl;
-import org.wyyt.springcloud.gateway.service.GatewayService;
+import org.wyyt.springcloud.gateway.service.ConsulService;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
@@ -25,34 +25,34 @@ import static org.wyyt.springcloud.gateway.controller.ApiController.PREFIX;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
 @RequestMapping(PREFIX)
 public class ApiController {
     public static final String PREFIX = "api";
-    private final GatewayService gatewayService;
+    private final ConsulService consulService;
     private final ApiServiceImpl apiServiceImpl;
 
-    public ApiController(final GatewayService gatewayService,
+    public ApiController(final ConsulService consulService,
                          final ApiServiceImpl apiServiceImpl) {
-        this.gatewayService = gatewayService;
+        this.consulService = consulService;
         this.apiServiceImpl = apiServiceImpl;
     }
 
     @GetMapping("tolist")
     public String toList(final Model model) {
-        final Set<String> serviceIds = new HashSet<>();
-        serviceIds.addAll(this.gatewayService.listServiceIds());
-        serviceIds.addAll(this.apiServiceImpl.listServiceIds());
-        model.addAttribute("serviceIds", serviceIds.stream().sorted(String::compareTo).collect(Collectors.toList()));
+        final Set<String> serviceNames = new HashSet<>();
+        serviceNames.addAll(this.consulService.listServiceNames());
+        serviceNames.addAll(this.apiServiceImpl.listServiceNames());
+        model.addAttribute("serviceNames", serviceNames.stream().sorted(String::compareTo).collect(Collectors.toList()));
         return String.format("%s/%s", PREFIX, "list");
     }
 
     @GetMapping("toadd")
     public String toAdd(final Model model) {
-        model.addAttribute("serviceIds", this.gatewayService.listServiceIds());
+        model.addAttribute("serviceNames", this.consulService.listServiceNames());
         return String.format("%s/%s", PREFIX, "add");
     }
 
@@ -60,7 +60,7 @@ public class ApiController {
     public String toEdit(final Model model,
                          @RequestParam(value = "id") final Long id) {
         model.addAttribute("api", this.apiServiceImpl.getById(id));
-        model.addAttribute("serviceIds", this.gatewayService.listServiceIds());
+        model.addAttribute("serviceNames", this.consulService.listServiceNames());
         return String.format("%s/%s", PREFIX, "edit");
     }
 
@@ -69,9 +69,9 @@ public class ApiController {
     public Result<List<Api>> list(@RequestParam(value = "page") final Integer pageNum,
                                   @RequestParam(value = "limit") final Integer pageSize,
                                   @RequestParam(value = "name", required = false) final String name,
-                                  @RequestParam(value = "serviceId", required = false) final String serviceId,
+                                  @RequestParam(value = "serviceName", required = false) final String serviceName,
                                   @RequestParam(value = "path", required = false) final String path) {
-        final IPage<Api> page = this.apiServiceImpl.page(pageNum, pageSize, name, serviceId, path);
+        final IPage<Api> page = this.apiServiceImpl.page(pageNum, pageSize, name, serviceName, path);
         return Result.ok(page.getRecords(), page.getTotal());
     }
 
@@ -79,9 +79,9 @@ public class ApiController {
     @ResponseBody
     public Result<?> add(@RequestParam(value = "name") final String name,
                          @RequestParam(value = "method") final String method,
-                         @RequestParam(value = "serviceId") final String serviceId,
+                         @RequestParam(value = "serviceName") final String serviceName,
                          @RequestParam(value = "path") final String path) {
-        this.apiServiceImpl.add(name, method, serviceId, path);
+        this.apiServiceImpl.add(name, method, serviceName, path);
         return Result.ok();
     }
 
@@ -90,9 +90,9 @@ public class ApiController {
     public Result<?> edit(@RequestParam(value = "id") final Long id,
                           @RequestParam(value = "name") final String name,
                           @RequestParam(value = "method") final String method,
-                          @RequestParam(value = "serviceId") final String serviceId,
+                          @RequestParam(value = "serviceName") final String serviceName,
                           @RequestParam(value = "path") final String path) {
-        this.apiServiceImpl.edit(id, name, method, serviceId, path);
+        this.apiServiceImpl.edit(id, name, method, serviceName, path);
         return Result.ok();
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -37,7 +37,7 @@ public class ApiLoadService {
         this.apiService = apiService;
     }
 
-    public Api.Result updateApi(final String serviceId,
+    public Api.Result updateApi(final String serviceName,
                                 final String serviceUrl) {
         Api.Result result = new Api.Result();
         final List<Api> apiList = new ArrayList<>();
@@ -77,7 +77,7 @@ public class ApiLoadService {
                         });
                         api.setName(methodJson[0].getString("summary"));
                         api.setMethod(StringUtils.join(methodList, ","));
-                        api.setServiceId(serviceId);
+                        api.setServiceName(serviceName);
                     }
                     apiList.add(api);
                 });

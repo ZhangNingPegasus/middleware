@@ -28,10 +28,10 @@
         <div class="layui-form-item">
             <label class="layui-form-label">服务名称</label>
             <div class="layui-input-inline" style="width: 740px">
-                <select name="serviceId" autocomplete="off" lay-verify="required" class="layui-select" lay-search>
+                <select name="serviceName" autocomplete="off" lay-verify="required" class="layui-select" lay-search>
                     <option value="">请选择服务名称</option>
-                    <#list serviceIds as serviceId>
-                        <option value="${serviceId}">${serviceId}</option>
+                    <#list serviceNames as serviceName>
+                        <option value="${serviceName}">${serviceName}</option>
                     </#list>
                 </select>
             </div>

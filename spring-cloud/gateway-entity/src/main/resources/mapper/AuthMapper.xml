@@ -28,8 +28,8 @@
         LEFT OUTER JOIN `t_auth` `auth` ON `api`.`id` = `auth`.`api_id`
         LEFT OUTER JOIN `t_app` `app` ON `app`.`id` = `auth`.`app_id`
         WHERE `api`.`id` NOT IN (SELECT `api_id` FROM `t_auth` WHERE `app_id` = #{appId})
-        <if test="serviceId!=null and serviceId!=''">
-            AND `api`.`service_id` = #{serviceId}
+        <if test="serviceName!=null and serviceName!=''">
+            AND `api`.`service_name` = #{serviceName}
         </if>
         <if test="name!=null and name!=''">
             AND `api`.`name` LIKE CONCAT('%', #{name}, '%')

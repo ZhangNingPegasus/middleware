@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Getter
@@ -37,6 +37,9 @@ public class PropertyConfig {
 
     @Value("${db_maximum}")
     public int dbMaximum;
+
+    @Value("${gateway_url}")
+    private String gatewayUrl;
 
     @Value("${gateway_consul_name}")
     private String gatewayConsulName;

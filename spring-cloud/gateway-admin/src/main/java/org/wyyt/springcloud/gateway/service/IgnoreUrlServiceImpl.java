@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -69,6 +69,6 @@ public class IgnoreUrlServiceImpl extends IgnoreUrlService {
 
     private void removeRedis() throws Exception {
         this.redisService.del(Names.REDIS_IGNORE_URLS_KEY);
-        this.gatewayService.removeIngoreUrlSetLocalCache();
+        this.gatewayService.removeIgnoreUrlSetLocalCache();
     }
 }

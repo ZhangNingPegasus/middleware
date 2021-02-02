@@ -1,6 +1,5 @@
 package org.wyyt.springcloud.trace;
 
-
 import brave.Span;
 import brave.Tracer;
 import com.alibaba.fastjson.JSONObject;
@@ -19,6 +18,16 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Add http-head/http-params/http-results into zipkin
+ * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
+ * *****************************************************************
+ */
 public class HttpResponseInjectingTraceFilter extends GenericFilterBean {
 
     private final Tracer tracer;

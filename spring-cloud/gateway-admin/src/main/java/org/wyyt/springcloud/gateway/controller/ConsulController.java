@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.EndpointVo;
 import org.wyyt.springcloud.gateway.entity.ServiceVo;
-import org.wyyt.springcloud.gateway.service.GatewayService;
+import org.wyyt.springcloud.gateway.service.ConsulService;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
@@ -25,19 +25,19 @@ import static org.wyyt.springcloud.gateway.controller.ConsulController.PREFIX;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
 @RequestMapping(PREFIX)
 public class ConsulController {
     public static final String PREFIX = "consul";
-    private final GatewayService gatewayService;
+    private final ConsulService consulService;
     private final PropertyConfig propertyConfig;
 
-    public ConsulController(final GatewayService gatewayService,
+    public ConsulController(final ConsulService consulService,
                             final PropertyConfig propertyConfig) {
-        this.gatewayService = gatewayService;
+        this.consulService = consulService;
         this.propertyConfig = propertyConfig;
     }
 
@@ -53,7 +53,7 @@ public class ConsulController {
                                          @RequestParam(value = "page") final Integer pageNum,
                                          @RequestParam(value = "limit") final Integer pageSize) throws Exception {
         final List<EndpointVo> endpointVoList = new ArrayList<>();
-        final List<ServiceVo> serviceVos = this.gatewayService.listService(false);
+        final List<ServiceVo> serviceVos = this.consulService.listService();
         for (final ServiceVo serviceVo : serviceVos) {
             endpointVoList.addAll(serviceVo.getEndpointVoList());
         }
@@ -65,10 +65,10 @@ public class ConsulController {
                                 (ObjectUtils.isEmpty(alive) || endpointVo.getAlive().equals(alive))
                 ).collect(Collectors.toList());
 
-        final List<EndpointVo> result = filterEndpointVoList.stream().skip((pageNum - 1L) * pageSize)
+        final List<EndpointVo> result = filterEndpointVoList.stream()
+                .skip((pageNum - 1L) * pageSize)
                 .limit(pageSize)
                 .collect(Collectors.toList());
-
         return Result.ok(result, filterEndpointVoList.size());
     }
 

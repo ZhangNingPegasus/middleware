@@ -1,5 +1,6 @@
 package org.wyyt.sharding.db2es.core.util.kafka;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.kafka.clients.admin.KafkaAdminClient;
@@ -20,7 +21,7 @@ import static org.wyyt.sharding.db2es.core.entity.domain.Names.ZOOKEEPER_BROKER_
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 public final class KafkaUtils {
@@ -34,7 +35,7 @@ public final class KafkaUtils {
             final JSONObject jsonObject = new JSONObject(brokerInfoJson);
             final String host = jsonObject.optString("host", "").trim();
             final String port = jsonObject.optString("port", "").trim();
-            if (StringUtils.isEmpty(host) || StringUtils.isEmpty(port)) {
+            if (ObjectUtils.isEmpty(host) || ObjectUtils.isEmpty(port)) {
                 continue;
             }
             result.add(String.format("%s:%s", host, port));

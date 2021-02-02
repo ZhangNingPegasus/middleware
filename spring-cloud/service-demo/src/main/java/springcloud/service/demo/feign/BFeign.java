@@ -17,10 +17,7 @@ public interface BFeign {
     @ApiOperation(value = "feign同步调用示例")
     @ApiImplicitParam(name = "value", value = "参数1", required = true, dataType = "String")
     @RequestMapping(path = "/feign/{value}")
-    Result<String> invoke(@PathVariable(value = "value") String value,
-                          @RequestParam(value = "a", required = false) String a,
-                          @RequestParam(value = "b", required = false) String b,
-                          @RequestParam(value = "c", required = false) String c) throws Throwable;
+    Result<String> invoke(@PathVariable(value = "value") String value) throws Throwable;
 
     // 传文件
     @PostMapping(value = "feign-uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

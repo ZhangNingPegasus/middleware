@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.Data;
 import lombok.ToString;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.DocWriteRequest;
@@ -53,7 +53,7 @@ import static org.wyyt.sharding.db2es.core.util.CommonUtils.OBJECT_MAPPER;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 public final class ElasticSearchUtils {
@@ -168,10 +168,10 @@ public final class ElasticSearchUtils {
             final String primaryValue = datum.get(tableInfo.getPrimaryKeyFieldName());
             final String strRowCreateTime = datum.get(tableInfo.getRowCreateTimeFieldName());
 
-            if (StringUtils.isEmpty(primaryValue)) {
+            if (ObjectUtils.isEmpty(primaryValue)) {
                 throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), tableInfo.getPrimaryKeyFieldName()));
             }
-            if (StringUtils.isEmpty(strRowCreateTime)) {
+            if (ObjectUtils.isEmpty(strRowCreateTime)) {
                 throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), tableInfo.getRowCreateTimeFieldName()));
             }
 
@@ -199,10 +199,10 @@ public final class ElasticSearchUtils {
             final String primaryValue = datum.get(tableInfo.getPrimaryKeyFieldName());
             final String strRowCreateTime = datum.get(tableInfo.getRowCreateTimeFieldName());
 
-            if (StringUtils.isEmpty(primaryValue)) {
+            if (ObjectUtils.isEmpty(primaryValue)) {
                 throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), tableInfo.getPrimaryKeyFieldName()));
             }
-            if (StringUtils.isEmpty(strRowCreateTime)) {
+            if (ObjectUtils.isEmpty(strRowCreateTime)) {
                 throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), tableInfo.getRowCreateTimeFieldName()));
             }
 
@@ -216,15 +216,15 @@ public final class ElasticSearchUtils {
         return result;
     }
 
-    public static List<DocWriteRequest> toUpdateRequest(final RestHighLevelClient restHighLevelClient,
-                                                        final FlatMsg flatMsg,
-                                                        final Config config,
-                                                        final TopicType topicType,
-                                                        final boolean checkInMemory) throws Exception {
+    public static List<DocWriteRequest<?>> toUpdateRequest(final RestHighLevelClient restHighLevelClient,
+                                                           final FlatMsg flatMsg,
+                                                           final Config config,
+                                                           final TopicType topicType,
+                                                           final boolean checkInMemory) throws Exception {
         if (flatMsg.getOld().size() != flatMsg.getData().size()) {
             throw new Db2EsException(String.format("the old data size not equals with new data in consumer record[%s]", flatMsg.getConsumerRecord().value()));
         }
-        final List<DocWriteRequest> result = new ArrayList<>(flatMsg.getData().size());
+        final List<DocWriteRequest<?>> result = new ArrayList<>(flatMsg.getData().size());
 
         final TableInfo tableInfo = config.getTableMap().getByFactTableName(flatMsg.getTable());
 
@@ -234,10 +234,10 @@ public final class ElasticSearchUtils {
             final String primaryValue = newMap.get(tableInfo.getPrimaryKeyFieldName());
             final String strRowCreateTime = newMap.get(tableInfo.getRowCreateTimeFieldName());
 
-            if (StringUtils.isEmpty(primaryValue)) {
+            if (ObjectUtils.isEmpty(primaryValue)) {
                 throw new Db2EsException(String.format("record[%s] missing the required primary key field[%s]", flatMsg.getConsumerRecord(), tableInfo.getPrimaryKeyFieldName()));
             }
-            if (StringUtils.isEmpty(strRowCreateTime)) {
+            if (ObjectUtils.isEmpty(strRowCreateTime)) {
                 throw new Db2EsException(String.format("record[%s] missing the required row create time field[%s]", flatMsg.getConsumerRecord(), tableInfo.getRowCreateTimeFieldName()));
             }
 
@@ -327,7 +327,7 @@ public final class ElasticSearchUtils {
             ALREADY_CREATED_INDEX_NAME.add(indexName);
             return false;
         }
-        if (StringUtils.isEmpty(topic.getMapping().trim())) {
+        if (ObjectUtils.isEmpty(topic.getMapping().trim())) {
             throw new Db2EsException(String.format("ElasticSearchUtils: the index[%s] miss the mapping information", alias));
         }
         try {
@@ -364,7 +364,7 @@ public final class ElasticSearchUtils {
                                       final String refreshInterval,
                                       final String mapping) throws IOException {
         final CreateIndexRequest request = new CreateIndexRequest(indexName);
-        if (!StringUtils.isEmpty(alias)) {
+        if (!ObjectUtils.isEmpty(alias)) {
             request.alias(new Alias(alias));
         }
         request.settings(Settings.builder()

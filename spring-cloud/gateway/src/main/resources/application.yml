@@ -25,7 +25,7 @@ spring:
   application:
     name: ${gateway_consul_name}
     group: ${gateway_consul_group}
-    version: 202101181606
+    version: 1.0
   redis:
     host: ${redis_host}
     port: ${redis_port}

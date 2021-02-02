@@ -5,6 +5,8 @@ import com.nepxion.discovery.plugin.framework.adapter.PluginAdapter;
 import com.nepxion.discovery.plugin.strategy.context.StrategyContextHolder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -36,23 +38,17 @@ public class AFeignImpl implements AFeign {
     }
 
     @Override
-    public Result<String> invoke(String value,
-                                 String a,
-                                 String b,
-                                 String c) throws Throwable {
+    public Result<String> invoke(String value) throws Throwable {
 //        this.studentServiceA.save(value);
-        value = doInvoke(value, a, b, c);
+        value = doInvoke(value);
         return Result.ok(value);
     }
 
     @Override
     @Async
-    public Future<Result<String>> invokeAsync(String value,
-                                              String a,
-                                              String b,
-                                              String c) {
+    public Future<Result<String>> invokeAsync(String value) {
         try {
-            value = doInvoke(value, a, b, c);
+            value = doInvoke(value);
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -66,16 +62,16 @@ public class AFeignImpl implements AFeign {
         return null;
     }
 
+    @Autowired
+    private BeanFactory beanFactory;
+
     @Override
-    public Result<String> invokeThreadPool(String value,
-                                           String a,
-                                           String b,
-                                           String c) {
+    public Result<String> invokeThreadPool(String value) {
         this.executor.execute(new Runnable() {
             @SneakyThrows
             @Override
             public void run() {
-                doInvoke(value, a, b, c);
+                doInvoke(value);
             }
         });
         return Result.ok("Invoke ThreadPool");
@@ -87,13 +83,10 @@ public class AFeignImpl implements AFeign {
         return Result.ok(String.valueOf(file.getBytes().length));
     }
 
-    private String doInvoke(String value,
-                            String a,
-                            String b,
-                            String c) throws Throwable {
-        log.info(strategyContextHolder.getHeader("access_token"));
+    private String doInvoke(String value) throws Throwable {
+//        log.info(strategyContextHolder.getHeader("access_token"));
         value = pluginAdapter.getPluginInfo(value);
-        Result<String> invoke = bFeign.invoke(value, a, b, c);
+        Result<String> invoke = bFeign.invoke(value);
         if (invoke.getOk()) {
             value = invoke.getData();
             log.info(String.format("调用路径：{%s}", value));

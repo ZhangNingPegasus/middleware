@@ -1,9 +1,9 @@
 #!/bin/bash
 # 修改成Runnable/Callable对象所在的扫描目录, 该包下的Runnable/Callable对象都会被装饰, 最好精细和准确, 减少被装饰的对象数，提高性能,多个用';'分隔
 THREAD_PACKAGES="@project.groupId@"
-Xms=2G
-Xmx=2G
-Xmn=1G
+Xms=1G
+Xmx=1G
+Xmn=256M
 APPLICATION="@project.name@"
 APPLICATION_JAR="@build.finalName@.jar"
 VERSION="@project.version@"

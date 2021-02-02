@@ -119,12 +119,12 @@ CREATE TABLE IF NOT EXISTS `t_api`  (
     `id` BIGINT(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
     `name` VARCHAR(128) NOT NULL COMMENT '接口名称',
     `method` VARCHAR(64) NOT NULL COMMENT '请求方式',
-    `service_id` VARCHAR(128) NOT NULL COMMENT '所属服务名称',
+    `service_name` VARCHAR(128) NOT NULL COMMENT '所属的服务名称(即: 服务的spring.application.name)',
     `path` VARCHAR(128) NOT NULL COMMENT '请求路径',
     `row_create_time` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
     `row_update_time` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `idx_service_id_path`(`service_id`, `path`) USING BTREE,
+    UNIQUE INDEX `idx_service_name_path`(`service_name`, `path`) USING BTREE,
     INDEX `idx_name`(`name`) USING BTREE
 ) COMMENT ='SpringCloud接口信息';
 
@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `t_route`  (
     `predicates` TEXT NOT NULL COMMENT '断言字符串',
     `filters` TEXT NOT NULL COMMENT '过滤器字符串',
     `order_num` INT(0) UNSIGNED NOT NULL COMMENT '路由执行顺序',
-    `service_id` VARCHAR(64) NOT NULL COMMENT '所属的服务id(即: 服务的spring.application.name)',
+    `service_name` VARCHAR(64) NOT NULL COMMENT '所属的服务名称(即: 服务的spring.application.name)',
     `enabled` TINYINT(1) NOT NULL COMMENT '是否启用',
     `description` VARCHAR(256) NOT NULL COMMENT '描述信息',
     `row_create_time` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
@@ -237,4 +237,4 @@ INSERT IGNORE INTO `t_ignore_url`(`id`, `url`, `description`) VALUES (5, '/**/v1
 INSERT IGNORE INTO `t_ignore_url`(`id`, `url`, `description`) VALUES (6, '/**/v1/app/access_token/**', '直接通过client id获取Access Token (为了兼容原来的使用方式, 建议不要使用, 有一定的风险, 后期可能会取消改接口)');
 INSERT IGNORE INTO `t_ignore_url`(`id`, `url`, `description`) VALUES (7, '/**/v1/oauth/logout/**', '注销已授权的access token');
 
-INSERT IGNORE INTO `t_route`(`id`, `route_id`, `uri`, `predicates`, `filters`, `order_num`, `service_id`, `enabled`, `description`) VALUES (1, 'auth', 'lb://auth', 'Path=/auth/**', 'StripPrefix=1', 0, 'auth', b'1', 'SpringCloud鉴权服务');
+INSERT IGNORE INTO `t_route`(`id`, `route_id`, `uri`, `predicates`, `filters`, `order_num`, `service_name`, `enabled`, `description`) VALUES (1, 'auth', 'lb://auth', 'Path=/auth/**', 'StripPrefix=1', 0, 'auth', b'1', 'SpringCloud鉴权服务');

@@ -17,7 +17,7 @@ import java.util.List;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Mapper
@@ -29,7 +29,7 @@ public interface AuthMapper extends BaseMapper<Auth> {
 
     IPage<Api> selectNoAuthApis(Page<Auth> page,
                                 @Param("appId") Long appId,
-                                @Param("serviceId") String serviceId,
+                                @Param("serviceName") String serviceName,
                                 @Param("name") String name,
                                 @Param("path") String path);
 }

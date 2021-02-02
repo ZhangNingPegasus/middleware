@@ -16,7 +16,6 @@ import java.util.List;
 
 import static org.wyyt.springcloud.gateway.controller.IgnoreUrlController.PREFIX;
 
-
 /**
  * The controller of IgnoreUrl
  * <p>
@@ -24,7 +23,7 @@ import static org.wyyt.springcloud.gateway.controller.IgnoreUrlController.PREFIX
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Controller

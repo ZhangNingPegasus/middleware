@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021        Initialize  *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -66,7 +66,7 @@ public class DynamicRouteService implements ApplicationEventPublisherAware {
         result.setId(route.getRouteId());
         result.setOrder(route.getOrderNum());
         result.setMetadata(new HashMap<>());
-        result.getMetadata().put(Names.SERVICE_ID, route.getServiceId());
+        result.getMetadata().put(Names.SERVICE_NAME, route.getServiceName());
 
         final String strUri = route.getUri();
         URI uri;

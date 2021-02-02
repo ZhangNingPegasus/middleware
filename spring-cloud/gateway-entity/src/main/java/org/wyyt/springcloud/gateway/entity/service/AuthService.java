@@ -22,7 +22,7 @@ import java.util.List;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -68,10 +68,10 @@ public class AuthService extends ServiceImpl<AuthMapper, Auth> {
     public IPage<Api> selectNoAuthApis(final Integer pageNum,
                                        final Integer pageSize,
                                        final Long appId,
-                                       final String serviceId,
+                                       final String serviceName,
                                        final String name,
                                        final String path) {
         final Page<Auth> page = new Page<>(pageNum, pageSize);
-        return this.baseMapper.selectNoAuthApis(page, appId, serviceId, name, path);
+        return this.baseMapper.selectNoAuthApis(page, appId, serviceName, name, path);
     }
 }

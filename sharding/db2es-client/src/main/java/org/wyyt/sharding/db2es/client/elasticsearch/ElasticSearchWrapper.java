@@ -51,7 +51,7 @@ import java.util.*;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -96,9 +96,9 @@ public abstract class ElasticSearchWrapper implements Closeable {
 
             @Override
             public final void update(final FlatMessge flatMessage) throws Exception {
-                final List<DocWriteRequest> updateRequestList = toUpdateRequest(flatMessage);
+                final List<DocWriteRequest<?>> updateRequestList = toUpdateRequest(flatMessage);
                 if (null != updateRequestList && !updateRequestList.isEmpty()) {
-                    for (final DocWriteRequest docWriteRequest : updateRequestList) {
+                    for (final DocWriteRequest<?> docWriteRequest : updateRequestList) {
                         requestList.add(new Request(docWriteRequest, flatMessage));
                     }
                 }
@@ -310,5 +310,5 @@ public abstract class ElasticSearchWrapper implements Closeable {
 
     abstract List<DeleteRequest> toDeleteRequest(final FlatMessge flatMessage) throws Exception;
 
-    abstract List<DocWriteRequest> toUpdateRequest(final FlatMessge flatMessage) throws Exception;
+    abstract List<DocWriteRequest<?>> toUpdateRequest(final FlatMessge flatMessage) throws Exception;
 }

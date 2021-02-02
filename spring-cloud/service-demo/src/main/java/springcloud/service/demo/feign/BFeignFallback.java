@@ -13,10 +13,7 @@ public class BFeignFallback implements FallbackFactory<BFeign> {
     public BFeign create(Throwable throwable) {
         return new BFeign() {
             @Override
-            public Result<String> invoke(String value,
-                                         String a,
-                                         String b,
-                                         String c) {
+            public Result<String> invoke(String value) {
                 return Result.error(ExceptionTool.getRootCauseMessage(throwable));
             }
 

@@ -1,7 +1,7 @@
 #!/bin/bash
-Xms=2G
-Xmx=2G
-Xmn=1G
+Xms=1G
+Xmx=1G
+Xmn=256M
 APPLICATION="@project.name@"
 APPLICATION_JAR="@build.finalName@.jar"
 VERSION="@project.version@"

@@ -34,6 +34,7 @@ import org.wyyt.tool.sql.SqlTool;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -55,22 +56,22 @@ public class GrayPublishService {
     private final ApolloTool apolloTool;
     private final GrayService grayService;
     private final RouteService routeService;
-    private final GatewayService gatewayService;
+    private final ConsulService consulService;
     private final PluginConfigParser pluginConfigParser;
     private final DingTalkService dingTalkService;
 
     public GrayPublishService(final ApolloTool apolloTool,
                               final PropertyConfig propertyConfig,
                               final GrayService grayService,
-                              RouteService routeService,
-                              final GatewayService gatewayService,
+                              final RouteService routeService,
+                              final ConsulService consulService,
                               final PluginConfigParser pluginConfigParser,
                               final DingTalkService dingTalkService) {
         this.apolloTool = apolloTool;
         this.grayKey = String.format("%s-%s", propertyConfig.getGatewayConsulGroup(), propertyConfig.getGatewayConsulGroup());
         this.grayService = grayService;
         this.routeService = routeService;
-        this.gatewayService = gatewayService;
+        this.consulService = consulService;
         this.pluginConfigParser = pluginConfigParser;
         this.dingTalkService = dingTalkService;
     }
@@ -78,7 +79,7 @@ public class GrayPublishService {
     public List<GrayVo> listGrayVo() throws Exception {
         final List<GrayVo> result = new ArrayList<>();
         final String grayConfig = this.getGrayConfig();
-        if (StringUtils.isEmpty(grayConfig)) {
+        if (ObjectUtils.isEmpty(grayConfig)) {
             return result;
         }
         final RuleEntity ruleEntity = this.pluginConfigParser.parse(grayConfig);
@@ -137,14 +138,14 @@ public class GrayPublishService {
         this.dingTalkService.send(message);
     }
 
-    public String inspect(final List<InspectVo> inspectVos) throws Exception {
+    public String inspect(final List<InspectVo> inspectVos) throws URISyntaxException {
         if (null == inspectVos || inspectVos.isEmpty()) {
             return "";
         }
 
-        final Set<String> serviceIdList = new HashSet<>(inspectVos.size());
+        final Set<String> serviceNameList = new HashSet<>(inspectVos.size());
         for (InspectVo vo : inspectVos) {
-            serviceIdList.add(String.format("\"%s\"", vo.getService().trim()));
+            serviceNameList.add(String.format("\"%s\"", vo.getService().trim()));
         }
 
         final List<String> ndVersionList = new ArrayList<>(inspectVos.size());
@@ -155,7 +156,7 @@ public class GrayPublishService {
         final Map<String, String> headers = new HashMap<>();
         headers.put(Names.N_D_VERSION, String.format("{%s}", StringUtils.join(ndVersionList, ",")));
 
-        final URI gatewayUri = this.gatewayService.getGatewayUri();
+        final URI gatewayUri = this.consulService.getGatewayUri();
         if (null == gatewayUri) {
             return "";
         }
@@ -166,12 +167,12 @@ public class GrayPublishService {
             return "缺少网关路由配置,请先进行路由配置";
         }
 
-        serviceIdList.remove(String.format("\"%s\"", firstRoute.getServiceName()));
+        serviceNameList.remove(String.format("\"%s\"", firstRoute.getServiceName()));
 
         final String inspect = Unirest.post(String.format("%s/%s/inspector/inspect", gatewayUri.toString(), firstRoute.getPathPredicate()))
                 .header("Content-Type", "application/json")
                 .headers(headers)
-                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.stream().sorted(Comparator.naturalOrder()).toArray())))
+                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceNameList.stream().sorted(Comparator.naturalOrder()).toArray())))
                 .asString()
                 .getBody();
 
@@ -182,30 +183,30 @@ public class GrayPublishService {
         final String grayConfig = this.getGrayConfig();
         final RuleEntity ruleEntity = this.pluginConfigParser.parse(grayConfig);
 
-        final Set<String> serviceIdSet = new HashSet<>();
+        final Set<String> serviceNameSet = new HashSet<>();
         for (final StrategyRouteEntity strategyRouteEntity : ruleEntity.getStrategyCustomizationEntity().getStrategyRouteEntityList()) {
             final String value = strategyRouteEntity.getValue();
             final Map<String, String> map = JSON.parseObject(value, Map.class);
-            serviceIdSet.addAll(map.keySet());
+            serviceNameSet.addAll(map.keySet());
         }
 
-        if (serviceIdSet.isEmpty()) {
+        if (serviceNameSet.isEmpty()) {
             return "";
         }
 
-        final List<String> serviceIdList = serviceIdSet.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+        final List<String> serviceNameist = serviceNameSet.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
 
-        final Route firstRoute = this.getFirstServiceName(serviceIdList);
+        final Route firstRoute = this.getFirstServiceName(serviceNameist);
 
         if (null == firstRoute) {
             return "缺少网关路由配置,请先进行路由配置";
         }
 
-        serviceIdList.remove(firstRoute.getServiceName());
-        final URI gatewayUri = this.gatewayService.getGatewayUri();
+        serviceNameist.remove(firstRoute.getServiceName());
+        final URI gatewayUri = this.consulService.getGatewayUri();
         final String inspect = Unirest.post(String.format("%s/%s/inspector/inspect", gatewayUri.toString(), firstRoute.getPathPredicate()))
                 .header("Content-Type", "application/json")
-                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceIdList.stream().map(p -> String.format("\"%s\"", p)).toArray())))
+                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceNameist.stream().map(p -> String.format("\"%s\"", p)).toArray())))
                 .asString()
                 .getBody();
 
@@ -281,7 +282,7 @@ public class GrayPublishService {
     }
 
     private static String formatInspect(final String inspect) {
-        if (StringUtils.isEmpty(inspect)) {
+        if (ObjectUtils.isEmpty(inspect)) {
             return "";
         }
 
@@ -291,7 +292,7 @@ public class GrayPublishService {
             return inspect.trim();
         }
         final String chain = jsonObject.getString("result");
-        if (StringUtils.isEmpty(chain)) {
+        if (ObjectUtils.isEmpty(chain)) {
             return inspect;
         }
 

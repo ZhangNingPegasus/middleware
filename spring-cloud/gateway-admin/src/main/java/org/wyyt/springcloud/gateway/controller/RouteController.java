@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.wyyt.springcloud.gateway.entity.WorkingVo;
 import org.wyyt.springcloud.gateway.entity.entity.Route;
 import org.wyyt.springcloud.gateway.entity.service.RouteService;
+import org.wyyt.springcloud.gateway.service.ConsulService;
 import org.wyyt.springcloud.gateway.service.GatewayService;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
@@ -24,7 +25,7 @@ import static org.wyyt.springcloud.gateway.controller.RouteController.PREFIX;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -33,11 +34,14 @@ public class RouteController {
     public static final String PREFIX = "route";
 
     private final RouteService routeService;
+    private final ConsulService consulService;
     private final GatewayService gatewayService;
 
     public RouteController(final RouteService routeService,
+                           final ConsulService consulService,
                            final GatewayService gatewayService) {
         this.routeService = routeService;
+        this.consulService = consulService;
         this.gatewayService = gatewayService;
     }
 
@@ -54,14 +58,14 @@ public class RouteController {
 
     @GetMapping("toadd")
     public String toAdd(final Model model) {
-        model.addAttribute("serviceIds", this.gatewayService.listServiceIds());
+        model.addAttribute("serviceNames", this.consulService.listServiceNames());
         return String.format("%s/%s", PREFIX, "add");
     }
 
     @GetMapping("toedit")
     public String toEdit(final Model model,
                          @RequestParam(name = "id") final Long id) {
-        model.addAttribute("serviceIds", this.gatewayService.listServiceIds());
+        model.addAttribute("serviceNames", this.consulService.listServiceNames());
         model.addAttribute("route", this.routeService.getById(id));
         return String.format("%s/%s", PREFIX, "edit");
     }
@@ -103,9 +107,9 @@ public class RouteController {
                          @RequestParam(value = "predicates") final String predicates,
                          @RequestParam(value = "filters") final String filters,
                          @RequestParam(value = "orderNum") final Integer orderNum,
-                         @RequestParam(value = "serviceId") final String serviceId,
+                         @RequestParam(value = "serviceName") final String serviceName,
                          @RequestParam(value = "enabled") final Boolean enabled) {
-        this.routeService.add(description, uri, predicates, filters, orderNum, serviceId, enabled);
+        this.routeService.add(description, uri, predicates, filters, orderNum, serviceName, enabled);
         return Result.ok();
     }
 
@@ -117,9 +121,9 @@ public class RouteController {
                           @RequestParam(value = "predicates") final String predicates,
                           @RequestParam(value = "filters") final String filters,
                           @RequestParam(value = "orderNum") final Integer orderNum,
-                          @RequestParam(value = "serviceId") final String serviceId,
+                          @RequestParam(value = "serviceName") final String serviceName,
                           @RequestParam(value = "enabled") final Boolean enabled) {
-        this.routeService.edit(id, description, uri, predicates, filters, orderNum, serviceId, enabled);
+        this.routeService.edit(id, description, uri, predicates, filters, orderNum, serviceName, enabled);
         return Result.ok();
     }
 

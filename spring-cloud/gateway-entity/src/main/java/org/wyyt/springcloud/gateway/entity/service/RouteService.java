@@ -23,7 +23,7 @@ import java.util.Set;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -59,7 +59,7 @@ public class RouteService extends ServiceImpl<RouteMapper, Route> {
                     final String predicate,
                     final String filter,
                     final Integer orderNum,
-                    final String serviceId,
+                    final String serviceName,
                     final Boolean enabled) {
         final String routeId = RandomStringUtils.randomAlphanumeric(15);
         Route route = this.getByRouteId(routeId);
@@ -73,7 +73,7 @@ public class RouteService extends ServiceImpl<RouteMapper, Route> {
         route.setPredicates(predicate);
         route.setFilters(filter);
         route.setOrderNum(orderNum);
-        route.setServiceId(serviceId);
+        route.setServiceName(serviceName);
         route.setEnabled(enabled);
         this.save(route);
     }
@@ -85,7 +85,7 @@ public class RouteService extends ServiceImpl<RouteMapper, Route> {
                      final String predicate,
                      final String filter,
                      final Integer orderNum,
-                     final String serviceId,
+                     final String serviceName,
                      final Boolean enabled) {
         final Route route = this.getById(id);
         if (null == route) {
@@ -96,7 +96,7 @@ public class RouteService extends ServiceImpl<RouteMapper, Route> {
         route.setPredicates(predicate);
         route.setFilters(filter);
         route.setOrderNum(orderNum);
-        route.setServiceId(serviceId);
+        route.setServiceName(serviceName);
         route.setEnabled(enabled);
         this.updateById(route);
     }

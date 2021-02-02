@@ -14,7 +14,7 @@ import java.util.Set;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021        Initialize  *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -22,22 +22,23 @@ public class ApiServiceImpl extends ApiService {
     private final AuthServiceImpl authServiceImpl;
 
     public ApiServiceImpl(final AuthServiceImpl authServiceImpl) {
+        super(authServiceImpl);
         this.authServiceImpl = authServiceImpl;
     }
 
     @TranSave
     public void add(final String name,
                     final String method,
-                    final String serviceId,
+                    final String serviceName,
                     final String path) {
-        Api api = this.getByServiceIdAndPath(serviceId, path);
+        Api api = this.getByServiceNameAndPath(serviceName, path);
         if (null != api) {
-            throw new RuntimeException(String.format("接口[%s]在服务[%s]中已存在", path, serviceId));
+            throw new RuntimeException(String.format("接口[%s]在服务[%s]中已存在", path, serviceName));
         }
         api = new Api();
         api.setName(name);
         api.setMethod(method);
-        api.setServiceId(serviceId);
+        api.setServiceName(serviceName);
         api.setPath(path);
         this.save(api);
     }
@@ -46,7 +47,7 @@ public class ApiServiceImpl extends ApiService {
     public void edit(final Long id,
                      final String name,
                      final String method,
-                     final String serviceId,
+                     final String serviceName,
                      final String path) {
         final Api api = this.getById(id);
         if (null == api) {
@@ -54,7 +55,7 @@ public class ApiServiceImpl extends ApiService {
         }
         api.setName(name);
         api.setMethod(method);
-        api.setServiceId(serviceId);
+        api.setServiceName(serviceName);
         api.setPath(path);
         this.updateById(api);
     }

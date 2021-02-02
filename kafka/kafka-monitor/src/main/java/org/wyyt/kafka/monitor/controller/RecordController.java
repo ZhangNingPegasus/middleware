@@ -29,9 +29,11 @@ import java.util.stream.Collectors;
 /**
  * The controller for providing the trace ability for topics' records.
  * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -118,7 +120,7 @@ public class RecordController {
         if (ObjectUtils.isEmpty(topicName)) {
             return Result.ok();
         }
-        final IPage<RecordVo> page = new Page(pageNum, pageSize);
+        final IPage<RecordVo> page = new Page<>(pageNum, pageSize);
         final TimeRange timeRange = CommonUtil.splitTime(createTimeRange);
         final Date from = timeRange.getStart(), to = timeRange.getEnd();
         try {

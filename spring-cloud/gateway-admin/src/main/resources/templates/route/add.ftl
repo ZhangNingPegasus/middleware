@@ -20,7 +20,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">服务名称</label>
             <div class="layui-input-inline">
-                <input type="text" id="serviceId" name="serviceId" lay-verify="required" class="layui-input"
+                <input type="text" id="serviceName" name="serviceName" lay-verify="required" class="layui-input"
                        style="width: 740px"
                        placeholder="请输入服务名称(即: 服务的spring.application.name值)" autocomplete="off">
             </div>
@@ -33,8 +33,8 @@
                        style="position:absolute;z-index:2;width:96%;" lay-verify="required" autocomplete="off">
                 <select name="uri1" lay-filter="uri1" autocomplete="off" lay-verify="required"
                         class="layui-select" lay-search>
-                    <#list serviceIds as serviceId>
-                        <option value="lb://${serviceId}" tag="${serviceId}">lb://${serviceId}</option>
+                    <#list serviceNames as serviceName>
+                        <option value="lb://${serviceName}" tag="${serviceName}">lb://${serviceName}</option>
                     </#list>
                 </select>
             </div>
@@ -85,7 +85,7 @@
                 const text = data.elem[data.elem.selectedIndex].text;
                 const name = $(data.elem[data.elem.selectedIndex]).attr('tag');
                 $("#uri").val(text);
-                $("#serviceId").val(name);
+                $("#serviceName").val(name);
                 $("#predicates").val('Path=/' + name + '/**');
                 $("#filters").val('StripPrefix=1');
                 $("#uri1").next().find("dl").css({"display": "none"});

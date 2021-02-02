@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 public class ApolloTool {
@@ -285,7 +285,7 @@ public class ApolloTool {
             return false;
         });
 
-        if (null == allMethods || allMethods.isEmpty()) {
+        if (allMethods.isEmpty()) {
             throw new RuntimeException("Cannot found function: CloseableHttpResponse get(String)");
         }
 
@@ -305,7 +305,7 @@ public class ApolloTool {
             return false;
         });
 
-        if (null == allMethods || allMethods.isEmpty()) {
+        if (allMethods.isEmpty()) {
             throw new RuntimeException("Cannot found function: CloseableHttpResponse post(String, Object)");
         }
 
@@ -325,7 +325,7 @@ public class ApolloTool {
             return false;
         });
 
-        if (null == allMethods || allMethods.isEmpty()) {
+        if (allMethods.isEmpty()) {
             throw new RuntimeException("Cannot found function: CloseableHttpResponse put(String, Object)");
         }
 
@@ -343,7 +343,7 @@ public class ApolloTool {
             return false;
         });
 
-        if (null == allMethods || allMethods.isEmpty()) {
+        if (allMethods.isEmpty()) {
             throw new RuntimeException("Cannot found function: CloseableHttpResponse delete(String)");
         }
 

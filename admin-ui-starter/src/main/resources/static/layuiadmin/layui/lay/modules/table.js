@@ -196,10 +196,10 @@
                 dataType: "json",
                 headers: a.headers || {},
                 success: function (t) {
-                    "function" == typeof a.parseData && (t = a.parseData(t) || t), t[n.statusName] != n.statusCode ? (i.renderForm(), i.errorView(t[n.msgName] || '返回的数据不符合规范，正确的成功状态码应为："' + n.statusName + '": ' + n.statusCode)) : (i.renderData(t, e, t[n.countName]), o(), a.time = (new Date).getTime() - i.startTime + " ms"), i.setColsWidth(), "function" == typeof a.done && a.done(t, e, t[n.countName])
+                    "function" == typeof a.parseData && (t = a.parseData(t) || t), t[n.statusName] != n.statusCode ? (i.renderForm(), i.errorView(t[n.msgName] || (t.error) ? t.error : '返回的数据不符合规范，正确的成功状态码应为："' + n.statusName + '": ' + n.statusCode)) : (i.renderData(t, e, t[n.countName]), o(), a.time = (new Date).getTime() - i.startTime + " ms"), i.setColsWidth(), "function" == typeof a.done && a.done(t, e, t[n.countName])
                 },
                 error: function (e, t) {
-                    i.errorView("数据接口请求异常：" + t), i.renderForm(), i.setColsWidth(),"function" == typeof a.error && a.error(t, e)
+                    i.errorView("数据接口请求异常：" + t), i.renderForm(), i.setColsWidth(), "function" == typeof a.error && a.error(t, e)
                 }
             })
         } else if (a.data && a.data.constructor === Array) {

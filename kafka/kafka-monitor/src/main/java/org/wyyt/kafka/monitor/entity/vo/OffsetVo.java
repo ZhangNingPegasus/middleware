@@ -9,9 +9,11 @@ import java.io.Serializable;
 /**
  * The view object for ajax's response. Using for show the kafka's consumers' offset information.
  * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Data

@@ -26,7 +26,7 @@ import static org.wyyt.springcloud.gateway.controller.AuthController.PREFIX;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021        Initialize  *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Controller
@@ -55,7 +55,7 @@ public class AuthController {
     public String toAdd(final Model model,
                         @RequestParam("appId") final Long appId) {
         model.addAttribute("appId", appId);
-        model.addAttribute("serviceIds", this.apiServiceImpl.listServiceIds());
+        model.addAttribute("serviceNames", this.apiServiceImpl.listServiceNames());
         return String.format("%s/%s", PREFIX, "add");
     }
 
@@ -76,10 +76,10 @@ public class AuthController {
     public Result<List<Api>> listApis(@RequestParam(value = "page") final Integer pageNum,
                                       @RequestParam(value = "limit") final Integer pageSize,
                                       @RequestParam(value = "appId") final Long appId,
-                                      @RequestParam(value = "serviceId", required = false) final String serviceId,
+                                      @RequestParam(value = "serviceName", required = false) final String serviceName,
                                       @RequestParam(value = "name", required = false) final String name,
                                       @RequestParam(value = "path", required = false) final String path) {
-        final IPage<Api> page = this.authServiceImpl.selectNoAuthApis(pageNum, pageSize, appId, serviceId, name, path);
+        final IPage<Api> page = this.authServiceImpl.selectNoAuthApis(pageNum, pageSize, appId, serviceName, name, path);
         if (null == page) {
             return Result.ok();
         }

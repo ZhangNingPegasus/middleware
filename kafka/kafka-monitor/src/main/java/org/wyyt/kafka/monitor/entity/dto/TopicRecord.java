@@ -15,9 +15,11 @@ import java.util.Date;
  * The entity for dynamic table. Using for saving the topic's content.
  * One topic corresponds one table, the table's name is the name of topic.
  * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @ToString

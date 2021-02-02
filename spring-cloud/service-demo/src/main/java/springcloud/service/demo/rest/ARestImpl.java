@@ -55,7 +55,7 @@ public class ARestImpl {
     @GetMapping(path = "/test/{value}")
     public Result<String> test(@PathVariable(value = "value") final String value) throws Throwable {
         log.info("调用者");
-        return bFeign.invoke(value, "", "", "");
+        return bFeign.invoke(value);
     }
 
     @ApiOperation(value = "rest同步调用示例")

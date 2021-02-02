@@ -7,7 +7,7 @@ package org.wyyt.springcloud.gateway.entity.contants;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 public class Names {
@@ -18,13 +18,15 @@ public class Names {
     public final static String ACCESS_TOKEN = "access_token";
     public final static String JWT_SIGNING_KEY = "npegnaskugsihazgdni";
     public final static String N_D_VERSION = "n-d-version";
+    public final static String VERSION = "version";
+    public final static String GROUP = "group";
 
     public final static String OAUTH_TOKEN = "oauth/token";
     public final static String API_DOCS = "v2/api-docs";
 
     public final static String EXPIRES_IN = "expires_in";
     public final static String CLIENT_ID = "client_id";
-    public static final String SERVICE_ID = "service_id";
+    public static final String SERVICE_NAME = "service_name";
     public final static String CLIENT_SECRET = "client_secret";
     public final static String GRANT_TYPE = "grant_type";
 

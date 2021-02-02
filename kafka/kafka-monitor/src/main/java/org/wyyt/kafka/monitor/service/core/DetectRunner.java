@@ -18,7 +18,7 @@ import java.util.Set;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -76,8 +76,8 @@ public class DetectRunner extends BaseRunner implements AutoCloseable {
         this.recordRunner.setConsumerRunner(consumerRunner);
         consumerRunner.setRecordRunner(this.recordRunner);
 
-        this.processor.setRecordThread(new WorkerThread(this.recordRunner, "thread-record-for-topics"));
-        this.processor.setConsumerThread(new WorkerThread(consumerRunner, "thread-consumer-for-topics"));
+        this.processor.setRecordThread(new WorkerThread<>(this.recordRunner, "thread-record-for-topics"));
+        this.processor.setConsumerThread(new WorkerThread<>(consumerRunner, "thread-consumer-for-topics"));
         this.processor.start();
     }
 

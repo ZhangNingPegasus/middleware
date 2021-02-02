@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @RestController("topic")
@@ -113,6 +113,9 @@ public final class TopicHandler extends BaseHandler {
         if (ObjectUtils.isEmpty(topicName)) {
             return Result.error("parameter[topicName] is required");
         }
+        if (ObjectUtils.isEmpty(partition)) {
+            return Result.error("parameter[partition] is required");
+        }
         final TopicPartition topicPartition = new TopicPartition(topicName, Integer.parseInt(partition));
         if (this.context.getProcessorWrapper().containsTopic(topicPartition)) {
             this.context.getProcessorWrapper().stopTopic(topicPartition);
@@ -182,10 +185,10 @@ public final class TopicHandler extends BaseHandler {
         if (ObjectUtils.isEmpty(topicName)) {
             return Result.error("parameter[topicName] is required.");
         }
-        if (ObjectUtils.isEmpty(timestamp)) {
-            return Result.error("parameter[timestamp] is required");
+        if (ObjectUtils.isEmpty(partition)) {
+            return Result.error("parameter[partition] is required");
         }
-        if (!NumberUtil.isLong(timestamp)) {
+        if (ObjectUtils.isEmpty(timestamp) || !NumberUtil.isLong(timestamp)) {
             return Result.error("parameter[timestamp] is must be timestamp format");
         }
 

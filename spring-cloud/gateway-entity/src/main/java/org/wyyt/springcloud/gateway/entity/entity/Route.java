@@ -14,7 +14,7 @@ import org.wyyt.springcloud.gateway.entity.entity.base.BaseDto;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @EqualsAndHashCode(callSuper = true)
@@ -36,17 +36,14 @@ public class Route extends BaseDto {
     @TableField(value = "`order_num`")
     private Integer orderNum;
 
-    @TableField(value = "`service_id`")
-    private String serviceId;
+    @TableField(value = "`service_name`")
+    private String serviceName;
 
     @TableField(value = "`enabled`")
     private Boolean enabled;
 
     @TableField(value = "`description`")
     private String description;
-
-    @TableField(exist = false)
-    private String serviceName;
 
     public String getPathPredicate() {
         if (ObjectUtils.isEmpty(this.predicates)) {

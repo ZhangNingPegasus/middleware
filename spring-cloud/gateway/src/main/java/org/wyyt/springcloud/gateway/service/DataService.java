@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 /**
  * Providing data service
  * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Service
@@ -78,12 +80,12 @@ public class DataService {
     }
 
     public List<Api> getApiList(final String clientId,
-                                final String serviceId) {
+                                final String serviceName) {
         final List<Api> apiList = this.getApiList(clientId);
         if (null == apiList) {
             return null;
         }
-        return apiList.stream().filter(f -> f.getServiceId().equals(serviceId)).collect(Collectors.toList());
+        return apiList.stream().filter(f -> f.getServiceName().equals(serviceName)).collect(Collectors.toList());
     }
 
     public void removeApiListLocalCache(final String clientId) {

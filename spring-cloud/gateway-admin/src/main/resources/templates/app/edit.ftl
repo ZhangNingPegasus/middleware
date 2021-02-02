@@ -84,10 +84,12 @@
                             <button id="btnRefresh" class="layui-btn layui-btn-sm">
                                 刷新Token
                             </button>
-                            <button id="btnRefreshAccessToken" ${((createTokenUrl!'')=='')?string('disabled="disabled"','')} class="${((createTokenUrl!'')=='')?string('layui-btn-disabled','')} layui-btn layui-btn-sm layui-btn-normal">
+                            <button id="btnRefreshAccessToken" ${((createTokenUrl!'')=='')?string('disabled="disabled"','')}
+                                    class="${((createTokenUrl!'')=='')?string('layui-btn-disabled','')} layui-btn layui-btn-sm layui-btn-normal">
                                 生成Token
                             </button>
-                            <button id="btnLogoutAccessToken" ${((createTokenUrl!'')=='')?string('disabled="disabled"','')} class="${((createTokenUrl!'')=='')?string('layui-btn-disabled','')} layui-btn layui-btn-sm layui-btn-danger">
+                            <button id="btnLogoutAccessToken" ${((createTokenUrl!'')=='')?string('disabled="disabled"','')}
+                                    class="${((createTokenUrl!'')=='')?string('layui-btn-disabled','')} layui-btn layui-btn-sm layui-btn-danger">
                                 注销Token
                             </button>
                         </div>
@@ -159,6 +161,7 @@
                     admin.post("logoutAccessToken", {'clientId': '${app.clientId}'}, function (data) {
                             $("#accessToken").html(data.data.accessToken);
                             $("#expire").val(data.data.expiresTime);
+                            layer.close(index);
                         }
                     );
                 });

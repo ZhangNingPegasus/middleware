@@ -16,7 +16,7 @@ import org.wyyt.kafka.monitor.service.dto.TopicRecordService;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
@@ -24,7 +24,7 @@ import org.wyyt.kafka.monitor.service.dto.TopicRecordService;
 public class ProcessorService implements SmartLifecycle, DisposableBean {
     private final DetectRunner detectRunner;
     private volatile boolean running;
-    private WorkerThread workerThread;
+    private WorkerThread<?> workerThread;
 
     public ProcessorService(@Lazy final KafkaService kafkaService,
                             @Lazy final TopicRecordService topicRecordService) {
@@ -34,7 +34,7 @@ public class ProcessorService implements SmartLifecycle, DisposableBean {
     @SneakyThrows
     @Override
     public void start() {
-        this.workerThread = new WorkerThread(this.detectRunner, "thread-new-topic-detect");
+        this.workerThread = new WorkerThread<>(this.detectRunner, "thread-new-topic-detect");
         this.workerThread.start();
         this.running = true;
     }

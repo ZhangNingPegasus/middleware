@@ -18,15 +18,15 @@ import java.util.concurrent.CountDownLatch;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize       01/01/2021       Initialize   *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
 @Slf4j
 @NoArgsConstructor
 @Data
 public final class Processor {
-    private WorkerThread recordThread;
-    private WorkerThread consumerThread;
+    private WorkerThread<?> recordThread;
+    private WorkerThread<?> consumerThread;
 
     public final void start() {
         Assert.isTrue(null != this.recordThread, "RecordThread is required");
@@ -45,8 +45,8 @@ public final class Processor {
         Assert.isTrue(null != this.consumerThread, "ConsumerThread is required");
 
         final CountDownLatch cdl = new CountDownLatch(2);
-        final List<WorkerThread> workerThreads = Arrays.asList(this.recordThread, this.consumerThread);
-        for (final WorkerThread workerThread : workerThreads) {
+        final List<WorkerThread<?>> workerThreads = Arrays.asList(this.recordThread, this.consumerThread);
+        for (final WorkerThread<?> workerThread : workerThreads) {
             new Thread(() -> {
                 try {
                     workerThread.stop();
