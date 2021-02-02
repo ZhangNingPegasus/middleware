@@ -22,6 +22,9 @@ import javax.sql.DataSource;
 import java.io.Closeable;
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.*;
 
 /**
@@ -138,10 +141,14 @@ public final class DbWrapper implements Closeable {
                         continue;
                     }
                     field.setAccessible(true);
-                    final Object value = kv.get(SqlTool.removeMySqlQualifier(columnName));
+                    Object value = kv.get(SqlTool.removeMySqlQualifier(columnName));
                     if (null == value) {
                         field.set(t, null);
                     } else {
+                        if (value.getClass().isAssignableFrom(LocalDateTime.class)) {
+                            final LocalDateTime localDateTime = (LocalDateTime) value;
+                            value = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                        }
                         field.set(t, ConvertUtils.convert(value, field.getType()));
                     }
                 }

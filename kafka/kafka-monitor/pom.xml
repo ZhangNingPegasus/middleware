@@ -147,6 +147,8 @@
                     <include>mapper/**</include>
                     <include>static/**</include>
                     <include>templates/**</include>
+                    <include>log4j.properties</include>
+                    <include>logback.xml</include>
                 </includes>
             </resource>
 
@@ -157,8 +159,6 @@
                 <targetPath>config</targetPath>
                 <includes>
                     <include>application.yml</include>
-                    <include>log4j.properties</include>
-                    <include>logback.xml</include>
                 </includes>
             </resource>
 

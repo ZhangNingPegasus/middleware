@@ -35,6 +35,10 @@
                     <artifactId>log4j-api</artifactId>
                     <groupId>org.apache.logging.log4j</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>error_prone_annotations</artifactId>
+                    <groupId>com.google.errorprone</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -115,8 +119,8 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
                     <include>db2es.properties</include>
-                    <include>logback.xml</include>
                     <include>log4j.properties</include>
+                    <include>logback.xml</include>
                 </includes>
             </resource>
 
@@ -127,7 +131,6 @@
                 <targetPath>config</targetPath>
                 <includes>
                     <include>db2es.properties</include>
-                    <include>logback.xml</include>
                 </includes>
             </resource>
 

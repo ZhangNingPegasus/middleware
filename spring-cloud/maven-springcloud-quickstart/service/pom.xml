@@ -86,7 +86,6 @@
                 <targetPath>config</targetPath>
                 <includes>
                     <include>application.yml</include>
-                    <include>bootstrap.properties</include>
                 </includes>
             </resource>
 
