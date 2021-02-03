@@ -18,7 +18,7 @@ public class CacheWrapper implements Closeable {
     private final CacheService cacheService;
 
     public CacheWrapper() {
-        this.cacheService = new CacheService();
+        this.cacheService = new CacheService(null, null, null);
     }
 
     public final void put(final String key,
