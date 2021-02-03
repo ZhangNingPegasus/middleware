@@ -115,7 +115,7 @@
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {page: {curr: 1}, where: field});
+                table.reload('grid', {where: field});
             });
 
             table.render({
@@ -126,7 +126,6 @@
                 cellMinWidth: 80,
                 page: false,
                 limit: 99999999,
-                limits: [99999999],
                 even: true,
                 text: {
                     none: '暂无相关数据'
@@ -167,7 +166,7 @@
                     {title: '操作', toolbar: '#grid-bar', width: 220}
                 ]],
                 done: function (r) {
-                    if (!r.success) {
+                    if (!r.ok) {
                         return;
                     }
                     let run = 0, notRun = 0, rows = r.data.length;
@@ -183,7 +182,7 @@
                     } else {
                         notRun = "<span class=\"layui-badge layui-bg-green\">" + notRun + "</span>";
                     }
-                    $(".layui-table-total .layui-table-cell.laytable-cell-1-0-4").html("<i><span class=\"layui-badge layui-bg-blue\">" + rows + "</span>个主题,<span class=\"layui-badge layui-bg-green\">" + run + "</span>个在运行," + notRun + "个处于暂停异常状态</i>");
+                    $(".layui-table-total .layui-table-cell.laytable-cell-1-0-4").html("<i><span class=\"layui-badge layui-bg-blue\">" + rows + "</span>个主题,<span class=\"layui-badge layui-bg-green\">" + run + "</span>个正在运行," + notRun + "个处于暂停异常状态</i>");
                     const size = $(".layui-table-total .layui-table-cell.laytable-cell-1-0-5");
                     const offset = $(".layui-table-total .layui-table-cell.laytable-cell-1-0-6");
                     const lag = $(".layui-table-total .layui-table-cell.laytable-cell-1-0-7");

@@ -72,7 +72,7 @@
                     {title: '操作', toolbar: '#grid-bar', width: 80}
                 ]],
                 done: function (r) {
-                    if (!r.success) {
+                    if (!r.ok) {
                         return;
                     }
                     layuiRowspan('key', 1);
