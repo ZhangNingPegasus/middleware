@@ -2,6 +2,7 @@ package org.wyyt.springcloud.gateway.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.StrategyConditionGrayEntity;
 import com.nepxion.discovery.common.entity.StrategyCustomizationEntity;
@@ -22,7 +23,6 @@ import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.GrayVo;
 import org.wyyt.springcloud.gateway.entity.InspectVo;
 import org.wyyt.springcloud.gateway.entity.anno.TranSave;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.Gray;
 import org.wyyt.springcloud.gateway.entity.entity.Route;
 import org.wyyt.springcloud.gateway.entity.service.GrayService;
@@ -154,7 +154,7 @@ public class GrayPublishService {
         }
 
         final Map<String, String> headers = new HashMap<>();
-        headers.put(Names.N_D_VERSION, String.format("{%s}", StringUtils.join(ndVersionList, ",")));
+        headers.put(DiscoveryConstant.N_D_VERSION, String.format("{%s}", StringUtils.join(ndVersionList, ",")));
 
         final URI gatewayUri = this.consulService.getGatewayUri();
         if (null == gatewayUri) {

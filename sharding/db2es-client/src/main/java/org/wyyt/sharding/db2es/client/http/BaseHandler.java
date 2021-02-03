@@ -115,7 +115,7 @@ public abstract class BaseHandler implements HttpAsyncRequestHandler<HttpRequest
             }
         } else {
             response.setStatusCode(HttpStatus.SC_BAD_REQUEST);
-            response.setEntity(stringEntity(Result.error(String.format("method [%s] is not supported.", requestMethod))));
+            response.setEntity(stringEntity(Result.error(String.format("method [%s] is not supported.", path))));
         }
     }
 

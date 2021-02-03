@@ -5,6 +5,7 @@ import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.health.HealthServicesRequest;
 import com.ecwid.consul.v1.health.model.Check;
 import com.ecwid.consul.v1.health.model.HealthService;
+import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
@@ -62,8 +63,8 @@ public class ConsulService {
             endpointVo.setId(service.getId());
             endpointVo.setAddress(service.getAddress());
             endpointVo.setPort(service.getPort());
-            endpointVo.setVersion(service.getMeta().get(Names.VERSION));
-            endpointVo.setGroup(service.getMeta().get(Names.GROUP));
+            endpointVo.setVersion(service.getMeta().get(DiscoveryConstant.VERSION));
+            endpointVo.setGroup(service.getMeta().get(DiscoveryConstant.GROUP));
             endpointVo.setAlive(false);
             for (final Check check : checks) {
                 if (check.getServiceId().equals(service.getId())) {
@@ -120,8 +121,8 @@ public class ConsulService {
                 endpointVo.setId(service.getId());
                 endpointVo.setAddress(service.getAddress());
                 endpointVo.setPort(service.getPort());
-                endpointVo.setVersion(service.getMeta().get(Names.VERSION));
-                endpointVo.setGroup(service.getMeta().get(Names.GROUP));
+                endpointVo.setVersion(service.getMeta().get(DiscoveryConstant.VERSION));
+                endpointVo.setGroup(service.getMeta().get(DiscoveryConstant.GROUP));
                 serviceVo.getEndpointVoList().add(endpointVo);
             }
             result.add(serviceVo);

@@ -2,6 +2,7 @@ package org.wyyt.springcloud.gateway.advice;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
@@ -61,7 +62,7 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
     }
 
     private static String getVersion(final ServerRequest serverRequest) {
-        final String version = serverRequest.exchange().getRequest().getHeaders().getFirst(Names.N_D_VERSION);
+        final String version = serverRequest.exchange().getRequest().getHeaders().getFirst(DiscoveryConstant.N_D_VERSION);
         if (ObjectUtils.isEmpty(version)) {
             return null;
         }

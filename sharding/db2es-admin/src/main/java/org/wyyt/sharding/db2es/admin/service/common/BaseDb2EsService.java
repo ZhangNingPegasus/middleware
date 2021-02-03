@@ -174,7 +174,7 @@ public abstract class BaseDb2EsService {
                 }
             }
         } else {
-            throw new Db2EsException(respondResult.getError());
+            throw new Db2EsException(String.format("Access url[%s] meet error, %s", url, respondResult.getError()));
         }
         return result;
     }
