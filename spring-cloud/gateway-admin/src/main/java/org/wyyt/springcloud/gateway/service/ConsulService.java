@@ -13,7 +13,6 @@ import org.springframework.util.ObjectUtils;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.EndpointVo;
 import org.wyyt.springcloud.gateway.entity.ServiceVo;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
 import org.wyyt.tool.exception.BusinessException;
 
 import java.net.URI;
@@ -63,8 +62,8 @@ public class ConsulService {
             endpointVo.setId(service.getId());
             endpointVo.setAddress(service.getAddress());
             endpointVo.setPort(service.getPort());
-            endpointVo.setVersion(service.getMeta().get(DiscoveryConstant.VERSION));
-            endpointVo.setGroup(service.getMeta().get(DiscoveryConstant.GROUP));
+            endpointVo.setVersion((null == service.getMeta()) ? null : service.getMeta().get(DiscoveryConstant.VERSION));
+            endpointVo.setGroup((null == service.getMeta()) ? null : service.getMeta().get(DiscoveryConstant.GROUP));
             endpointVo.setAlive(false);
             for (final Check check : checks) {
                 if (check.getServiceId().equals(service.getId())) {
@@ -88,44 +87,18 @@ public class ConsulService {
     public List<ServiceVo> listService() {
         final List<String> ignoredServiceNames = Arrays.asList(this.propertyConfig.getServiceName(), this.propertyConfig.getGatewayConsulName());
         final List<ServiceVo> result = new ArrayList<>();
-        final Response<Map<String, com.ecwid.consul.v1.agent.model.Service>> services = consulClient.getAgentServices();
+        final Response<Map<String, com.ecwid.consul.v1.agent.model.Service>> services = this.consulClient.getAgentServices();
 
         if (null == services) {
             return result;
         }
 
-        final Map<String, List<com.ecwid.consul.v1.agent.model.Service>> serviceMap = new HashMap<>((int) (services.getValue().size() / 0.75));
         for (final Map.Entry<String, com.ecwid.consul.v1.agent.model.Service> pair : services.getValue().entrySet()) {
-            final com.ecwid.consul.v1.agent.model.Service service = pair.getValue();
-            final String key = service.getService();
-            if (ignoredServiceNames.contains(key)) {
+            final String serviceName = pair.getValue().getService();
+            if (ignoredServiceNames.contains(serviceName)) {
                 continue;
             }
-            if (serviceMap.containsKey(key)) {
-                serviceMap.get(key).add(service);
-            } else {
-                List<com.ecwid.consul.v1.agent.model.Service> serviceList = new ArrayList<>();
-                serviceList.add(service);
-                serviceMap.put(key, serviceList);
-            }
-        }
-
-        for (final Map.Entry<String, List<com.ecwid.consul.v1.agent.model.Service>> pair : serviceMap.entrySet()) {
-            final ServiceVo serviceVo = new ServiceVo();
-            serviceVo.setName(pair.getKey());
-            serviceVo.setEndpointVoList(new ArrayList<>());
-            final List<com.ecwid.consul.v1.agent.model.Service> value = pair.getValue();
-
-            for (final com.ecwid.consul.v1.agent.model.Service service : value) {
-                final EndpointVo endpointVo = new EndpointVo();
-                endpointVo.setId(service.getId());
-                endpointVo.setAddress(service.getAddress());
-                endpointVo.setPort(service.getPort());
-                endpointVo.setVersion(service.getMeta().get(DiscoveryConstant.VERSION));
-                endpointVo.setGroup(service.getMeta().get(DiscoveryConstant.GROUP));
-                serviceVo.getEndpointVoList().add(endpointVo);
-            }
-            result.add(serviceVo);
+            result.add(this.getService(serviceName, false));
         }
         return result.stream().sorted(Comparator.comparing(ServiceVo::getName)).collect(Collectors.toList());
     }

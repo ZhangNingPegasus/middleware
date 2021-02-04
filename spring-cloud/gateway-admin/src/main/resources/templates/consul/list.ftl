@@ -94,7 +94,11 @@
                     {field: 'port', title: '主机端口', width: 200},
                     {field: 'id', title: '服务实例ID'},
                     {field: 'alive', title: '是否运行', align: "center", templet: '#colAlive', width: 200}
-                ]]
+                ]],
+                done: function () {
+                    layuiRowspan('group', 1);
+                    layuiRowspan('version', 1);
+                }
             });
 
             table.on('toolbar(grid)', function (obj) {

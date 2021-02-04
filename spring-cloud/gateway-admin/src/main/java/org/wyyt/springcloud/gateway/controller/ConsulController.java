@@ -62,7 +62,7 @@ public class ConsulController {
                 .filter(endpointVo ->
                         (ObjectUtils.isEmpty(instanceId) || endpointVo.getId().contains(instanceId))
                                 &&
-                                (ObjectUtils.isEmpty(alive) || endpointVo.getAlive().equals(alive))
+                                (ObjectUtils.isEmpty(alive) || alive.equals(endpointVo.getAlive()))
                 ).collect(Collectors.toList());
 
         final List<EndpointVo> result = filterEndpointVoList.stream()
