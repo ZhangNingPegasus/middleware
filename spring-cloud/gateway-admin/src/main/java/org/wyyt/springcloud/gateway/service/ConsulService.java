@@ -88,17 +88,17 @@ public class ConsulService {
         final List<String> ignoredServiceNames = Arrays.asList(this.propertyConfig.getServiceName(), this.propertyConfig.getGatewayConsulName());
         final List<ServiceVo> result = new ArrayList<>();
         final Response<Map<String, com.ecwid.consul.v1.agent.model.Service>> services = this.consulClient.getAgentServices();
-
-        if (null == services) {
+        if (null == services || null == services.getValue() || services.getValue().isEmpty()) {
             return result;
         }
-
+        final Set<String> addedServiceNameMap = new HashSet<>(services.getValue().size());
         for (final Map.Entry<String, com.ecwid.consul.v1.agent.model.Service> pair : services.getValue().entrySet()) {
             final String serviceName = pair.getValue().getService();
-            if (ignoredServiceNames.contains(serviceName)) {
+            if (ignoredServiceNames.contains(serviceName) || addedServiceNameMap.contains(serviceName)) {
                 continue;
             }
             result.add(this.getService(serviceName, false));
+            addedServiceNameMap.add(serviceName);
         }
         return result.stream().sorted(Comparator.comparing(ServiceVo::getName)).collect(Collectors.toList());
     }
