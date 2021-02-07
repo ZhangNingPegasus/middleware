@@ -38,7 +38,7 @@
         <spring-cloud-starter-zipkin.version>2.2.6.RELEASE</spring-cloud-starter-zipkin.version>
         <com.nepxion.discovery.version>6.6.0</com.nepxion.discovery.version>
         <caffeine.version>2.8.8</caffeine.version>
-        <checker-qual.version>3.9.1</checker-qual.version>
+        <checker-qual.version>3.10.0</checker-qual.version>
         <mysql-connector-java.version>8.0.23</mysql-connector-java.version>
         <lombok.version>1.18.18</lombok.version>
         <unirest-java.version>3.11.10</unirest-java.version>
