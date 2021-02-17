@@ -134,7 +134,7 @@ public class RebuildService {
                 final List<Date> dbDateList = dbDateMap.values().stream().map(Date::new).sorted(Date::compareTo).collect(Collectors.toList());
                 this.rebuildStatus.addMessage(String.format("开始从数据库向Elastic-Search同步全量数据(时间: 从<b>%s</b>同步到<b>%s</b>)", CommonUtils.formatMs(fromDate), CommonUtils.formatMs(dbDateList.get(0))));
                 start = System.currentTimeMillis();
-                final List<Exception> populateExceptionList = this.populate(elasticSearchBulk, topic, tableSourceMap, rebuildIndexMap, fromDate, dbDateMap);
+                final List<Exception> populateExceptionList = this.populate(elasticSearchBulk, tableSourceMap, rebuildIndexMap, fromDate, dbDateMap);
                 if (!populateExceptionList.isEmpty()) {
                     System.err.printf("2. 数据库同步发生异常, 原因: %s%n", ExceptionTool.getRootCauseMessage(populateExceptionList.get(0)));
                     throw populateExceptionList.get(0);
@@ -193,7 +193,7 @@ public class RebuildService {
                     this.rebuildStatus.addMessage(String.format("旧索引[<b>%s</b>]已成功清理完成", topic.getName()));
                     this.rebuildStatus.addMessage(String.format("索引[<b>%s</b>]重建已全部成功完成。共耗时:%.3f秒", topic.getName(), calcDuringSeconds(allStart)));
                 } catch (final Exception e) {
-                    this.rebuildStatus.addErrorMesssage(String.format("索引[%s]重建成功, 但收尾工作遇到一些问题, 请在Kiabana中对旧索引进行删除等操作, 失败原因: %s",
+                    this.rebuildStatus.addErrorMessage(String.format("索引[%s]重建成功, 但收尾工作遇到一些问题, 请在Kiabana中对旧索引进行删除等操作, 失败原因: %s",
                             topic.getName(), ExceptionTool.getRootCauseMessage(e)), "green");
                 }
             } catch (final Exception exception) {
@@ -203,7 +203,7 @@ public class RebuildService {
                     final Throwable throwable = ((CanalException) e).getThrowable();
                     if (null == throwable) {
                         this.rebuildStatus.setProgress(0);
-                        this.rebuildStatus.addErrorMesssage(String.format("<span style='color:green'>索引[%s]重建已被成功取消, 所有操作已回滚</span>", topic.getName()), "green");
+                        this.rebuildStatus.addErrorMessage(String.format("<span style='color:green'>索引[%s]重建已被成功取消, 所有操作已回滚</span>", topic.getName()), "green");
                         e = null;
                     }
                 }
@@ -379,7 +379,6 @@ public class RebuildService {
     }
 
     private List<Exception> populate(final ElasticSearchBulk elasticSearchBulk,
-                                     final Topic topic,
                                      final Map<DataSourceVo, Set<String>> tableSourceMap,
                                      final Map<Integer, IndexName> rebuildIndexMap,
                                      final Date fromDate,
@@ -438,7 +437,6 @@ public class RebuildService {
                                           final Map<Integer, IndexName> rebuildIndexMap) throws Exception {
         final KafkaResult kafkaResult = new KafkaResult();
         kafkaResult.setEndTime(System.currentTimeMillis());
-        int tryTimes = 0;
         long _start = 0L;
         long count = 0L;
         KafkaConsumer<String, String> consumer = null;
@@ -680,10 +678,7 @@ public class RebuildService {
     private void createDataSource(final Map<DataSourceVo, Set<String>> tableSourceMap) throws CanalException {
         for (final Map.Entry<DataSourceVo, Set<String>> pair : tableSourceMap.entrySet()) {
             this.checkTerminated(null);
-
             final DataSourceVo dataSourceVo = pair.getKey();
-            final Set<String> tableNameSet = pair.getValue();
-
             final DataSource dataSource = DataSourceTool.createHikariDataSource(
                     dataSourceVo.getHost().trim(),
                     dataSourceVo.getPort().toString().trim(),
@@ -769,7 +764,6 @@ public class RebuildService {
         private final AtomicBoolean terminated;
         private List<PopulateRunner> populateRunnerList;
         private final String name;
-        private long count;
         private int tps;
         private long startTime;
         private long duringSeconds;
@@ -926,7 +920,7 @@ public class RebuildService {
                     message));
         }
 
-        public final void addErrorMesssage(final String message, final String color) {
+        public final void addErrorMessage(final String message, final String color) {
             if (null == this.message) {
                 this.message = new ArrayList<>();
             }
@@ -941,14 +935,12 @@ public class RebuildService {
         }
 
         public final void addErrorMesssage(final String message) {
-            addErrorMesssage(message, "red");
+            addErrorMessage(message, "red");
         }
 
         public final void addProgress(final int progress) {
             this.progress += progress;
-            if (this.progress >= 100) {
-                this.progress = 100;
-            }
+            this.progress = Math.min(this.progress, 100);
         }
 
         public final void setProgress(final int progress) {

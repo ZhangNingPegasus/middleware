@@ -99,7 +99,7 @@ public class ConsumerController {
         final List<KafkaConsumerVo> kafkaConsumerVoList = (List<KafkaConsumerVo>) httpSession.getAttribute(Constants.SESSION_KAFKA_CONSUMER_INFO);
         httpSession.removeAttribute(Constants.SESSION_KAFKA_CONSUMER_INFO);
         if (null != kafkaConsumerVoList) {
-            final List<TreeInfo> consuerGroupTreeInfoList = new ArrayList<>(kafkaConsumerVoList.size());
+            final List<TreeInfo> consumerGroupTreeInfoList = new ArrayList<>(kafkaConsumerVoList.size());
 
             for (final KafkaConsumerVo kafkaConsumerVo : kafkaConsumerVoList) {
                 final TreeInfo consumerGroup = new TreeInfo(kafkaConsumerVo.getGroupId());
@@ -125,9 +125,9 @@ public class ConsumerController {
                     topicTreeInfoList.add(topicInfo);
                 }
                 consumerGroup.setChildren(topicTreeInfoList);
-                consuerGroupTreeInfoList.add(consumerGroup);
+                consumerGroupTreeInfoList.add(consumerGroup);
             }
-            root.setChildren(consuerGroupTreeInfoList);
+            root.setChildren(consumerGroupTreeInfoList);
         }
         if (null != root.getChildren() && root.getChildren().size() > 0) {
             return Result.ok(root);

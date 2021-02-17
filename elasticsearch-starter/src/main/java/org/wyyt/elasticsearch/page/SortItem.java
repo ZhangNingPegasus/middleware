@@ -39,11 +39,11 @@ public final class SortItem implements Serializable {
         return build(column, false);
     }
 
-    public static List<SortItem> ascs(final String... columns) {
+    public static List<SortItem> asc(final String... columns) {
         return Arrays.stream(columns).map(SortItem::asc).collect(Collectors.toList());
     }
 
-    public static List<SortItem> descs(final String... columns) {
+    public static List<SortItem> desc(final String... columns) {
         return Arrays.stream(columns).map(SortItem::desc).collect(Collectors.toList());
     }
 
