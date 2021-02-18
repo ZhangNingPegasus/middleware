@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.wyyt.logback.config.EncoderConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.wyyt.logback.config.EncoderConfig

@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.wyyt.sharding.auto.ShardingAutoConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.wyyt.sharding.auto.ShardingAutoConfig

@@ -15,6 +15,7 @@ import lombok.Data;
 @Data
 public class EndpointVo {
     private String id;
+    private String serviceName;
     private String address;
     private Integer port;
     private String version;

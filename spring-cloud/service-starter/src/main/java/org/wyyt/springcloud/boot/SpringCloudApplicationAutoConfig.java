@@ -1,4 +1,4 @@
-package org.wyyt.springcloud.autoconfig;
+package org.wyyt.springcloud.boot;
 
 import brave.Tracer;
 import org.springframework.beans.factory.BeanFactory;
@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.util.ObjectUtils;
 import org.wyyt.springcloud.advice.ExceptionControllerAdvice;
 import org.wyyt.springcloud.trace.HttpResponseInjectingTraceFilter;
 
@@ -26,12 +27,15 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @EnableAsync
 @Configuration
-@EnableConfigurationProperties(ServiceProperties.class)
-public class ServiceAutoConfig {
+@EnableConfigurationProperties(SpringCloudApplicationProperties.class)
+public class SpringCloudApplicationAutoConfig {
     private final BeanFactory beanFactory;
+    private final SpringCloudApplicationProperties springCloudApplicationProperties;
 
-    public ServiceAutoConfig(final BeanFactory beanFactory) {
+    public SpringCloudApplicationAutoConfig(final BeanFactory beanFactory,
+                                            final SpringCloudApplicationProperties springCloudApplicationProperties) {
         this.beanFactory = beanFactory;
+        this.springCloudApplicationProperties = springCloudApplicationProperties;
     }
 
     @Bean
@@ -42,10 +46,21 @@ public class ServiceAutoConfig {
     @Bean
     public Executor executor() {
         final ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-        threadPoolTaskExecutor.setCorePoolSize(Runtime.getRuntime().availableProcessors());
-        threadPoolTaskExecutor.setMaxPoolSize(Runtime.getRuntime().availableProcessors() * 5);
-        threadPoolTaskExecutor.setQueueCapacity(Runtime.getRuntime().availableProcessors() * 2);
-        threadPoolTaskExecutor.setThreadNamePrefix("Pool-Executor-");
+        threadPoolTaskExecutor.setCorePoolSize(
+                getOrDefault(this.springCloudApplicationProperties.getCorePoolSize(), Runtime.getRuntime().availableProcessors())
+        );
+
+        threadPoolTaskExecutor.setMaxPoolSize(
+                getOrDefault(this.springCloudApplicationProperties.getMaxPoolSize(), Runtime.getRuntime().availableProcessors() * 5)
+        );
+
+        threadPoolTaskExecutor.setQueueCapacity(
+                getOrDefault(this.springCloudApplicationProperties.getQueueCapacity(), Runtime.getRuntime().availableProcessors() * 2)
+        );
+
+        threadPoolTaskExecutor.setThreadNamePrefix(
+                getOrDefault(this.springCloudApplicationProperties.getThreadNamePrefix(), SpringCloudApplicationProperties.DEFAULT_THREAD_NAME_PREFIX)
+        );
         threadPoolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         threadPoolTaskExecutor.initialize();
         return new LazyTraceExecutor(this.beanFactory, threadPoolTaskExecutor);
@@ -54,5 +69,12 @@ public class ServiceAutoConfig {
     @Bean
     public ExceptionControllerAdvice exceptionControllerAdvice() {
         return new ExceptionControllerAdvice();
+    }
+
+    private <T> T getOrDefault(T value, T def) {
+        if (ObjectUtils.isEmpty(value)) {
+            return def;
+        }
+        return value;
     }
 }

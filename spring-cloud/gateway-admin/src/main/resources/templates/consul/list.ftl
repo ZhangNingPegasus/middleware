@@ -37,6 +37,42 @@
             <div class="layui-card-body">
                 <table id="grid" lay-filter="grid"></table>
 
+                <script type="text/html" id="colGroup">
+                    {{# if(d.alive){ }}
+                    {{# if(d.group==null || d.group==''){ }}
+                    <span class="layui-badge layui-bg-orange">无服务组名, 请设置spring.application.group</span>
+                    {{#  } else { }}
+                    {{d.group}}
+                    {{# } }}
+                    {{#  } else { }}
+                    <span class="layui-badge layui-bg-red">{{d.group}}</span>
+                    {{# } }}
+                </script>
+
+                <script type="text/html" id="colServiceName">
+                    {{# if(d.alive){ }}
+                    {{# if(d.serviceName==null || d.serviceName==''){ }}
+                    <span class="layui-badge layui-bg-orange">无服务名, 请设置spring.application.name</span>
+                    {{#  } else { }}
+                    {{d.serviceName}}
+                    {{# } }}
+                    {{#  } else { }}
+                    <span class="layui-badge layui-bg-red">{{d.serviceName}}</span>
+                    {{# } }}
+                </script>
+
+                <script type="text/html" id="colVersion">
+                    {{# if(d.alive){ }}
+                    {{# if(d.version==null || d.version==''){ }}
+                    <span class="layui-badge layui-bg-orange">无版本号, 请设置spring.application.version</span>
+                    {{#  } else { }}
+                    {{d.version}}
+                    {{# } }}
+                    {{#  } else { }}
+                    <span class="layui-badge layui-bg-red">{{d.version}}</span>
+                    {{# } }}
+                </script>
+
                 <script type="text/html" id="colAlive">
                     {{# if(d.alive){ }}
                     &nbsp;&nbsp;&nbsp;&nbsp;<span class="layui-badge layui-bg-blue">正在运行</span>
@@ -88,15 +124,17 @@
                 cols: [[
                     {type: 'checkbox'},
                     {type: 'numbers', title: '序号', width: 50},
-                    {field: 'group', title: '服务组名', width: 225},
-                    {field: 'version', title: '服务版本', width: 150},
-                    {field: 'address', title: '主机地址', width: 200},
-                    {field: 'port', title: '主机端口', width: 200},
+                    {field: 'group', title: '服务组名', templet: '#colGroup', width: 275},
+                    {field: 'serviceName', title: '服务名', templet: '#colServiceName', width: 270},
+                    {field: 'version', title: '服务版本', templet: '#colVersion', width: 270},
+                    {field: 'address', title: '主机地址', width: 140},
+                    {field: 'port', title: '主机端口', width: 110},
                     {field: 'id', title: '服务实例ID'},
-                    {field: 'alive', title: '是否运行', align: "center", templet: '#colAlive', width: 200}
+                    {field: 'alive', title: '是否运行', align: "center", templet: '#colAlive', width: 120}
                 ]],
                 done: function () {
                     layuiRowspan('group', 1);
+                    layuiRowspan('serviceName', 1);
                     layuiRowspan('version', 1);
                 }
             });

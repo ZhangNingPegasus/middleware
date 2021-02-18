@@ -5,8 +5,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.wyyt.springcloud.auth.entity.TokenVo;
 import org.wyyt.springcloud.auth.service.AccessTokenService;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.vo.AccessToken;
@@ -40,23 +42,10 @@ public class ClientTokenController {
             @ApiImplicitParam(name = "clientId", value = "注册的客户端id", required = true, dataType = "String"),
             @ApiImplicitParam(name = "clientSecret", value = "注册的客户端secret", required = true, dataType = "String")
     })
-    @PostMapping(value = {"/v1/oauth/token", "v1/access_token"})
+    @PostMapping(value = {"/v1/oauth/token"})
     public Result<AccessToken> clientLoginToken(@RequestParam("clientId") final String clientId,
                                                 @RequestParam("clientSecret") final String clientSecret) throws Exception {
         return Result.ok(this.clientTokenService.getClientCredentialsToken(clientId, clientSecret));
-    }
-
-    @ApiOperation(value = "直接通过client id获取Access Token (为了兼容原来的使用方式, 建议不要使用, 有一定的风险, 后期可能会取消改接口)")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "appId", value = "注册的客户端id", required = true, dataType = "String")
-    })
-    @PostMapping(value = "v1/app/access_token")
-    public Result<AccessToken> clientLoginToken(@RequestParam("appId") final String clientId) throws Exception {
-        final App app = this.appService.getByClientId(clientId);
-        if (null == app) {
-            return Result.error(String.format("不存在client id=[%s]的应用", clientId));
-        }
-        return Result.ok(this.clientTokenService.getClientCredentialsToken(app));
     }
 
     @ApiOperation(value = "注销已授权的Access Token")
@@ -72,5 +61,24 @@ public class ClientTokenController {
         } else {
             return Result.error("Failed to logout");
         }
+    }
+
+    //---------------------------------------------兼容旧接口-------------------------------------------------------------
+
+    @ApiOperation(value = "获取Access Token (接口已过时,请用v1/oauth/token接口代替)")
+    @PostMapping(value = {"v1/access_token"})
+    public Result<AccessToken> clientLoginTokenOld(@RequestBody final TokenVo tokenVo) throws Exception {
+        return Result.ok(this.clientTokenService.getClientCredentialsToken(tokenVo.getApiKey(), tokenVo.getSecretKey()));
+    }
+
+    @ApiOperation(value = "直接通过AppId(Client Id)获取Access Token (接口已过时,请用v1/oauth/token接口代替)")
+    @PostMapping(value = "v1/app/access_token")
+    public Result<AccessToken> clientLoginToken(@RequestBody final TokenVo tokenVo) throws Exception {
+        final String clientId = tokenVo.getAppId();
+        final App app = this.appService.getByClientId(clientId);
+        if (null == app) {
+            return Result.error(String.format("不存在App id=[%s]的应用", clientId));
+        }
+        return Result.ok(this.clientTokenService.getClientCredentialsToken(app));
     }
 }

@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.wyyt.kafka.auto.KafkaAutoConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.wyyt.kafka.auto.KafkaAutoConfig

@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.wyyt.admin.ui.config.AdminUiAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.wyyt.admin.ui.config.AdminUiAutoConfiguration

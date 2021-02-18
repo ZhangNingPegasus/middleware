@@ -1,2 +1,4 @@
-org.springframework.context.ApplicationListener=org.wyyt.springcloud.context.DefaultConfigApplicationListener
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.wyyt.springcloud.autoconfig.ServiceAutoConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.wyyt.springcloud.boot.SpringCloudApplicationAutoConfig
+org.springframework.boot.env.EnvironmentPostProcessor=\
+org.wyyt.springcloud.boot.SpringCloudApplicationContextInitializer

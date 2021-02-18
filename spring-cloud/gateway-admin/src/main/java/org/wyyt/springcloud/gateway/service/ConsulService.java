@@ -60,6 +60,7 @@ public class ConsulService {
 
             final EndpointVo endpointVo = new EndpointVo();
             endpointVo.setId(service.getId());
+            endpointVo.setServiceName(serviceName);
             endpointVo.setAddress(service.getAddress());
             endpointVo.setPort(service.getPort());
             endpointVo.setVersion((null == service.getMeta()) ? null : service.getMeta().get(DiscoveryConstant.VERSION));

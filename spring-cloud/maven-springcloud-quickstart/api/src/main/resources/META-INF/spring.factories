@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=maven.springcloud.quickstart.api.autoconfig.FeignAutoConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+maven.springcloud.quickstart.api.autoconfig.FeignAutoConfig
