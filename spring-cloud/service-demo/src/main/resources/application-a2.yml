@@ -22,7 +22,7 @@ spring:
   application:
     name: a
     group: sample-group
-    version: 202101181602
+    version: 2.0
     strategy:
       scan:
         # RestController类的扫描路径

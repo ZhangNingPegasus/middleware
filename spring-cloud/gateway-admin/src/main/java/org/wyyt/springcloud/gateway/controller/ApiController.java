@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.wyyt.springcloud.common.service.ConsulService;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 import org.wyyt.springcloud.gateway.service.ApiServiceImpl;
-import org.wyyt.springcloud.gateway.service.ConsulService;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 

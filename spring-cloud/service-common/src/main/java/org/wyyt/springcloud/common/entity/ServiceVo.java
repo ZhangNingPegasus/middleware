@@ -1,4 +1,4 @@
-package org.wyyt.springcloud.gateway.entity;
+package org.wyyt.springcloud.common.entity;
 
 import lombok.Data;
 import lombok.ToString;

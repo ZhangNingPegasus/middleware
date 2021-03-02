@@ -52,6 +52,11 @@ public class ARestImpl {
         this.bFeign = bFeign;
     }
 
+    @GetMapping(path = "/test")
+    public Result<String> test() {
+        return Result.ok(this.userName);
+    }
+
     @GetMapping(path = "/test/{value}")
     public Result<String> test(@PathVariable(value = "value") final String value) throws Throwable {
         log.info("调用者");
@@ -95,7 +100,6 @@ public class ARestImpl {
     }
 
     private String doInvoke(String value) {
-        log.info(strategyContextHolder.getHeader("access_token"));
         value = pluginAdapter.getPluginInfo(value);
         final Result<String> result = restTemplate.getForEntity("http://b/rest/" + value, Result.class).getBody();
         LOG.info(String.format("调用路径：{%s}", result.getData()));

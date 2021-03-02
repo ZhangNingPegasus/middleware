@@ -10,7 +10,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import org.wyyt.springcloud.gateway.anno.Auth;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.util.ResponseTool;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.SignTool;
@@ -52,8 +52,8 @@ public class AuthFilter implements WebFilter {
                             }
 
                             try {
-                                final Object queryParamsObject = exchange.getAttributeOrDefault(Names.CACHED_REQUEST_BODY_OBJECT_KEY, null);
-                                if (SignTool.checkSign(sign, CommonTool.queryParamstoMap(queryParamsObject), Names.API_KEY, Names.API_IV)) {
+                                final Object queryParamsObject = exchange.getAttributeOrDefault(Constant.CACHED_REQUEST_BODY_OBJECT_KEY, null);
+                                if (SignTool.checkSign(sign, CommonTool.queryParamstoMap(queryParamsObject), Constant.API_KEY, Constant.API_IV)) {
                                     return chain.filter(exchange);
                                 }
                                 return ResponseTool.unauthorized(exchange);

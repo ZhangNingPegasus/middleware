@@ -1,5 +1,6 @@
 package org.wyyt.springcloud.gateway.controller;
 
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,20 +10,18 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.redis.service.RedisService;
+import org.wyyt.springcloud.common.service.GatewayService;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.ClientVo;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.vo.AccessToken;
 import org.wyyt.springcloud.gateway.service.AppServiceImpl;
-import org.wyyt.springcloud.gateway.service.ConsulService;
-import org.wyyt.springcloud.gateway.service.GatewayService;
+import org.wyyt.springcloud.gateway.service.GatewayRpcService;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.exception.BusinessException;
 import org.wyyt.tool.rpc.Result;
-import org.wyyt.tool.rpc.RpcService;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,23 +48,20 @@ public class AppController {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final PropertyConfig propertyConfig;
     private final AppServiceImpl appServiceImpl;
-    private final ConsulService consulService;
     private final RedisService redisService;
     private final GatewayService gatewayService;
-    private final RpcService rpcService;
+    private final GatewayRpcService gatewayRpcService;
 
     public AppController(final PropertyConfig propertyConfig,
                          final AppServiceImpl appServiceImpl,
-                         final ConsulService consulService,
                          final RedisService redisService,
                          final GatewayService gatewayService,
-                         final RpcService rpcService) {
+                         final GatewayRpcService gatewayRpcService) {
         this.propertyConfig = propertyConfig;
         this.appServiceImpl = appServiceImpl;
-        this.consulService = consulService;
         this.redisService = redisService;
         this.gatewayService = gatewayService;
-        this.rpcService = rpcService;
+        this.gatewayRpcService = gatewayRpcService;
     }
 
     @GetMapping("tolist")
@@ -86,7 +82,7 @@ public class AppController {
             throw new BusinessException(String.format("App[id=%s]不存在", id));
         }
 
-        final Object accessToken = this.redisService.get(Names.getAccessTokenRedisKey(app.getClientId()));
+        final Object accessToken = this.redisService.get(Constant.getAccessTokenRedisKey(app.getClientId()));
 
         if (!ObjectUtils.isEmpty(accessToken)) {
             model.addAttribute("ak", this.getAccessToken(app.getClientId()));
@@ -171,12 +167,12 @@ public class AppController {
         params.put("clientId", app.getClientId());
         params.put("clientSecret", app.getClientSecret());
 
-        final Result<AccessToken> result = this.rpcService.post(createAccessTokenUrl,
-                params,
-                new com.alibaba.fastjson.TypeReference<Result<AccessToken>>() {
-                });
+        final Result<AccessToken> result = this.gatewayService.post(createAccessTokenUrl, params, new TypeReference<Result<AccessToken>>() {
+        });
         if (null == result) {
             return Result.ok(new AccessToken());
+        } else if (!result.getOk()) {
+            return Result.error(result.getMessage());
         }
         return Result.ok(result.getData());
     }
@@ -193,7 +189,7 @@ public class AppController {
             return Result.error("无可用的网关或鉴权中心, 请假检查网关和鉴权中心是否正常开启");
         }
 
-        final Object accessToken = this.redisService.get(Names.getAccessTokenRedisKey(clientId));
+        final Object accessToken = this.redisService.get(Constant.getAccessTokenRedisKey(clientId));
         if (ObjectUtils.isEmpty(accessToken)) {
             return Result.ok(this.getAccessToken(clientId));
         }
@@ -202,7 +198,7 @@ public class AppController {
         params.put("clientId", app.getClientId());
         params.put("accessToken", accessToken.toString());
 
-        this.rpcService.post(logoutAccessTokenUrl, params);
+        this.gatewayService.post(logoutAccessTokenUrl, params);
         return Result.ok(this.getAccessToken(clientId));
     }
 
@@ -219,33 +215,20 @@ public class AppController {
     @PostMapping("clearCache")
     @ResponseBody
     public Result<?> clearCache(@RequestParam(value = "clientId") final String clientId) throws Exception {
-        this.gatewayService.clearAllCache(clientId);
+        this.gatewayRpcService.clearAllCache(clientId);
         return Result.ok();
     }
 
     private String getCreateAccessTokenUrl() throws URISyntaxException {
-        return this.getRemoteUrl(this.propertyConfig.getAuthConsulName(), "v1/oauth/token");
+        return this.gatewayService.getRemoteUrl(this.propertyConfig.getAuthConsulName(), "v1/oauth/token");
     }
 
     private String getLogoutAccessTokenUrl() throws URISyntaxException {
-        return this.getRemoteUrl(this.propertyConfig.getAuthConsulName(), "v1/oauth/logout");
-    }
-
-    private String getRemoteUrl(final String serviceName,
-                                final String path) throws URISyntaxException {
-        final URI gatewayUrl = this.consulService.getGatewayUri();
-        if (null == gatewayUrl) {
-            return null;
-        }
-        final URI authUri = this.consulService.getServiceUri(serviceName);
-        if (null == authUri) {
-            return null;
-        }
-        return String.format("%s/%s/%s", gatewayUrl, serviceName, path);
+        return this.gatewayService.getRemoteUrl(this.propertyConfig.getAuthConsulName(), "v1/oauth/logout");
     }
 
     private AccessToken getAccessToken(final String clientId) {
-        final String key = Names.getAccessTokenRedisKey(clientId);
+        final String key = Constant.getAccessTokenRedisKey(clientId);
         final AccessToken result = new AccessToken();
         final Object accessToken = this.redisService.get(key);
         final Long expire = this.redisService.getExpire(key);

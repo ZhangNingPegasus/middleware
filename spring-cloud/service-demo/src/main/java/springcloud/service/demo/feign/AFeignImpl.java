@@ -5,13 +5,12 @@ import com.nepxion.discovery.plugin.framework.adapter.PluginAdapter;
 import com.nepxion.discovery.plugin.strategy.context.StrategyContextHolder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.wyyt.springcloud.service.EnvironmentService;
 import org.wyyt.tool.rpc.Result;
 
 import java.io.IOException;
@@ -22,24 +21,25 @@ import java.util.concurrent.Future;
 @RestController
 @ConditionalOnProperty(name = DiscoveryConstant.SPRING_APPLICATION_NAME, havingValue = "a")
 public class AFeignImpl implements AFeign {
-    private final StrategyContextHolder strategyContextHolder;
     private final PluginAdapter pluginAdapter;
     private final BFeign bFeign;
     private final Executor executor;
+    private final EnvironmentService environmentService;
 
-    public AFeignImpl(final StrategyContextHolder strategyContextHolder,
-                      final PluginAdapter pluginAdapter,
+    public AFeignImpl(final PluginAdapter pluginAdapter,
                       final BFeign bFeign,
-                      final Executor executor) {
-        this.strategyContextHolder = strategyContextHolder;
+                      final Executor executor,
+                      final EnvironmentService environmentService) {
         this.pluginAdapter = pluginAdapter;
         this.bFeign = bFeign;
         this.executor = executor;
+        this.environmentService = environmentService;
     }
 
     @Override
     public Result<String> invoke(String value) throws Throwable {
-//        this.studentServiceA.save(value);
+        System.out.println(this.environmentService.getClientId());
+        System.out.println(this.environmentService.getClient());
         value = doInvoke(value);
         return Result.ok(value);
     }
@@ -62,8 +62,6 @@ public class AFeignImpl implements AFeign {
         return null;
     }
 
-    @Autowired
-    private BeanFactory beanFactory;
 
     @Override
     public Result<String> invokeThreadPool(String value) {
@@ -84,7 +82,6 @@ public class AFeignImpl implements AFeign {
     }
 
     private String doInvoke(String value) throws Throwable {
-//        log.info(strategyContextHolder.getHeader("access_token"));
         value = pluginAdapter.getPluginInfo(value);
         Result<String> invoke = bFeign.invoke(value);
         if (invoke.getOk()) {

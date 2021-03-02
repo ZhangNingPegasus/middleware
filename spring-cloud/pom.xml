@@ -11,6 +11,10 @@
         <module>service-starter</module>
         <module>maven-springcloud-quickstart</module>
         <module>auth</module>
+        <module>sms</module>
+        <module>sms-entity</module>
+        <module>service-common</module>
+        <module>service-entity</module>
     </modules>
 
     <packaging>pom</packaging>

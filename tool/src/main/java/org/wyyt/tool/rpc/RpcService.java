@@ -2,35 +2,13 @@ package org.wyyt.tool.rpc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import kong.unirest.HttpRequestWithBody;
+import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
-import org.wyyt.tool.exception.ExceptionTool;
-import org.wyyt.tool.resource.ResourceTool;
 
-import javax.net.ssl.SSLContext;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,208 +24,109 @@ import java.util.Map;
 @Slf4j
 public class RpcService {
     private static final Integer CONNECTION_TIMEOUT = 30000;
-    private static final Integer REQUEST_TIMEOUT = 30000;
     private static final Integer SOCKET_TIMEOUT = 30000;
+    private static final String DEFAULT_CONTENT_TYPE = "application/x-www-form-urlencoded";
 
-    public byte[] getFileBytes(final String url) throws IOException {
-        final URL httpUrl = new URL(url);
-        final HttpURLConnection conn = (HttpURLConnection) httpUrl.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setConnectTimeout(CONNECTION_TIMEOUT);
-        conn.setReadTimeout(REQUEST_TIMEOUT);
-        byte[] result;
-        try (final InputStream inStream = conn.getInputStream();
-             final ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
-            final byte[] buffer = new byte[2048];
-            int len;
-            while (-1 != (len = inStream.read(buffer))) {
-                outStream.write(buffer, 0, len);
-            }
-            result = outStream.toByteArray();
-        }
-        return result;
-    }
-
-
-    public String get(final String url) throws Exception {
-        if (url.toLowerCase().startsWith("https:")) {
-            return get(url, null, null, true);
-        } else {
-            return get(url, null, null, false);
-        }
+    public byte[] getFileBytes(final String url) {
+        return Unirest.get(url).asBytes().getBody();
     }
 
     public String get(final String url,
-                      final Map<String, Object> params) throws Exception {
-        if (url.toLowerCase().startsWith("https:")) {
-            return get(url, params, null, true);
-        } else {
-            return get(url, params, null, false);
-        }
+                      @Nullable final Map<String, String> headers,
+                      @Nullable final Map<String, Object> params) {
+        return Unirest.get(url)
+                .connectTimeout(CONNECTION_TIMEOUT)
+                .socketTimeout(SOCKET_TIMEOUT)
+                .headers(headers)
+                .queryString(params)
+                .asString()
+                .getBody();
     }
 
     public String get(final String url,
-                      final Map<String, Object> params,
-                      final Map<String, String> headers) throws Exception {
-        if (url.toLowerCase().startsWith("https:")) {
-            return get(url, params, headers, true);
-        } else {
-            return get(url, params, headers, false);
-        }
+                      final Map<String, Object> params) {
+        return get(url, null, params);
     }
 
-    public String post(final String url) throws Exception {
-        if (url.toLowerCase().startsWith("https:")) {
-            return post(url, null, null, true);
-        } else {
-            return post(url, null, null, false);
-        }
-    }
-
-    public <T> T post(final String url,
-                      final Map<String, Object> params,
-                      final TypeReference<T> type) throws Exception {
-        final String responseText = this.post(url, params);
-        if (ObjectUtils.isEmpty(responseText)) {
-            return null;
-        }
-        return JSONObject.parseObject(responseText, type);
-    }
-
-    public <T> T post(final String url,
-                      final Map<String, Object> params,
-                      final Map<String, String> headers,
-                      final TypeReference<T> type) throws Exception {
-        final String responseText = this.post(url, params, headers);
-        if (ObjectUtils.isEmpty(responseText)) {
-            return null;
-        }
-        return JSONObject.parseObject(responseText, type);
+    public String get(final String url) {
+        return get(url, null, null);
     }
 
     public String post(final String url,
-                       final Map<String, Object> params) throws Exception {
-        if (url.toLowerCase().startsWith("https:")) {
-            return post(url, params, null, true);
-        } else {
-            return post(url, params, null, false);
-        }
-    }
-
-    public String post(final String url,
-                       final Map<String, Object> params,
-                       final Map<String, String> headers) throws Exception {
-        if (url.toLowerCase().startsWith("https:")) {
-            return post(url, params, headers, true);
-        } else {
-            return post(url, params, headers, false);
-        }
-    }
-
-    private String get(String url,
-                       @Nullable final Map<String, Object> params,
+                       final String contentType,
                        @Nullable final Map<String, String> headers,
-                       final boolean isHttps) throws Exception {
-        String strResult;
-        CloseableHttpClient httpClient;
-        if (isHttps) {
-            httpClient = createSSLClientDefault();
-        } else {
-            httpClient = HttpClients.createDefault();
+                       @Nullable final Object params) {
+        final HttpRequestWithBody httpRequestWithBody = Unirest.post(url)
+                .connectTimeout(CONNECTION_TIMEOUT)
+                .socketTimeout(SOCKET_TIMEOUT)
+                .contentType(contentType)
+                .charset(StandardCharsets.UTF_8)
+                .headers(headers);
+
+        if (params instanceof Map) {
+            return httpRequestWithBody.fields((Map<String, Object>) params).asString().getBody();
         }
-        HttpGet request = null;
-        try {
-            final StringBuilder strParams = new StringBuilder();
-            if (params != null && params.size() > 0) {
-                for (final Map.Entry<String, Object> pair : params.entrySet()) {
-                    strParams.append(String.format("%s=%s&", pair.getKey(), pair.getValue().toString()));
-                }
-                url = String.format("%s?%s", url, strParams.substring(0, strParams.length() - 1));
-            }
-            request = new HttpGet(url);
-            if (null != headers && !headers.isEmpty()) {
-                final List<Header> _headers = new ArrayList<>(headers.size());
-                for (final Map.Entry<String, String> header : headers.entrySet()) {
-                    _headers.add(new BasicHeader(header.getKey(), header.getValue()));
-                }
-                request.setHeaders(_headers.toArray(new Header[]{}));
-            }
-            request.setConfig(RequestConfig // 配置
-                    .custom() // 开启自定义模式
-                    .setConnectTimeout(CONNECTION_TIMEOUT) // 设置超时连接超时时间
-                    .setConnectionRequestTimeout(REQUEST_TIMEOUT) // 设置连接后的请求处理超时时间
-                    .setSocketTimeout(SOCKET_TIMEOUT) // 设置整体socket的超时时间
-                    .build());
-            final HttpResponse response = httpClient.execute(request);
-            strResult = EntityUtils.toString(response.getEntity());
-        } finally {
-            if (null != request) {
-                request.releaseConnection();
-            }
-            ResourceTool.closeQuietly(httpClient);
-        }
-        return strResult;
+        return httpRequestWithBody.body(params).asString().getBody();
     }
 
-    private String post(final String url,
-                        @Nullable final Map<String, Object> params,
-                        @Nullable final Map<String, String> headers,
-                        final boolean isHttps) throws Exception {
-        String strResult;
-        CloseableHttpClient httpClient;
-        if (isHttps) {
-            httpClient = createSSLClientDefault();
-        } else {
-            httpClient = HttpClients.createDefault();
-        }
-        final HttpPost request = new HttpPost(url);
-        try {
-            request.setConfig(RequestConfig // 配置
-                    .custom() // 开启自定义模式
-                    .setConnectTimeout(CONNECTION_TIMEOUT) // 设置超时连接超时时间
-                    .setConnectionRequestTimeout(REQUEST_TIMEOUT) // 设置连接后的请求处理超时时间
-                    .setSocketTimeout(SOCKET_TIMEOUT) // 设置整体socket的超时时间
-                    .build());
-            if (null != params && params.size() > 0) {
-                final List<NameValuePair> _params = new ArrayList<>(params.size());
-                for (final Map.Entry<String, Object> pair : params.entrySet()) {
-                    String value;
-                    if (null == pair.getValue()) {
-                        value = "";
-                    } else {
-                        value = pair.getValue().toString();
-                    }
-                    _params.add(new BasicNameValuePair(pair.getKey(), value));
-                }
-                final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(_params, "utf-8");
-                entity.setContentType("application/x-www-form-urlencoded");
-                entity.setContentEncoding(StandardCharsets.UTF_8.name());
-                request.setEntity(entity);
-            }
-            if (null != headers && headers.size() > 0) {
-                final List<Header> _headers = new ArrayList<>(headers.size());
-                for (final Map.Entry<String, String> header : headers.entrySet()) {
-                    _headers.add(new BasicHeader(header.getKey(), header.getValue()));
-                }
-                request.setHeaders(_headers.toArray(new Header[]{}));
-            }
-            final HttpResponse result = httpClient.execute(request);
-            strResult = EntityUtils.toString(result.getEntity());
-        } finally {
-            request.releaseConnection();
-            ResourceTool.closeQuietly(httpClient);
-        }
-        return strResult;
+    public String post(final String url,
+                       final Map<String, String> headers,
+                       final Object params) {
+        return this.post(url, DEFAULT_CONTENT_TYPE, headers, params);
     }
 
-    private CloseableHttpClient createSSLClientDefault() {
-        try {
-            final SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build();
-            final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
-            return HttpClients.custom().setSSLSocketFactory(sslsf).build();
-        } catch (final Exception e) {
-            log.error(String.format("Create SSL HttpClient meet error, [%s]", ExceptionTool.getRootCauseMessage(e)), e);
+    public String post(final String url,
+                       final String contentType,
+                       @Nullable final Map<String, String> headers) {
+        return post(url, contentType, headers, null);
+    }
+
+    public String post(final String url,
+                       final String contentType,
+                       @Nullable final Object params) {
+        return post(url, contentType, null, params);
+    }
+
+    public String post(final String url,
+                       final String contentType) {
+        return post(url, contentType, null, null);
+    }
+
+    public String post(final String url) {
+        return this.post(url, DEFAULT_CONTENT_TYPE);
+    }
+
+    public <T> T postForEntity(final String url,
+                               final String contentType,
+                               final Map<String, String> headers,
+                               final Object params,
+                               final TypeReference<T> typeReference) {
+        final String responseText = this.post(url, contentType, headers, params);
+        if (ObjectUtils.isEmpty(responseText)) {
+            return null;
         }
-        return HttpClients.createDefault();
+        return JSONObject.parseObject(responseText, typeReference);
+    }
+
+    public <T> T postForEntity(final String url,
+                               final Map<String, String> headers,
+                               final Object params,
+                               final TypeReference<T> typeReference) {
+        return this.postForEntity(url, DEFAULT_CONTENT_TYPE, headers, params, typeReference);
+    }
+
+
+    public <T> T postForEntity(final String url,
+                               final String contentType,
+                               final Object params,
+                               final TypeReference<T> typeReference) {
+        return this.postForEntity(url, contentType, null, params, typeReference);
+    }
+
+
+    public <T> T postForEntity(final String url,
+                               final Object params,
+                               final TypeReference<T> typeReference) {
+        return this.postForEntity(url, DEFAULT_CONTENT_TYPE, params, typeReference);
     }
 }

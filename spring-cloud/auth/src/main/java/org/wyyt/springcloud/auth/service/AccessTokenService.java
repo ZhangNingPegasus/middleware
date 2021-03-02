@@ -1,12 +1,14 @@
 package org.wyyt.springcloud.auth.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.redis.service.RedisService;
 import org.wyyt.springcloud.auth.config.PropertyConfig;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.entity.constants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.enums.GrantType;
 import org.wyyt.springcloud.gateway.entity.entity.vo.AccessToken;
@@ -45,9 +47,13 @@ public class AccessTokenService {
         this.redisService = redisService;
     }
 
+    public App getByClientId(final String clientId) {
+        return this.appService.getByClientId(clientId);
+    }
+
     public AccessToken getClientCredentialsToken(final String clientId,
                                                  final String clientSecret) throws Exception {
-        final App app = this.appService.getByClientId(clientId);
+        final App app = this.getByClientId(clientId);
         if (null == app || !app.getClientSecret().equals(clientSecret)) {
             throw new BusinessException(String.format("The clientId [%s] not match clientSecret [%s]", clientId, clientSecret));
         }
@@ -60,17 +66,24 @@ public class AccessTokenService {
         }
         final Map<String, Object> params = new HashMap<>();
         params.put(Names.CLIENT_ID, app.getClientId());
-        params.put(Names.CLIENT_SECRET, app.getClientSecret());
-        params.put(Names.GRANT_TYPE, GrantType.CLIENT_CREDENTIALS.getCode());
-        final String response = this.rpcService.post(String.format("http://localhost:%s/%s", this.propertyConfig.getServerPort(), Names.OAUTH_TOKEN), params);
-        final Map<String, Object> map = JSON.parseObject(response, Map.class);
+        params.put(Constant.CLIENT_SECRET, app.getClientSecret());
+        params.put(Constant.GRANT_TYPE, GrantType.CLIENT_CREDENTIALS.getCode());
+        final String response = this.rpcService.post(
+                String.format("http://localhost:%s/%s", this.propertyConfig.getServerPort(), Constant.OAUTH_TOKEN),
+                new HashMap<>(),
+                params);
+        final Map<String, Object> map = JSON.parseObject(response, new TypeReference<Map<String, Object>>() {
+        });
         if (map.containsKey("error")) {
             throw new BusinessException(response);
         }
         final AccessToken result = new AccessToken();
         result.setAccessToken(map.get(Names.ACCESS_TOKEN).toString());
-        result.setExpiresTime(Long.parseLong(map.get(Names.EXPIRES_IN).toString()));  //单位:秒
-        this.redisService.set(Names.getAccessTokenRedisKey(app.getClientId()), result.getAccessToken(), result.getExpiresTime() * 1000);
+        result.setExpiresTime(Long.parseLong(map.get(Constant.EXPIRES_IN).toString()));  //单位:秒
+        this.redisService.set(
+                Constant.getAccessTokenRedisKey(app.getClientId()),
+                result.getAccessToken(),
+                result.getExpiresTime() * 1000);
         return result;
     }
 
@@ -80,7 +93,7 @@ public class AccessTokenService {
             return false;
         }
 
-        final String key = Names.getAccessTokenRedisKey(clientId);
+        final String key = Constant.getAccessTokenRedisKey(clientId);
 
         final String redisAccessToken = (String) this.redisService.get(key);
         if (ObjectUtils.isEmpty(redisAccessToken)) {

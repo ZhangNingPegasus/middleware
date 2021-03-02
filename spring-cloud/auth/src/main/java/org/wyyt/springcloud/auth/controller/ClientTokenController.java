@@ -1,18 +1,25 @@
 package org.wyyt.springcloud.auth.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.nepxion.discovery.plugin.strategy.context.StrategyContextHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.wyyt.redis.service.RedisService;
 import org.wyyt.springcloud.auth.entity.TokenVo;
 import org.wyyt.springcloud.auth.service.AccessTokenService;
+import org.wyyt.springcloud.entity.constants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.vo.AccessToken;
 import org.wyyt.springcloud.gateway.entity.service.AppService;
+import org.wyyt.springcloud.gateway.entity.utils.Common;
 import org.wyyt.tool.rpc.Result;
 
 /**
@@ -28,13 +35,41 @@ import org.wyyt.tool.rpc.Result;
 @Api("接口授权")
 @RestController
 public class ClientTokenController {
+    private final StrategyContextHolder strategyContextHolder;
     private final AccessTokenService clientTokenService;
     private final AppService appService;
+    private final RedisService redisService;
 
-    public ClientTokenController(final AccessTokenService clientTokenService,
-                                 final AppService appService) {
+    public ClientTokenController(final StrategyContextHolder strategyContextHolder,
+                                 final AccessTokenService clientTokenService,
+                                 final AppService appService,
+                                 final RedisService redisService) {
+        this.strategyContextHolder = strategyContextHolder;
         this.clientTokenService = clientTokenService;
         this.appService = appService;
+        this.redisService = redisService;
+    }
+
+    @ApiOperation(value = "获取应用信息")
+    @PostMapping(value = {"/v1/oauth/info"})
+    public Result<String> getInfoByAccessToken() {
+        final String accessToken = this.strategyContextHolder.getHeader(Names.ACCESS_TOKEN);
+        if (ObjectUtils.isEmpty(accessToken)) {
+            return Result.ok("");
+        }
+        final String clientId = Common.getClientIdFromAccessToken(accessToken);
+        if (ObjectUtils.isEmpty(clientId)) {
+            return Result.ok("");
+        }
+        final Object at = this.redisService.get(Constant.getAccessTokenRedisKey(clientId));
+        if (!accessToken.equals(at)) {
+            return Result.ok("");
+        }
+        final App app = this.clientTokenService.getByClientId(clientId);
+        app.setClientSecret(null);
+        app.setRowCreateTime(null);
+        app.setRowUpdateTime(null);
+        return Result.ok(JSON.toJSONString(app));
     }
 
     @ApiOperation(value = "获取Access Token")

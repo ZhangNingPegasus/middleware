@@ -3,7 +3,6 @@ package org.wyyt.springcloud.gateway.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.wyyt.apollo.tool.ApolloTool;
-import org.wyyt.tool.rpc.RpcService;
 
 /**
  * the configuration of bean
@@ -21,11 +20,6 @@ public class BeanConfig {
 
     public BeanConfig(final PropertyConfig propertyConfig) {
         this.propertyConfig = propertyConfig;
-    }
-
-    @Bean
-    public RpcService rpcService() {
-        return new RpcService();
     }
 
     @Bean

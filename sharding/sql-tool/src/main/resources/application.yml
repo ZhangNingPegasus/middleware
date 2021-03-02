@@ -49,11 +49,6 @@ server:
 spring:
   application:
     name: sql-tool
-  http:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
   servlet:
     multipart:
       enabled: true

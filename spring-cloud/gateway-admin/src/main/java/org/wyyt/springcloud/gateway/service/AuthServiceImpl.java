@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 @Service
 public class AuthServiceImpl extends AuthService {
 
-    private final GatewayService gatewayService;
+    private final GatewayRpcService gatewayRpcService;
 
-    public AuthServiceImpl(final GatewayService gatewayService) {
-        this.gatewayService = gatewayService;
+    public AuthServiceImpl(final GatewayRpcService gatewayRpcService) {
+        this.gatewayRpcService = gatewayRpcService;
     }
 
     @TranSave
@@ -116,6 +116,6 @@ public class AuthServiceImpl extends AuthService {
         if (null == app) {
             return;
         }
-        this.gatewayService.clearAllCache(app.getClientId());
+        this.gatewayRpcService.clearAllCache(app.getClientId());
     }
 }

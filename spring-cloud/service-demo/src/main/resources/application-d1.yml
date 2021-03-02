@@ -22,7 +22,7 @@ spring:
   application:
     name: d
     group: sample-group
-    version: 202101181601
+    version: 1.0
     strategy:
       scan:
         # RestController类的扫描路径
@@ -32,6 +32,7 @@ spring:
       host: ${consul_host}
       port: ${consul_port}
   zipkin:
-    base-url: ${zipkin_url}
     sender:
-      type: web
+      type: kafka
+  kafka:
+    bootstrap-servers: ${zipkin_kafka_servers}

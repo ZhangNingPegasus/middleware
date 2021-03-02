@@ -3,7 +3,7 @@ package org.wyyt.springcloud.gateway.service;
 import org.springframework.stereotype.Service;
 import org.wyyt.redis.service.RedisService;
 import org.wyyt.springcloud.gateway.entity.anno.TranSave;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.entity.IgnoreUrl;
 import org.wyyt.springcloud.gateway.entity.service.IgnoreUrlService;
 
@@ -22,12 +22,12 @@ import java.util.Set;
 @Service
 public class IgnoreUrlServiceImpl extends IgnoreUrlService {
     private final RedisService redisService;
-    private final GatewayService gatewayService;
+    private final GatewayRpcService gatewayRpcService;
 
     public IgnoreUrlServiceImpl(final RedisService redisService,
-                                final GatewayService gatewayService) {
+                                final GatewayRpcService gatewayRpcService) {
         this.redisService = redisService;
-        this.gatewayService = gatewayService;
+        this.gatewayRpcService = gatewayRpcService;
     }
 
     @TranSave
@@ -68,7 +68,7 @@ public class IgnoreUrlServiceImpl extends IgnoreUrlService {
     }
 
     private void removeRedis() throws Exception {
-        this.redisService.del(Names.REDIS_IGNORE_URLS_KEY);
-        this.gatewayService.removeIgnoreUrlSetLocalCache();
+        this.redisService.del(Constant.REDIS_IGNORE_URLS_KEY);
+        this.gatewayRpcService.removeIgnoreUrlSetLocalCache();
     }
 }

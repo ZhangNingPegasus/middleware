@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.wyyt.springcloud.common.service.ConsulService;
 import org.wyyt.springcloud.gateway.entity.WorkingVo;
 import org.wyyt.springcloud.gateway.entity.entity.Route;
 import org.wyyt.springcloud.gateway.entity.service.RouteService;
-import org.wyyt.springcloud.gateway.service.ConsulService;
-import org.wyyt.springcloud.gateway.service.GatewayService;
+import org.wyyt.springcloud.gateway.service.GatewayRpcService;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 
@@ -35,14 +35,14 @@ public class RouteController {
 
     private final RouteService routeService;
     private final ConsulService consulService;
-    private final GatewayService gatewayService;
+    private final GatewayRpcService gatewayRpcService;
 
     public RouteController(final RouteService routeService,
                            final ConsulService consulService,
-                           final GatewayService gatewayService) {
+                           final GatewayRpcService gatewayRpcService) {
         this.routeService = routeService;
         this.consulService = consulService;
-        this.gatewayService = gatewayService;
+        this.gatewayRpcService = gatewayRpcService;
     }
 
     @GetMapping("tolist")
@@ -84,7 +84,7 @@ public class RouteController {
     public Result<List<WorkingVo>> listWorking(@RequestParam(value = "page") final Integer pageNum,
                                                @RequestParam(value = "limit") final Integer pageSize,
                                                @RequestParam(value = "routeName", required = false) final String routeName) throws Exception {
-        final List<String> workingRouteList = this.gatewayService.listWorkingRoutes();
+        final List<String> workingRouteList = this.gatewayRpcService.listWorkingRoutes();
         if (null == workingRouteList || workingRouteList.isEmpty()) {
             return Result.ok();
         }
@@ -152,7 +152,7 @@ public class RouteController {
     @PostMapping("publish")
     @ResponseBody
     public Result<?> publish() throws Exception {
-        this.gatewayService.refresh();
+        this.gatewayRpcService.refresh();
         return Result.ok();
     }
 }

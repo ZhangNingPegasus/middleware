@@ -9,10 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * the common function of resources
@@ -30,8 +27,11 @@ public final class CommonTool {
     private final static long MB_IN_BYTES = 1024 * KB_IN_BYTES;
     private final static long GB_IN_BYTES = 1024 * MB_IN_BYTES;
     private final static long TB_IN_BYTES = 1024 * GB_IN_BYTES;
-    private final static long PB_IN_BYTES = 1024 * TB_IN_BYTES;
     private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
+
+    public static Date getMinDate() {
+        return new Date(0);
+    }
 
     public static <T> List<T> parseList(final String value,
                                         final String separate,

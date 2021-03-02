@@ -33,10 +33,10 @@ public class PropertyConfig {
     private String dbPwd;
 
     @Value("${db_min_idle}")
-    public int dbMinIdle;
+    private int dbMinIdle;
 
     @Value("${db_maximum}")
-    public int dbMaximum;
+    private int dbMaximum;
 
     @Value("${gateway_url}")
     private String gatewayUrl;

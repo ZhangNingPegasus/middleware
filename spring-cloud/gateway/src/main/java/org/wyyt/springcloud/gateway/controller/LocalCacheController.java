@@ -4,9 +4,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
+import org.wyyt.springcloud.entity.constants.Names;
 import org.wyyt.springcloud.gateway.anno.Auth;
 import org.wyyt.springcloud.gateway.entity.BaseEntity;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.service.DataService;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
@@ -47,7 +48,7 @@ public class LocalCacheController {
     public Mono<Result<Void>> removeClientIdLocalCache(final Mono<BaseEntity> data,
                                                        final ServerWebExchange exchange) {
         return data.flatMap(d -> {
-            final Object queryParamsObject = exchange.getAttributeOrDefault(Names.CACHED_REQUEST_BODY_OBJECT_KEY, null);
+            final Object queryParamsObject = exchange.getAttributeOrDefault(Constant.CACHED_REQUEST_BODY_OBJECT_KEY, null);
             final Map<String, Object> params = CommonTool.queryParamstoMap(queryParamsObject);
             this.dataService.removeApiListLocalCache(params.get(Names.CLIENT_ID).toString());
             this.dataService.removeAppLocalCache(params.get(Names.CLIENT_ID).toString());

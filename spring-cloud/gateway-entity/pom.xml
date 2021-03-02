@@ -12,6 +12,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.wyyt.springcloud</groupId>
+            <artifactId>service-entity</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.wyyt</groupId>
             <artifactId>redis-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
@@ -21,6 +27,11 @@
             <groupId>org.wyyt</groupId>
             <artifactId>tool</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
         </dependency>
 
         <dependency>

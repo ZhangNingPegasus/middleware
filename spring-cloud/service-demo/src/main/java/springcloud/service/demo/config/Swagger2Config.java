@@ -4,6 +4,7 @@ package springcloud.service.demo.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.wyyt.springcloud.entity.constants.Names;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -49,8 +50,8 @@ public class Swagger2Config {
     private List<Parameter> setHeaderToken() {
         final ParameterBuilder tokenPar = new ParameterBuilder();
         final List<Parameter> pars = new ArrayList<>();
-        tokenPar.name("access_token")
-                .description("授权access token")
+        tokenPar.name(Names.ACCESS_TOKEN)
+                .description("授权码")
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")
                 .required(false)

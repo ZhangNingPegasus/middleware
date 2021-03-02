@@ -29,8 +29,6 @@ public class BFeignImpl implements BFeign {
 
     @Override
     public Result<String> invoke(String value) {
-//        this.studentServiceB.save(value);
-//        log.info(strategyContextHolder.getHeader("access_token"));
         value = pluginAdapter.getPluginInfo(value);
         log.info(String.format("调用路径：{%s}", value));
         return Result.ok("服务B的执行方法:" + value);

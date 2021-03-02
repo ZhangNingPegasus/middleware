@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.springcloud.sms.mapper.MsgMapper">
+    <insert id="batchSave">
+        <foreach collection="msgList" item="msg" separator=";">
+            INSERT IGNORE INTO `t_msg`
+            (
+            `msg_id`,
+            `phone_number`,
+            `content`,
+            `sign_code`,
+            `template_code`,
+            `template_param`,
+            `provider`,
+            `send_ip`,
+            `send_time`,
+            `receive_time`,
+            `send_status`,
+            `extra`,
+            `row_create_time`
+            )
+            VALUES
+            (
+            #{msg.msgId},
+            #{msg.phoneNumber},
+            #{msg.content},
+            #{msg.signCode},
+            #{msg.templateCode},
+            #{msg.templateParam},
+            #{msg.provider},
+            #{msg.sendIp},
+            #{msg.sendTime},
+            #{msg.receiveTime},
+            #{msg.sendStatus},
+            #{msg.extra},
+            #{msg.rowCreateTime}
+            )
+        </foreach>
+    </insert>
+</mapper>

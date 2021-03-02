@@ -5,8 +5,10 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.wyyt.redis.service.RedisService;
+import org.wyyt.springcloud.common.service.ConsulService;
+import org.wyyt.springcloud.entity.constants.Names;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.exception.GatewayException;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.rpc.Result;
@@ -31,7 +33,7 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class GatewayService {
+public class GatewayRpcService {
     private final PropertyConfig propertyConfig;
     private final RpcService rpcService;
     private final RedisService redisService;
@@ -41,10 +43,10 @@ public class GatewayService {
     private final static String REMOVE_IGNORE_URLS_LOCAL_CACHE = "cache/removeIngoreUrlSetLocalCache";
     private final static String REMOVE_CLIENT_ID_LOCAL_CACHE = "cache/removeClientIdLocalCache";
 
-    public GatewayService(final PropertyConfig propertyConfig,
-                          final RpcService rpcService,
-                          final RedisService redisService,
-                          final ConsulService consulService) {
+    public GatewayRpcService(final PropertyConfig propertyConfig,
+                             final RpcService rpcService,
+                             final RedisService redisService,
+                             final ConsulService consulService) {
         this.propertyConfig = propertyConfig;
         this.rpcService = rpcService;
         this.redisService = redisService;
@@ -101,8 +103,8 @@ public class GatewayService {
     }
 
     public void clearAllCache(final String clientId) throws Exception {
-        this.redisService.del(Names.getApiListOfClientIdKey(clientId));
-        this.redisService.del(Names.getAppOfClientId(clientId));
+        this.redisService.del(Constant.getApiListOfClientIdKey(clientId));
+        this.redisService.del(Constant.getAppOfClientId(clientId));
         this.removeClientIdLocalCache(clientId);
         this.removeClientIdLocalCache(clientId);
     }
@@ -114,11 +116,9 @@ public class GatewayService {
             params = new HashMap<>();
         }
         final Map<String, String> headers = new HashMap<>();
-        headers.put("sign", SignTool.sign(params, Names.API_KEY, Names.API_IV));
-
+        headers.put("sign", SignTool.sign(params, Constant.API_KEY, Constant.API_IV));
         final URI remoteAddress = UriComponentsBuilder.fromHttpUrl(uri.toString().concat(serviceUrl)).build().toUri();
-
-        return this.rpcService.post(remoteAddress.toString(), params, headers, new com.alibaba.fastjson.TypeReference<Result<?>>() {
+        return this.rpcService.postForEntity(remoteAddress.toString(), headers, params, new com.alibaba.fastjson.TypeReference<Result<?>>() {
         });
     }
 }

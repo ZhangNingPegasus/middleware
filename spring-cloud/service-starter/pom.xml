@@ -17,29 +17,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.wyyt</groupId>
-            <artifactId>tool</artifactId>
+            <groupId>org.wyyt.springcloud</groupId>
+            <artifactId>service-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.nepxion</groupId>
-            <artifactId>discovery-plugin-register-center-starter-consul</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.nepxion</groupId>
-            <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.nepxion</groupId>
-            <artifactId>discovery-plugin-admin-center-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.nepxion</groupId>
-            <artifactId>discovery-plugin-strategy-starter-service</artifactId>
         </dependency>
 
         <dependency>
@@ -55,11 +35,6 @@
                     <groupId>org.hdrhistogram</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-client</artifactId>
         </dependency>
 
         <dependency>

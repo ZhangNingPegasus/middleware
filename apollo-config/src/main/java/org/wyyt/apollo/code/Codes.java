@@ -1,6 +1,5 @@
 package org.wyyt.apollo.code;
 
-import com.ctrip.framework.apollo.core.utils.StringUtils;
 import lombok.Getter;
 
 /**
@@ -42,19 +41,6 @@ public enum Codes {
 
         for (final Codes item : Codes.values()) {
             if (item.getCode().equals(code)) {
-                return item;
-            }
-        }
-        return null;
-    }
-
-    public static Codes get(final String description) {
-        if (StringUtils.isBlank(description)) {
-            return null;
-        }
-
-        for (final Codes item : Codes.values()) {
-            if (item.getDescription().equals(description)) {
                 return item;
             }
         }

@@ -1,4 +1,4 @@
-package org.wyyt.springcloud.gateway.service;
+package org.wyyt.springcloud.common.service;
 
 import com.ecwid.consul.v1.ConsulClient;
 import com.ecwid.consul.v1.Response;
@@ -8,11 +8,10 @@ import com.ecwid.consul.v1.health.model.HealthService;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
-import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.wyyt.springcloud.gateway.config.PropertyConfig;
-import org.wyyt.springcloud.gateway.entity.EndpointVo;
-import org.wyyt.springcloud.gateway.entity.ServiceVo;
+import org.wyyt.springcloud.common.config.SpringCloudConfig;
+import org.wyyt.springcloud.common.entity.EndpointVo;
+import org.wyyt.springcloud.common.entity.ServiceVo;
 import org.wyyt.tool.exception.BusinessException;
 
 import java.net.URI;
@@ -31,14 +30,13 @@ import java.util.stream.Collectors;
  * *****************************************************************
  */
 @Slf4j
-@Service
 public class ConsulService {
-    private final PropertyConfig propertyConfig;
+    private final SpringCloudConfig springCloudConfig;
     private final ConsulClient consulClient;
 
-    public ConsulService(final PropertyConfig propertyConfig,
+    public ConsulService(final SpringCloudConfig springCloudConfig,
                          final ConsulClient consulClient) {
-        this.propertyConfig = propertyConfig;
+        this.springCloudConfig = springCloudConfig;
         this.consulClient = consulClient;
     }
 
@@ -86,7 +84,9 @@ public class ConsulService {
     }
 
     public List<ServiceVo> listService() {
-        final List<String> ignoredServiceNames = Arrays.asList(this.propertyConfig.getServiceName(), this.propertyConfig.getGatewayConsulName());
+        final List<String> ignoredServiceNames = Arrays.asList(
+                this.springCloudConfig.getServiceName(),
+                this.springCloudConfig.getGatewayConsulName());
         final List<ServiceVo> result = new ArrayList<>();
         final Response<Map<String, com.ecwid.consul.v1.agent.model.Service>> services = this.consulClient.getAgentServices();
         if (null == services || null == services.getValue() || services.getValue().isEmpty()) {
@@ -143,11 +143,10 @@ public class ConsulService {
     }
 
     public URI getGatewayUri() throws URISyntaxException {
-        final String gatewayUrl = this.propertyConfig.getGatewayUrl();
+        final String gatewayUrl = this.springCloudConfig.getGatewayUrl();
         if (ObjectUtils.isEmpty(gatewayUrl)) {
-            return this.getServiceUri(this.propertyConfig.getGatewayConsulName());
+            return this.getServiceUri(this.springCloudConfig.getGatewayConsulName());
         }
         return new URI(gatewayUrl);
     }
-
 }

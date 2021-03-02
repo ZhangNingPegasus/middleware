@@ -4,10 +4,10 @@ import kong.unirest.Unirest;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import org.wyyt.springcloud.common.entity.EndpointVo;
+import org.wyyt.springcloud.common.entity.ServiceVo;
+import org.wyyt.springcloud.common.service.ConsulService;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
-import org.wyyt.springcloud.gateway.entity.EndpointVo;
-import org.wyyt.springcloud.gateway.entity.ServiceVo;
-import org.wyyt.springcloud.gateway.service.ConsulService;
 import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.rpc.Result;
 

@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.entity.Route;
 import org.wyyt.springcloud.gateway.entity.service.RouteService;
 import reactor.core.Disposable;
@@ -66,7 +66,7 @@ public class DynamicRouteService implements ApplicationEventPublisherAware {
         result.setId(route.getRouteId());
         result.setOrder(route.getOrderNum());
         result.setMetadata(new HashMap<>());
-        result.getMetadata().put(Names.SERVICE_NAME, route.getServiceName());
+        result.getMetadata().put(Constant.SERVICE_NAME, route.getServiceName());
 
         final String strUri = route.getUri();
         URI uri;

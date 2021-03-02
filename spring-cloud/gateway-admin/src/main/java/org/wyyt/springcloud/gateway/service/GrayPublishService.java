@@ -19,6 +19,7 @@ import org.dom4j.io.XMLWriter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.apollo.tool.ApolloTool;
+import org.wyyt.springcloud.common.service.ConsulService;
 import org.wyyt.springcloud.gateway.config.PropertyConfig;
 import org.wyyt.springcloud.gateway.entity.GrayVo;
 import org.wyyt.springcloud.gateway.entity.InspectVo;

@@ -35,11 +35,6 @@ server:
 spring:
   application:
     name: kafka-monitor-business
-  http:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
   servlet:
     multipart:
       enabled: true

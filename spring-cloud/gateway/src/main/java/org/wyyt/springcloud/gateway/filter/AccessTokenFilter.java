@@ -1,8 +1,6 @@
 package org.wyyt.springcloud.gateway.filter;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -15,14 +13,15 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.wyyt.redis.service.RedisService;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.entity.constants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 import org.wyyt.springcloud.gateway.entity.entity.App;
+import org.wyyt.springcloud.gateway.entity.utils.Common;
 import org.wyyt.springcloud.gateway.service.DataService;
 import org.wyyt.springcloud.gateway.util.ResponseTool;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -63,16 +62,12 @@ public class AccessTokenFilter implements GlobalFilter {
         }
 
         try {
-            final Claims claims = Jwts.parser()
-                    .setSigningKey(Names.JWT_SIGNING_KEY.getBytes(StandardCharsets.UTF_8))
-                    .parseClaimsJws(accessToken)
-                    .getBody();
-            final String clientId = claims.getOrDefault(Names.CLIENT_ID, "").toString();
+            final String clientId = Common.getClientIdFromAccessToken(accessToken);
             if (ObjectUtils.isEmpty(clientId)) {
                 return ResponseTool.unauthorized(exchange, "client id is required");
             }
 
-            final Object redisAccessToken = this.redisService.get(Names.getAccessTokenRedisKey(clientId));
+            final Object redisAccessToken = this.redisService.get(Constant.getAccessTokenRedisKey(clientId));
             if (ObjectUtils.isEmpty(redisAccessToken)) {
                 return ResponseTool.unauthorized(exchange, String.format("%s has expired or canceled", Names.ACCESS_TOKEN));
             } else if (!redisAccessToken.toString().equals(accessToken)) {
@@ -83,7 +78,9 @@ public class AccessTokenFilter implements GlobalFilter {
             if (null == app) {
                 return ResponseTool.unauthorized(exchange, String.format("client id [%s] not existed", clientId));
             }
+
             if (app.getIsAdmin()) {
+                exchange.getRequest().mutate().header(Names.CLIENT_ID, app.getClientId());
                 return chain.filter(exchange);
             }
 
@@ -92,9 +89,9 @@ public class AccessTokenFilter implements GlobalFilter {
             final Object attrRoute = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
             if (attrRoute instanceof Route) {
                 route = (Route) attrRoute;
-                final Object serviceNameObj = route.getMetadata().get(Names.SERVICE_NAME);
+                final Object serviceNameObj = route.getMetadata().get(Constant.SERVICE_NAME);
                 if (null == serviceNameObj) {
-                    return ResponseTool.unauthorized(exchange, String.format("%s is missing", Names.SERVICE_NAME));
+                    return ResponseTool.unauthorized(exchange, String.format("%s is missing", Constant.SERVICE_NAME));
                 }
                 serviceName = serviceNameObj.toString();
             }
@@ -105,6 +102,7 @@ public class AccessTokenFilter implements GlobalFilter {
                 apiList = this.dataService.getApiList(app.getClientId(), serviceName);
             }
             if (apiList.stream().anyMatch(r -> PATH_MATCH.match(String.format("/**%s/**", r.getPath()), url))) {
+                exchange.getRequest().mutate().header(Names.CLIENT_ID, app.getClientId());
                 return chain.filter(exchange);
             }
             return ResponseTool.unauthorized(exchange, "Access is denied");

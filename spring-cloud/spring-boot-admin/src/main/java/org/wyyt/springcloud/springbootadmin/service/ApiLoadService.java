@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 import org.wyyt.springcloud.gateway.entity.service.ApiService;
 import org.wyyt.tool.exception.ExceptionTool;
@@ -46,7 +46,7 @@ public class ApiLoadService {
             int tryTimes = 0;
             String text = "";
             while (ObjectUtils.isEmpty(text)) {
-                text = this.rpcService.post(String.format("%s/%s", serviceUrl, Names.API_DOCS));
+                text = this.rpcService.post(String.format("%s/%s", serviceUrl, Constant.API_DOCS));
                 Thread.sleep(100);
                 tryTimes++;
                 if (tryTimes >= 10) {

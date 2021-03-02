@@ -130,11 +130,11 @@ CREATE TABLE IF NOT EXISTS `t_api`  (
 
 CREATE TABLE IF NOT EXISTS `t_app`  (
     `id` BIGINT(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `client_id` VARCHAR(256) NOT NULL COMMENT '换取token的id',
-    `client_secret` VARCHAR(256) NOT NULL COMMENT '换取token的secret',
-    `name` VARCHAR(255) NOT NULL COMMENT '应用名称',
+    `client_id` VARCHAR(64) NOT NULL COMMENT '换取token的id',
+    `client_secret` VARCHAR(64) NOT NULL COMMENT '换取token的secret',
+    `name` VARCHAR(64) NOT NULL COMMENT '应用名称',
     `is_admin` TINYINT(1) NOT NULL DEFAULT b'0' COMMENT '是否是管理员(具有所有接口的调用权限)',
-    `description` VARCHAR(255) NOT NULL COMMENT '描述信息',
+    `description` VARCHAR(256) NOT NULL COMMENT '描述信息',
     `row_create_time` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
     `row_update_time` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE,

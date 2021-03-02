@@ -18,32 +18,32 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PropertyConfig {
     @Value("${db_host}")
-    public String dbHost;
+    private String dbHost;
 
     @Value("${db_port}")
-    public String dbPort;
+    private String dbPort;
 
     @Value("${db_name}")
-    public String dbName;
+    private String dbName;
 
     @Value("${db_username}")
-    public String dbUseName;
+    private String dbUseName;
 
     @Value("${db_password}")
-    public String dbPassword;
+    private String dbPassword;
 
     @Value("${db_min_idle}")
-    public int dbMinIdle;
+    private int dbMinIdle;
 
     @Value("${db_maximum}")
-    public int dbMaximum;
+    private int dbMaximum;
 
     @Value("${auth_consul_name}")
-    public String authConsulName;
+    private String authConsulName;
 
     @Value("${gateway_consul_name}")
-    public String gatewayConsulName;
+    private String gatewayConsulName;
 
     @Value("${gateway_admin_consul_name}")
-    public String gatewayAdminConsulName;
+    private String gatewayAdminConsulName;
 }

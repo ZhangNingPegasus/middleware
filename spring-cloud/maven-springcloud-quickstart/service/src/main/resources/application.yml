@@ -12,7 +12,7 @@ apollo:
       enabled: true
 
 server:
-  port: 1001
+  port: 1000
 
 spring:
   servlet:

@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.springcloud.advice.ExceptionControllerAdvice;
+import org.wyyt.springcloud.service.EnvironmentService;
 import org.wyyt.springcloud.trace.HttpResponseInjectingTraceFilter;
 
 import java.util.concurrent.Executor;
@@ -36,6 +37,11 @@ public class SpringCloudApplicationAutoConfig {
                                             final SpringCloudApplicationProperties springCloudApplicationProperties) {
         this.beanFactory = beanFactory;
         this.springCloudApplicationProperties = springCloudApplicationProperties;
+    }
+
+    @Bean
+    public EnvironmentService environmentService() {
+        return new EnvironmentService();
     }
 
     @Bean

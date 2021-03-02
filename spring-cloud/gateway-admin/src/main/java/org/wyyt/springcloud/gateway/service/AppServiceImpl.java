@@ -2,7 +2,7 @@ package org.wyyt.springcloud.gateway.service;
 
 import org.springframework.stereotype.Service;
 import org.wyyt.springcloud.gateway.entity.anno.TranSave;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.entity.OauthClientDetails;
 import org.wyyt.springcloud.gateway.entity.entity.enums.GrantType;
@@ -23,12 +23,12 @@ import java.util.Set;
 @Service
 public class AppServiceImpl extends AppService {
 
-    private final GatewayService gatewayService;
+    private final GatewayRpcService gatewayRpcService;
     private final AuthServiceImpl authServiceImpl;
 
-    public AppServiceImpl(final GatewayService gatewayService,
+    public AppServiceImpl(final GatewayRpcService gatewayRpcService,
                           final AuthServiceImpl authServiceImpl) {
-        this.gatewayService = gatewayService;
+        this.gatewayRpcService = gatewayRpcService;
         this.authServiceImpl = authServiceImpl;
     }
 
@@ -57,7 +57,7 @@ public class AppServiceImpl extends AppService {
         oauthClientDetails.setScope("all");
         oauthClientDetails.setAuthorizedGrantTypes(GrantType.CLIENT_CREDENTIALS.getCode());
         this.oauthClientDetailsService.save(oauthClientDetails);
-        this.redisService.set(Names.getAppOfClientId(app.getClientId()), app);
+        this.redisService.set(Constant.getAppOfClientId(app.getClientId()), app);
     }
 
     @TranSave
@@ -86,12 +86,12 @@ public class AppServiceImpl extends AppService {
             this.removeById(appId);
             this.authServiceImpl.removeByAppId(app.getId());
             this.oauthClientDetailsService.removeById(app.getClientId());
-            this.redisService.del(Names.getAccessTokenRedisKey(app.getClientId()));
+            this.redisService.del(Constant.getAccessTokenRedisKey(app.getClientId()));
             this.removeRedis(app.getClientId());
         }
     }
 
     private void removeRedis(final String clientId) throws Exception {
-        this.gatewayService.clearAllCache(clientId);
+        this.gatewayRpcService.clearAllCache(clientId);
     }
 }

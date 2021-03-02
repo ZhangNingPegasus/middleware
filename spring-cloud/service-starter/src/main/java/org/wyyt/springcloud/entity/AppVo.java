@@ -1,9 +1,10 @@
-package org.wyyt.springcloud.gateway.entity;
+package org.wyyt.springcloud.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
- * The View Object of Endpoint
+ * The View Object of App
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
@@ -13,12 +14,10 @@ import lombok.Data;
  * *****************************************************************
  */
 @Data
-public class EndpointVo {
-    private String id;
-    private String serviceName;
-    private String address;
-    private Integer port;
-    private String version;
-    private String group;
-    private Boolean alive;
+@ToString
+public class AppVo {
+    private String clientId;
+    private String name;
+    private Boolean isAdmin;
+    private String description;
 }

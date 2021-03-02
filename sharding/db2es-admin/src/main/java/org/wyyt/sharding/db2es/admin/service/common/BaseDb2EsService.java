@@ -155,7 +155,7 @@ public abstract class BaseDb2EsService {
             params = new HashMap<>();
         }
         headers.put("sign", SignTool.sign(params, Names.API_KEY, Names.API_IV));
-        final Result<?> respondResult = this.rpcService.post(url, params, headers, new com.alibaba.fastjson.TypeReference<Result<?>>() {
+        final Result<?> respondResult = this.rpcService.postForEntity(url, headers, params, new com.alibaba.fastjson.TypeReference<Result<?>>() {
         });
         if (null == respondResult) {
             return result;

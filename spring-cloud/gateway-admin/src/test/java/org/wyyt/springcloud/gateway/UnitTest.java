@@ -1,5 +1,7 @@
 package org.wyyt.springcloud.gateway;
 
+import com.nepxion.banner.BannerConstant;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.wyyt.springcloud.gateway.service.ConsulService;
+import org.wyyt.springcloud.common.service.ConsulService;
 
 /**
  * The unit test
@@ -17,7 +19,7 @@ import org.wyyt.springcloud.gateway.service.ConsulService;
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
  * Name               Action            Time          Description  *
- * Ning.Zhang       Initialize        01/01/2021        Initialize  *
+ * Ning.Zhang       Initialize        02/14/2021       Initialize  *
  * *****************************************************************
  */
 @RunWith(SpringRunner.class)

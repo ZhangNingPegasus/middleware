@@ -58,9 +58,6 @@ public class CacheService implements DisposableBean {
     public final <T> T get(final String key,
                            final Function<String, Object> function) {
         final Object value = this.cache.get(key, function);
-        if (null == value) {
-            return null;
-        }
         return (T) value;
     }
 

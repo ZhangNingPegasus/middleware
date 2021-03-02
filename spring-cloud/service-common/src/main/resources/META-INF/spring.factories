@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.wyyt.springcloud.common.boot.SpringCloudCommonAutoConfig
+org.springframework.boot.env.EnvironmentPostProcessor=\
+org.wyyt.springcloud.common.boot.SpringCloudCommonEnvInitializer

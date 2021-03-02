@@ -33,7 +33,6 @@ public class BRestImpl {
     @ApiImplicitParam(name = "value", value = "参数1", required = true, dataType = "String")
     @GetMapping(path = "/rest/{value}")
     public Result<String> rest(@PathVariable(value = "value") String value) {
-        log.info(strategyContextHolder.getHeader("access_token"));
         value = pluginAdapter.getPluginInfo(value);
         LOG.info("调用路径：{}", value);
         return Result.ok(value);

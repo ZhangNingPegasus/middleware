@@ -10,7 +10,7 @@ import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.reactive.function.server.ServerRequest;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.rpc.Result;
 import org.wyyt.tool.rpc.ResultCode;
@@ -57,7 +57,7 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
                 result = Result.create(respondCode);
             }
         }
-        errorAttributes.put(Names.ERROR_PARAMETER_KEY, JSON.toJSONString(result));
+        errorAttributes.put(Constant.ERROR_PARAMETER_KEY, JSON.toJSONString(result));
         return errorAttributes;
     }
 

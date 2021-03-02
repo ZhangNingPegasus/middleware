@@ -2,7 +2,7 @@ package org.wyyt.springcloud.gateway.service;
 
 import org.springframework.stereotype.Service;
 import org.wyyt.redis.service.RedisService;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 import org.wyyt.springcloud.gateway.entity.entity.App;
 import org.wyyt.springcloud.gateway.entity.service.AppService;
@@ -46,35 +46,35 @@ public class DataService {
     }
 
     public Set<String> getIgnoreUrlSet() {
-        final String key = Names.REDIS_IGNORE_URLS_KEY;
+        final String key = Constant.REDIS_IGNORE_URLS_KEY;
         return this.cacheService.get(key, p -> {
-            final String distributedLockKey = Names.REDIS_DISTRIBUTED_LOCK_IGNORE_URLS_KEY;
+            final String distributedLockKey = Constant.REDIS_DISTRIBUTED_LOCK_IGNORE_URLS_KEY;
             return this.redisService.getOrDefault(key, distributedLockKey, ignoreUrlService::getUrls);
         });
     }
 
     public void removeIngoreUrlSetLocalCache() {
-        final String key = Names.REDIS_IGNORE_URLS_KEY;
+        final String key = Constant.REDIS_IGNORE_URLS_KEY;
         this.cacheService.delete(key);
     }
 
     public App getApp(final String clientId) {
-        final String key = Names.getAppOfClientId(clientId);
+        final String key = Constant.getAppOfClientId(clientId);
         return this.cacheService.get(key, p -> {
-            final String distributedLockKey = String.format(Names.REDIS_DISTRIBUTED_LOCK_APP_OF_CLIENT_ID_KEY, clientId);
+            final String distributedLockKey = String.format(Constant.REDIS_DISTRIBUTED_LOCK_APP_OF_CLIENT_ID_KEY, clientId);
             return this.redisService.getOrDefault(key, distributedLockKey, () -> appService.getByClientId(clientId));
         });
     }
 
     public void removeAppLocalCache(final String clientId) {
-        final String key = Names.getAppOfClientId(clientId);
+        final String key = Constant.getAppOfClientId(clientId);
         this.cacheService.delete(key);
     }
 
     public List<Api> getApiList(final String clientId) {
-        final String key = Names.getApiListOfClientIdKey(clientId);
+        final String key = Constant.getApiListOfClientIdKey(clientId);
         return this.cacheService.get(key, p -> {
-            final String distributedLockKey = String.format(Names.REDIS_DISTRIBUTED_LOCK_API_LIST_OF_CLIENT_ID_KEY, clientId);
+            final String distributedLockKey = String.format(Constant.REDIS_DISTRIBUTED_LOCK_API_LIST_OF_CLIENT_ID_KEY, clientId);
             return this.redisService.getOrDefault(key, distributedLockKey, () -> authService.getApiByClientId(clientId));
         });
     }
@@ -89,7 +89,7 @@ public class DataService {
     }
 
     public void removeApiListLocalCache(final String clientId) {
-        final String key = Names.getApiListOfClientIdKey(clientId);
+        final String key = Constant.getApiListOfClientIdKey(clientId);
         this.cacheService.delete(key);
     }
 }

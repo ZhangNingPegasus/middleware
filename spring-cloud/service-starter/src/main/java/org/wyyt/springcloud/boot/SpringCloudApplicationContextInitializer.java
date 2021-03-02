@@ -1,8 +1,8 @@
 package org.wyyt.springcloud.boot;
 
 import com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer;
-import com.nepxion.banner.BannerConstant;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.env.EnvironmentPostProcessor;
@@ -10,11 +10,23 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.util.ObjectUtils;
+import org.wyyt.springcloud.entity.constants.Names;
 import org.wyyt.tool.exception.ExceptionTool;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Properties;
 
+/**
+ * The Context initializer
+ * <p>
+ *
+ * @author Ning.Zhang(Pegasus)
+ * *****************************************************************
+ * Name               Action            Time          Description  *
+ * Ning.Zhang       Initialize       02/14/2021       Initialize   *
+ * *****************************************************************
+ */
 @Slf4j
 public class SpringCloudApplicationContextInitializer implements EnvironmentPostProcessor, Ordered {
     @Override
@@ -36,11 +48,13 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
         if (ObjectUtils.isEmpty(configurableEnvironment.getProperty("spring.application.version", ""))) {
             throw new RuntimeException("未设置服务版本, 请设置[spring.application.version]");
         }
-        System.setProperty(BannerConstant.BANNER_SHOWN, "false");
 
         final Properties properties = new Properties();
 
         // common config
+        this.addDefaultConfig(configurableEnvironment, properties,
+                "spring.cloud.consul.discovery.service-name",
+                "${spring.application.name}");
         this.addDefaultConfig(configurableEnvironment, properties,
                 "spring.cloud.consul.discovery.tags",
                 "group=${spring.application.group},version=${spring.application.version}");
@@ -176,6 +190,9 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
         addDefaultConfig(configurableEnvironment, properties,
                 "management.metrics.tags.application",
                 "${spring.application.name}");
+        addDefaultConfig(configurableEnvironment, properties,
+                "management.endpoint.logfile.external-file",
+                "logs/app.log");
 
         // core config
         addDefaultConfig(configurableEnvironment, properties,
@@ -267,7 +284,7 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
         // 路由策略的时候，对REST方式调用拦截的时候（支持Feign或者RestTemplate调用），希望把来自外部自定义的Header参数（用于业务系统自定义Header，例如：mobile）传递到服务里，那么配置如下值。如果多个用“;”分隔，不允许出现空格
         addDefaultConfig(configurableEnvironment, properties,
                 "spring.application.strategy.business.request.headers",
-                "access_token");
+                StringUtils.join(Arrays.asList(Names.ACCESS_TOKEN, Names.CLIENT_ID), ";"));
         // 启动和关闭路由策略的时候，对RPC方式的调用拦截。缺失则默认为false
         addDefaultConfig(configurableEnvironment, properties,
                 "spring.application.strategy.rpc.intercept.enabled",

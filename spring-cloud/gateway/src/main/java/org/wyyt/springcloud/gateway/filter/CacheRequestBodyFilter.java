@@ -10,7 +10,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import org.wyyt.springcloud.gateway.anno.Auth;
-import org.wyyt.springcloud.gateway.entity.contants.Names;
+import org.wyyt.springcloud.gateway.entity.contants.Constant;
 import reactor.core.publisher.Mono;
 
 /**
@@ -44,7 +44,7 @@ public class CacheRequestBodyFilter implements WebFilter {
                         final HandlerMethod handlerMethod = (HandlerMethod) p;
                         final Auth auth = handlerMethod.getMethod().getAnnotation(Auth.class);
                         if (null != auth) {
-                            final Object cachedRequestBodyObject = exchange.getAttributeOrDefault(Names.CACHED_REQUEST_BODY_OBJECT_KEY, null);
+                            final Object cachedRequestBodyObject = exchange.getAttributeOrDefault(Constant.CACHED_REQUEST_BODY_OBJECT_KEY, null);
                             if (null != cachedRequestBodyObject) {
                                 return chain.filter(exchange);
                             }
@@ -56,7 +56,7 @@ public class CacheRequestBodyFilter implements WebFilter {
                                         DataBufferUtils.release(dataBuffer);
                                         return bytes;
                                     }).defaultIfEmpty(new byte[0])
-                                    .doOnNext(bytes -> exchange.getAttributes().put(Names.CACHED_REQUEST_BODY_OBJECT_KEY, bytes))
+                                    .doOnNext(bytes -> exchange.getAttributes().put(Constant.CACHED_REQUEST_BODY_OBJECT_KEY, bytes))
                                     .then(chain.filter(exchange));
                         }
                     }
