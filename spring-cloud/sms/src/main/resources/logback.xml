@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATH" value="/wyyt/logs/tomcat/springcloud/@project.artifactId@"/>
-    <property name="LOG_NAME" value="filebeat"/>
+    <property name="LOG_PATH" value="/wyyt/logs/tomcat/springcloud/sms"/>
+    <property name="LOG_NAME" value="sms-filebeat"/>
     <property name="MAX_FILE_SIZE" value="100MB"/>
     <property name="MAX_HISTORY" value="7"/>
 

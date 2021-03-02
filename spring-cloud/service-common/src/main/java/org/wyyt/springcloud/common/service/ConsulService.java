@@ -84,9 +84,7 @@ public class ConsulService {
     }
 
     public List<ServiceVo> listService() {
-        final List<String> ignoredServiceNames = Arrays.asList(
-                this.springCloudConfig.getServiceName(),
-                this.springCloudConfig.getGatewayConsulName());
+        final List<String> ignoredServiceNames = Arrays.asList(this.springCloudConfig.getServiceName());
         final List<ServiceVo> result = new ArrayList<>();
         final Response<Map<String, com.ecwid.consul.v1.agent.model.Service>> services = this.consulClient.getAgentServices();
         if (null == services || null == services.getValue() || services.getValue().isEmpty()) {
@@ -128,7 +126,7 @@ public class ConsulService {
         return endpointVoList.stream().map(p -> {
             try {
                 return new URI(String.format("http://%s:%s", p.getAddress(), p.getPort()));
-            } catch (URISyntaxException e) {
+            } catch (final URISyntaxException e) {
                 throw new BusinessException(e);
             }
         }).collect(Collectors.toList());

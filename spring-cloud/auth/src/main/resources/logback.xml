@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property name="LOG_PATH" value="/wyyt/logs/tomcat/springcloud/auth"/>
+    <property name="LOG_NAME" value="auth-filebeat"/>
+    <property name="MAX_FILE_SIZE" value="100MB"/>
+    <property name="MAX_HISTORY" value="7"/>
+
     <logger name="org.hibernate.validator" level="ERROR">
     </logger>
     <logger name="com.nepxion.discovery.plugin.framework.util" level="ERROR">
     </logger>
     <logger name="com.netflix.config.sources" level="ERROR">
     </logger>
-    <logger name="org.springframework.security.oauth2.provider.token.store" level="ERROR">
+    <logger name="springfox.documentation.swagger2.web.Swagger2Controller" level="ERROR">
     </logger>
     <logger name="org.springframework.boot.actuate.endpoint.EndpointId" level="ERROR">
     </logger>
-    <logger name="org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration" level="ERROR">
+    <logger name="org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration"
+            level="ERROR">
     </logger>
-    <logger name="org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerClientAutoConfiguration" level="ERROR">
+    <logger name="org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerClientAutoConfiguration"
+            level="ERROR">
+    </logger>
+    <logger name="org.apache.kafka.clients.admin.AdminClientConfig" level="ERROR">
+    </logger>
+    <logger name="org.apache.kafka.clients.producer.ProducerConfig" level="ERROR">
+    </logger>
+    <logger name="org.apache.kafka.common.utils.AppInfoParser" level="ERROR">
     </logger>
 
     <conversionRule conversionWord="clr"
@@ -22,43 +35,62 @@
     <conversionRule conversionWord="wEx"
                     converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
 
+    <property name="FILE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="REAL_TIME_LOG_FOLDER" value="logs"/>
+    <property name="REAL_TIME_LOG_NAME" value="app"/>
+
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>
         <encoder>
-            <pattern>
-                ${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}
-            </pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${REAL_TIME_LOG_FOLDER}/${REAL_TIME_LOG_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${REAL_TIME_LOG_FOLDER}/${REAL_TIME_LOG_NAME}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="async_file" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>512</queueSize>
+        <appender-ref ref="file"/>
     </appender>
 
     <appender name="elkLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <append>true</append>
-        <file>/wyyt/logs/tomcat/springcloud/auth/auth-filebeat.log</file> <!-- 路径也要按照规范修改 -->
-        <encoder class="org.wyyt.logback.encoder.LogstashEncoderZipkin"> <!-- ELK 最新接入方式 -->
-            <!--includeCallerData 请求者信息字段 需要开启异步写入，否则比较比较耗性能-->
+        <file>${LOG_PATH}/${LOG_NAME}.log</file>
+        <encoder class="org.wyyt.logback.encoder.LogstashEncoderZipkin">
             <includeCallerData>true</includeCallerData>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>/wyyt/logs/tomcat/springcloud/auth/auth-filebeat.%d{yyyy-MM-dd-HH}.%i.log.gz
+            <fileNamePattern>${LOG_PATH}/${LOG_NAME}.%d{yyyy-MM-dd-HH}.%i.log.gz
             </fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
         </rollingPolicy>
     </appender>
 
-    <!--日志采用异步方式，提升服务TPS处理能力-->
     <appender name="async_elkLog" class="ch.qos.logback.classic.AsyncAppender">
-        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
         <discardingThreshold>0</discardingThreshold>
-        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
         <queueSize>512</queueSize>
         <appender-ref ref="elkLog"/>
     </appender>
 
     <root level="INFO">
         <appender-ref ref="console"/>
+        <appender-ref ref="async_file"/>
         <appender-ref ref="async_elkLog"/>
     </root>
 </configuration>
