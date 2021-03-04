@@ -17,7 +17,8 @@ public class MybatisPlusConfig {
                 "3306",
                 "seata_test_1",
                 "root",
-                "zhangningpegasus"
+                "zhangningpegasus",
+                parameter -> DataSourceTool.registerZipkinForMySql8(parameter)
         );
     }
 }

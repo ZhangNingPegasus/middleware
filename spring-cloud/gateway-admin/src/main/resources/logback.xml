@@ -7,6 +7,8 @@
 
     <logger name="org.hibernate.validator" level="ERROR">
     </logger>
+    <logger name="com.baomidou.mybatisplus.core.toolkit.ReflectionKit" level="ERROR">
+    </logger>
     <logger name="com.nepxion.discovery.plugin.framework.util" level="ERROR">
     </logger>
     <logger name="com.netflix.config.sources" level="ERROR">

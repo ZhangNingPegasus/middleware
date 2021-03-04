@@ -7,6 +7,8 @@
 
     <logger name="org.hibernate.validator" level="ERROR">
     </logger>
+    <logger name="org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter" level="ERROR">
+    </logger>
     <logger name="com.nepxion.discovery.plugin.framework.util" level="ERROR">
     </logger>
     <logger name="com.netflix.config.sources" level="ERROR">

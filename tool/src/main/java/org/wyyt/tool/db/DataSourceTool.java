@@ -1,9 +1,10 @@
 package org.wyyt.tool.db;
 
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 import javax.sql.DataSource;
@@ -25,24 +26,31 @@ import java.util.Collections;
 @Slf4j
 public final class DataSourceTool {
     private static final String DATA_BASE_URL = "jdbc:mysql://%s/%s?allowPublicKeyRetrieval=true&serverTimezone=GMT%%2B8&characterEncoding=UTF-8&useUnicode=true&autoReconnect=true&allowMultiQueries=true&useSSL=false&rewriteBatchedStatements=true&zeroDateTimeBehavior=CONVERT_TO_NULL";
+    private final static String ZIPKIN_MYSQL8_INTERCEPTOR = "queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=%s";
     private static final String CONNECTION_TEST_QUERY = "SELECT 1";
     private static final String CONNECTION_INIT_SQL = "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci";
+    private static final int INITIAL_SIZE = 5;
+    private static final int MIN_IDLE = 10;
+    private static final int MAXIMUM = 30;
+    private static final String DRIVER_CLASS_NAME = com.mysql.cj.jdbc.Driver.class.getCanonicalName();
 
-    public static DataSource createDruidDataSource(final String poolName,
+    public static DataSource createDruidDataSource(@Nullable final String poolName,
                                                    final String host,
-                                                   final String port,
+                                                   @Nullable final String port,
                                                    final String databaseName,
                                                    final String userName,
                                                    final String password,
                                                    final Integer initialSize,
                                                    final Integer minIdle,
-                                                   final Integer maxActive) {
+                                                   final Integer maxActive,
+                                                   @Nullable final PostProcessor postProcessor) {
+        final Parameter parameter = DataSourceTool.generateParameter(poolName, host, port, databaseName, postProcessor);
         final DruidDataSource result = new DruidDataSource();
-        if (!StrUtil.isBlank(poolName)) {
-            result.setName(poolName); //连接池名称
+        if (!ObjectUtils.isEmpty(parameter.getPoolName())) {
+            result.setName(parameter.getPoolName()); //连接池名称
         }
-        result.setDriverClassName(com.mysql.cj.jdbc.Driver.class.getCanonicalName());
-        result.setUrl(String.format(DATA_BASE_URL, getDbUrl(host, port), databaseName));
+        result.setDriverClassName(DRIVER_CLASS_NAME);
+        result.setUrl(parameter.getUrl());
         result.setUsername(userName);
         result.setPassword(password);
         result.setInitialSize(initialSize); //配置初始化大小
@@ -68,7 +76,7 @@ public final class DataSourceTool {
                                                    final String databaseName,
                                                    final String userName,
                                                    final String password) {
-        return createDruidDataSource(null, host, port, databaseName, userName, password, 5, 10, 20);
+        return createDruidDataSource(null, host, port, databaseName, userName, password, INITIAL_SIZE, MIN_IDLE, MAXIMUM, null);
     }
 
     public static DataSource createHikariDataSource(final String poolName,
@@ -78,13 +86,15 @@ public final class DataSourceTool {
                                                     final String userName,
                                                     final String password,
                                                     final Integer minIdle,
-                                                    final Integer maximum) {
+                                                    final Integer maximum,
+                                                    @Nullable final PostProcessor postProcessor) {
+        final Parameter parameter = DataSourceTool.generateParameter(poolName, host, port, databaseName, postProcessor);
         final HikariDataSource result = new HikariDataSource();
-        if (!StrUtil.isBlank(poolName)) {
-            result.setPoolName(poolName); //连接池名称
+        if (!ObjectUtils.isEmpty(parameter.getPoolName())) {
+            result.setPoolName(parameter.getPoolName()); //连接池名称
         }
-        result.setDriverClassName(com.mysql.cj.jdbc.Driver.class.getCanonicalName());
-        result.setJdbcUrl(String.format(DATA_BASE_URL, getDbUrl(host, port), databaseName));
+        result.setDriverClassName(DRIVER_CLASS_NAME);
+        result.setJdbcUrl(parameter.getUrl());
         result.setUsername(userName);
         result.setPassword(password);
         result.setMinimumIdle(minIdle);     //最小空闲连接数量
@@ -98,6 +108,17 @@ public final class DataSourceTool {
         return result;
     }
 
+    public static DataSource createHikariDataSource(final String poolName,
+                                                    final String host,
+                                                    final String port,
+                                                    final String databaseName,
+                                                    final String userName,
+                                                    final String password,
+                                                    final Integer minIdle,
+                                                    final Integer maximum) {
+        return createHikariDataSource(poolName, host, port, databaseName, userName, password, minIdle, maximum, null);
+    }
+
     public static DataSource createHikariDataSource(final String host,
                                                     final String port,
                                                     final String databaseName,
@@ -105,7 +126,16 @@ public final class DataSourceTool {
                                                     final String password,
                                                     final Integer minIdle,
                                                     final Integer maximum) {
-        return createHikariDataSource(null, host, port, databaseName, userName, password, minIdle, maximum);
+        return createHikariDataSource(null, host, port, databaseName, userName, password, minIdle, maximum, null);
+    }
+
+    public static DataSource createHikariDataSource(final String host,
+                                                    final String port,
+                                                    final String databaseName,
+                                                    final String userName,
+                                                    final String password,
+                                                    final PostProcessor postProcessor) {
+        return createHikariDataSource(null, host, port, databaseName, userName, password, MIN_IDLE, MAXIMUM, postProcessor);
     }
 
     public static DataSource createHikariDataSource(final String host,
@@ -113,7 +143,18 @@ public final class DataSourceTool {
                                                     final String databaseName,
                                                     final String userName,
                                                     final String password) {
-        return createHikariDataSource(host, port, databaseName, userName, password, 10, 20);
+        return createHikariDataSource(null, host, port, databaseName, userName, password, MIN_IDLE, MAXIMUM, null);
+    }
+
+    public static Parameter registerZipkinForMySql8(final Parameter parameter) {
+        String name = ObjectUtils.isEmpty(parameter.getPoolName()) ? parameter.getDatabaseName() : parameter.getPoolName();
+        if (ObjectUtils.isEmpty(name)) {
+            name = Thread.currentThread().getName();
+        }
+        final String zipkinServiceName = String.format("MYSQL_%s", name).toUpperCase();
+        final String suffix = String.format(ZIPKIN_MYSQL8_INTERCEPTOR, zipkinServiceName);
+        parameter.setUrl(parameter.getUrl().concat(String.format("&%s", suffix)));
+        return parameter;
     }
 
     public static void close(final DataSource dataSource) {
@@ -172,5 +213,35 @@ public final class DataSourceTool {
         } else {
             return String.format("%s:%s", host.trim(), port.trim());
         }
+    }
+
+    private static Parameter generateParameter(final String poolName,
+                                               final String host,
+                                               @Nullable final String port,
+                                               final String databaseName,
+                                               final PostProcessor postProcessor) {
+        Parameter result = new Parameter();
+        result.setPoolName(poolName);
+        result.setHost(host);
+        result.setPort(port);
+        result.setDatabaseName(databaseName);
+        result.setUrl(String.format(DATA_BASE_URL, DataSourceTool.getDbUrl(host, port), databaseName));
+        if (null != postProcessor) {
+            result = postProcessor.after(result);
+        }
+        return result;
+    }
+
+    @Data
+    public static class Parameter {
+        private String poolName;
+        private String host;
+        private String port;
+        private String databaseName;
+        private String url;
+    }
+
+    public interface PostProcessor {
+        Parameter after(Parameter parameter);
     }
 }

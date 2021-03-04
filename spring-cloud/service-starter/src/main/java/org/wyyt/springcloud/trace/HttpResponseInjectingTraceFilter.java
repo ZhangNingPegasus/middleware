@@ -51,7 +51,6 @@ public class HttpResponseInjectingTraceFilter extends GenericFilterBean {
         }
         this.fillTag(span, "http.head", headerMap);
 
-
         final RequestWrapper requestWrapper = new RequestWrapper(httpRequest);
         final ResponseWrapper responseWrapper = new ResponseWrapper((HttpServletResponse) servletResponse);
 

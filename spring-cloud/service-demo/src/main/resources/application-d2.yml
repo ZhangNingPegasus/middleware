@@ -35,3 +35,8 @@ spring:
     base-url: ${zipkin_url}
     sender:
       type: web
+  redis:
+    host: 192.168.5.110
+    port: 8145
+    password:
+    database: 5

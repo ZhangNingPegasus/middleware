@@ -17,8 +17,11 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.wyyt.redis.service.RedisService;
 import org.wyyt.tool.rpc.Result;
+import springcloud.service.demo.entity.Student;
 import springcloud.service.demo.feign.BFeign;
+import springcloud.service.demo.service.StudentServiceA;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,28 +42,40 @@ public class ARestImpl {
     private final RestTemplate restTemplate;
     private final Executor executor;
     private final BFeign bFeign;
+    private final RedisService redisService;
+    private final StudentServiceA studentServiceA;
 
     public ARestImpl(final StrategyContextHolder strategyContextHolder,
                      final PluginAdapter pluginAdapter,
                      final RestTemplate restTemplate,
                      final Executor executor,
-                     final BFeign bFeign) {
+                     final BFeign bFeign,
+                     final RedisService redisService,
+                     final StudentServiceA studentServiceA) {
         this.strategyContextHolder = strategyContextHolder;
         this.pluginAdapter = pluginAdapter;
         this.restTemplate = restTemplate;
         this.executor = executor;
         this.bFeign = bFeign;
+        this.redisService = redisService;
+        this.studentServiceA = studentServiceA;
     }
 
     @GetMapping(path = "/test")
     public Result<String> test() {
-        return Result.ok(this.userName);
+        this.redisService.set("a", "123456");
+        return Result.ok(this.userName + " : " + this.redisService.get("a"));
     }
 
     @GetMapping(path = "/test/{value}")
     public Result<String> test(@PathVariable(value = "value") final String value) throws Throwable {
         log.info("调用者");
-        return bFeign.invoke(value);
+        this.redisService.set("a", "abcefg");
+        Student student = new Student();
+        student.setName(value);
+        this.studentServiceA.save(student);
+        System.out.println(this.studentServiceA.list());
+        return bFeign.invoke(value + " : " + this.redisService.get("a"));
     }
 
     @ApiOperation(value = "rest同步调用示例")

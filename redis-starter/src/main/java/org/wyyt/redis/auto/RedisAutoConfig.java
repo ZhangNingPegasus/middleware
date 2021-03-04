@@ -67,7 +67,6 @@ public class RedisAutoConfig {
         return jackson2JsonRedisSerializer;
     }
 
-
     @Bean
     @Primary
     @ConditionalOnMissingBean

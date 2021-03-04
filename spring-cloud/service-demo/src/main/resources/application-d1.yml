@@ -36,3 +36,8 @@ spring:
       type: kafka
   kafka:
     bootstrap-servers: ${zipkin_kafka_servers}
+  redis:
+    host: 192.168.5.110
+    port: 8145
+    password:
+    database: 5
