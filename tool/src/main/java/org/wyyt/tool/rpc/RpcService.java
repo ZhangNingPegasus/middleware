@@ -129,4 +129,9 @@ public class RpcService {
                                final TypeReference<T> typeReference) {
         return this.postForEntity(url, DEFAULT_CONTENT_TYPE, params, typeReference);
     }
+
+    public <T> T postForEntity(final String url,
+                               final TypeReference<T> typeReference) {
+        return this.postForEntity(url, DEFAULT_CONTENT_TYPE, null, typeReference);
+    }
 }
