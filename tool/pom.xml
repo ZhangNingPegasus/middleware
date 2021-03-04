@@ -86,11 +86,6 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>com.google.guava</groupId>-->
-        <!--            <artifactId>guava</artifactId>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
@@ -125,6 +120,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
+            <version>5.2.13.RELEASE</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
