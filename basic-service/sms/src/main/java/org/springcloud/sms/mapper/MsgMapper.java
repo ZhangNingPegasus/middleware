@@ -20,4 +20,6 @@ import java.util.List;
 @Mapper
 public interface MsgMapper extends BaseMapper<Msg> {
     void batchSave(@Param("msgList") List<Msg> msgList);
+
+    void batchUpdate(@Param("msgList") List<Msg> msgList);
 }

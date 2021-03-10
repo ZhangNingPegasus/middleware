@@ -31,6 +31,7 @@ public class RpcService {
         return Unirest.get(url).asBytes().getBody();
     }
 
+
     public String get(final String url,
                       @Nullable final Map<String, String> headers,
                       @Nullable final Map<String, Object> params) {
@@ -45,11 +46,42 @@ public class RpcService {
 
     public String get(final String url,
                       final Map<String, Object> params) {
-        return get(url, null, params);
+        return this.get(url, null, params);
     }
 
     public String get(final String url) {
-        return get(url, null, null);
+        return this.get(url, null, null);
+    }
+
+
+    public <T> T getForEntity(final String url,
+                              @Nullable final Map<String, String> headers,
+                              @Nullable final Map<String, Object> params,
+                              final TypeReference<T> typeReference) {
+        final String responseText = this.get(url, headers, params);
+        if (ObjectUtils.isEmpty(responseText)) {
+            return null;
+        }
+        return JSONObject.parseObject(responseText, typeReference);
+    }
+
+    public <T> T getForEntity(final String url,
+                              @Nullable final Map<String, String> headers,
+                              final TypeReference<T> typeReference) {
+        final String responseText = this.get(url, headers, null);
+        if (ObjectUtils.isEmpty(responseText)) {
+            return null;
+        }
+        return JSONObject.parseObject(responseText, typeReference);
+    }
+
+    public <T> T getForEntity(final String url,
+                              final TypeReference<T> typeReference) {
+        final String responseText = this.get(url, null, null);
+        if (ObjectUtils.isEmpty(responseText)) {
+            return null;
+        }
+        return JSONObject.parseObject(responseText, typeReference);
     }
 
     public String post(final String url,
@@ -78,18 +110,18 @@ public class RpcService {
     public String post(final String url,
                        final String contentType,
                        @Nullable final Map<String, String> headers) {
-        return post(url, contentType, headers, null);
+        return this.post(url, contentType, headers, null);
     }
 
     public String post(final String url,
                        final String contentType,
                        @Nullable final Object params) {
-        return post(url, contentType, null, params);
+        return this.post(url, contentType, null, params);
     }
 
     public String post(final String url,
                        final String contentType) {
-        return post(url, contentType, null, null);
+        return this.post(url, contentType, null, null);
     }
 
     public String post(final String url) {

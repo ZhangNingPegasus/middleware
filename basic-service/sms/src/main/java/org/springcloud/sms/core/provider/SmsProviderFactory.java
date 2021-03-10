@@ -9,7 +9,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.wyyt.sms.enums.ProviderType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,5 +61,9 @@ public class SmsProviderFactory implements ApplicationContextAware, Initializing
             throw new SmsException(errorMsg);
         }
         return result;
+    }
+
+    public List<SmsProvider> getProviders(){
+        return new ArrayList<>(this.providerMap.values());
     }
 }

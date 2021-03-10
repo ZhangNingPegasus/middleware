@@ -18,6 +18,7 @@
             `receive_time`,
             `send_status`,
             `extra`,
+            `err_msg`,
             `row_create_time`
             )
             VALUES
@@ -34,8 +35,34 @@
             #{msg.receiveTime},
             #{msg.sendStatus},
             #{msg.extra},
+            #{msg.errMsg},
             #{msg.rowCreateTime}
             )
         </foreach>
     </insert>
+
+    <update id="batchUpdate">
+        <foreach collection="msgList" item="msg" separator=";">
+            UPDATE `t_msg`
+            <set>
+                <if test="msg.content != null">
+                    `content` = #{msg.content},
+                </if>
+                <if test="msg.sendTime != null">
+                    `send_time` = #{msg.sendTime},
+                </if>
+
+                <if test="msg.receiveTime != null">
+                    `receive_time` = #{msg.receiveTime},
+                </if>
+
+                <if test="msg.sendStatus != null">
+                    `send_status` = #{msg.sendStatus},
+                </if>
+
+                `err_msg` = #{msg.errMsg}
+            </set>
+            WHERE `id` = #{msg.id}
+        </foreach>
+    </update>
 </mapper>

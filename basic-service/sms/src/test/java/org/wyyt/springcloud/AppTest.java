@@ -21,13 +21,19 @@ public class AppTest {
     private SmsService smsService;
 
     @Test
-    public void shouldAnswerWithTrue() {
+    public void sendSms() {
         SmsRequest smsRequest = new SmsRequest();
-        smsRequest.setPhoneNumbers("18207131101");
+        smsRequest.setPhoneNumbers("18207131101,17343386465");
         smsRequest.setSignCode("煤链社");
         smsRequest.setTemplateCode("SMS_206740237");
-        smsRequest.setTemplateParam("{\"temple\":\"78901\"}");
+        smsRequest.setTemplateParam("{\"temple\":\"123456\"}");
         smsRequest.setExtra("I am the extra information");
         System.out.println(this.smsService.send(smsRequest));
     }
+
+    @Test
+    public void processSendDetails() throws InterruptedException {
+        this.smsService.processSendDetails();
+    }
+
 }

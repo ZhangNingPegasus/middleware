@@ -11,5 +11,5 @@ package org.wyyt.basic.service.admin.constants;
  * *****************************************************************
  */
 public class Constant {
-    public static final String PROCESS_ENDING_MSG = "processSendingMsg";
+    public static final String PROCESS_SENDING_MSG = "processSendingMsg";
 }

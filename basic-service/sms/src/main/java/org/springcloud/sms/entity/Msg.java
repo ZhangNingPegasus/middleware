@@ -95,4 +95,10 @@ public class Msg extends BaseDto {
      */
     @TableField(value = "`extra`")
     private String extra;
+
+    /**
+     * 短信发送错误回执
+     */
+    @TableField(value = "`err_msg`")
+    private String errMsg;
 }

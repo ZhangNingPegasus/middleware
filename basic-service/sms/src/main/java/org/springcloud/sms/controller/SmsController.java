@@ -15,9 +15,13 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springcloud.sms.core.SmsService;
 import org.springcloud.sms.service.PendingMsgAliService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.wyyt.sms.request.SmsRequest;
+import org.wyyt.sms.response.SmsResponse;
 import org.wyyt.tool.rpc.Result;
 
 /**
@@ -34,59 +38,46 @@ import org.wyyt.tool.rpc.Result;
 @Slf4j
 @RestController
 public class SmsController {
+    private final SmsService smsService;
     private final PendingMsgAliService pendingMsgAliService;
 
-    public SmsController(final PendingMsgAliService pendingMsgAliService) {
+    public SmsController(final SmsService smsService,
+                         final PendingMsgAliService pendingMsgAliService) {
+        this.smsService = smsService;
         this.pendingMsgAliService = pendingMsgAliService;
     }
 
     @ApiOperation(value = "同步发送短信")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "value", value = "参数A", required = true, dataType = "String")
+            @ApiImplicitParam(name = "phoneNumbers", value = "发送方手机号码, 多个用逗号分隔", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signCode", value = "短信签名编码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "templateCode", value = "短信模板编码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "templateParam", value = "短信模板参数, 必须是json格式", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "extra", value = "扩展字段", required = true, dataType = "String")
     })
     @PostMapping(path = "send")
-    public Result<String> send() {
-        return Result.ok();
+    public Result<SmsResponse> send(@RequestParam("phoneNumbers") final String phoneNumbers,
+                                    @RequestParam("signCode") final String signCode,
+                                    @RequestParam("templateCode") final String templateCode,
+                                    @RequestParam("templateParam") final String templateParam,
+                                    @RequestParam("extra") final String extra) throws Exception {
+        final SmsRequest smsRequest = new SmsRequest();
+        smsRequest.setPhoneNumbers(phoneNumbers);
+        smsRequest.setSignCode(signCode);
+        smsRequest.setTemplateCode(templateCode);
+        smsRequest.setTemplateParam(templateParam);
+        smsRequest.setExtra(extra);
+        return Result.ok(this.smsService.send(smsRequest));
     }
 
     @PostMapping(path = "processSendingMsg")
-    public Result<?> processSendingMsg() {
-        System.out.println("processSendingMsg");
+    public Result<?> processSendingMsg() throws InterruptedException {
+        this.smsService.processSendDetails();
         return Result.ok();
     }
 
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         mengWang();
-    }
-
-    private static void ali() throws Exception {
-        Config config = new Config()
-                .setAccessKeyId("LTAICkrY07EwE6Xb")
-                .setAccessKeySecret("xuGbPfRTGg2QJ8saLWTNXmBh1ndj9D");
-        // 访问的域名
-        config.endpoint = "dysmsapi.aliyuncs.com";
-        Client client = new Client(config);
-
-        QuerySendDetailsRequest querySendDetailsRequest = new QuerySendDetailsRequest()
-                .setPhoneNumber("18207131101")
-                .setBizId("558308914133319996^0")
-                .setSendDate("20210224")
-                .setPageSize(50L)
-                .setCurrentPage(1L);
-        QuerySendDetailsResponse querySendDetailsResponse = client.querySendDetails(querySendDetailsRequest);
-        System.out.println(querySendDetailsResponse);
-
-
-        SendSmsRequest sendSmsRequest = new SendSmsRequest()
-                .setPhoneNumbers("18207131101")
-                .setSignName("煤链社")
-                .setTemplateCode("SMS_206740237")
-                .setTemplateParam("{\"temple\":\"12345\"}")
-                .setOutId("abcdefg");
-        SendSmsResponse sendSmsResponse = client.sendSms(sendSmsRequest);
-        System.out.println(sendSmsResponse);
-
     }
 
     private static void mengWang() {

@@ -7,13 +7,22 @@
             INSERT IGNORE INTO `t_pending_msg_ali`
             (
             `msg_id`,
+            `phone_number`,
             `row_create_time`
             )
             VALUES
             (
             #{msg.msgId},
+            #{msg.phoneNumber},
             #{msg.rowCreateTime}
             )
         </foreach>
     </insert>
+
+    <delete id="deleteByMsgIds">
+        DELETE FROM `t_pending_msg_ali` WHERE `msg_id` IN
+        <foreach collection="msgIdList" item="msgId" open="(" close=")" separator=",">
+            #{msgId}
+        </foreach>
+    </delete>
 </mapper>

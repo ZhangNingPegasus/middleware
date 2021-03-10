@@ -17,5 +17,7 @@ import org.wyyt.sms.response.SmsResponse;
 public interface SmsProvider {
     SmsResponse send(SmsRequest smsRequest);
 
+    void processSendDetails();
+
     ProviderType getProvider();
 }

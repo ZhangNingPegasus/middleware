@@ -24,6 +24,11 @@ public class MontnetsSmsProvider extends AbstractSmsProvider {
     }
 
     @Override
+    public void processSendDetails() {
+        System.out.println("梦网处理短信发送回执");
+    }
+
+    @Override
     public ProviderType getProvider() {
         return ProviderType.MONTNETS;
     }

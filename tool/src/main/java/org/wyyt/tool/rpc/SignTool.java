@@ -62,7 +62,6 @@ public final class SignTool {
         if (diff > 1000 * 60 * 5) {
             return false;
         }
-        final String str = SignTool.createLinkString(params);
         final String tSign = Objects.requireNonNull(SignTool.sign(params, key, iv)).toLowerCase();
         return tSign.equals(sign);
     }

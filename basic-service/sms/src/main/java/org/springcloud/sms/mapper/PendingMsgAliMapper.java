@@ -20,4 +20,6 @@ import java.util.List;
 @Mapper
 public interface PendingMsgAliMapper extends BaseMapper<PendingMsgAli> {
     void batchSave(@Param("msgList") List<PendingMsgAli> msgList);
+
+    void deleteByMsgIds(@Param("msgIdList") List<String> msgIdList);
 }

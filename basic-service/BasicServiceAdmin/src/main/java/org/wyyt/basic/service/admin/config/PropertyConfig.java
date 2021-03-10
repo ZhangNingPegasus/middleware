@@ -2,7 +2,9 @@ package org.wyyt.basic.service.admin.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.wyyt.tool.rpc.RpcService;
 
 /**
  * the entity of configuration information in application.yml
@@ -40,4 +42,12 @@ public class PropertyConfig {
 
     @Value("${sms_consul_name}")
     private String smsConsulName;
+
+    @Value("${gateway_url}")
+    private String gatewayUrl;
+
+    @Bean
+    public RpcService rpcService() {
+        return new RpcService();
+    }
 }

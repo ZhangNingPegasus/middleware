@@ -63,19 +63,18 @@ public class ARestImpl {
 
     @GetMapping(path = "/test")
     public Result<String> test() {
-        this.redisService.set("a", "123456");
-        return Result.ok(this.userName + " : " + this.redisService.get("a"));
+        return Result.ok(this.userName);
     }
 
     @GetMapping(path = "/test/{value}")
     public Result<String> test(@PathVariable(value = "value") final String value) throws Throwable {
         log.info("调用者");
-        this.redisService.set("a", "abcefg");
+        this.redisService.set("a", "abcefg"); //1. redis set
         Student student = new Student();
         student.setName(value);
-        this.studentServiceA.save(student);
-        System.out.println(this.studentServiceA.list());
-        return bFeign.invoke(value + " : " + this.redisService.get("a"));
+        this.studentServiceA.save(student); //2. mysql insert
+        System.out.println(this.studentServiceA.list()); //3. mysql select
+        return bFeign.invoke(value + " : " + this.redisService.get("a")); //4. redis get  //5. service A rpc to service B
     }
 
     @ApiOperation(value = "rest同步调用示例")
