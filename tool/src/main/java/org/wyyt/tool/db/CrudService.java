@@ -143,11 +143,10 @@ public final class CrudService implements DisposableBean {
         final List<T> records = this.select(cls, querySql, params);
         final Long total = this.executeScalar(Long.class, totalSql, params);
         final CrudPage<T> crudPage = new CrudPage<>();
-        crudPage.setRecrods(records);
+        crudPage.setRecords(records);
         crudPage.setTotal(total);
         return crudPage;
     }
-
 
     public final <T> T selectOne(final Class<T> cls, final String sql, final Object... params) throws Exception {
         final List<T> result = this.select(cls, sql, params);

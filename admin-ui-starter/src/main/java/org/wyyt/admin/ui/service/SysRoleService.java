@@ -55,7 +55,7 @@ public class SysRoleService {
         sql.append(" ORDER BY `name` ASC");
         final IPage<SysRole> result = new Page<>(pageNum, pageSize);
         final CrudPage<SysRole> crudPage = crudService.page(SysRole.class, pageNum, pageSize, sql.toString(), ObjectUtils.isEmpty(name) ? null : "%".concat(name).concat("%"));
-        result.setRecords(crudPage.getRecrods());
+        result.setRecords(crudPage.getRecords());
         result.setTotal(crudPage.getTotal());
         return result;
     }

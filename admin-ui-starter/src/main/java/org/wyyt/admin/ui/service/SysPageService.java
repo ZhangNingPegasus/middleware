@@ -72,7 +72,7 @@ public class SysPageService {
 
         final IPage<PageVo> result = new Page<>(pageNum, pageSize);
         final CrudPage<PageVo> crudPage = this.crudService.page(PageVo.class, pageNum, pageSize, sql.toString(), ObjectUtils.isEmpty(name) ? null : "%".concat(name).concat("%"));
-        result.setRecords(crudPage.getRecrods());
+        result.setRecords(crudPage.getRecords());
         result.setTotal(crudPage.getTotal());
         return result;
     }

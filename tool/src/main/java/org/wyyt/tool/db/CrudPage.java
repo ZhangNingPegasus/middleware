@@ -16,6 +16,6 @@ import java.util.List;
  */
 @Data
 public class CrudPage<T> {
-    private List<T> recrods;
+    private List<T> records;
     private long total;
 }

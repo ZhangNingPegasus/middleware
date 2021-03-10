@@ -63,7 +63,7 @@ public class SysAdminService {
         sql.append(" ORDER BY `admin`.`username` ASC");
         final IPage<AdminVo> result = new Page<>(pageNum, pageSize);
         final CrudPage<AdminVo> crudPage = this.crudService.page(AdminVo.class, pageNum, pageSize, sql.toString(), ObjectUtils.isEmpty(name) ? null : "%".concat(name).concat("%"));
-        result.setRecords(crudPage.getRecrods());
+        result.setRecords(crudPage.getRecords());
         result.setTotal(crudPage.getTotal());
         return result;
     }

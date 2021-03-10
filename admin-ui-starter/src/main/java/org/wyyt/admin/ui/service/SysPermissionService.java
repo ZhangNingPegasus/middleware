@@ -66,7 +66,7 @@ public class SysPermissionService {
 
         final CrudPage<PermissionVo> crudPage = this.crudService.page(PermissionVo.class, pageNum, pageSize, sql.toString(), objectList.toArray());
         final IPage<PermissionVo> result = new Page<>(pageNum, pageSize);
-        result.setRecords(crudPage.getRecrods());
+        result.setRecords(crudPage.getRecords());
         result.setTotal(crudPage.getTotal());
         return result;
     }
