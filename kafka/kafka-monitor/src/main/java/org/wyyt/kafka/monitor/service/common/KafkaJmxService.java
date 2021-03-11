@@ -34,8 +34,8 @@ public class KafkaJmxService {
         String result;
         JMXConnector connector = null;
         try {
-            final JMXServiceURL jmxSeriverUrl = new JMXServiceURL(String.format(JMX_URL, String.format("%s:%s", brokerVo.getHost(), brokerVo.getJmxPort())));
-            connector = JMXFactoryUtil.connectWithTimeout(jmxSeriverUrl, TIME_OUT, TimeUnit.SECONDS);
+            final JMXServiceURL jmxServiceUrl = new JMXServiceURL(String.format(JMX_URL, String.format("%s:%s", brokerVo.getHost(), brokerVo.getJmxPort())));
+            connector = JMXFactoryUtil.connectWithTimeout(jmxServiceUrl, TIME_OUT, TimeUnit.SECONDS);
             final MBeanServerConnection mbeanConnection = connector.getMBeanServerConnection();
             result = mbeanConnection.getAttribute(ObjectName.getInstance(name), attribute).toString();
         } finally {
@@ -50,8 +50,8 @@ public class KafkaJmxService {
         final List<String> results = new ArrayList<>(names.length);
         JMXConnector connector = null;
         try {
-            final JMXServiceURL jmxSeriverUrl = new JMXServiceURL(String.format(JMX_URL, String.format("%s:%s", brokerVo.getHost(), brokerVo.getJmxPort())));
-            connector = JMXFactoryUtil.connectWithTimeout(jmxSeriverUrl, TIME_OUT, TimeUnit.SECONDS);
+            final JMXServiceURL jmxServiceUrl = new JMXServiceURL(String.format(JMX_URL, String.format("%s:%s", brokerVo.getHost(), brokerVo.getJmxPort())));
+            connector = JMXFactoryUtil.connectWithTimeout(jmxServiceUrl, TIME_OUT, TimeUnit.SECONDS);
             final MBeanServerConnection mbeanConnection = connector.getMBeanServerConnection();
             for (int i = 0; i < names.length; i++) {
                 results.add(mbeanConnection.getAttribute(ObjectName.getInstance(names[i]), attributes[i]).toString());

@@ -94,12 +94,12 @@ public final class Db {
             params.add(toExecutionTime);
         }
 
-        final List<SysSql> sysSqls = this.crudService.select(SysSql.class,
+        final List<SysSql> sysSqlList = this.crudService.select(SysSql.class,
                 String.format("SELECT s.id,s.sys_admin_id,a.`name`,s.ip,s.short_sql,s.execution_time,s.execution_duration FROM `sys_sql` s LEFT OUTER JOIN `sys_admin` a ON s.sys_admin_id=a.id WHERE 1=1 %s ORDER BY s.create_time DESC %s", strWhere.toString(), limit(pageNum, pageSize)),
                 params.toArray(new Object[]{}));
         final long rowCount = this.crudService.executeScalar(Long.class, String.format("SELECT COUNT(*) FROM `sys_sql` s WHERE 1=1 %s", strWhere.toString()), params.toArray(new Object[]{}));
         result.setTotal(rowCount);
-        result.setRecords(sysSqls);
+        result.setRecords(sysSqlList);
         return result;
     }
 

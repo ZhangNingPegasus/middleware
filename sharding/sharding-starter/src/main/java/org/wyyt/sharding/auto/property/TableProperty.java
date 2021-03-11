@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * the entity of sharding table inforamtion
+ * the entity of sharding table information
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

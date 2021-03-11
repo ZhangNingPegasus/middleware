@@ -3,7 +3,7 @@ package org.wyyt.sharding.db2es.client.kafka;
 import org.apache.kafka.common.KafkaException;
 
 /**
- * the business exception occured on cluster switch
+ * the business exception occur on cluster switch
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

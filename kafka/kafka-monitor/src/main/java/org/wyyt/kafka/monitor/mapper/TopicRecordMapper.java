@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The mapper for dynamic table. Using for save the topics'content.
+ * The mapper for dynamic table. Using for save the topics' content.
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

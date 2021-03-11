@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * the base calss used for polling the records from kafka server
+ * the base class used for polling the records from kafka server
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

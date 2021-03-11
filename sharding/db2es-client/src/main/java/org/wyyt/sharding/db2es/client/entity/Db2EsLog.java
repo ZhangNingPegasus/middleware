@@ -7,7 +7,7 @@ import org.wyyt.sharding.db2es.client.common.Context;
 import org.wyyt.sharding.db2es.core.entity.domain.TableInfo;
 
 /**
- * the entity used for logging error inforamtion.
+ * the entity used for logging error information.
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
@@ -40,7 +40,7 @@ public final class Db2EsLog {
     private final Long offset;
 
     public Db2EsLog(final Context context,
-                    final FlatMessge flatMessage) {
+                    final FlatMessage flatMessage) {
         this.consumerRecord = flatMessage.getConsumerRecord().value();
         this.topicName = flatMessage.getConsumerRecord().topic();
         this.partition = flatMessage.getConsumerRecord().partition();

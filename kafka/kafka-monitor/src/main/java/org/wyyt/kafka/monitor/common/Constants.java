@@ -29,7 +29,7 @@ public class Constants {
     public static final Integer CAPACITY = 2048;
     public static final int INIT_TOPIC_COUNT = 128;
 
-    public static final String HOST_NOT_AVAIABLE = "主机不可用，请检查";
+    public static final String HOST_NOT_AVAILABLE = "主机不可用，请检查";
 
     public static final String SESSION_KAFKA_CONSUMER_INFO = "SESSION_KAFKA_CONSUMER_INFO";
 

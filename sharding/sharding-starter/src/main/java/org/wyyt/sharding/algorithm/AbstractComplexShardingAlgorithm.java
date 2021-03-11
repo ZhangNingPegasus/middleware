@@ -27,7 +27,7 @@ import java.util.*;
  * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
-public abstract class AbstractComplextShardingAlgorithm {
+public abstract class AbstractComplexShardingAlgorithm {
     @Autowired
     protected ShardingService shardingService;
 

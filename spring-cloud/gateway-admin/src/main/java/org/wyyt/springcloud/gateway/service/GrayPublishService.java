@@ -195,19 +195,19 @@ public class GrayPublishService {
             return "";
         }
 
-        final List<String> serviceNameist = serviceNameSet.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+        final List<String> serviceNameList = serviceNameSet.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
 
-        final Route firstRoute = this.getFirstServiceName(serviceNameist);
+        final Route firstRoute = this.getFirstServiceName(serviceNameList);
 
         if (null == firstRoute) {
             return "缺少网关路由配置,请先进行路由配置";
         }
 
-        serviceNameist.remove(firstRoute.getServiceName());
+        serviceNameList.remove(firstRoute.getServiceName());
         final URI gatewayUri = this.consulService.getGatewayUri();
         final String inspect = Unirest.post(String.format("%s/%s/inspector/inspect", gatewayUri.toString(), firstRoute.getPathPredicate()))
                 .header("Content-Type", "application/json")
-                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceNameist.stream().map(p -> String.format("\"%s\"", p)).toArray())))
+                .body(String.format("{\"serviceIdList\":%s}", Arrays.toString(serviceNameList.stream().map(p -> String.format("\"%s\"", p)).toArray())))
                 .asString()
                 .getBody();
 
@@ -267,11 +267,11 @@ public class GrayPublishService {
 
     private static String formatXml(final Document document) throws IOException {
         try (final StringWriter out = new StringWriter()) {
-            final OutputFormat formater = OutputFormat.createPrettyPrint();
-            formater.setEncoding(StandardCharsets.UTF_8.name());
+            final OutputFormat formatter = OutputFormat.createPrettyPrint();
+            formatter.setEncoding(StandardCharsets.UTF_8.name());
             XMLWriter writer = null;
             try {
-                writer = new XMLWriter(out, formater);
+                writer = new XMLWriter(out, formatter);
                 writer.write(document);
             } finally {
                 if (null != writer) {

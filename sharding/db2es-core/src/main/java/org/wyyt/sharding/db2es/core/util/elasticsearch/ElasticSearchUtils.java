@@ -478,7 +478,7 @@ public final class ElasticSearchUtils {
 
     public static void refreshTopicSuffix(final RestHighLevelClient restHighLevelClient,
                                           final Topic topic,
-                                          final boolean removeUnavaiableAlias) throws Exception {
+                                          final boolean removeUnavailableAlias) throws Exception {
         if (null == topic.getInUseSuffixMap()) {
             topic.setInUseSuffixMap(new HashMap<>());
         }
@@ -500,7 +500,7 @@ public final class ElasticSearchUtils {
             }
         });
 
-        if (removeUnavaiableAlias) {
+        if (removeUnavailableAlias) {
             for (final Map.Entry<Integer, IndexName> pair : indexNameMap.entrySet()) {
                 if (!topic.getInUseSuffixMap().containsKey(pair.getKey())) {
                     removeAlias(restHighLevelClient,
@@ -542,6 +542,5 @@ public final class ElasticSearchUtils {
         interface Action {
             void getYear(final int year);
         }
-
     }
 }

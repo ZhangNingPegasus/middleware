@@ -14,6 +14,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * *****************************************************************
  */
 @Data
-@ConfigurationProperties
+@ConfigurationProperties(prefix = "spring.cloud.config")
 public final class SpringCloudCommonProperties {
 }

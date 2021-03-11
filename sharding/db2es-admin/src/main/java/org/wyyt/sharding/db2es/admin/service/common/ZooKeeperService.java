@@ -14,7 +14,7 @@ import org.wyyt.tool.resource.ResourceTool;
 import java.util.List;
 
 /**
- * The service for kafka cluter's zookeeper.
+ * The service for kafka clusters' zookeeper.
  *
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************

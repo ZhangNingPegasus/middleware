@@ -404,7 +404,7 @@ public class ShardingService {
         return result;
     }
 
-    public final Map<String, List<IndexInfo>> listIndexsMap(final String logicTable) throws Exception {
+    public final Map<String, List<IndexInfo>> listIndexesMap(final String logicTable) throws Exception {
         final Map<String, List<IndexInfo>> result = new HashMap<>();
         final List<TableProperty> tableProperties = this.listTableProperties();
 
@@ -434,12 +434,12 @@ public class ShardingService {
 
     public final List<String> diffFields(final String logicTable) throws Exception {
         final Map<String, List<FieldInfo>> fieldsMap = this.listFieldsMap(logicTable);
-        return anaylseDiffTableList(fieldsMap, FieldInfo::getName);
+        return analyseDiffTableList(fieldsMap, FieldInfo::getName);
     }
 
-    public final List<String> diffIndexs(final String logicTable) throws Exception {
-        final Map<String, List<IndexInfo>> indexsMap = this.listIndexsMap(logicTable);
-        return anaylseDiffTableList(indexsMap, IndexInfo::getIndexName);
+    public final List<String> diffIndexes(final String logicTable) throws Exception {
+        final Map<String, List<IndexInfo>> indexesMap = this.listIndexesMap(logicTable);
+        return analyseDiffTableList(indexesMap, IndexInfo::getIndexName);
     }
 
     public final List<FieldInfo> listFields(final DataSource dataSource, final String factTable) throws Exception {
@@ -456,7 +456,7 @@ public class ShardingService {
                         fieldInfo.setDecimal(fieldType.getDecimal());
                         fieldInfo.setNotNull("YES".equalsIgnoreCase(kv.get("IS_NULLABLE").toString()));
                         fieldInfo.setIsPrimary("PRI".equalsIgnoreCase(kv.get("COLUMN_KEY").toString()));
-                        fieldInfo.setAutoUpdateByTimestampt(kv.get("EXTRA").toString().contains("on update CURRENT_TIMESTAMP"));
+                        fieldInfo.setAutoUpdateByTimestamp(kv.get("EXTRA").toString().contains("on update CURRENT_TIMESTAMP"));
                         fieldInfo.setUnsigned(fieldType.getUnsigned());
                         fieldInfo.setAutoIncrement(kv.get("EXTRA").toString().contains("auto_increment"));
                         fieldInfo.setDefaultValue(kv.get("COLUMN_DEFAULT").toString());
@@ -559,7 +559,7 @@ public class ShardingService {
         return result.get();
     }
 
-    private <T> List<String> anaylseDiffTableList(final Map<String, List<T>> source,
+    private <T> List<String> analyseDiffTableList(final Map<String, List<T>> source,
                                                   final Function<? super T, ? extends String> fieldComparator) {
         final List<String> result = new ArrayList<>();
         final Map<String, Long> fieldsHashMap = new HashMap<>();
@@ -641,7 +641,7 @@ public class ShardingService {
 
         String name;
         int length = 0;
-        int deciaml = 0;
+        int decimal = 0;
         boolean unsigned;
 
         if (start > -1) {
@@ -651,7 +651,7 @@ public class ShardingService {
             if (commaIndex > -1) {
                 final String[] all = precision.split(",");
                 length = Integer.parseInt(all[0]);
-                deciaml = Integer.parseInt(all[1]);
+                decimal = Integer.parseInt(all[1]);
             } else {
                 length = Integer.parseInt(precision);
             }
@@ -662,7 +662,7 @@ public class ShardingService {
             name = columnType;
             unsigned = false;
         }
-        return new FieldType(name, length, deciaml, unsigned);
+        return new FieldType(name, length, decimal, unsigned);
     }
 
     private interface Handle {

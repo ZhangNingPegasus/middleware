@@ -65,7 +65,7 @@ public final class ErrorLog extends BaseDto {
     private String topicName;
 
     /**
-     * kakfa消息所在的主题分区
+     * kafka消息所在的主题分区
      */
     @TableField(value = "`partition`")
     private Integer partition;

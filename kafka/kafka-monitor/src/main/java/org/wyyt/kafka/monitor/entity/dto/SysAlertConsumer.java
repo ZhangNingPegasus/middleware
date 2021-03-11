@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import org.wyyt.admin.ui.entity.base.BaseDto;
 
 /**
- * The entity for table `sys_alert_consumer`. Using for throw an alerm when there's something wrong in consumer.
+ * The entity for table `sys_alert_consumer`. Using for throw an alert when there's something wrong in consumer.
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

@@ -127,16 +127,16 @@ public class KafkaZkService implements InitializingBean, DisposableBean {
                 final ZooKeeperKpi zooKeeperKpi = ZooKeeperKpiUtil.listKpi(ip, Integer.parseInt(port));
                 switch (kpi) {
                     case ZK_PACKETS_RECEIVED:
-                        sysKpi.setValue(CommonTool.numberic((null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + Double.parseDouble(null == zooKeeperKpi.getZkPacketsReceived() ? "0" : zooKeeperKpi.getZkPacketsReceived())));
+                        sysKpi.setValue(CommonTool.toDouble((null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + Double.parseDouble(null == zooKeeperKpi.getZkPacketsReceived() ? "0" : zooKeeperKpi.getZkPacketsReceived())));
                         break;
                     case ZK_PACKETS_SENT:
-                        sysKpi.setValue(CommonTool.numberic((null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + Double.parseDouble(null == zooKeeperKpi.getZkPacketsSent() ? "0" : zooKeeperKpi.getZkPacketsSent())));
+                        sysKpi.setValue(CommonTool.toDouble((null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + Double.parseDouble(null == zooKeeperKpi.getZkPacketsSent() ? "0" : zooKeeperKpi.getZkPacketsSent())));
                         break;
                     case ZK_NUM_ALIVE_CONNECTIONS:
-                        sysKpi.setValue(CommonTool.numberic((null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + Double.parseDouble(null == zooKeeperKpi.getZkNumAliveConnections() ? "0" : zooKeeperKpi.getZkNumAliveConnections())));
+                        sysKpi.setValue(CommonTool.toDouble((null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + Double.parseDouble(null == zooKeeperKpi.getZkNumAliveConnections() ? "0" : zooKeeperKpi.getZkNumAliveConnections())));
                         break;
                     case ZK_OUTSTANDING_REQUESTS:
-                        sysKpi.setValue(CommonTool.numberic((null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + Double.parseDouble(null == zooKeeperKpi.getZkOutstandingRequests() ? "0" : zooKeeperKpi.getZkOutstandingRequests())));
+                        sysKpi.setValue(CommonTool.toDouble((null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + Double.parseDouble(null == zooKeeperKpi.getZkOutstandingRequests() ? "0" : zooKeeperKpi.getZkOutstandingRequests())));
                         break;
                     default:
                         break;

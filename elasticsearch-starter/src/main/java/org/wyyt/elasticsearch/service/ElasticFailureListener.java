@@ -5,7 +5,7 @@ import org.elasticsearch.client.RestClient;
 import org.wyyt.elasticsearch.exception.ElasticSearchException;
 
 /**
- * the exception listner of Elastic-Search
+ * the exception listener of Elastic-Search
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

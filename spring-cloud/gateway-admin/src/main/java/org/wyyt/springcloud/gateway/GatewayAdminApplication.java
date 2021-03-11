@@ -1,7 +1,6 @@
 package org.wyyt.springcloud.gateway;
 
 import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
-import com.nepxion.banner.BannerConstant;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

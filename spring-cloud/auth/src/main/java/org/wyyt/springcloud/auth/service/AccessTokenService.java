@@ -52,7 +52,7 @@ public class AccessTokenService {
     }
 
     public AccessToken getClientCredentialsToken(final String clientId,
-                                                 final String clientSecret) throws Exception {
+                                                 final String clientSecret) {
         final App app = this.getByClientId(clientId);
         if (null == app || !app.getClientSecret().equals(clientSecret)) {
             throw new BusinessException(String.format("The clientId [%s] not match clientSecret [%s]", clientId, clientSecret));
@@ -60,7 +60,7 @@ public class AccessTokenService {
         return this.getClientCredentialsToken(app);
     }
 
-    public AccessToken getClientCredentialsToken(final App app) throws Exception {
+    public AccessToken getClientCredentialsToken(final App app) {
         if (null == app) {
             return null;
         }

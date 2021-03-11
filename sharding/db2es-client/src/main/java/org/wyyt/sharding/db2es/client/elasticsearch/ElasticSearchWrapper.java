@@ -28,7 +28,7 @@ import org.springframework.util.ObjectUtils;
 import org.wyyt.sharding.db2es.client.common.Constant;
 import org.wyyt.sharding.db2es.client.common.Context;
 import org.wyyt.sharding.db2es.client.entity.Db2EsLog;
-import org.wyyt.sharding.db2es.client.entity.FlatMessge;
+import org.wyyt.sharding.db2es.client.entity.FlatMessage;
 import org.wyyt.sharding.db2es.core.entity.domain.EsException;
 import org.wyyt.sharding.db2es.core.entity.domain.IndexName;
 import org.wyyt.sharding.db2es.core.entity.domain.TopicType;
@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * the base wapper class of Elatic-Search, which providing each of methods to manipulate Elsatic-Search
+ * the base wrapper class of Elastic-Search, which providing each of methods to manipulate Elastic-Search
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
@@ -66,16 +66,16 @@ public abstract class ElasticSearchWrapper implements Closeable {
         log.info(String.format("ElasticSearchWrapper: initialize the ElasticSearch with server[%s] with successfully", this.context.getConfig().getEsHost()));
     }
 
-    public final int populate(final List<FlatMessge> flatMessageList) throws Exception {
+    public final int populate(final List<FlatMessage> flatMessageList) throws Exception {
         if (null == flatMessageList || flatMessageList.isEmpty()) {
             return 0;
         }
         final List<Request> requestList = new ArrayList<>(flatMessageList.size());
         final List<Db2EsLog> db2EsLogList = new ArrayList<>();
 
-        FlatMsgUtils.operate(flatMessageList, new Operation<FlatMessge>() {
+        FlatMsgUtils.operate(flatMessageList, new Operation<FlatMessage>() {
             @Override
-            public final void insert(final FlatMessge flatMessage) throws Exception {
+            public final void insert(final FlatMessage flatMessage) throws Exception {
                 final List<IndexRequest> insertRequestList = toInsertRequest(flatMessage);
                 if (null != insertRequestList && !insertRequestList.isEmpty()) {
                     for (final IndexRequest indexRequest : insertRequestList) {
@@ -85,7 +85,7 @@ public abstract class ElasticSearchWrapper implements Closeable {
             }
 
             @Override
-            public final void delete(final FlatMessge flatMessage) throws Exception {
+            public final void delete(final FlatMessage flatMessage) throws Exception {
                 final List<DeleteRequest> deleteRequestList = toDeleteRequest(flatMessage);
                 if (null != deleteRequestList && !deleteRequestList.isEmpty()) {
                     for (final DeleteRequest deleteRequest : deleteRequestList) {
@@ -95,7 +95,7 @@ public abstract class ElasticSearchWrapper implements Closeable {
             }
 
             @Override
-            public final void update(final FlatMessge flatMessage) throws Exception {
+            public final void update(final FlatMessage flatMessage) throws Exception {
                 final List<DocWriteRequest<?>> updateRequestList = toUpdateRequest(flatMessage);
                 if (null != updateRequestList && !updateRequestList.isEmpty()) {
                     for (final DocWriteRequest<?> docWriteRequest : updateRequestList) {
@@ -105,7 +105,7 @@ public abstract class ElasticSearchWrapper implements Closeable {
             }
 
             @Override
-            public final void exception(final FlatMessge flatMessage, final Exception exception) throws Exception {
+            public final void exception(final FlatMessage flatMessage, final Exception exception) throws Exception {
                 if (!context.getConfig().getContinueOnError()) {
                     throw exception;
                 }
@@ -179,7 +179,7 @@ public abstract class ElasticSearchWrapper implements Closeable {
         if (null == requestList || requestList.isEmpty()) {
             return;
         }
-        final List<FlatMessge> flatMessageList = new ArrayList<>(requestList.size());
+        final List<FlatMessage> flatMessageList = new ArrayList<>(requestList.size());
         final BulkRequest bulkRequest = new BulkRequest();
         bulkRequest.timeout(TimeValue.timeValueMinutes(1)); //bulk请求执行的超时。默认是1分钟
         //设置刷新策略
@@ -201,7 +201,7 @@ public abstract class ElasticSearchWrapper implements Closeable {
             if (!this.context.getConfig().getContinueOnError()) {
                 throw exception;
             }
-            for (final FlatMessge flatMessage : flatMessageList) {
+            for (final FlatMessage flatMessage : flatMessageList) {
                 final Db2EsLog db2EsLog = new Db2EsLog(this.context, flatMessage);
                 db2EsLog.setIndexName("");
                 db2EsLog.setErrorMessage(ExceptionTool.getRootCauseMessage(exception));
@@ -217,7 +217,7 @@ public abstract class ElasticSearchWrapper implements Closeable {
                     throw new Db2EsException(errorMsg);
                 }
 
-                final FlatMessge flatMessage = flatMessageList.get(esException.getBulkItemResponse().getItemId());
+                final FlatMessage flatMessage = flatMessageList.get(esException.getBulkItemResponse().getItemId());
                 final Db2EsLog db2EsLog = new Db2EsLog(this.context, flatMessage);
                 db2EsLog.setIndexName(esException.getBulkItemResponse().getIndex());
                 db2EsLog.setErrorMessage(errorMsg);
@@ -303,12 +303,12 @@ public abstract class ElasticSearchWrapper implements Closeable {
     @AllArgsConstructor
     private static class Request {
         private DocWriteRequest<?> docWriteRequest;
-        private FlatMessge flatMessage;
+        private FlatMessage flatMessage;
     }
 
-    abstract List<IndexRequest> toInsertRequest(final FlatMessge flatMessage) throws Exception;
+    abstract List<IndexRequest> toInsertRequest(final FlatMessage flatMessage) throws Exception;
 
-    abstract List<DeleteRequest> toDeleteRequest(final FlatMessge flatMessage) throws Exception;
+    abstract List<DeleteRequest> toDeleteRequest(final FlatMessage flatMessage) throws Exception;
 
-    abstract List<DocWriteRequest<?>> toUpdateRequest(final FlatMessge flatMessage) throws Exception;
+    abstract List<DocWriteRequest<?>> toUpdateRequest(final FlatMessage flatMessage) throws Exception;
 }

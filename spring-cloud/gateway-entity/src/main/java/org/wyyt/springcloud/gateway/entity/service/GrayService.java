@@ -24,7 +24,6 @@ import java.util.Map;
  */
 @Service
 public class GrayService extends ServiceImpl<GrayMapper, Gray> {
-
     @TranRead
     public Map<String, Gray> listMap() {
         final Map<String, Gray> result = new HashMap<>();

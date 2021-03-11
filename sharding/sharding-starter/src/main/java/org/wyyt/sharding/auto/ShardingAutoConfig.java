@@ -305,8 +305,8 @@ public class ShardingAutoConfig implements DisposableBean {
 
     private Map<String, DimensionProperty> analyseDimensionXml(final ShardingProperty shardingProperty) throws Exception {
         NacosNativeUtils.loadAcmInfo(
-                this.xmlConfig.getAcm().getDimenstion().getDataId(),
-                this.xmlConfig.getAcm().getDimenstion().getGroup(),
+                this.xmlConfig.getAcm().getDimension().getDataId(),
+                this.xmlConfig.getAcm().getDimension().getGroup(),
                 this.xmlConfig.getAcm().getAcmConfigPath(),
                 this.xmlConfig.getAcm().getNacosLocalSnapshotPath(),
                 this.xmlConfig.getAcm().getNacosLogPath());

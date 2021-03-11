@@ -23,7 +23,7 @@ import org.wyyt.springcloud.gateway.entity.utils.Common;
 import org.wyyt.tool.rpc.Result;
 
 /**
- * The controller of authtication
+ * The controller of Access Token generation
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

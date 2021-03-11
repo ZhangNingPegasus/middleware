@@ -32,7 +32,7 @@ public class BFeignImpl implements BFeign {
     public Result<String> invoke(String value) {
         value = pluginAdapter.getPluginInfo(value);
         log.info(String.format("调用路径：{%s}", value));
-        return Result.ok("服务B的执行方法:" + value);
+        return Result.ok(value);
     }
 
     @Override

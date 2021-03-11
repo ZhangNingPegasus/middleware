@@ -1,6 +1,6 @@
 package org.wyyt.sharding.db2es.client.common;
 
-import org.wyyt.sharding.db2es.client.entity.FlatMessge;
+import org.wyyt.sharding.db2es.client.entity.FlatMessage;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ import java.util.List;
  * *****************************************************************
  */
 public interface RecordListener {
-    int consume(final List<FlatMessge> flatMessageList) throws Exception;
+    int consume(final List<FlatMessage> flatMessageList) throws Exception;
 }

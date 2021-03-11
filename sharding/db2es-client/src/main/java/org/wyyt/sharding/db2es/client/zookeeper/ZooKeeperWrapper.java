@@ -23,7 +23,7 @@ import static org.wyyt.sharding.db2es.core.entity.domain.Names.DB2ES_ID;
 
 
 /**
- * the wapper class of ZooKeeper, which providing each of methods to manipulate ZooKeeper
+ * the wrapper class of ZooKeeper, which providing each of methods to manipulate ZooKeeper
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

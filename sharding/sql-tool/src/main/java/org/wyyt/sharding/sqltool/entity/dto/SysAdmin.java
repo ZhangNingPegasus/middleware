@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import org.wyyt.admin.ui.entity.base.BaseDto;
 
 /**
- * The entity of adminsitrator
+ * The entity of administrator
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

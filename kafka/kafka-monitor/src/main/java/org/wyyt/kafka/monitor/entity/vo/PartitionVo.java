@@ -27,9 +27,9 @@ public class PartitionVo implements Serializable {
     private String topicName;
     private String partitionId;
     private Long logSize;
-    private PartionInfo leader;
-    private List<PartionInfo> replicas;
-    private List<PartionInfo> isr;
+    private PartitionInfo leader;
+    private List<PartitionInfo> replicas;
+    private List<PartitionInfo> isr;
     private String strLeader;
     private String strReplicas;
     private String strIsr;
@@ -39,7 +39,7 @@ public class PartitionVo implements Serializable {
     @AllArgsConstructor
     @JsonSerialize
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class PartionInfo implements Serializable {
+    public static class PartitionInfo implements Serializable {
         private String partitionId;
         private String host;
         private String port;

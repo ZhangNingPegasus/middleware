@@ -87,7 +87,7 @@ public class AFeignImpl implements AFeign {
         if (invoke.getOk()) {
             value = invoke.getData();
             log.info(String.format("调用路径：{%s}", value));
-            return "服务A的执行方法: " + value;
+            return value;
         } else {
             throw new Exception(invoke.getError());
         }

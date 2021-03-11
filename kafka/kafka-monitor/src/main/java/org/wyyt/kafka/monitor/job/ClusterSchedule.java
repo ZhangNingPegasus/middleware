@@ -47,9 +47,9 @@ public class ClusterSchedule {
         if (list == null || list.isEmpty()) {
             return;
         }
-        final List<KafkaBrokerVo> KafkaBrokerVofoList = this.kafkaService.listBrokerInfos();
+        final List<KafkaBrokerVo> KafkaBrokerVoList = this.kafkaService.listBrokerInfos();
         final List<SysAlertCluster> zooKeepers = list.stream().filter(p -> p.getType().equals(SysAlertCluster.Type.ZOOKEEPER.getCode())).collect(Collectors.toList());
-        final List<SysAlertCluster> kafkas = list.stream().filter(p -> p.getType().equals(SysAlertCluster.Type.KAFKA.getCode())).collect(Collectors.toList());
+        final List<SysAlertCluster> kafkaList = list.stream().filter(p -> p.getType().equals(SysAlertCluster.Type.KAFKA.getCode())).collect(Collectors.toList());
 
         for (final SysAlertCluster zooKeeper : zooKeepers) {
             final String[] split = zooKeeper.getServer().split(":");
@@ -70,11 +70,11 @@ public class ClusterSchedule {
             }
         }
 
-        for (final SysAlertCluster kafka : kafkas) {
+        for (final SysAlertCluster kafka : kafkaList) {
             final String[] split = kafka.getServer().split(":");
             final String ip = split[0];
             final String port = split[1];
-            final List<KafkaBrokerVo> result = KafkaBrokerVofoList.stream().filter(p -> p.getHost().equals(ip) && p.getPort().equals(port)).collect(Collectors.toList());
+            final List<KafkaBrokerVo> result = KafkaBrokerVoList.stream().filter(p -> p.getHost().equals(ip) && p.getPort().equals(port)).collect(Collectors.toList());
             if (result.isEmpty()) {
                 final Alert alert = new Alert();
                 alert.setEmail(kafka.getEmail());

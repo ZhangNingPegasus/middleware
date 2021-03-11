@@ -236,5 +236,6 @@ INSERT IGNORE INTO `t_ignore_url`(`id`, `url`, `description`) VALUES (4, '/**/v1
 INSERT IGNORE INTO `t_ignore_url`(`id`, `url`, `description`) VALUES (5, '/**/v1/access_token/**', '授权获取access token');
 INSERT IGNORE INTO `t_ignore_url`(`id`, `url`, `description`) VALUES (6, '/**/v1/app/access_token/**', '直接通过client id获取Access Token (为了兼容原来的使用方式, 建议不要使用, 有一定的风险, 后期可能会取消改接口)');
 INSERT IGNORE INTO `t_ignore_url`(`id`, `url`, `description`) VALUES (7, '/**/v1/oauth/logout/**', '注销已授权的access token');
+INSERT IGNORE INTO `t_ignore_url`(`id`, `url`, `description`) VALUES (8, '/**/v1/oauth/info/**', '通过授权的access token获取应用信息');
 
 INSERT IGNORE INTO `t_route`(`id`, `route_id`, `uri`, `predicates`, `filters`, `order_num`, `service_name`, `enabled`, `description`) VALUES (1, 'auth', 'lb://auth', 'Path=/auth/**', 'StripPrefix=1', 0, 'auth', b'1', 'SpringCloud鉴权服务');

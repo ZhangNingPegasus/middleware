@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * the thread used for populating the kafka recrods into Elastic-Search
+ * the thread used for populating the kafka records into Elastic-Search
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

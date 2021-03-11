@@ -7,7 +7,7 @@ import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
-import org.wyyt.sharding.db2es.client.entity.FlatMessge;
+import org.wyyt.sharding.db2es.client.entity.FlatMessage;
 import org.wyyt.sharding.db2es.core.entity.domain.Checkpoint;
 import org.wyyt.sharding.db2es.core.entity.domain.TableInfo;
 import org.wyyt.tool.date.DateTool;
@@ -41,7 +41,7 @@ public final class CheckpointExt extends Checkpoint {
     }
 
     public static CheckpointExt toCommitCheckPoint(final Context context,
-                                                   final FlatMessge flatMessage) {
+                                                   final FlatMessage flatMessage) {
         return new CheckpointExt(new TopicPartition(flatMessage.getConsumerRecord().topic(),
                 flatMessage.getConsumerRecord().partition()),
                 flatMessage.getConsumerRecord().offset() + 1,  //+1表示接下来要消费但还没有消费的消息
@@ -50,7 +50,7 @@ public final class CheckpointExt extends Checkpoint {
     }
 
     public static long getTimestamp(final Context context,
-                                    final FlatMessge flatMessage) {
+                                    final FlatMessage flatMessage) {
 
         TableInfo tableInfo = context.getConfig().getTableMap().getByFactTableName(flatMessage.getTable());
 

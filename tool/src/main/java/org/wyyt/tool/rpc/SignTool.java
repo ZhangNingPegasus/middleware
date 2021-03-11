@@ -21,7 +21,7 @@ import java.util.*;
  * *****************************************************************
  */
 public final class SignTool {
-    public static final String TIME_STAMPT_NAME = "_$_current__timestampt_$_";
+    private static final String TIMESTAMP_NAME = "_$_current__timestamp_$_";
 
     public static String sign(final Map<String, Object> params,
                               final String key,
@@ -51,7 +51,7 @@ public final class SignTool {
             return false;
         }
 
-        final Object timestamp = params.get(TIME_STAMPT_NAME);
+        final Object timestamp = params.get(TIMESTAMP_NAME);
         if (null == timestamp) {
             return false;
         } else if (!NumberUtil.isLong(timestamp.toString())) {
@@ -69,8 +69,8 @@ public final class SignTool {
     private static String createLinkString(final Map<String, Object> params) {
         Assert.notNull(params, "params cannot be null");
         params.entrySet().removeIf(next -> null == next.getValue());
-        if (!params.containsKey(TIME_STAMPT_NAME)) {
-            params.put(TIME_STAMPT_NAME, System.currentTimeMillis());
+        if (!params.containsKey(TIMESTAMP_NAME)) {
+            params.put(TIMESTAMP_NAME, System.currentTimeMillis());
         }
 
         final List<String> keys = new ArrayList<>(params.keySet());

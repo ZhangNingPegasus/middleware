@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
- * the wapper class of cache
+ * the wrapper class of cache
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

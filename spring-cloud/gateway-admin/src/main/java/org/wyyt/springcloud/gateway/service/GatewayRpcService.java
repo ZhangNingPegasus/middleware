@@ -40,7 +40,7 @@ public class GatewayRpcService {
     private final ConsulService consulService;
     private final static String REFRESH_URL = "/route/refresh";
     private final static String LIST_ROUTES_URL = "/route/listRoutes";
-    private final static String REMOVE_IGNORE_URLS_LOCAL_CACHE = "cache/removeIngoreUrlSetLocalCache";
+    private final static String REMOVE_IGNORE_URLS_LOCAL_CACHE = "cache/removeIgnoreUrlSetLocalCache";
     private final static String REMOVE_CLIENT_ID_LOCAL_CACHE = "cache/removeClientIdLocalCache";
 
     public GatewayRpcService(final PropertyConfig propertyConfig,

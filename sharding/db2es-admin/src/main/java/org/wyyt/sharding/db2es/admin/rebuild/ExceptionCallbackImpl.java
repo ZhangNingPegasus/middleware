@@ -1,7 +1,7 @@
 package org.wyyt.sharding.db2es.admin.rebuild;
 
 /**
- * The implemention of exception callback
+ * The implementation of exception callback
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

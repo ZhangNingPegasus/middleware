@@ -3,7 +3,7 @@ package org.wyyt.sharding.db2es.client.core;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.wyyt.sharding.db2es.client.common.*;
-import org.wyyt.sharding.db2es.client.entity.FlatMessge;
+import org.wyyt.sharding.db2es.client.entity.FlatMessage;
 import org.wyyt.sharding.db2es.client.entity.Processor;
 import org.wyyt.sharding.db2es.client.thread.WorkerThread;
 import org.wyyt.sharding.db2es.core.util.flatmsg.FlatMsgUtils;
@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * the thread used for populating the kafka recrods into Elastic-Search
+ * the thread used for populating the kafka records into Elastic-Search
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
@@ -49,7 +49,7 @@ public final class ConsumerRunner extends BaseRunner {
     @Override
     public final void run() {
         final List<ConsumerRecord> toProcessList = new ArrayList<>(Constant.CAPACITY);
-        final List<FlatMessge> flatMessageList = new ArrayList<>(Constant.CAPACITY);
+        final List<FlatMessage> flatMessageList = new ArrayList<>(Constant.CAPACITY);
         final Processor processor = this.context.getProcessorWrapper().getByTopicPartition(this.recordRunner.getTopicPartition());
         long start, end;
         while (!this.terminated) {
@@ -113,7 +113,7 @@ public final class ConsumerRunner extends BaseRunner {
         try {
             return this.toProcessRecords.offer(record, timeOut, timeUnit);
         } catch (final Exception exception) {
-            log.error(String.format("ConsumerRunner: offser record failed, record [%s], cause %s",
+            log.error(String.format("ConsumerRunner: offer record failed, record [%s], cause %s",
                     record,
                     ExceptionTool.getRootCauseMessage(exception)), exception);
             return false;
@@ -153,8 +153,8 @@ public final class ConsumerRunner extends BaseRunner {
         }
     }
 
-    private FlatMessge toFlatMessage(final ConsumerRecord<String, String> consumerRecord) throws Exception {
-        final FlatMessge result = FlatMsgUtils.toFlatMsg(consumerRecord, FlatMessge.class);
+    private FlatMessage toFlatMessage(final ConsumerRecord<String, String> consumerRecord) throws Exception {
+        final FlatMessage result = FlatMsgUtils.toFlatMsg(consumerRecord, FlatMessage.class);
         result.setUserCommitCallBack((checkpoint) -> this.commitCheckpoint = checkpoint);
         return result;
     }

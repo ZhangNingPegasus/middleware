@@ -12,7 +12,7 @@ import org.wyyt.tool.rpc.Result;
 import java.util.List;
 
 /**
- * The controller for params's pages.
+ * The controller for params' pages.
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

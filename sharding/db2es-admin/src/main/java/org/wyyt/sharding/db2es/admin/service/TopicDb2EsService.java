@@ -60,7 +60,7 @@ public class TopicDb2EsService extends ServiceImpl<TopicDb2EsMapper, TopicDb2Es>
                        final Long topicId) throws Exception {
         final Topic topic = this.topicService.getById(topicId);
         if (null == topic) {
-            throw new Db2EsException(String.format("不存在[topid id = %s]的主题", topicId));
+            throw new Db2EsException(String.format("不存在[topic id = %s]的主题", topicId));
         }
 
         final NodeVo nodeVo = this.db2EsHttpService.getNodeVoByDb2EsId(db2esId);
@@ -81,7 +81,7 @@ public class TopicDb2EsService extends ServiceImpl<TopicDb2EsMapper, TopicDb2Es>
 
         final Topic topic = topicService.getById(topicId);
         if (null == topic) {
-            throw new Db2EsException(String.format("不存在[topid id = %s]的主题", topicId));
+            throw new Db2EsException(String.format("不存在[topic id = %s]的主题", topicId));
         }
 
         TopicDb2Es topicDb2Es = getByTopicId(topicId);

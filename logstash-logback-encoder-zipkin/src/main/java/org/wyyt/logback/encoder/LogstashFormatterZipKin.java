@@ -7,7 +7,7 @@ import net.logstash.logback.composite.JsonProvider;
 import net.logstash.logback.composite.loggingevent.MessageJsonProvider;
 
 /**
- * The logstach formatter used for ZipKin
+ * The logstash formatter used for ZipKin
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

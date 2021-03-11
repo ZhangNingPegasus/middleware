@@ -27,7 +27,6 @@ import java.util.List;
  */
 @Service
 public class AuthService extends ServiceImpl<AuthMapper, Auth> {
-
     @Autowired
     protected RedisService redisService;
     @Lazy

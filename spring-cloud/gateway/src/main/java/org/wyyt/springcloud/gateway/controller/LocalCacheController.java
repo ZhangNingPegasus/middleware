@@ -35,10 +35,10 @@ public class LocalCacheController {
     }
 
     @Auth
-    @PostMapping("removeIngoreUrlSetLocalCache")
-    public Mono<Result<Void>> removeIngoreUrlSetLocalCache(final Mono<BaseEntity> data) {
+    @PostMapping("removeIgnoreUrlSetLocalCache")
+    public Mono<Result<Void>> removeIgnoreUrlSetLocalCache(final Mono<BaseEntity> data) {
         return data.flatMap(d -> {
-            this.dataService.removeIngoreUrlSetLocalCache();
+            this.dataService.removeIgnoreUrlSetLocalCache();
             return Mono.just(Result.ok());
         });
     }

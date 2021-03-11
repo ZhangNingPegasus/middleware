@@ -53,7 +53,7 @@ public class DataService {
         });
     }
 
-    public void removeIngoreUrlSetLocalCache() {
+    public void removeIgnoreUrlSetLocalCache() {
         final String key = Constant.REDIS_IGNORE_URLS_KEY;
         this.cacheService.delete(key);
     }

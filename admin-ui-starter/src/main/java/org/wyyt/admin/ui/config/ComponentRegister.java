@@ -15,6 +15,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = {"org.wyyt.admin.ui"})
-public class ComponentRegistor {
+public class ComponentRegister {
 
 }

@@ -23,10 +23,10 @@ public abstract class BaseRunner implements Runnable, Closeable {
     }
 
     protected final void sleepInterval(final long milliseconds) {
-        final long sleepMillseconds = Math.min(milliseconds, INTERVAL);
+        final long sleepMilliseconds = Math.min(milliseconds, INTERVAL);
         final long end = System.currentTimeMillis() + milliseconds;
         while (System.currentTimeMillis() < end) {
-            CommonTool.sleep(sleepMillseconds);
+            CommonTool.sleep(sleepMilliseconds);
             if (this.terminated) {
                 break;
             }

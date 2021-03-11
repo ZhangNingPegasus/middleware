@@ -95,7 +95,7 @@ public class ShiroConfig {
     public SimpleCookie sessionIdCookie() {
         // 这个参数是cookie的名称
         final SimpleCookie simpleCookie = new SimpleCookie("sidDb2EsAdmin");
-        // setcookie的httponly属性如果设为true的话，会增加对xss防护的安全系数。它有以下特点：
+        // setCookie的httponly属性如果设为true的话，会增加对xss防护的安全系数。它有以下特点：
         // 只能通过http访问，javascript无法访问
         // 防止xss读取cookie
         simpleCookie.setHttpOnly(true);

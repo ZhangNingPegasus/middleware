@@ -130,7 +130,7 @@ public final class ExecController {
                                                 final @RequestParam(name = "sql") String sql,
                                                 final @RequestParam(name = "limit") Integer limit) {
         try {
-            return Result.ok(this.sqlService.exec(Utils.getCliectIp(request), adminVo, sql, limit));
+            return Result.ok(this.sqlService.exec(Utils.getClientIp(request), adminVo, sql, limit));
         } catch (final Exception exception) {
             return Result.ok(new ArrayList<>(Collections.singleton(this.sqlService.exception(exception))));
         }

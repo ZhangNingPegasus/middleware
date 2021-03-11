@@ -560,7 +560,7 @@
                     layer.open({
                         type: 2,
                         title: '<i class="layui-icon layui-icon-form" style="color: #1E9FFF;"></i>&nbsp;建表语句',
-                        content: 'toresullt',
+                        content: 'toresult',
                         area: ['1200px', '780px'],
                         btn: ['确定'],
                         resize: false

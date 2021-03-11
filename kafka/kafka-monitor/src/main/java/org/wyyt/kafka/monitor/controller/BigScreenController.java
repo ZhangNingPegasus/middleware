@@ -97,8 +97,8 @@ public class BigScreenController {
             );
             cpuInfo = new CpuInfo();
             cpuInfo.setXAxis(sysKpiList.stream().map(p -> sdf.format(p.getCollectTime())).distinct().collect(Collectors.toList()));
-            cpuInfo.setSystemCpu(sysKpiList.stream().filter(p -> p.getKpi() == SysKpi.KAFKA_KPI.KAFKA_SYSTEM_CPU_LOAD.getCode()).map(p -> CommonTool.numberic(p.getValue())).collect(Collectors.toList()));
-            cpuInfo.setProcessCpu(sysKpiList.stream().filter(p -> p.getKpi() == SysKpi.KAFKA_KPI.KAFKA_PROCESS_CPU_LOAD.getCode()).map(p -> CommonTool.numberic(p.getValue())).collect(Collectors.toList()));
+            cpuInfo.setSystemCpu(sysKpiList.stream().filter(p -> p.getKpi() == SysKpi.KAFKA_KPI.KAFKA_SYSTEM_CPU_LOAD.getCode()).map(p -> CommonTool.toDouble(p.getValue())).collect(Collectors.toList()));
+            cpuInfo.setProcessCpu(sysKpiList.stream().filter(p -> p.getKpi() == SysKpi.KAFKA_KPI.KAFKA_PROCESS_CPU_LOAD.getCode()).map(p -> CommonTool.toDouble(p.getValue())).collect(Collectors.toList()));
 
             cpuInfo.setStrXAxis(JSON.toJSONString(cpuInfo.getXAxis()));
             cpuInfo.setStrSystemCpu(JSON.toJSONString(cpuInfo.getSystemCpu()));

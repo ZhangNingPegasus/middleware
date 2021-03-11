@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import org.wyyt.admin.ui.entity.base.BaseDto;
 
 /**
- * The entity for table `sys_alert_topic`. Using for throw a alerm when there's something wrong in topic.
+ * The entity for table `sys_alert_topic`. Using for throw an alert when there's something wrong in topic.
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

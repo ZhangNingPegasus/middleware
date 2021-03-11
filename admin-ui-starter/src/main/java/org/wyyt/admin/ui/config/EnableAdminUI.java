@@ -17,6 +17,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@Import(ComponentRegistor.class)
+@Import(ComponentRegister.class)
 public @interface EnableAdminUI {
 }

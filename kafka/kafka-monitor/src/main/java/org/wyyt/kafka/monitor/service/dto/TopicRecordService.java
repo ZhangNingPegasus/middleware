@@ -304,9 +304,9 @@ public class TopicRecordService extends ServiceImpl<TopicRecordMapper, TopicReco
     }
 
     @TranSave
-    public String deleteConsumer(final Set<String> groupdIdList) {
+    public String deleteConsumer(final Set<String> groupIdList) {
         String result = "";
-        for (final String groupId : groupdIdList) {
+        for (final String groupId : groupIdList) {
             if (null == groupId || ObjectUtils.isEmpty(groupId.trim())) {
                 continue;
             }

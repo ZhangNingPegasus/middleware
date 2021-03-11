@@ -5,7 +5,7 @@ import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.wyyt.sharding.db2es.client.common.Context;
-import org.wyyt.sharding.db2es.client.entity.FlatMessge;
+import org.wyyt.sharding.db2es.client.entity.FlatMessage;
 import org.wyyt.sharding.db2es.core.entity.domain.TopicType;
 import org.wyyt.sharding.db2es.core.util.elasticsearch.ElasticSearchUtils;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * the wapper class of Elatic-Search, which providing each of methods to manipulate Elsatic-Search with Optimistic Locking
+ * the wrapper class of Elastic-Search, which providing each of methods to manipulate Elastic-Search with Optimistic Locking
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
@@ -29,7 +29,7 @@ public class ElasticSearchWrapperImpl extends ElasticSearchWrapper {
     }
 
     @Override
-    public final List<IndexRequest> toInsertRequest(final FlatMessge flatMessage) throws Exception {
+    public final List<IndexRequest> toInsertRequest(final FlatMessage flatMessage) throws Exception {
         return ElasticSearchUtils.toInsertRequest(this.restHighLevelClient,
                 flatMessage,
                 this.context.getConfig(),
@@ -39,7 +39,7 @@ public class ElasticSearchWrapperImpl extends ElasticSearchWrapper {
     }
 
     @Override
-    public final List<DeleteRequest> toDeleteRequest(final FlatMessge flatMessage) throws Exception {
+    public final List<DeleteRequest> toDeleteRequest(final FlatMessage flatMessage) throws Exception {
         return ElasticSearchUtils.toDeleteRequest(this.restHighLevelClient,
                 flatMessage,
                 this.context.getConfig(),
@@ -48,7 +48,7 @@ public class ElasticSearchWrapperImpl extends ElasticSearchWrapper {
     }
 
     @Override
-    public final List<DocWriteRequest<?>> toUpdateRequest(final FlatMessge flatMessage) throws Exception {
+    public final List<DocWriteRequest<?>> toUpdateRequest(final FlatMessage flatMessage) throws Exception {
         return new ArrayList<>(toInsertRequest(flatMessage));
     }
 }

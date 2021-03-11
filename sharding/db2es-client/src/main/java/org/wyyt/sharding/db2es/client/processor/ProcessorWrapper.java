@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
- * the wapper class of processor with RecordRunner and ConsumerRunner
+ * the wrapper class of processor with RecordRunner and ConsumerRunner
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

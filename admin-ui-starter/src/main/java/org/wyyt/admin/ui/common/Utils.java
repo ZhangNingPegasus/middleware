@@ -35,7 +35,7 @@ public final class Utils {
         return System.getProperty("version", "BETA");
     }
 
-    public static String getCliectIp(final HttpServletRequest request) {
+    public static String getClientIp(final HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || "".equals(ip.trim()) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");

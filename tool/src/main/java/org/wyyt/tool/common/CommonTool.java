@@ -55,11 +55,11 @@ public final class CommonTool {
         }
     }
 
-    public static double numberic(final String number) {
-        return numberic(Double.valueOf(number));
+    public static double toDouble(final String number) {
+        return toDouble(Double.valueOf(number));
     }
 
-    public static double numberic(final Double number) {
+    public static double toDouble(final Double number) {
         return Double.parseDouble(DECIMAL_FORMAT.format(number));
     }
 
@@ -78,7 +78,7 @@ public final class CommonTool {
     }
 
     public static String convertSize(String number) {
-        return convertSize(Math.round(numberic(number)));
+        return convertSize(Math.round(toDouble(number)));
     }
 
     public static Map<String, Object> queryParamstoMap(final String queryParams) {

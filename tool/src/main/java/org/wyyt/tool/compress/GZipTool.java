@@ -49,11 +49,10 @@ public final class GZipTool {
         byte[] compressed = Base64.decodeBase64(value);
         try (final ByteArrayOutputStream out = new ByteArrayOutputStream();
              final ByteArrayInputStream in = new ByteArrayInputStream(compressed);
-             final GZIPInputStream ginzip = new GZIPInputStream(in)) {
-
+             final GZIPInputStream gzip = new GZIPInputStream(in)) {
             byte[] buffer = new byte[1024];
             int offset;
-            while ((offset = ginzip.read(buffer)) != -1) {
+            while ((offset = gzip.read(buffer)) != -1) {
                 out.write(buffer, 0, offset);
             }
             result = out.toString();

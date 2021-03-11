@@ -236,7 +236,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
         return this.getTopicLogSize(topicPartitionList);
     }
 
-    public Long getTopicLogSize(KafkaConsumer kafkaConsumer, final TopicPartition topicPartition) throws Exception {
+    public Long getTopicLogSize(final TopicPartition topicPartition) throws Exception {
         final Map<TopicPartition, Long> topicLogSize = this.getTopicLogSize(Collections.singletonList(topicPartition));
         if (null == topicLogSize || topicLogSize.isEmpty()) {
             return 0L;
@@ -250,18 +250,18 @@ public class KafkaService implements InitializingBean, DisposableBean {
         List<Integer> brokerIdList = partitionVoList.stream().map(p -> Integer.parseInt(p.getLeader().getPartitionId())).collect(Collectors.toList());
         long result = 0L;
         final DescribeLogDirsResult describeLogDirsResult = this.kafkaAdminClient.describeLogDirs(brokerIdList);
-        final Map<Integer, Map<String, DescribeLogDirsResponse.LogDirInfo>> all = describeLogDirsResult.all().get();
-        for (final Map.Entry<Integer, Map<String, DescribeLogDirsResponse.LogDirInfo>> entry : all.entrySet()) {
-            final Map<String, DescribeLogDirsResponse.LogDirInfo> logDirInfoMap = entry.getValue();
-            for (final Map.Entry<String, DescribeLogDirsResponse.LogDirInfo> entry1 : logDirInfoMap.entrySet()) {
-                final DescribeLogDirsResponse.LogDirInfo info = entry1.getValue();
-                final Map<TopicPartition, DescribeLogDirsResponse.ReplicaInfo> replicaInfoMap = info.replicaInfos;
-                for (Map.Entry<TopicPartition, DescribeLogDirsResponse.ReplicaInfo> replicas : replicaInfoMap.entrySet()) {
+        final Map<Integer, Map<String, LogDirDescription>> all = describeLogDirsResult.allDescriptions().get();
+        for (final Map.Entry<Integer, Map<String, LogDirDescription>> entry : all.entrySet()) {
+            final Map<String, LogDirDescription> logDirInfoMap = entry.getValue();
+            for (final Map.Entry<String, LogDirDescription> entry1 : logDirInfoMap.entrySet()) {
+                final LogDirDescription info = entry1.getValue();
+                final Map<TopicPartition, ReplicaInfo> replicaInfoMap = info.replicaInfos();
+                for (Map.Entry<TopicPartition, ReplicaInfo> replicas : replicaInfoMap.entrySet()) {
                     if (topicName.equals(replicas.getKey().topic())) {
                         if (topicPartitionSet.contains(replicas.getKey())) {
                             continue;
                         }
-                        result += replicas.getValue().size;
+                        result += replicas.getValue().size();
                         topicPartitionSet.add(replicas.getKey());
                     }
                 }
@@ -305,30 +305,30 @@ public class KafkaService implements InitializingBean, DisposableBean {
                 partitionVo.setPartitionId(Integer.toString(partition.partition()));
                 if (null == partition.leader()) {
                     partitionVo.setLogSize(-1L);
-                    partitionVo.setStrLeader(Constants.HOST_NOT_AVAIABLE);
-                    partitionVo.setStrReplicas(Constants.HOST_NOT_AVAIABLE);
-                    partitionVo.setStrIsr(Constants.HOST_NOT_AVAIABLE);
+                    partitionVo.setStrLeader(Constants.HOST_NOT_AVAILABLE);
+                    partitionVo.setStrReplicas(Constants.HOST_NOT_AVAILABLE);
+                    partitionVo.setStrIsr(Constants.HOST_NOT_AVAILABLE);
                 } else {
-                    partitionVo.setLeader(new PartitionVo.PartionInfo(Integer.toString(partition.leader().id()), partition.leader().host(), Integer.toString(partition.leader().port()), partition.leader().rack()));
-                    final List<PartitionVo.PartionInfo> partitionVoList = new ArrayList<>(partition.replicas().size());
+                    partitionVo.setLeader(new PartitionVo.PartitionInfo(Integer.toString(partition.leader().id()), partition.leader().host(), Integer.toString(partition.leader().port()), partition.leader().rack()));
+                    final List<PartitionVo.PartitionInfo> partitionVoList = new ArrayList<>(partition.replicas().size());
                     for (final Node replica : partition.replicas()) {
-                        partitionVoList.add(new PartitionVo.PartionInfo(Integer.toString(replica.id()), replica.host(), Integer.toString(replica.port()), replica.rack()));
+                        partitionVoList.add(new PartitionVo.PartitionInfo(Integer.toString(replica.id()), replica.host(), Integer.toString(replica.port()), replica.rack()));
                     }
                     partitionVo.setReplicas(partitionVoList);
-                    final List<PartitionVo.PartionInfo> isrList = new ArrayList<>(partition.isr().size());
+                    final List<PartitionVo.PartitionInfo> isrList = new ArrayList<>(partition.isr().size());
                     for (final Node isr : partition.isr()) {
-                        isrList.add(new PartitionVo.PartionInfo(Integer.toString(isr.id()), isr.host(), Integer.toString(isr.port()), isr.rack()));
+                        isrList.add(new PartitionVo.PartitionInfo(Integer.toString(isr.id()), isr.host(), Integer.toString(isr.port()), isr.rack()));
                     }
                     partitionVo.setIsr(isrList);
 
                     partitionVo.setStrLeader(String.format("[%s] : (%s:%s)", partitionVo.getLeader().getPartitionId(), partitionVo.getLeader().getHost(), partitionVo.getLeader().getPort()));
                     final StringBuilder strReplicas = new StringBuilder();
-                    for (final PartitionVo.PartionInfo replica : partitionVo.getReplicas()) {
+                    for (final PartitionVo.PartitionInfo replica : partitionVo.getReplicas()) {
                         strReplicas.append(String.format("[%s] : (%s:%s), ", replica.getPartitionId(), replica.getHost(), replica.getPort()));
                     }
                     partitionVo.setStrReplicas(strReplicas.substring(0, strReplicas.length() - 2));
                     final StringBuilder strIsr = new StringBuilder();
-                    for (final PartitionVo.PartionInfo isr : partitionVo.getIsr()) {
+                    for (final PartitionVo.PartitionInfo isr : partitionVo.getIsr()) {
                         strIsr.append(String.format("[%s] : (%s:%s), ", isr.getPartitionId(), isr.getHost(), isr.getPort()));
                     }
                     partitionVo.setStrIsr(strIsr.substring(0, strIsr.length() - 2));
@@ -348,7 +348,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
             this.kafkaConsumerDo(kafkaConsumer -> {
                 for (Map.Entry<String, List<PartitionVo>> pair : result.entrySet()) {
                     for (PartitionVo partitionVo : pair.getValue()) {
-                        partitionVo.setLogSize(this.getTopicLogSize(kafkaConsumer, new TopicPartition(partitionVo.getTopicName(), Integer.parseInt(partitionVo.getPartitionId()))));
+                        partitionVo.setLogSize(this.getTopicLogSize(new TopicPartition(partitionVo.getTopicName(), Integer.parseInt(partitionVo.getPartitionId()))));
                     }
                 }
             });
@@ -415,7 +415,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
             }
 
             final KafkaConsumerVo.Meta noActiveMeta = new KafkaConsumerVo.Meta();
-            final List<KafkaConsumerVo.TopicSubscriber> noActivetopicSubscriberList = new ArrayList<>();
+            final List<KafkaConsumerVo.TopicSubscriber> noActiveTopicSubscriberList = new ArrayList<>();
             noActiveMeta.setConsumerId("");
             noActiveMeta.setNode(" - ");
             noActiveMeta.setConsumerGroupState(consumerGroupDescription.state());
@@ -425,10 +425,10 @@ public class KafkaService implements InitializingBean, DisposableBean {
                 topicSubscriber.setTopicName(entry.getKey().topic());
                 topicSubscriber.setPartitionId(entry.getKey().partition());
                 if (!hasOwnerTopics.contains(entry.getKey().topic())) {
-                    noActivetopicSubscriberList.add(topicSubscriber);
+                    noActiveTopicSubscriberList.add(topicSubscriber);
                 }
             }
-            noActiveMeta.setTopicSubscriberList(noActivetopicSubscriberList);
+            noActiveMeta.setTopicSubscriberList(noActiveTopicSubscriberList);
             if (!noActiveMeta.getTopicSubscriberList().isEmpty()) {
                 metaList.add(noActiveMeta);
             }
@@ -622,7 +622,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
 
         final Set<Integer> partitionIds = this.listPartitionIds(topicName);
         if (null != partitionCount && partitionCount > 1 && !partitionCount.equals(partitionIds.size())) {
-            if (null == partitionIds || partitionIds.isEmpty()) {
+            if (partitionIds.isEmpty()) {
                 throw new BusinessException(String.format("查询不到主题[%s]的分区信息", topicName));
             } else if (partitionCount < partitionIds.size()) {
                 throw new BusinessException(String.format("主题[%s]新的分区数量必须大于[%s]", topicName, partitionIds.size()));
@@ -631,7 +631,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
             newPartitionsMap.put(topicName, NewPartitions.increaseTo(partitionCount));
         }
 
-        if (null != partitionCount && replicationCount >= 1) {
+        if (null != partitionCount && null!=replicationCount && replicationCount >= 1) {
             final List<KafkaBrokerVo> kafkaBrokerVos = this.listBrokerInfos();
             if (replicationCount > kafkaBrokerVos.size()) {
                 throw new BusinessException(String.format("主题[%s]副本分片数量不能大于kafka节点数[%s]", topicName, kafkaBrokerVos.size()));
@@ -699,85 +699,85 @@ public class KafkaService implements InitializingBean, DisposableBean {
                     case KAFKA_MESSAGES_IN:
                         final MBeanVo msg = this.mBeanService.messagesInPerSec(broker);
                         if (msg != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(msg.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(msg.getOneMinute()));
                         }
                         break;
                     case KAFKA_BYTES_IN:
                         final MBeanVo bin = this.mBeanService.bytesInPerSec(broker);
                         if (bin != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(bin.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(bin.getOneMinute()));
                         }
                         break;
                     case KAFKA_BYTES_OUT:
                         final MBeanVo bout = this.mBeanService.bytesOutPerSec(broker);
                         if (bout != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(bout.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(bout.getOneMinute()));
                         }
                         break;
                     case KAFKA_BYTES_REJECTED:
                         final MBeanVo bytesRejectedPerSec = this.mBeanService.bytesRejectedPerSec(broker);
                         if (bytesRejectedPerSec != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(bytesRejectedPerSec.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(bytesRejectedPerSec.getOneMinute()));
                         }
                         break;
                     case KAFKA_FAILED_FETCH_REQUEST:
                         final MBeanVo failedFetchRequestsPerSec = this.mBeanService.failedFetchRequestsPerSec(broker);
                         if (failedFetchRequestsPerSec != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(failedFetchRequestsPerSec.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(failedFetchRequestsPerSec.getOneMinute()));
                         }
                         break;
                     case KAFKA_FAILED_PRODUCE_REQUEST:
                         final MBeanVo failedProduceRequestsPerSec = this.mBeanService.failedProduceRequestsPerSec(broker);
                         if (failedProduceRequestsPerSec != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(failedProduceRequestsPerSec.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(failedProduceRequestsPerSec.getOneMinute()));
                         }
                         break;
                     case KAFKA_TOTAL_FETCH_REQUESTS_PER_SEC:
                         final MBeanVo totalFetchRequests = this.mBeanService.totalFetchRequestsPerSec(broker);
                         if (totalFetchRequests != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(totalFetchRequests.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(totalFetchRequests.getOneMinute()));
                         }
                         break;
                     case KAFKA_TOTAL_PRODUCE_REQUESTS_PER_SEC:
                         final MBeanVo totalProduceRequestsPerSec = this.mBeanService.totalProduceRequestsPerSec(broker);
                         if (totalProduceRequestsPerSec != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(totalProduceRequestsPerSec.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(totalProduceRequestsPerSec.getOneMinute()));
                         }
                         break;
                     case KAFKA_REPLICATION_BYTES_IN_PER_SEC:
                         final MBeanVo replicationBytesInPerSec = this.mBeanService.replicationBytesInPerSec(broker);
                         if (replicationBytesInPerSec != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(replicationBytesInPerSec.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(replicationBytesInPerSec.getOneMinute()));
                         }
                         break;
                     case KAFKA_REPLICATION_BYTES_OUT_PER_SEC:
                         final MBeanVo replicationBytesOutPerSec = this.mBeanService.replicationBytesOutPerSec(broker);
                         if (replicationBytesOutPerSec != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(replicationBytesOutPerSec.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(replicationBytesOutPerSec.getOneMinute()));
                         }
                         break;
                     case KAFKA_PRODUCE_MESSAGE_CONVERSIONS:
                         final MBeanVo produceMessageConv = this.mBeanService.produceMessageConversionsPerSec(broker);
                         if (produceMessageConv != null) {
-                            sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.numberic(produceMessageConv.getOneMinute()));
+                            sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + CommonTool.toDouble(produceMessageConv.getOneMinute()));
                         }
                         break;
                     case KAFKA_OS_TOTAL_MEMORY:
                         final long totalMemory = this.mBeanService.getOsTotalMemory(broker);
-                        sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + totalMemory);
+                        sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + totalMemory);
                         break;
                     case KAFKA_OS_FREE_MEMORY:
                         final long freeMemory = this.mBeanService.getOsFreeMemory(broker);
-                        sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + freeMemory);
+                        sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + freeMemory);
                         break;
                     case KAFKA_SYSTEM_CPU_LOAD:
                     case KAFKA_PROCESS_CPU_LOAD:
                         final double systemCpuLoad = Double.parseDouble(kafkaJmxService.getData(broker, JMX.OPERATING_SYSTEM, kpi.getName()));
-                        sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + systemCpuLoad);
+                        sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + systemCpuLoad);
                         break;
                     case KAFKA_THREAD_COUNT:
                         final int threadCount = Integer.parseInt(kafkaJmxService.getData(broker, JMX.THREADING, kpi.getName()));
-                        sysKpi.setValue(CommonTool.numberic(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + threadCount);
+                        sysKpi.setValue(CommonTool.toDouble(null == sysKpi.getValue() ? 0D : sysKpi.getValue()) + threadCount);
                         break;
                     default:
                         break;
@@ -786,7 +786,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
             if (null == sysKpi.getValue()) {
                 continue;
             }
-            sysKpi.setHost(host.length() == 0 ? "unkowns" : host.substring(0, host.length() - 1));
+            sysKpi.setHost(host.length() == 0 ? "unknowns" : host.substring(0, host.length() - 1));
             result.add(sysKpi);
         }
 
@@ -802,7 +802,7 @@ public class KafkaService implements InitializingBean, DisposableBean {
             final SysKpi sysKpi = new SysKpi();
             sysKpi.setKpi(SysKpi.KAFKA_KPI.KAFKA_OS_USED_MEMORY_PERCENTAGE.getCode());
             sysKpi.setCollectTime(now);
-            sysKpi.setValue(CommonTool.numberic((1 - osFree / osTotal) * 100));
+            sysKpi.setValue(CommonTool.toDouble((1 - osFree / osTotal) * 100));
             sysKpi.setHost(firstOsFree.get().getHost());
             result.add(sysKpi);
         }
@@ -871,17 +871,17 @@ public class KafkaService implements InitializingBean, DisposableBean {
             final DecimalFormat formatter = new DecimalFormat("###.##");
             final MBeanVo existedMBeanVo = mbeans.get(mBeanInfoKey);
             final String fifteenMinuteOld = existedMBeanVo.getFifteenMinute() == null ? "0.0" : existedMBeanVo.getFifteenMinute();
-            final String fifteenMinuteLastest = mBeanVo.getFifteenMinute() == null ? "0.0" : mBeanVo.getFifteenMinute();
+            final String fifteenMinuteLatest = mBeanVo.getFifteenMinute() == null ? "0.0" : mBeanVo.getFifteenMinute();
             final String fiveMinuteOld = existedMBeanVo.getFiveMinute() == null ? "0.0" : existedMBeanVo.getFiveMinute();
-            final String fiveMinuteLastest = mBeanVo.getFiveMinute() == null ? "0.0" : mBeanVo.getFiveMinute();
+            final String fiveMinuteLatest = mBeanVo.getFiveMinute() == null ? "0.0" : mBeanVo.getFiveMinute();
             final String meanRateOld = existedMBeanVo.getMeanRate() == null ? "0.0" : existedMBeanVo.getMeanRate();
-            final String meanRateLastest = mBeanVo.getMeanRate() == null ? "0.0" : mBeanVo.getMeanRate();
+            final String meanRateLatest = mBeanVo.getMeanRate() == null ? "0.0" : mBeanVo.getMeanRate();
             final String oneMinuteOld = existedMBeanVo.getOneMinute() == null ? "0.0" : existedMBeanVo.getOneMinute();
-            final String oneMinuteLastest = mBeanVo.getOneMinute() == null ? "0.0" : mBeanVo.getOneMinute();
-            final double fifteenMinute = CommonTool.numberic(fifteenMinuteOld) + CommonTool.numberic(fifteenMinuteLastest);
-            final double fiveMinute = CommonTool.numberic(fiveMinuteOld) + CommonTool.numberic(fiveMinuteLastest);
-            final double meanRate = CommonTool.numberic(meanRateOld) + CommonTool.numberic(meanRateLastest);
-            final double oneMinute = CommonTool.numberic(oneMinuteOld) + CommonTool.numberic(oneMinuteLastest);
+            final String oneMinuteLatest = mBeanVo.getOneMinute() == null ? "0.0" : mBeanVo.getOneMinute();
+            final double fifteenMinute = CommonTool.toDouble(fifteenMinuteOld) + CommonTool.toDouble(fifteenMinuteLatest);
+            final double fiveMinute = CommonTool.toDouble(fiveMinuteOld) + CommonTool.toDouble(fiveMinuteLatest);
+            final double meanRate = CommonTool.toDouble(meanRateOld) + CommonTool.toDouble(meanRateLatest);
+            final double oneMinute = CommonTool.toDouble(oneMinuteOld) + CommonTool.toDouble(oneMinuteLatest);
             existedMBeanVo.setFifteenMinute(formatter.format(fifteenMinute));
             existedMBeanVo.setFiveMinute(formatter.format(fiveMinute));
             existedMBeanVo.setMeanRate(formatter.format(meanRate));

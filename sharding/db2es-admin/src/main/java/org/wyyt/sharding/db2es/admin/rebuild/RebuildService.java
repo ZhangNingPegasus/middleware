@@ -193,7 +193,7 @@ public class RebuildService {
                     this.rebuildStatus.addMessage(String.format("旧索引[<b>%s</b>]已成功清理完成", topic.getName()));
                     this.rebuildStatus.addMessage(String.format("索引[<b>%s</b>]重建已全部成功完成。共耗时:%.3f秒", topic.getName(), calcDuringSeconds(allStart)));
                 } catch (final Exception e) {
-                    this.rebuildStatus.addErrorMessage(String.format("索引[%s]重建成功, 但收尾工作遇到一些问题, 请在Kiabana中对旧索引进行删除等操作, 失败原因: %s",
+                    this.rebuildStatus.addErrorMessage(String.format("索引[%s]重建成功, 但收尾工作遇到一些问题, 请在Kibana中对旧索引进行删除等操作, 失败原因: %s",
                             topic.getName(), ExceptionTool.getRootCauseMessage(e)), "green");
                 }
             } catch (final Exception exception) {
@@ -208,8 +208,8 @@ public class RebuildService {
                     }
                 }
                 if (null != e) {
-                    this.rebuildStatus.addErrorMesssage(String.format("<span style='color:red'>%s</span>", e.getMessage()));
-                    this.rebuildStatus.addErrorMesssage(String.format("<span style='color:red'>索引[%s]重建失败, 所有操作成功回滚</span>", topic.getName()));
+                    this.rebuildStatus.addErrorMessage(String.format("<span style='color:red'>%s</span>", e.getMessage()));
+                    this.rebuildStatus.addErrorMessage(String.format("<span style='color:red'>索引[%s]重建失败, 所有操作成功回滚</span>", topic.getName()));
                     log.error(ExceptionTool.getRootCauseMessage(e), e);
                 }
 
@@ -640,14 +640,14 @@ public class RebuildService {
 
         this.threadFlushShards = new Thread(() -> {
 
-            long trytimes = 0L;
+            long tryTimes = 0L;
             while (true) {
-                trytimes++;
+                tryTimes++;
                 final List<IndexVo> indexVos = this.esService.listIndexVo(rebuildIndexName);
                 final Set<IndexVo> readyShards = indexVos.stream().filter(p -> "started".equalsIgnoreCase(p.getState())).collect(Collectors.toSet());
-                if (trytimes >= 10L) {
-                    final Set<IndexVo> avaiableShards = indexVos.stream().filter(p -> !ObjectUtils.isEmpty(p.getIp())).collect(Collectors.toSet());
-                    if (avaiableShards.size() == readyShards.size()) {
+                if (tryTimes >= 10L) {
+                    final Set<IndexVo> availableShards = indexVos.stream().filter(p -> !ObjectUtils.isEmpty(p.getIp())).collect(Collectors.toSet());
+                    if (availableShards.size() == readyShards.size()) {
                         isShardsReady.set(true);
                         break;
                     }
@@ -934,7 +934,7 @@ public class RebuildService {
             addMessage(message, "black");
         }
 
-        public final void addErrorMesssage(final String message) {
+        public final void addErrorMessage(final String message) {
             addErrorMessage(message, "red");
         }
 

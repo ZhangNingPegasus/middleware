@@ -153,7 +153,7 @@ public class DashboardController {
                 if (null == logSize) {
                     data.add(null);
                 } else {
-                    data.add(CommonTool.numberic(logSize / seconds));
+                    data.add(CommonTool.toDouble(logSize / seconds));
                 }
             }
             series.setData(data);
@@ -288,7 +288,7 @@ public class DashboardController {
                 if (null == offset) {
                     data.add(null);
                 } else {
-                    data.add(CommonTool.numberic(offset / seconds));
+                    data.add(CommonTool.toDouble(offset / seconds));
                 }
             }
             series.setData(data);

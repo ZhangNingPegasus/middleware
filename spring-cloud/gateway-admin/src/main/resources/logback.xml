@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATH" value="/wyyt/logs/tomcat/springcloud/gateway_admin"/>
-    <property name="LOG_NAME" value="gateway_admin-filebeat"/>
+    <property name="LOG_PATH" value="/wyyt/logs/tomcat/springcloud/gateway-admin"/>
+    <property name="LOG_NAME" value="gateway-admin-filebeat"/>
     <property name="MAX_FILE_SIZE" value="100MB"/>
     <property name="MAX_HISTORY" value="7"/>
 

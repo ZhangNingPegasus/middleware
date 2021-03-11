@@ -24,7 +24,7 @@ public final class AcmConfig {
     /**
      * ShardingSphere的维度配置信息
      */
-    private Config dimenstion;
+    private Config dimension;
     /**
      * ShardingSphere的数据表配置信息
      */

@@ -24,12 +24,12 @@ import java.util.List;
 public class SysDingDingConfigService extends ServiceImpl<SysDingDingConfigMapper, SysDingDingConfig> {
 
     @TranSave
-    public int save(final String accesstoken,
+    public int save(final String accessToken,
                     final String secret) {
         final QueryWrapper<SysDingDingConfig> queryWrapper = new QueryWrapper<>();
         this.baseMapper.delete(queryWrapper);
         final SysDingDingConfig sysDingDingConfig = new SysDingDingConfig();
-        sysDingDingConfig.setAccessToken(accesstoken);
+        sysDingDingConfig.setAccessToken(accessToken);
         sysDingDingConfig.setSecret(secret);
         return this.baseMapper.insert(sysDingDingConfig);
     }

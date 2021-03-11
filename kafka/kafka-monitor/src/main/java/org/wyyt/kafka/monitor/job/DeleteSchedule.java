@@ -45,7 +45,7 @@ public class DeleteSchedule {
 
     //每天00:01:00执行一次
     @Scheduled(cron = "0 1 0 1/1 * ?")
-    public void deleteExpired() throws Exception {
+    public void deleteExpired() {
         final Set<String> tableNameList = this.schemaService.listPartitionTables();
         final Map<String, List<Partition>> partitionMap = this.partitionService.getPartition(tableNameList);
 

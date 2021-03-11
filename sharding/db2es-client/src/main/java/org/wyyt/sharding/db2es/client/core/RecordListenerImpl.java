@@ -2,7 +2,7 @@ package org.wyyt.sharding.db2es.client.core;
 
 import org.wyyt.sharding.db2es.client.common.Context;
 import org.wyyt.sharding.db2es.client.common.RecordListener;
-import org.wyyt.sharding.db2es.client.entity.FlatMessge;
+import org.wyyt.sharding.db2es.client.entity.FlatMessage;
 
 import java.util.List;
 
@@ -24,12 +24,12 @@ public class RecordListenerImpl implements RecordListener {
     }
 
     @Override
-    public int consume(final List<FlatMessge> flatMessageList) throws Exception {
+    public int consume(final List<FlatMessage> flatMessageList) throws Exception {
         if (null == flatMessageList || flatMessageList.isEmpty()) {
             return 0;
         }
         int result = this.context.getElasticSearchWrapper().populate(flatMessageList);
-        final FlatMessge lastFlatMessage = flatMessageList.get(flatMessageList.size() - 1);
+        final FlatMessage lastFlatMessage = flatMessageList.get(flatMessageList.size() - 1);
         lastFlatMessage.commit(this.context);
         return result;
     }

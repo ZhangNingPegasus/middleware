@@ -10,7 +10,7 @@ import org.wyyt.tool.sql.SqlTool;
 import java.util.*;
 
 /**
- * the service which providing the ability of genrate table creating script
+ * the service which providing the ability of DDL script
  * <p>
  *
  * @author Ning.Zhang(Pegasus)
@@ -21,7 +21,7 @@ import java.util.*;
  */
 @Service
 public class TableService {
-    private static final String LINE_SEPERATOR = "&#13;&#10;";
+    private static final String LINE_SEPARATOR = "&#13;&#10;";
 
     public final Map<String, String> createTable(final String tableName,
                                                  final Integer dbCount,
@@ -37,8 +37,8 @@ public class TableService {
                 final String tableSql = generateCreateTable(tbName, fieldVoList, indexVoList);
                 sql.append(tableSql);
                 if (j < tableCount - 1) {
-                    sql.append(LINE_SEPERATOR);
-                    sql.append(LINE_SEPERATOR);
+                    sql.append(LINE_SEPARATOR);
+                    sql.append(LINE_SEPARATOR);
                 }
             }
             result.put(dbName, sql.toString().trim());
@@ -51,7 +51,7 @@ public class TableService {
                                        final List<IndexVo> indexVoList) {
         final StringBuilder strTable = new StringBuilder();
         final List<String> pkNames = new ArrayList<>();
-        strTable.append(String.format("CREATE TABLE IF NOT EXISTS `%s` (%s", SqlTool.removeMySqlQualifier(tableName), LINE_SEPERATOR));
+        strTable.append(String.format("CREATE TABLE IF NOT EXISTS `%s` (%s", SqlTool.removeMySqlQualifier(tableName), LINE_SEPARATOR));
 
         if (null != fieldVoList && !fieldVoList.isEmpty()) {
             for (final FieldVo fieldVo : fieldVoList) {
@@ -69,36 +69,36 @@ public class TableService {
                         fieldVo.getNotNull() ? " NOT NULL" : " NULL",
                         !ObjectUtils.isEmpty(defaultValue) ? " DEFAULT".concat(" ").concat(defaultValue) : fieldVo.getNotNull() ? "" : " DEFAULT NULL",
                         fieldVo.getAutoIncrement() ? " AUTO_INCREMENT" : "",
-                        fieldVo.getAutoUpdateByTimestampt() == null || !fieldVo.getAutoUpdateByTimestampt() ? "" : " ON UPDATE CURRENT_TIMESTAMP(0)",
+                        fieldVo.getAutoUpdateByTimestamp() == null || !fieldVo.getAutoUpdateByTimestamp() ? "" : " ON UPDATE CURRENT_TIMESTAMP(0)",
                         fieldVo.getComment(),
-                        LINE_SEPERATOR));
+                        LINE_SEPARATOR));
 
                 if (fieldVo.getIsPrimary()) {
                     pkNames.add(String.format("`%s`", SqlTool.removeMySqlQualifier(fieldVo.getName())));
                 }
             }
-            strTable.delete(strTable.length() - String.format(",%s", LINE_SEPERATOR).length(), strTable.length());
+            strTable.delete(strTable.length() - String.format(",%s", LINE_SEPARATOR).length(), strTable.length());
         }
 
         if (!pkNames.isEmpty()) {
-            strTable.append(String.format(",%s", LINE_SEPERATOR));
+            strTable.append(String.format(",%s", LINE_SEPARATOR));
             strTable.append(String.format("PRIMARY KEY (%s) USING BTREE",
                     StringUtils.join(pkNames, ',')));
         }
 
         if (null != indexVoList && !indexVoList.isEmpty()) {
-            strTable.append(String.format(",%s", LINE_SEPERATOR));
+            strTable.append(String.format(",%s", LINE_SEPARATOR));
             for (final IndexVo indexVo : indexVoList) {
                 strTable.append(String.format("%sINDEX `%s`(%s) USING BTREE COMMENT '%s',%s",
                         "NORMAL".equalsIgnoreCase(indexVo.getIndexType()) ? "" : "UNIQUE ",
                         SqlTool.removeMySqlQualifier(indexVo.getIndexName()),
                         indexVo.getFieldName(),
                         indexVo.getComment(),
-                        LINE_SEPERATOR));
+                        LINE_SEPARATOR));
             }
-            strTable.delete(strTable.length() - String.format(",%s", LINE_SEPERATOR).length(), strTable.length());
+            strTable.delete(strTable.length() - String.format(",%s", LINE_SEPARATOR).length(), strTable.length());
         }
-        strTable.append(LINE_SEPERATOR);
+        strTable.append(LINE_SEPARATOR);
         strTable.append(") ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;");
         return strTable.toString();
     }

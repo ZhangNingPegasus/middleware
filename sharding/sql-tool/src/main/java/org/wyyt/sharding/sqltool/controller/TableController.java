@@ -123,8 +123,8 @@ public final class TableController {
         return String.format("%s/%s", PREFIX, "fieldname");
     }
 
-    @GetMapping("toresullt")
-    public final String toResullt(final Model model,
+    @GetMapping("toresult")
+    public final String toResult(final Model model,
                                   final HttpSession session) {
         final String tableName = session.getAttribute("tableName").toString();
         final Integer dbCount = Integer.valueOf(session.getAttribute("dbCount").toString());

@@ -63,9 +63,9 @@ public class SqlService {
         if (StrUtil.isBlank(sql)) {
             return null;
         }
-        final String[] sqls = sql.split(";");
-        final List<DataTableVo> result = new ArrayList<>(sqls.length);
-        for (String singleSql : sqls) {
+        final String[] sqlArray = sql.split(";");
+        final List<DataTableVo> result = new ArrayList<>(sqlArray.length);
+        for (String singleSql : sqlArray) {
             if (null == singleSql || StrUtil.isBlank(singleSql)) {
                 continue;
             }

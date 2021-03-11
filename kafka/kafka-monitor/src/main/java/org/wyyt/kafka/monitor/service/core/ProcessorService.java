@@ -10,7 +10,7 @@ import org.wyyt.kafka.monitor.service.common.KafkaService;
 import org.wyyt.kafka.monitor.service.dto.TopicRecordService;
 
 /**
- * the wapper class of processor with RecordRunner and ConsumerRunner
+ * the wrapper class of processor with RecordRunner and ConsumerRunner
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

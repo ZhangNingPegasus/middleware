@@ -28,7 +28,7 @@ public final class FieldVo implements Serializable {
     private Integer decimal;
     private Boolean notNull;
     private Boolean isPrimary;
-    private Boolean autoUpdateByTimestampt;
+    private Boolean autoUpdateByTimestamp;
     private Boolean unsigned;
     private Boolean autoIncrement;
     private String defaultValue;

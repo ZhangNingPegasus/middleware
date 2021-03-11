@@ -41,7 +41,7 @@ public class PropertyConfig implements InitializingBean {
     private final static String ELASTICSEARCH_PASSWORD = "encrypt.elasticsearch.password";
     private final static String DB_HOST = "db.host";
     private final static String DB_PORT = "db.port";
-    private final static String DB_DATABASENAME = "db.databaseName";
+    private final static String DB_DATABASE_NAME = "db.databaseName";
     private final static String DB_USERNAME = "db.username";
     private final static String DB_PASSWORD = "encrypt.db.password";
 
@@ -74,7 +74,7 @@ public class PropertyConfig implements InitializingBean {
         this.esPwd = acmProperties.getProperty(ELASTICSEARCH_PASSWORD, "");
         this.dbHost = acmProperties.getProperty(DB_HOST, "");
         this.dbPort = acmProperties.getProperty(DB_PORT, "");
-        this.dbName = acmProperties.getProperty(DB_DATABASENAME, "");
+        this.dbName = acmProperties.getProperty(DB_DATABASE_NAME, "");
         this.dbUid = acmProperties.getProperty(DB_USERNAME, "");
         this.dbPwd = acmProperties.getProperty(DB_PASSWORD, "");
     }

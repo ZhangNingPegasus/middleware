@@ -5,7 +5,7 @@ import org.elasticsearch.client.RestClient;
 import org.wyyt.sharding.db2es.core.exception.Db2EsException;
 
 /**
- * the listner which processing the exception when manipulate the Elastic-Search
+ * the listener which processing the exception when manipulate the Elastic-Search
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

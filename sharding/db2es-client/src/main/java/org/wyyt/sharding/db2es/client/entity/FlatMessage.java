@@ -21,7 +21,7 @@ import org.wyyt.sharding.db2es.core.entity.domain.FlatMsg;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @Data
-public final class FlatMessge extends FlatMsg {
+public final class FlatMessage extends FlatMsg {
     /**
      * 用户自定义位点提交的回调接口
      */

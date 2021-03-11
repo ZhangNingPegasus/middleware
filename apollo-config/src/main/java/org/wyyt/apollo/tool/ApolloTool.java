@@ -55,7 +55,7 @@ public class ApolloTool {
         } else if (apolloMeta.contains(".prod.")) {
             env = "PRO";
         } else {
-            throw new RuntimeException("The value of config [apollo.meta] is incorrent");
+            throw new RuntimeException("The value of config [apollo.meta] is incorrect");
         }
         this.appId = appId;
         this.operator = operator;

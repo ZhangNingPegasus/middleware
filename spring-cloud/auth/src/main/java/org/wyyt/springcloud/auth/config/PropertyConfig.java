@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.wyyt.tool.rpc.RpcService;
 
 /**
- * the configuration of proeprty
+ * the configuration of property
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

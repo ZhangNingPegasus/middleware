@@ -83,12 +83,12 @@ public class ShardingDbService implements DisposableBean {
         if (null == crudService) {
             throw new Db2EsException(String.format("不存在名为[%s]的数据源", databaseName));
         }
-        final List<String> whereCaluse = new ArrayList<>();
+        final List<String> whereClause = new ArrayList<>();
         for (final String name : columnNames) {
-            whereCaluse.add(String.format("`%s`=?", name));
+            whereClause.add(String.format("`%s`=?", name));
         }
 
-        return crudService.select(String.format("SELECT * FROM `%s` WHERE %s", tableName, StringUtils.join(whereCaluse, " AND")), (Object[]) columnValues);
+        return crudService.select(String.format("SELECT * FROM `%s` WHERE %s", tableName, StringUtils.join(whereClause, " AND")), (Object[]) columnValues);
     }
 
     public DataSource getDataSourceByDatabaseName(final String databaseName) {

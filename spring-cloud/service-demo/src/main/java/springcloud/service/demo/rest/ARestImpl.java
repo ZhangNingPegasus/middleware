@@ -67,14 +67,20 @@ public class ARestImpl {
     }
 
     @GetMapping(path = "/test/{value}")
-    public Result<String> test(@PathVariable(value = "value") final String value) throws Throwable {
-        log.info("调用者");
-        this.redisService.set("a", "abcefg"); //1. redis set
-        Student student = new Student();
+    public Result<String> test(@PathVariable(value = "value") String value) throws Throwable {
+        //1. redis 写入
+        this.redisService.set("a", "redis写入测试");
+        final Student student = new Student();
         student.setName(value);
-        this.studentServiceA.save(student); //2. mysql insert
-        System.out.println(this.studentServiceA.list()); //3. mysql select
-        return bFeign.invoke(value + " : " + this.redisService.get("a")); //4. redis get  //5. service A rpc to service B
+        //2. mysql 插入
+        this.studentServiceA.save(student);
+        //3. mysql 查询
+        System.out.println(this.studentServiceA.list());
+        log.info("redis读取: " + this.redisService.get("a"));
+        value = pluginAdapter.getPluginInfo(value);
+        //4. redis 读取
+        //5. A -> B
+        return bFeign.invoke(value);
     }
 
     @ApiOperation(value = "rest同步调用示例")

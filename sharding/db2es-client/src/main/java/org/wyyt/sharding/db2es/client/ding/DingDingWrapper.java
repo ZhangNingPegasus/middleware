@@ -12,7 +12,7 @@ import java.io.Closeable;
 import java.util.List;
 
 /**
- * the wapper class of DingDing
+ * the wrapper class of DingDing
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

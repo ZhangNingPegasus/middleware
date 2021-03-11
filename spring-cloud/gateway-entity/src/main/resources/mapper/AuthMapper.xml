@@ -23,6 +23,7 @@
 
     <select id="selectNoAuthApis" resultType="org.wyyt.springcloud.gateway.entity.entity.Api">
         SELECT
+        DISTINCT
         `api`.*
         FROM `t_api` `api`
         LEFT OUTER JOIN `t_auth` `auth` ON `api`.`id` = `auth`.`api_id`

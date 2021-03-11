@@ -9,7 +9,7 @@ import lombok.Getter;
 import org.wyyt.admin.ui.entity.base.BaseDto;
 
 /**
- * The entity for table `sys_alert_cluster`. Using for throw a alerm when there's something wrong in cluster.
+ * The entity for table `sys_alert_cluster`. Using for throw an alert when there's something wrong in cluster.
  * <p>
  *
  * @author Ning.Zhang(Pegasus)

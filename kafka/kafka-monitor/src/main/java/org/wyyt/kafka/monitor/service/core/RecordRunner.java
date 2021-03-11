@@ -74,7 +74,7 @@ public final class RecordRunner extends BaseRunner {
                         final TopicRecord topicRecord = this.toTopicRecord(record);
                         while (!this.consumerRunner.offer(topicRecord, 1000, TimeUnit.MILLISECONDS)) {
                             if (++offerTryCount % 30 == 0) {
-                                log.warn(String.format("Queue is full, the recod will be discarded, [%s]", record.value()));
+                                log.warn(String.format("Queue is full, the record will be discarded, [%s]", record.value()));
                                 break;
                             } else if (!this.continued()) {
                                 break;

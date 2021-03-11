@@ -31,11 +31,11 @@ import static org.wyyt.sharding.db2es.core.util.metastore.MetaStoreUtils.ZOOKEEP
 @Slf4j
 public final class ZooKeeperMetaStore implements MetaStore {
     private final Map<String, Map<TopicPartition, Checkpoint>> inMemoryStore;
-    private final ZooKeeperWrapper zooKeeperWraper;
+    private final ZooKeeperWrapper zooKeeperWrapper;
 
     public ZooKeeperMetaStore(final Context context) {
         this.inMemoryStore = new HashMap<>();
-        this.zooKeeperWraper = context.getZooKeeperWrapper();
+        this.zooKeeperWrapper = context.getZooKeeperWrapper();
     }
 
     @Override
@@ -50,7 +50,7 @@ public final class ZooKeeperMetaStore implements MetaStore {
         topicPartitionCheckpointMap.put(topicPartition, checkpointExt);
         this.inMemoryStore.put(groupName, topicPartitionCheckpointMap);
         try {
-            this.zooKeeperWraper.setData(
+            this.zooKeeperWrapper.setData(
                     MetaStoreUtils.getPath(groupName),
                     MetaStoreUtils.toJson(new MetaStoreUtils.StoreElement(groupName, topicPartitionCheckpointMap))
             );
@@ -72,8 +72,8 @@ public final class ZooKeeperMetaStore implements MetaStore {
         }
         try {
             final String path = String.format(ZOOKEEPER_PATH, Common.ZK_ROOT_PATH, groupName);
-            if (this.zooKeeperWraper.exists(path)) {
-                final String json = this.zooKeeperWraper.getData(path);
+            if (this.zooKeeperWrapper.exists(path)) {
+                final String json = this.zooKeeperWrapper.getData(path);
                 if (!ObjectUtils.isEmpty(json)) {
                     final MetaStoreUtils.StoreElement storeElement = MetaStoreUtils.fromString(json);
                     if (!this.inMemoryStore.containsKey(groupName)) {

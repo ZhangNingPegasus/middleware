@@ -2,7 +2,7 @@ package org.wyyt.sharding.algorithm.impl;
 
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingValue;
-import org.wyyt.sharding.algorithm.AbstractComplextShardingAlgorithm;
+import org.wyyt.sharding.algorithm.AbstractComplexShardingAlgorithm;
 import org.wyyt.sharding.algorithm.MathsTool;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.List;
  * Ning.Zhang       Initialize       02/14/2021       Initialize   *
  * *****************************************************************
  */
-public final class DatabaseComplexShardingAlgorithm extends AbstractComplextShardingAlgorithm implements ComplexKeysShardingAlgorithm<Long> {
+public final class DatabaseComplexShardingAlgorithm extends AbstractComplexShardingAlgorithm implements ComplexKeysShardingAlgorithm<Long> {
 
     @Override
     public final Collection<String> doSharding(final Collection<String> availableTargetNames,

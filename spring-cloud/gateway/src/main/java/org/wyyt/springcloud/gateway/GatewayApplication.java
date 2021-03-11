@@ -1,6 +1,7 @@
 package org.wyyt.springcloud.gateway;
 
 import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
+import com.nepxion.banner.BannerConstant;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableApolloConfig
 public class GatewayApplication {
     public static void main(String[] args) {
-        System.setProperty("nepxion.banner.shown", "false");
+        System.setProperty(BannerConstant.BANNER_SHOWN, "false");
         SpringApplication.run(GatewayApplication.class, args);
     }
 }

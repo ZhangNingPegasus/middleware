@@ -10,7 +10,7 @@ import org.wyyt.sharding.db2es.core.util.elasticsearch.ElasticSearchUtils;
 import java.util.List;
 
 /**
- * The implemention of BulkProcessorListener
+ * The implementation of BulkProcessorListener
  *
  * @author Ning.Zhang(Pegasus)
  * *****************************************************************
