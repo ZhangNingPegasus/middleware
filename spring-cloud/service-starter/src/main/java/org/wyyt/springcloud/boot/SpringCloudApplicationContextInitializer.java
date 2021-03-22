@@ -4,7 +4,6 @@ import com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitialize
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -34,11 +33,10 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
                                        final SpringApplication springApplication) {
         if (null == configurableEnvironment || null == springApplication) {
             return;
-        }
-        final WebApplicationType webApplicationType = springApplication.getWebApplicationType();
-        if (null == webApplicationType || WebApplicationType.NONE == webApplicationType) {
+        } else if (configurableEnvironment.getClass().getName().equals(org.springframework.core.env.StandardEnvironment.class.getName())) {
             return;
         }
+
         if (ObjectUtils.isEmpty(configurableEnvironment.getProperty("spring.application.name", ""))) {
             throw new RuntimeException("未设置服务名称, 请设置[spring.application.name]");
         }
@@ -221,7 +219,7 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
         // 为微服务归类的Key，一般通过group字段来归类，例如eureka.instance.metadataMap.group=xxx-group或者eureka.instance.metadataMap.application=xxx-application。缺失则默认为group
         addDefaultConfig(configurableEnvironment, properties,
                 "spring.application.group.key",
-                "group");
+                Names.GROUP);
         // 业务系统希望大多数时候Spring、SpringBoot或者SpringCloud的基本配置、调优参数（非业务系统配置参数），不配置在业务端，集成到基础框架里。但特殊情况下，业务系统有时候也希望能把基础框架里配置的参数给覆盖掉，用他们自己的配置
         // 对于此类型的配置需求，可以配置在下面的配置文件里。该文件一般放在resource目录下。缺失则默认为spring-application-default.properties
         addDefaultConfig(configurableEnvironment, properties,

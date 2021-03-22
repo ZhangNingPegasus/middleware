@@ -22,6 +22,8 @@ public class Constant {
     public final static String EXPIRES_IN = "expires_in";
 
     public static final String SERVICE_NAME = "service_name";
+    public static final String ROUTE_PATH = "route_path";
+
     public final static String CLIENT_SECRET = "client_secret";
     public final static String GRANT_TYPE = "grant_type";
 

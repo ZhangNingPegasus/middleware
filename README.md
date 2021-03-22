@@ -78,7 +78,7 @@ sharding:
     datasource:
       data-id: scfs.xml.datasource.encrypt
       group: SIJIBAO_ORDER_CENTER_GROUP
-    dimenstion:
+    dimension:
       data-id: scfs.xml.dimension
       group: SIJIBAO_ORDER_CENTER_GROUP
     table:
@@ -255,7 +255,7 @@ sharding:
     datasource:
       data-id: scfs.xml.datasource.encrypt
       group: SIJIBAO_ORDER_CENTER_GROUP
-    dimenstion:
+    dimension:
       data-id: scfs.xml.dimension
       group: SIJIBAO_ORDER_CENTER_GROUP
     table:

@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+import org.wyyt.springcloud.entity.constants.Names;
 import org.wyyt.springcloud.gateway.entity.entity.Api;
 import org.wyyt.springcloud.springbootadmin.config.PropertyConfig;
 import org.wyyt.springcloud.springbootadmin.service.ApiLoadService;
@@ -81,8 +82,8 @@ public class DingTalkNotifier extends AbstractEventNotifier {
                         !serviceName.equals(this.propertyConfig.getAuthConsulName())) {
                     apiResult = this.apiLoadService.updateApi(instance.getRegistration().getName(),
                             instance.getRegistration().getServiceUrl());
-                    group = instance.getRegistration().getMetadata().get("group");
-                    version = instance.getRegistration().getMetadata().get("version");
+                    group = instance.getRegistration().getMetadata().get(Names.GROUP);
+                    version = instance.getRegistration().getMetadata().get(Names.VERSION);
                 }
 
                 switch (status) {

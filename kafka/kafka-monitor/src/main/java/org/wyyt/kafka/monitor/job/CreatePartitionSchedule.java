@@ -38,7 +38,7 @@ public class CreatePartitionSchedule {
 
     //每天晚上10点,建立未来两天的partition
     @Scheduled(cron = "0 0 22 1/1 * ?")
-    public void createPartition() throws Exception {
+    public void createPartition() {
         final Set<String> tableNameList = this.schemaService.listPartitionTables();
         final Map<String, List<Partition>> partitionMap = this.partitionService.getPartition(tableNameList);
 

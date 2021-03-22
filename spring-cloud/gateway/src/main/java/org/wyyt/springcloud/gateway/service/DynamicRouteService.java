@@ -1,5 +1,6 @@
 package org.wyyt.springcloud.gateway.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
@@ -67,6 +68,7 @@ public class DynamicRouteService implements ApplicationEventPublisherAware {
         result.setOrder(route.getOrderNum());
         result.setMetadata(new HashMap<>());
         result.getMetadata().put(Constant.SERVICE_NAME, route.getServiceName());
+        result.getMetadata().put(Constant.ROUTE_PATH, getRoutePath(route));
 
         final String strUri = route.getUri();
         URI uri;
@@ -171,5 +173,43 @@ public class DynamicRouteService implements ApplicationEventPublisherAware {
     @Override
     public void setApplicationEventPublisher(final ApplicationEventPublisher applicationEventPublisher) {
         this.publisher = applicationEventPublisher;
+    }
+
+    private static String getRoutePath(final Route route) {
+        if (null == route.getFilters() || null == route.getPredicates()) {
+            return route.getServiceName();
+        }
+
+        String filters = route.getFilters().toLowerCase();
+        String predicates = route.getPredicates().toLowerCase();
+        Integer stripPrefix = null;
+
+        if (!StringUtils.isEmpty(filters) && filters.contains("stripprefix=")) {
+            stripPrefix = Integer.parseInt(StringUtils.removeStart(filters, "stripprefix="));
+        }
+        if (!StringUtils.isEmpty(predicates) && predicates.contains("path=")) {
+            predicates = StringUtils.removeStart(predicates, "path=");
+        }
+
+        if (null != stripPrefix) {
+            int start = predicates.indexOf("/");
+            if (start < 0) {
+                return predicates;
+            }
+
+            int end = start;
+            int fromStart;
+            for (int i = 0; i < stripPrefix; i++) {
+                fromStart = end;
+                int endTemp = predicates.indexOf("/", fromStart + 1);
+                if (endTemp > -1) {
+                    end = endTemp;
+                }
+            }
+
+            return predicates.substring(start, end + 1);
+        }
+
+        return route.getServiceName();
     }
 }
