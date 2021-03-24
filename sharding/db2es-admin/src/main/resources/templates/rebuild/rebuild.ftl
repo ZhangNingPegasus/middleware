@@ -12,7 +12,7 @@
         <div class="layui-tab layui-tab-brief" lay-filter="form">
             <ul class="layui-tab-title">
                 <li class="layui-this">配置数据源</li>
-                <li>配置新Mapping</li>
+                <li>配置索引结构</li>
             </ul>
             <div class="layui-tab-content" style="height: 100px;">
                 <div class="layui-tab-item layui-show">
@@ -106,36 +106,15 @@
                                            placeholder="请填写主题名称" value="${topicName}" readonly="readonly">
                                 </div>
 
-                                <div class="layui-inline">主分片数:</div>
-                                <div class="layui-inline" style="width: 140px">
-                                    <input type="number" name="numberOfShards" lay-verify="required" class="layui-input"
-                                           placeholder="请填写主分片数" autocomplete="off"
-                                           value="${(topic.numberOfShards)!'5'}">
-                                </div>
-
-                                <div class="layui-inline">副本分片数:</div>
-                                <div class="layui-inline" style="width: 140px">
-                                    <input type="number" name="numberOfReplicas" lay-verify="required"
-                                           class="layui-input" placeholder="请填写副本分片数"
-                                           value="${(topic.numberOfReplicas)!(replicaNum)}"
-                                           autocomplete="off">
-                                </div>
-
-                                <div class="layui-inline">索引别名年份数:</div>
+                                <div class="layui-inline">数据保留年份数:</div>
                                 <div class="layui-inline" style="width: 140px">
                                     <input type="number" name="aliasOfYears" lay-verify="required" class="layui-input"
-                                           placeholder="请填写索引别名年份数" autocomplete="off"
+                                           placeholder="请填写数据保留年份数" autocomplete="off"
                                            value="${(topic.aliasOfYears)!'3'}">
                                 </div>
 
-                                <div class="layui-inline">刷盘间隔:</div>
-                                <div class="layui-inline" style="width: 100px">
-                                    <input type="text" name="refreshInterval" lay-verify="required" class="layui-input"
-                                           placeholder="请填写索引刷盘间隔" autocomplete="off"
-                                           value="${(topic.refreshInterval)!'1s'}">
-                                </div>
                                 <div class="layui-inline">描述信息:</div>
-                                <div class="layui-inline" style="width: 872px">
+                                <div class="layui-inline" style="width: 390px">
                                     <input type="text" name="description" class="layui-input" placeholder="请填写描述信息"
                                            autocomplete="off" value="${(topic.description)!''}">
                                 </div>
@@ -153,8 +132,8 @@
 
         <div class="layui-form-item layui-hide">
             <input type="button" lay-submit lay-filter="btn_confirm" id="btn_confirm" value="确认">
-            <input type="button" lay-submit lay-filter="btnMapping" id="btnMapping" value="">
-            <textarea id="mapping" name="mapping" class="layui-input" autocomplete="off"
+            <input type="button" lay-submit lay-filter="btnSource" id="btnSource" value="">
+            <textarea id="source" name="source" class="layui-input" autocomplete="off"
                       style="resize: none"></textarea>
         </div>
     </div>
@@ -179,13 +158,13 @@
                 styleActiveLine: true,
                 autoRefresh: true
             });
-            txtJson.setSize('auto', '450px');
+            txtJson.setSize('auto', '540px');
 
-            const json = ${mapping};
+            const json = ${source};
             txtJson.setValue(JSON.stringify(json, null, "\t"));
 
-            $("#btnMapping").click(function () {
-                $("#mapping").html(txtJson.getValue());
+            $("#btnSource").click(function () {
+                $("#source").html(txtJson.getValue());
             });
 
             form.on('radio(type)', function (data) {

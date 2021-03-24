@@ -2,6 +2,7 @@ package org.wyyt.sharding.db2es.client.processor;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.sharding.db2es.client.common.CheckpointExt;
@@ -54,10 +55,11 @@ public final class ProcessorWrapper implements Closeable {
             return;
         }
 
-        log.info(String.format("found [%s] topics for db2es_id[%s], %s",
+        final List<String> topicNames = this.context.getConfig().getTopicMap().values().stream().map(Topic::getName).collect(Collectors.toList());
+        log.info(String.format("found [%s] topics for db2es_id[%s]%s",
                 this.context.getConfig().getTopicMap().size(),
                 this.context.getConfig().getDb2EsId(),
-                this.context.getConfig().getTopicMap().values().stream().map(Topic::getName).collect(Collectors.toList())));
+                topicNames.isEmpty() ? ", ".concat(StringUtils.join(topicNames, ", ")) : ""));
 
         for (final Topic topic : this.context.getConfig().getTopicMap().values()) {
             final int partition = 0;

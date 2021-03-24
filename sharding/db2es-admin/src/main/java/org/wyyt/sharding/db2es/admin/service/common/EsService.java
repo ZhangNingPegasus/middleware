@@ -2,7 +2,6 @@ package org.wyyt.sharding.db2es.admin.service.common;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -14,16 +13,15 @@ import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.VersionType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.wyyt.elasticsearch.exception.ElasticSearchException;
+import org.wyyt.elasticsearch.service.ElasticSearchService;
 import org.wyyt.sharding.db2es.admin.service.TopicService;
 import org.wyyt.sharding.db2es.core.entity.domain.IndexName;
 import org.wyyt.sharding.db2es.core.entity.domain.IndexSetting;
@@ -33,8 +31,6 @@ import org.wyyt.sharding.db2es.core.entity.view.AliasVo;
 import org.wyyt.sharding.db2es.core.entity.view.IndexVo;
 import org.wyyt.sharding.db2es.core.exception.Db2EsException;
 import org.wyyt.sharding.db2es.core.util.elasticsearch.ElasticSearchUtils;
-import org.wyyt.elasticsearch.exception.ElasticSearchException;
-import org.wyyt.elasticsearch.service.ElasticSearchService;
 
 import java.io.IOException;
 import java.util.*;
@@ -122,22 +118,12 @@ public class EsService {
 
     public void createIndex(final String indexName,
                             final String alias,
-                            final int numberOfShards,
-                            final int numberOfReplicas,
-                            final String refreshInterval,
-                            final String mapping) throws IOException {
-        final CreateIndexRequest request = new CreateIndexRequest(indexName);
-        if (!ObjectUtils.isEmpty(alias)) {
-            request.alias(new Alias(alias));
-        }
+                            final String source) throws IOException {
+        final CreateIndexResponse createIndexResponse = ElasticSearchUtils.createIndex(this.elasticSearchService.getRestHighLevelClient(),
+                indexName,
+                alias,
+                source);
 
-        request.settings(Settings.builder()
-                .put(Names.NUMBER_OF_SHARDS, String.valueOf(numberOfShards))
-                .put(Names.NUMBER_OF_REPLICAS, String.valueOf(numberOfReplicas))
-                .put(Names.REFRESH_INTERVAL, refreshInterval));
-
-        request.mapping(mapping, XContentType.JSON);
-        final CreateIndexResponse createIndexResponse = this.elasticSearchService.getRestHighLevelClient().indices().create(request, RequestOptions.DEFAULT);
         if (!createIndexResponse.isAcknowledged()) {
             throw new ElasticSearchException(String.format("索引[%s]创建失败, 原因: %s", indexName, createIndexResponse));
         }
@@ -157,6 +143,15 @@ public class EsService {
         settingMap.put(Names.REFRESH_INTERVAL, "-1");
         return ElasticSearchUtils.updateIndexSetting(this.elasticSearchService.getRestHighLevelClient(),
                 indexNameSet,
+                settingMap);
+    }
+
+    public final boolean optimizeBulk(final String indexName) throws IOException {
+        final Map<String, String> settingMap = new HashMap<>();
+        settingMap.put(Names.NUMBER_OF_REPLICAS, "0");
+        settingMap.put(Names.REFRESH_INTERVAL, "-1");
+        return ElasticSearchUtils.updateIndexSetting(this.elasticSearchService.getRestHighLevelClient(),
+                new HashSet<>(Collections.singletonList(indexName)),
                 settingMap);
     }
 

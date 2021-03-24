@@ -1,6 +1,5 @@
 package org.wyyt.sharding.db2es.admin.service.common;
 
-import com.sijibao.nacos.spring.util.NacosRsaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
@@ -158,7 +157,7 @@ public class ShardingDbService implements DisposableBean {
                             dataSourceProperty.getPort().toString(),
                             dataSourceProperty.getDatabaseName(),
                             dataSourceProperty.getUsername(),
-                            NacosRsaUtils.decrypt(dataSourceProperty.getPassword()),
+                            dataSourceProperty.getPassword(),
                             10,
                             20)));
         }

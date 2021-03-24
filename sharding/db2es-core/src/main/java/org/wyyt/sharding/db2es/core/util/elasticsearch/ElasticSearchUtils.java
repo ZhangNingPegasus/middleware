@@ -27,6 +27,7 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
+import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -327,19 +328,16 @@ public final class ElasticSearchUtils {
             ALREADY_CREATED_INDEX_NAME.add(indexName);
             return false;
         }
-        if (ObjectUtils.isEmpty(topic.getMapping().trim())) {
-            throw new Db2EsException(String.format("ElasticSearchUtils: the index[%s] miss the mapping information", alias));
+        if (ObjectUtils.isEmpty(topic.getSource().trim())) {
+            throw new Db2EsException(String.format("ElasticSearchUtils: the index[%s] miss the source information", alias));
         }
         try {
-            final boolean result = createIndex(restHighLevelClient,
-                    alias,
+            final CreateIndexResponse createIndexResponse = ElasticSearchUtils.createIndex(restHighLevelClient,
                     indexName,
-                    topic.getNumberOfShards(),
-                    topic.getNumberOfReplicas(),
-                    topic.getRefreshInterval(),
-                    topic.getMapping().trim());
-            if (!result) {
-                throw new Db2EsException(String.format("index[%s] create failed", indexName));
+                    alias,
+                    topic.getSource().trim());
+            if (!createIndexResponse.isAcknowledged()) {
+                throw new Db2EsException(String.format("index[%s] create failed caused %s", indexName, createIndexResponse));
             }
             ALREADY_CREATED_INDEX_NAME.add(indexName);
             return true;
@@ -356,24 +354,16 @@ public final class ElasticSearchUtils {
         return restHighLevelClient.indices().exists(new GetIndexRequest(indexName), RequestOptions.DEFAULT);
     }
 
-    public static boolean createIndex(final RestHighLevelClient restHighLevelClient,
-                                      final String alias,
-                                      final String indexName,
-                                      final int numberOfShards,
-                                      final int numberOfReplicas,
-                                      final String refreshInterval,
-                                      final String mapping) throws IOException {
+    public static CreateIndexResponse createIndex(final RestHighLevelClient restHighLevelClient,
+                                                  final String indexName,
+                                                  @Nullable final String alias,
+                                                  final String source) throws IOException {
         final CreateIndexRequest request = new CreateIndexRequest(indexName);
         if (!ObjectUtils.isEmpty(alias)) {
             request.alias(new Alias(alias));
         }
-        request.settings(Settings.builder()
-                .put(Names.NUMBER_OF_SHARDS, String.valueOf(numberOfShards))
-                .put(Names.NUMBER_OF_REPLICAS, String.valueOf(numberOfReplicas))
-                .put(Names.REFRESH_INTERVAL, refreshInterval));
-        request.mapping(mapping, XContentType.JSON);
-        final CreateIndexResponse createIndexResponse = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
-        return createIndexResponse.isAcknowledged();
+        request.source(source, XContentType.JSON);
+        return restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
     }
 
     public void deleteIndex(final RestHighLevelClient restHighLevelClient,

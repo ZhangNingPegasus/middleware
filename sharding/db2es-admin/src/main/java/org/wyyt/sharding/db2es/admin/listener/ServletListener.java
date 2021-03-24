@@ -37,14 +37,14 @@ public class ServletListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(final ServletContextEvent sce) {
-        TableMap tableMap = new TableMap();
+        final TableMap tableMap = new TableMap();
 
         for (final TableProperty tableProperty : this.shardingService.listTableProperties()) {
-            String logicTableName = tableProperty.getName();
-            String pkName = tableProperty.getPkName();
-            String rowCreateTime = tableProperty.getRowCreateTime();
-            String rowUpdateTime = tableProperty.getRowUpdateTime();
-            Set<String> factTableNameSet = new HashSet<>();
+            final String logicTableName = tableProperty.getName();
+            final String pkName = tableProperty.getPkName();
+            final String rowCreateTime = tableProperty.getRowCreateTime();
+            final String rowUpdateTime = tableProperty.getRowUpdateTime();
+            final Set<String> factTableNameSet = new HashSet<>();
 
             for (final Map.Entry<String, TableProperty.DimensionInfo> pair : tableProperty.getDimensionInfos().entrySet()) {
                 int tableCountNum = pair.getValue().getTableCountNum();

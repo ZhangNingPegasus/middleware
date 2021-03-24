@@ -32,7 +32,7 @@ public final class XmlConfig {
     private Boolean showSql = false;
 
     /**
-     * ACM配置信息
+     * Apollo配置
      */
-    private AcmConfig acm;
+    private ApolloConfig apollo;
 }

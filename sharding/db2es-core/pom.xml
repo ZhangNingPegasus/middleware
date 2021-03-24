@@ -15,6 +15,22 @@
     <dependencies>
         <dependency>
             <groupId>org.wyyt</groupId>
+            <artifactId>apollo-config</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>gson</artifactId>
+                    <groupId>com.google.code.gson</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>snakeyaml</artifactId>
+                    <groupId>org.yaml</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wyyt</groupId>
             <artifactId>tool</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <exclusions>
@@ -61,6 +77,10 @@
             <exclusions>
                 <exclusion>
                     <artifactId>httpcore</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>httpcore-nio</artifactId>
                     <groupId>org.apache.httpcomponents</groupId>
                 </exclusion>
             </exclusions>

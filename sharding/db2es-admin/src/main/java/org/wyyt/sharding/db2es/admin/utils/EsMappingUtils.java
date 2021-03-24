@@ -16,9 +16,40 @@ import java.util.List;
  * *****************************************************************
  */
 public class EsMappingUtils {
-    public static String getEsMapping(final List<FieldInfo> fieldInfoList) {
-        String result = "{\"properties\": {%s}}";
+    public static String getEsSource(final int numberOfShards,
+                                     final int numberOfReplicas,
+                                     final String refreshInterval,
+                                     final List<FieldInfo> fieldInfoList) {
+        final String result = "{\"settings\":{%s},\"mappings\":{\"properties\":{%s}}}";
+        return String.format(result,
+                getEsSettings(
+                        numberOfShards,
+                        numberOfReplicas,
+                        refreshInterval
+                ),
+                getEsProperties(fieldInfoList));
+    }
 
+    public static String getEsSource(final int numberOfShards,
+                                     final int numberOfReplicas,
+                                     final List<FieldInfo> fieldInfoList) {
+        return getEsSource(numberOfShards, numberOfReplicas, "1s", fieldInfoList);
+    }
+
+    private static String getEsSettings(final int numberOfShards,
+                                        final int numberOfReplicas,
+                                        final String refreshInterval) {
+        final StringBuilder settings = new StringBuilder();
+        settings.append(String.format("\"number_of_shards\":%s,", numberOfShards));
+        settings.append(String.format("\"number_of_replicas\":%s,", numberOfReplicas));
+        settings.append(String.format("\"refresh_interval\": \"%s\",", refreshInterval));
+        if (settings.length() > 0) {
+            settings.delete(settings.length() - 1, settings.length());
+        }
+        return settings.toString().trim();
+    }
+
+    private static String getEsProperties(final List<FieldInfo> fieldInfoList) {
         final StringBuilder properties = new StringBuilder();
         for (final FieldInfo fieldInfo : fieldInfoList) {
             final String name = fieldInfo.getName();
@@ -63,7 +94,6 @@ public class EsMappingUtils {
         if (properties.length() > 0) {
             properties.delete(properties.length() - 1, properties.length());
         }
-
-        return String.format(result, properties.toString().trim()).trim();
+        return properties.toString().trim();
     }
 }

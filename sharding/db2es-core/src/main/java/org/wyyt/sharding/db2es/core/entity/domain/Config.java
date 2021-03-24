@@ -102,26 +102,11 @@ public final class Config {
      * 该db2es负责消费的Topic. KEY: TopicName;  VALUE:Topic
      */
     private Map<String, Topic> topicMap;
+
     /**
-     * ACM配置
+     * Apollo的App_Id
      */
-    private String acmDataId;
-    /**
-     * ACM配置
-     */
-    private String acmGroupId;
-    /**
-     * ACM配置
-     */
-    private String acmConfigPath;
-    /**
-     * ACM配置
-     */
-    private String acmNacosLocalSnapshotPath;
-    /**
-     * ACM配置
-     */
-    private String acmNacosLogPath;
+    private String apolloAppId;
 
     /**
      * 各个表的关键字段信息(如主键字段名等)

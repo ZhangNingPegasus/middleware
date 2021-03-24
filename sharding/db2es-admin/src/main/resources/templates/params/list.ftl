@@ -52,7 +52,7 @@
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {page: {curr: 1}, where: field});
+                table.reload('grid', {where: field});
             });
             table.render({
                 elem: '#grid',

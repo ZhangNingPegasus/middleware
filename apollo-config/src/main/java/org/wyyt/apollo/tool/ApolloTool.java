@@ -47,7 +47,6 @@ public class ApolloTool {
                       final String token,
                       final String appId,
                       final String operator) {
-
         if (apolloMeta.contains(".dev.")) {
             env = "DEV";
         } else if (apolloMeta.contains(".test.")) {

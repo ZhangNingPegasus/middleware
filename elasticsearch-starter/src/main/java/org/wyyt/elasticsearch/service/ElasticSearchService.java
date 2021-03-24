@@ -77,6 +77,10 @@ public final class ElasticSearchService implements InitializingBean, DisposableB
         this.elasticSearchProperty = elasticSearchProperty;
     }
 
+    public int getNodesCount() {
+        return this.elasticSearchProperty.getHostnames().size();
+    }
+
     public RestHighLevelClient getRestHighLevelClient() {
         return this.restHighLevelClient;
     }

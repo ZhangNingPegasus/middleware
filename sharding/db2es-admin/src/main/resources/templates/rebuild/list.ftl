@@ -76,7 +76,7 @@
 
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {page: {curr: 1}, where: field});
+                table.reload('grid', {where: field});
             });
 
             <#if inRebuild==true>
@@ -101,7 +101,7 @@
                     {field: 'name', title: '索引名称', width: 300},
                     {field: 'numberOfShards', title: '主分片数', width: 100},
                     {field: 'numberOfReplicas', title: '副本分片数', width: 100},
-                    {field: 'aliasOfYears', title: '索引别名年份数', width: 130},
+                    {field: 'aliasOfYears', title: '数据保留年份数', width: 130},
                     {field: 'refreshInterval', title: '刷盘间隔', width: 100},
                     {field: 'description', title: '描述信息'},
                     {field: 'rowUpdateTime', title: '最近一次重建索引时间', templet: '#colRowUpdateTime', width: 170},
@@ -131,8 +131,8 @@
                                 layer.close(i);
                                 const iframeWindow = window['layui-layer-iframe' + index], submitID = 'btn_confirm',
                                     submit = layero.find('iframe').contents().find('#' + submitID),
-                                    mapping = layero.find('iframe').contents().find('#btnMapping');
-                                mapping.click();
+                                    source = layero.find('iframe').contents().find('#btnSource');
+                                source.click();
                                 iframeWindow.layui.form.on('submit(' + submitID + ')', function (d) {
                                     const field = d.field;
                                     field.datasources = JSON.stringify(convertParam(field));
@@ -148,7 +148,7 @@
                                 submit.trigger('click');
                             });
                         },
-                        btn2: function (index, layero) {
+                        btn2: function (index) {
                             layer.confirm("确定取消主题[" + data.name + "]的索引重建设置吗?", function (i) {
                                 layer.close(i);
                                 layer.close(index);

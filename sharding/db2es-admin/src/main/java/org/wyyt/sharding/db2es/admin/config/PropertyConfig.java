@@ -1,12 +1,13 @@
 package org.wyyt.sharding.db2es.admin.config;
 
-import com.sijibao.nacos.spring.util.NacosNativeUtils;
 import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.wyyt.apollo.tool.ApolloReader;
+import org.wyyt.sharding.db2es.core.entity.domain.Names;
 
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * the entity of configuration information in application.yml
@@ -20,31 +21,8 @@ import java.util.Properties;
  */
 @Configuration
 public class PropertyConfig implements InitializingBean {
-    @Value("${acm.data-id}")
-    private String dataId;
-
-    @Value("${acm.group}")
-    private String groupId;
-
-    @Value("${acm.acmConfigPath}")
-    private String configPath;
-
-    @Value("${acm.nacosLocalSnapshotPath}")
-    private String snapshotPath;
-
-    @Value("${acm.nacosLogPath}")
-    private String logPath;
-
-    private final static String ZOOKEEPER_SERVERS = "zookeeper.servers";
-    private final static String ELASTICSEARCH_HOSTNAMES = "elasticsearch.hostnames";
-    private final static String ELASTICSEARCH_USERNAME = "elasticsearch.username";
-    private final static String ELASTICSEARCH_PASSWORD = "encrypt.elasticsearch.password";
-    private final static String DB_HOST = "db.host";
-    private final static String DB_PORT = "db.port";
-    private final static String DB_DATABASE_NAME = "db.databaseName";
-    private final static String DB_USERNAME = "db.username";
-    private final static String DB_PASSWORD = "encrypt.db.password";
-
+    @Value("${apollo.app-id}")
+    private String appId;
     @Getter
     private String zkServers;
     @Getter
@@ -65,17 +43,17 @@ public class PropertyConfig implements InitializingBean {
     private String dbPwd;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        NacosNativeUtils.loadAcmInfo(this.dataId, this.groupId, this.configPath, this.snapshotPath, this.logPath);
-        final Properties acmProperties = NacosNativeUtils.getConfig();
-        this.zkServers = acmProperties.getProperty(ZOOKEEPER_SERVERS, "");
-        this.esHost = acmProperties.getProperty(ELASTICSEARCH_HOSTNAMES, "");
-        this.esUid = acmProperties.getProperty(ELASTICSEARCH_USERNAME, "");
-        this.esPwd = acmProperties.getProperty(ELASTICSEARCH_PASSWORD, "");
-        this.dbHost = acmProperties.getProperty(DB_HOST, "");
-        this.dbPort = acmProperties.getProperty(DB_PORT, "");
-        this.dbName = acmProperties.getProperty(DB_DATABASE_NAME, "");
-        this.dbUid = acmProperties.getProperty(DB_USERNAME, "");
-        this.dbPwd = acmProperties.getProperty(DB_PASSWORD, "");
+    public void afterPropertiesSet() {
+        final ApolloReader apolloReader = new ApolloReader(this.appId);
+        final Map<String, String> properties = apolloReader.getProperties();
+        this.zkServers = properties.get(Names.ZOOKEEPER_SERVERS);
+        this.esHost = properties.get(Names.ELASTICSEARCH_HOSTNAMES);
+        this.esUid = properties.get(Names.ELASTICSEARCH_USERNAME);
+        this.esPwd = properties.get(Names.ELASTICSEARCH_PASSWORD);
+        this.dbHost = properties.get(Names.DATABASE_HOST);
+        this.dbPort = properties.get(Names.DATABASE_PORT);
+        this.dbName = properties.get(Names.DATABASE_NAME);
+        this.dbUid = properties.get(Names.DATABASE_USERNAME);
+        this.dbPwd = properties.get(Names.DATABASE_PASSWORD);
     }
 }

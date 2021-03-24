@@ -17,27 +17,13 @@
                         <input type="text" class="layui-input" value="${topic.name!''}" readonly="readonly">
                     </div>
 
-                    <div class="layui-inline">主分片数:</div>
-                    <div class="layui-inline" style="width: 160px">
-                        <input type="text" class="layui-input" value="${topic.numberOfShards!''}" readonly="readonly">
-                    </div>
-
-                    <div class="layui-inline">副本分片数:</div>
-                    <div class="layui-inline" style="width: 160px">
-                        <input type="text" class="layui-input" value="${topic.numberOfReplicas!''}" readonly="readonly">
-                    </div>
-
-                    <div class="layui-inline">索引别名年份数:</div>
+                    <div class="layui-inline">数据保留年份数:</div>
                     <div class="layui-inline" style="width: 160px">
                         <input type="text" class="layui-input" value="${topic.aliasOfYears!''}" readonly="readonly">
                     </div>
 
-                    <div class="layui-inline">刷盘间隔:</div>
-                    <div class="layui-inline" style="width: 160px">
-                        <input type="text" class="layui-input" value="${topic.refreshInterval!''}" readonly="readonly">
-                    </div>
                     <div class="layui-inline">描述信息:</div>
-                    <div class="layui-inline" style="width: 882px">
+                    <div class="layui-inline" style="width: 426px">
                         <input type="text" class="layui-input" value="${topic.description!''}" readonly="readonly">
                     </div>
                 </div>
@@ -67,8 +53,8 @@
                 styleActiveLine: true,
                 autoRefresh: true
             });
-            txtJson.setSize('auto', '510px');
-            txtJson.setValue(JSON.stringify(${topic.mapping}, null, "\t"));
+            txtJson.setSize('auto', '555px');
+            txtJson.setValue(JSON.stringify(${topic.source}, null, "\t"));
         });
     </script>
     </body>

@@ -70,7 +70,7 @@ public final class Names {
     /**
      * ElasticSearch的密码
      */
-    public static final String ELASTICSEARCH_PASSWORD = "encrypt.elasticsearch.password";
+    public static final String ELASTICSEARCH_PASSWORD = "elasticsearch.password";
     /**
      * 用于同步失败记录异常数据库的地址
      */
@@ -90,40 +90,11 @@ public final class Names {
     /**
      * 用于同步失败记录异常数据库的密码
      */
-    public static final String DATABASE_PASSWORD = "encrypt.db.password";
+    public static final String DATABASE_PASSWORD = "db.password";
     /**
-     * ACM配置
+     * Apollo的App_Id
      */
-    public static final String ACM_DATA_ID = "acm.data.id";
-    /**
-     * ACM配置
-     */
-    public static final String ACM_GROUP_ID = "acm.group.id";
-    /**
-     * ACM配置
-     */
-    public static final String ACM_CONFIG_PATH = "acm.config.path";
-    /**
-     * ACM配置
-     */
-    public static final String ACM_NACOS_LOCAL_SNAPSHOT_PATH = "acm.nacos.local.snapshot.path";
-    /**
-     * ACM配置
-     */
-    public static final String ACM_NACOS_LOG_PATH = "acm.nacos.log.path";
-    /**
-     * ES索引主分片设置
-     */
-    public static final String NUMBER_OF_SHARDS = "index.number_of_shards";
-    /**
-     * ES索引副本分片设置
-     */
-    public static final String NUMBER_OF_REPLICAS = "index.number_of_replicas";
-    /**
-     * ES索引刷盘间隔时间设置
-     */
-    public static final String REFRESH_INTERVAL = "index.refresh_interval";
-
+    public static final String APOLLO_APP_ID = "apollo.app_id";
     /**
      * kafka集群地址
      */
@@ -139,4 +110,9 @@ public final class Names {
      * DB2ES存储在zk中的路径
      */
     public static final String ZOOKEEPER_BROKER_IDS_PATH = "/brokers/ids";
+
+    public static final String SETTINGS = "settings";
+    public static final String NUMBER_OF_SHARDS = "number_of_shards";
+    public static final String NUMBER_OF_REPLICAS = "number_of_replicas";
+    public static final String REFRESH_INTERVAL = "refresh_interval";
 }

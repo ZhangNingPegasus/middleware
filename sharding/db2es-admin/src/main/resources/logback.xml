@@ -4,6 +4,9 @@
     </logger>
     <logger name="org.apache.kafka" level="OFF">
     </logger>
+    <logger name="org.apache.curator.framework.imps.EnsembleTracker" level="OFF">
+    </logger>
+
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>

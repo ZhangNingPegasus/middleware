@@ -1,7 +1,6 @@
 package org.wyyt.sharding.db2es.admin.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.sijibao.nacos.spring.util.NacosRsaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -9,6 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.wyyt.admin.ui.common.Utils;
+import org.wyyt.elasticsearch.service.ElasticSearchService;
+import org.wyyt.sharding.auto.property.DataSourceProperty;
+import org.wyyt.sharding.auto.property.DimensionProperty;
+import org.wyyt.sharding.auto.property.TableProperty;
 import org.wyyt.sharding.db2es.admin.config.PropertyConfig;
 import org.wyyt.sharding.db2es.admin.entity.vo.DataSourceVo;
 import org.wyyt.sharding.db2es.admin.entity.vo.RebuildVo;
@@ -18,11 +21,9 @@ import org.wyyt.sharding.db2es.admin.service.common.ShardingDbService;
 import org.wyyt.sharding.db2es.admin.utils.EsMappingUtils;
 import org.wyyt.sharding.db2es.core.entity.persistent.Topic;
 import org.wyyt.sharding.db2es.core.exception.Db2EsException;
-import org.wyyt.sharding.auto.property.DataSourceProperty;
-import org.wyyt.sharding.auto.property.DimensionProperty;
-import org.wyyt.sharding.auto.property.TableProperty;
 import org.wyyt.sharding.entity.FieldInfo;
 import org.wyyt.sharding.service.ShardingService;
+import org.wyyt.tool.common.CommonTool;
 import org.wyyt.tool.db.DataSourceTool;
 import org.wyyt.tool.rpc.Result;
 
@@ -51,17 +52,20 @@ public class RebuildController {
     private final TopicService topicService;
     private final RebuildService rebuildService;
     private final PropertyConfig propertyConfig;
+    private final ElasticSearchService elasticSearchService;
 
     public RebuildController(final ShardingService shardingService,
                              final ShardingDbService shardingDbService,
                              final TopicService topicService,
                              final RebuildService rebuildService,
-                             final PropertyConfig propertyConfig) {
+                             final PropertyConfig propertyConfig,
+                             final ElasticSearchService elasticSearchService) {
         this.shardingService = shardingService;
         this.shardingDbService = shardingDbService;
         this.topicService = topicService;
         this.rebuildService = rebuildService;
         this.propertyConfig = propertyConfig;
+        this.elasticSearchService = elasticSearchService;
     }
 
     @GetMapping("tolist")
@@ -96,9 +100,12 @@ public class RebuildController {
 
             final DataSource dataSource = this.shardingDbService.getDataSourceByName(dbNameList.get(0));
             final List<FieldInfo> fieldVos = this.shardingService.listFields(dataSource, String.format(dimensionInfo.getValue().getTableNameFormat(), 0));
-            model.addAttribute("mapping", Utils.toPrettyFormatJson(EsMappingUtils.getEsMapping(fieldVos)));
+            model.addAttribute("source", Utils.toPrettyFormatJson(EsMappingUtils.getEsSource(
+                    this.elasticSearchService.getNodesCount(),
+                    this.elasticSearchService.getNodesCount() - 1,
+                    fieldVos)));
         } else {
-            model.addAttribute("mapping", Utils.toPrettyFormatJson(topic.getMapping()));
+            model.addAttribute("source", Utils.toPrettyFormatJson(topic.getSource()));
         }
         int replicaNum = this.propertyConfig.getEsHost().split(",").length - 1;
         model.addAttribute("replicaNum", replicaNum);
@@ -162,6 +169,10 @@ public class RebuildController {
     public Result<?> rebuild(final Topic topic,
                              @RequestParam(value = "datasources") final String datasources,
                              @RequestParam(value = "type") final Integer type) throws Exception {
+        if (null == topic || !CommonTool.isJson(topic.getSource())) {
+            return Result.error("ES的source不是标准的JSON格式");
+        }
+
         List<DataSourceVo> dataSourceVoList;
         final Map<DataSourceVo, Set<String>> tableSourceMap = new HashMap<>();
 
@@ -250,7 +261,7 @@ public class RebuildController {
             dataSourceVo.setHost(value.getHost());
             dataSourceVo.setPort(value.getPort());
             dataSourceVo.setUid(value.getUsername());
-            dataSourceVo.setPwd(NacosRsaUtils.decrypt(value.getPassword()));
+            dataSourceVo.setPwd(value.getPassword());
             dataSourceVo.setDatabaseName(value.getDatabaseName());
             dataSourceVoList.add(dataSourceVo);
 

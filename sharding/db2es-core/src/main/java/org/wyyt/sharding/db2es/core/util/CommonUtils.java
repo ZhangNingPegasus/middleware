@@ -1,6 +1,7 @@
 package org.wyyt.sharding.db2es.core.util;
 
 import cn.hutool.core.date.DateUtil;
+import com.ctrip.framework.apollo.ConfigService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ObjectUtils;
 import org.wyyt.sharding.db2es.core.entity.domain.Config;

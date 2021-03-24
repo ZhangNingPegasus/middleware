@@ -12,7 +12,6 @@
         <module>spring-cloud</module>
         <module>sharding</module>
         <module>kafka</module>
-        <module>basic-service</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
@@ -100,7 +99,6 @@
         <httpcore.version>4.4.14</httpcore.version>
         <junit.version>4.13.2</junit.version>
 
-        <nacos-spring-config-ex.version>1.1.9</nacos-spring-config-ex.version>
         <logstash-logback-encoder-ex.version>6.4</logstash-logback-encoder-ex.version>
     </properties>
 
@@ -461,26 +459,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>log4j-over-slf4j</artifactId>
                 <version>${log4j-over-slf4j.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.sijibao.nacos</groupId>
-                <artifactId>nacos-spring-config-ex</artifactId>
-                <version>${nacos-spring-config-ex.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>sentinel-datasource-nacos</artifactId>
-                        <groupId>com.alibaba.csp</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>commons-io</artifactId>
-                        <groupId>commons-io</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>logstash-logback-encoder</artifactId>
-                        <groupId>net.logstash.logback</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>

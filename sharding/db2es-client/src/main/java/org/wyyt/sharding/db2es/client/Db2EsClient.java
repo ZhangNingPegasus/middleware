@@ -1,8 +1,8 @@
 package org.wyyt.sharding.db2es.client;
 
-import com.sijibao.nacos.spring.util.NacosNativeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.wyyt.apollo.tool.ApolloReader;
 import org.wyyt.sharding.db2es.client.boot.Boot;
 import org.wyyt.sharding.db2es.client.common.Context;
 import org.wyyt.sharding.db2es.core.entity.domain.Config;
@@ -71,12 +71,7 @@ public final class Db2EsClient {
         result.setDbUid(properties.getProperty(Names.DATABASE_USERNAME, "").trim());
         result.setDbPwd(properties.getProperty(Names.DATABASE_PASSWORD, "").trim());
         result.setInitialCheckpoint(properties.getProperty(Names.INITIAL_CHECKPOINT, "").trim());
-        result.setAcmDataId(properties.getProperty(Names.ACM_DATA_ID, "").trim());
-        result.setAcmGroupId(properties.getProperty(Names.ACM_GROUP_ID, "").trim());
-        result.setAcmConfigPath(properties.getProperty(Names.ACM_CONFIG_PATH, "").trim());
-        result.setAcmNacosLocalSnapshotPath(properties.getProperty(Names.ACM_NACOS_LOCAL_SNAPSHOT_PATH, "").trim());
-        result.setAcmNacosLogPath(properties.getProperty(Names.ACM_NACOS_LOG_PATH, "").trim());
-
+        result.setApolloAppId(properties.getProperty(Names.APOLLO_APP_ID, "").trim());
         final Map<String, String> topicCheckpointSet = new HashMap<>();
         for (final Map.Entry<Object, Object> pair : properties.entrySet()) {
             if (Pattern.matches("db2es.*-.*checkpoint", pair.getKey().toString())) {
@@ -87,17 +82,12 @@ public final class Db2EsClient {
         return result;
     }
 
-    private static void readAcmSetting(final Properties properties) throws Exception {
-        NacosNativeUtils.loadAcmInfo(properties.getProperty(Names.ACM_DATA_ID, ""),
-                properties.getProperty(Names.ACM_GROUP_ID, ""),
-                properties.getProperty(Names.ACM_CONFIG_PATH, ""),
-                properties.getProperty(Names.ACM_NACOS_LOCAL_SNAPSHOT_PATH, ""),
-                properties.getProperty(Names.ACM_NACOS_LOG_PATH, ""));
-        final Properties acmProperties = NacosNativeUtils.getConfig();
-
-        for (final Map.Entry<Object, Object> item : acmProperties.entrySet()) {
-            final String key = item.getKey().toString();
-            final String value = item.getValue().toString();
+    private static void readAcmSetting(final Properties properties) {
+        final ApolloReader apolloReader = new ApolloReader(properties.getProperty(Names.APOLLO_APP_ID, ""));
+        final Map<String, String> propertiesMap = apolloReader.getProperties();
+        for (final Map.Entry<String, String> pair : propertiesMap.entrySet()) {
+            final String key = pair.getKey();
+            final String value = pair.getValue();
             properties.setProperty(key, value);
         }
     }

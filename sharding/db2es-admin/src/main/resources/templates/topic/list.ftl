@@ -62,7 +62,7 @@
             tableErrorHandler();
             form.on('submit(search)', function (data) {
                 const field = data.field;
-                table.reload('grid', {page: {curr: 1}, where: field});
+                table.reload('grid', {where: field});
             });
             table.render({
                 elem: '#grid',
@@ -82,7 +82,7 @@
                     {field: 'name', title: '名称', width: 300},
                     {field: 'numberOfShards', title: '主分片数', width: 100},
                     {field: 'numberOfReplicas', title: '副本分片数', width: 100},
-                    {field: 'aliasOfYears', title: '索引别名年份数', width: 130},
+                    {field: 'aliasOfYears', title: '数据保留年份数', width: 130},
                     {field: 'refreshInterval', title: '刷盘间隔', width: 100},
                     {field: 'description', title: '描述信息'},
                     {
@@ -115,37 +115,24 @@
                         yes: function (index, layero) {
                             const iframeWindow = window['layui-layer-iframe' + index], submitID = 'btn_confirm',
                                 submit = layero.find('iframe').contents().find('#' + submitID),
-                                mapping = layero.find('iframe').contents().find('#btnMapping');
-                            mapping.click();
+                                source = layero.find('iframe').contents().find('#btnSource');
+                            source.click();
 
                             iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                                 const field = data.field;
                                 if (field.name === '') {
                                     admin.error("系统错误", "请选择主题名称");
                                     return false;
-                                } else if (field.numberOfShards === '') {
-                                    admin.error("系统错误", "请填写主分片数");
-                                    return false;
-                                } else if (field.numberOfReplicas === '') {
-                                    admin.error("系统错误", "请填写副本分片数");
-                                    return false;
-                                } else if (field.refreshInterval === '') {
-                                    admin.error("系统错误", "请填写索引别名年份数");
-                                    return false;
                                 } else if (field.aliasOfYears === '') {
                                     admin.error("系统错误", "请填写刷盘间隔");
                                     return false;
-                                } else if (field.mapping === '') {
+                                } else if (field.source === '') {
                                     admin.error("系统错误", "请填写Mapping信息");
                                     return false;
-                                } else if (field.numberOfShards < 1) {
-                                    admin.error("系统错误", "主分片数至少是1个");
-                                    return false;
                                 } else if (field.aliasOfYears < 1) {
-                                    admin.error("系统错误", "索引别名年份数至少是1年");
+                                    admin.error("系统错误", "数据保留年份数至少是1年");
                                     return false;
                                 }
-
                                 admin.post('add', field, function () {
                                     table.reload('grid');
                                     layer.close(index);

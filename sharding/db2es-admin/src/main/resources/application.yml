@@ -1,33 +1,21 @@
-acm:
-  data-id: scfs-refactoring-db2es
-  group: SIJIBAO_SCFS
-  acmConfigPath: acmConfig.properties
-  nacosLocalSnapshotPath: /wyyt/etc/acm/db2es/
-  nacosLogPath: /wyyt/logs/sql_tool/
+apollo:
+  app-id: db2es
+
+sharding:
+  enabled: false
+  work-id: 100
+  show-sql: false
+  apollo:
+    app-id: ${apollo.app-id}
+    data-source-key: datasource
+    dimension-key: dimension
+    table-key: table
 
 admin:
   ui:
     title: DB2ES管理综合平台
     full-name: DB2ES管理综合平台
     short-name: DB2ES管理综合平台
-
-sharding:
-  enabled: false
-  work-id: 100
-  show-sql: false
-  acm:
-    datasource:
-      data-id: scfs.xml.datasource.encrypt
-      group: SIJIBAO_ORDER_CENTER_GROUP
-    dimension:
-      data-id: scfs.xml.dimension
-      group: SIJIBAO_ORDER_CENTER_GROUP
-    table:
-      data-id: scfs.xml.table
-      group: SIJIBAO_ORDER_CENTER_GROUP
-    acmConfigPath: acmConfig.properties
-    nacosLocalSnapshotPath: /wyyt/etc/acm/sql_tool
-    nacosLogPath: /wyyt/logs/tomcat/sql_tool/
 
 server:
   port: ${db2es.admin.port:10088}

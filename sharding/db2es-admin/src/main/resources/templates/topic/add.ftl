@@ -15,38 +15,21 @@
                     <div class="layui-inline">主题名称:</div>
                     <div class="layui-inline" style="width: 330px">
                         <select name="name" lay-filter="name" lay-verify="required" lay-search>
-                            <option value="">选择对应的逻辑表可自动生成MAPPING</option>
+                            <option value="">选择对应的逻辑表可自动生成索引Source</option>
                             <#list tables as table>
                                 <option value="${table}">${table}</option>
                             </#list>
                         </select>
                     </div>
 
-                    <div class="layui-inline">主分片数:</div>
-                    <div class="layui-inline" style="width: 160px">
-                        <input type="number" id="numberOfShards" name="numberOfShards" lay-verify="required"
-                               class="layui-input" placeholder="请填写主分片数" value="5" autocomplete="off">
-                    </div>
-
-                    <div class="layui-inline">副本分片数:</div>
-                    <div class="layui-inline" style="width: 160px">
-                        <input type="number" id="numberOfReplicas" name="numberOfReplicas" lay-verify="required"
-                               class="layui-input" placeholder="请填写副本分片数" value="${replicaNum}" autocomplete="off">
-                    </div>
-
-                    <div class="layui-inline">索引别名年份数:</div>
+                    <div class="layui-inline">数据保留年份数:</div>
                     <div class="layui-inline" style="width: 160px">
                         <input type="number" id="aliasOfYears" name="aliasOfYears" lay-verify="required"
-                               class="layui-input" placeholder="请填写索引别名年份数" value="3" autocomplete="off">
+                               class="layui-input" placeholder="请填写数据保留年份数" value="3" autocomplete="off">
                     </div>
 
-                    <div class="layui-inline">刷盘间隔:</div>
-                    <div class="layui-inline" style="width: 160px">
-                        <input type="text" id="refreshInterval" name="refreshInterval" lay-verify="required"
-                               class="layui-input" placeholder="请填写索引刷盘间隔" value="1s" autocomplete="off">
-                    </div>
                     <div class="layui-inline">描述信息:</div>
-                    <div class="layui-inline" style="width: 882px">
+                    <div class="layui-inline" style="width: 426px">
                         <input type="text" id="description" name="description" class="layui-input" placeholder="请填写描述信息"
                                autocomplete="off">
                     </div>
@@ -61,8 +44,8 @@
 
         <div class="layui-form-item layui-hide">
             <input type="button" lay-submit lay-filter="btn_confirm" id="btn_confirm" value="">
-            <input type="button" lay-submit lay-filter="btnMapping" id="btnMapping" value="">
-            <textarea id="mapping" name="mapping" class="layui-input" autocomplete="off"
+            <input type="button" lay-submit lay-filter="btnSource" id="btnSource" value="">
+            <textarea id="source" name="source" class="layui-input" autocomplete="off"
                       style="resize: none"></textarea>
         </div>
     </div>
@@ -84,21 +67,21 @@
                 styleActiveLine: true,
                 autoRefresh: true
             });
-            txtJson.setSize('auto', '510px');
+            txtJson.setSize('auto', '555px');
 
             form.on('select(name)', function (data) {
                 const tableName = data.value;
                 if ($.trim(tableName) === '') {
                     return;
                 }
-                admin.post('getMapping', {'tableName': tableName}, function (data) {
+                admin.post('getSource', {'tableName': tableName}, function (data) {
                     data = data.data;
                     txtJson.setValue(data);
                 });
             });
 
-            $("#btnMapping").click(function () {
-                $("#mapping").html(txtJson.getValue());
+            $("#btnSource").click(function () {
+                $("#source").html(txtJson.getValue());
             });
         });
     </script>

@@ -1,10 +1,12 @@
 package org.wyyt.tool.common;
 
+import com.alibaba.fastjson.JSONValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.util.ObjectUtils;
 import org.wyyt.tool.exception.ExceptionTool;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +30,18 @@ public final class CommonTool {
     private final static long GB_IN_BYTES = 1024 * MB_IN_BYTES;
     private final static long TB_IN_BYTES = 1024 * GB_IN_BYTES;
     private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
+
+    public static boolean isJson(final String value) {
+        if (ObjectUtils.isEmpty(value)) {
+            return false;
+        }
+
+        try (final JSONValidator from = JSONValidator.from(value)) {
+            return from.validate();
+        } catch (IOException e) {
+            return false;
+        }
+    }
 
     public static Date getMinDate() {
         return new Date(0);

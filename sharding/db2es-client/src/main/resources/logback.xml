@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <logger name="org.apache" level="OFF">
+    <logger name="org.apache" level="ERROR">
     </logger>
-    <logger name="org.reflections" level="OFF">
+    <logger name="org.reflections" level="ERROR">
     </logger>
-    <logger name="com.zaxxer" level="OFF">
+    <logger name="com.zaxxer" level="ERROR">
+    </logger>
+    <logger name="com.ctrip.framework.foundation.internals.provider.DefaultServerProvider" level="ERROR">
+    </logger>
+    <logger name="com.ctrip.framework.foundation.internals.provider.DefaultApplicationProvider" level="ERROR">
+    </logger>
+    <logger name="com.ctrip.framework.apollo.internals.DefaultMetaServerProvider" level="ERROR">
+    </logger>
+    <logger name="com.ctrip.framework.apollo.core.MetaDomainConsts" level="ERROR">
+    </logger>
+    <logger name="org.apache.curator.framework.imps.CuratorFrameworkImpl" level="ERROR">
+    </logger>
+    <logger name="org.apache.zookeeper.ZooKeeper" level="ERROR">
+    </logger>
+    <logger name="org.apache.curator.framework.imps.EnsembleTracker" level="OFF">
     </logger>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">

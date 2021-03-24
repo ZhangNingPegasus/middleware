@@ -168,11 +168,8 @@ CREATE TABLE IF NOT EXISTS `t_topic`
 (
     `id`                 BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
     `name`               VARCHAR(128)        NOT NULL DEFAULT '' COMMENT '主题名称',
-    `number_of_shards`   INT(10) UNSIGNED    NOT NULL COMMENT '主分片的个数',
-    `number_of_replicas` INT(10) UNSIGNED    NOT NULL COMMENT '每个主分片的副本分片的个数',
-    `refresh_interval`   VARCHAR(64)         NOT NULL DEFAULT '1s' COMMENT '数据刷盘的间隔时间',
     `alias_of_years`     INT(10) UNSIGNED    NOT NULL COMMENT '将多少年的索引归为同一个索引别名',
-    `mapping`            TEXT                NOT NULL COMMENT '主题对应的ES索引的MAPPING',
+    `source`             TEXT                NOT NULL COMMENT '主题对应的ES索引的source (必须包括settings和mappings两部分)',
     `description`        VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '主题描述信息',
     `row_create_time`    DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
     `row_update_time`    DATETIME(3)         NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',

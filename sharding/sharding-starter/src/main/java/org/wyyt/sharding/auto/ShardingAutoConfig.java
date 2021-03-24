@@ -1,8 +1,6 @@
 package org.wyyt.sharding.auto;
 
 import cn.hutool.core.util.StrUtil;
-import com.sijibao.nacos.spring.util.NacosNativeUtils;
-import com.sijibao.nacos.spring.util.NacosRsaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shardingsphere.api.config.sharding.KeyGeneratorConfiguration;
 import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
@@ -24,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.util.ObjectUtils;
+import org.wyyt.apollo.tool.ApolloReader;
 import org.wyyt.sharding.algorithm.impl.DatabaseComplexShardingAlgorithm;
 import org.wyyt.sharding.algorithm.impl.TableComplexShardingAlgorithm;
 import org.wyyt.sharding.aop.TransactionAop;
@@ -65,6 +64,13 @@ public class ShardingAutoConfig implements DisposableBean {
     @Bean
     @Primary
     @ConditionalOnMissingBean
+    public ApolloReader apolloReader(final XmlConfig xmlConfig) {
+        return new ApolloReader(this.xmlConfig.getApollo().getMeta(), this.xmlConfig.getApollo().getAppId());
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
     public MainMybatisInterceptor mainMybatisInterceptor(final ApplicationContext applicationContext) {
         return new MainMybatisInterceptor(applicationContext);
     }
@@ -93,11 +99,11 @@ public class ShardingAutoConfig implements DisposableBean {
     @Bean
     @Primary
     @ConditionalOnMissingBean
-    public ShardingProperty shardingProperty() throws Exception {
+    public ShardingProperty shardingProperty(final ApolloReader apolloReader) throws Exception {
         final ShardingProperty shardingProperty = new ShardingProperty();
-        shardingProperty.setDataSourceProperties(analyseDataSourceXML(shardingProperty));
-        shardingProperty.setDimensionProperties(analyseDimensionXml(shardingProperty));
-        shardingProperty.setTableProperties(analyseTableXml(shardingProperty));
+        shardingProperty.setDataSourceProperties(analyseDataSourceXML(shardingProperty, apolloReader));
+        shardingProperty.setDimensionProperties(analyseDimensionXml(shardingProperty, apolloReader));
+        shardingProperty.setTableProperties(analyseTableXml(shardingProperty, apolloReader));
         return shardingProperty;
     }
 
@@ -204,13 +210,12 @@ public class ShardingAutoConfig implements DisposableBean {
         final Map<String, DataSourceProperty> dataSourceProperties = shardingService.listDataSourcePropertyMap();
         dataSourceProperties.forEach((key, dataSourceProperty) -> this.dataSourceMap.put(
                 new DbInfo(dataSourceProperty.getName(), dataSourceProperty.getDatabaseName()),
-                DataSourceTool.createHikariDataSource(
-                        key,
+                DataSourceTool.createHikariDataSource(key,
                         dataSourceProperty.getHost(),
                         dataSourceProperty.getPort().toString(),
                         dataSourceProperty.getDatabaseName(),
                         dataSourceProperty.getUsername(),
-                        NacosRsaUtils.decrypt(dataSourceProperty.getPassword()),
+                        dataSourceProperty.getPassword(),
                         dataSourceProperty.getMinIdle(),
                         dataSourceProperty.getMaxActive())));
     }
@@ -261,15 +266,9 @@ public class ShardingAutoConfig implements DisposableBean {
         return new KeyGeneratorConfiguration("SNOWFLAKE", primaryKey, properties);
     }
 
-    private Map<String, DataSourceProperty> analyseDataSourceXML(final ShardingProperty shardingProperty) throws Exception {
-        NacosNativeUtils.loadAcmInfo(
-                this.xmlConfig.getAcm().getDatasource().getDataId(),
-                this.xmlConfig.getAcm().getDatasource().getGroup(),
-                this.xmlConfig.getAcm().getAcmConfigPath(),
-                this.xmlConfig.getAcm().getNacosLocalSnapshotPath(),
-                this.xmlConfig.getAcm().getNacosLogPath());
-        final String xml = NacosNativeUtils.getContent();
-
+    private Map<String, DataSourceProperty> analyseDataSourceXML(final ShardingProperty shardingProperty,
+                                                                 final ApolloReader apolloReader) throws Exception {
+        final String xml = apolloReader.getProperty(this.xmlConfig.getApollo().getDataSourceKey());
         final Map<String, DataSourceProperty> result = new HashMap<>();
         analyse(xml, root -> {
             shardingProperty.setShowSql(this.xmlConfig.getShowSql());
@@ -303,14 +302,9 @@ public class ShardingAutoConfig implements DisposableBean {
         return result;
     }
 
-    private Map<String, DimensionProperty> analyseDimensionXml(final ShardingProperty shardingProperty) throws Exception {
-        NacosNativeUtils.loadAcmInfo(
-                this.xmlConfig.getAcm().getDimension().getDataId(),
-                this.xmlConfig.getAcm().getDimension().getGroup(),
-                this.xmlConfig.getAcm().getAcmConfigPath(),
-                this.xmlConfig.getAcm().getNacosLocalSnapshotPath(),
-                this.xmlConfig.getAcm().getNacosLogPath());
-        final String xml = NacosNativeUtils.getContent();
+    private Map<String, DimensionProperty> analyseDimensionXml(final ShardingProperty shardingProperty,
+                                                               final ApolloReader apolloReader) throws Exception {
+        final String xml = apolloReader.getProperty(this.xmlConfig.getApollo().getDimensionKey());
 
         final List<DimensionProperty> dimensionPropertyList = new ArrayList<>();
         final Set<Integer> priorityList = new HashSet<>(64);
@@ -366,15 +360,9 @@ public class ShardingAutoConfig implements DisposableBean {
         return result;
     }
 
-    private List<TableProperty> analyseTableXml(final ShardingProperty shardingProperty) throws Exception {
-        NacosNativeUtils.loadAcmInfo(
-                this.xmlConfig.getAcm().getTable().getDataId(),
-                this.xmlConfig.getAcm().getTable().getGroup(),
-                this.xmlConfig.getAcm().getAcmConfigPath(),
-                this.xmlConfig.getAcm().getNacosLocalSnapshotPath(),
-                this.xmlConfig.getAcm().getNacosLogPath());
-        final String xml = NacosNativeUtils.getContent();
-
+    private List<TableProperty> analyseTableXml(final ShardingProperty shardingProperty,
+                                                final ApolloReader apolloReader) throws Exception {
+        final String xml = apolloReader.getProperty(this.xmlConfig.getApollo().getTableKey());
         final List<TableProperty> result = new ArrayList<>();
 
         analyse(xml, root -> {

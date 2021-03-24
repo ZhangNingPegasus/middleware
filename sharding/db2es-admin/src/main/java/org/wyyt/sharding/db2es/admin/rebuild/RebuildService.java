@@ -119,7 +119,7 @@ public class RebuildService {
                 this.createDataSource(tableSourceMap);
 
                 long start = allStart;
-                this.rebuildStatus.addMessage(String.format("开始根据新的Elastic-Search的MAPPING设定，为逻辑表[<b>%s</b>]创建新的索引", topic.getName()));
+                this.rebuildStatus.addMessage(String.format("开始根据新的索引结构，为逻辑表[<b>%s</b>]创建新的索引", topic.getName()));
                 rebuildIndexMap = createRebuildIndex(topic);
                 this.rebuildStatus.setRebuildIndexNames(rebuildIndexMap.values().stream().map(IndexName::toString).collect(Collectors.toSet()));
                 this.rebuildStatus.addProgress(10);
@@ -351,11 +351,7 @@ public class RebuildService {
                 this.esService.createIndex(
                         indexName.toString(),
                         topic.getName(),
-                        topic.getNumberOfShards(),
-                        topic.getNumberOfReplicas(),
-                        topic.getRefreshInterval(),
-                        topic.getMapping()
-                );
+                        topic.getSource());
             }
 
             if (this.esService.getElasticSearchService().exists(indexNameRebuild.toString())) {
@@ -364,11 +360,9 @@ public class RebuildService {
             this.esService.createIndex(
                     indexNameRebuild.toString(),
                     null,
-                    topic.getNumberOfShards(),
-                    0,
-                    "-1",
-                    topic.getMapping()
+                    topic.getSource()
             );
+            this.esService.optimizeBulk(indexNameRebuild.toString());
             result.put(indexNameRebuild.getYear(), indexNameRebuild);
             this.checkTerminated(null);
         }

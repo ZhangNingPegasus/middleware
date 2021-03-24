@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.wyyt.tool.anno.TranRead;
-import org.wyyt.tool.anno.TranSave;
 import org.wyyt.sharding.db2es.admin.mapper.TopicMapper;
 import org.wyyt.sharding.db2es.core.entity.persistent.Topic;
+import org.wyyt.tool.anno.TranRead;
+import org.wyyt.tool.anno.TranSave;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,16 +43,7 @@ public class TopicService extends ServiceImpl<TopicMapper, Topic> {
         if (!ObjectUtils.isEmpty(searchName)) {
             lambda.like(Topic::getName, searchName);
         }
-        lambda.select(Topic::getId,
-                Topic::getName,
-                Topic::getNumberOfShards,
-                Topic::getNumberOfReplicas,
-                Topic::getAliasOfYears,
-                Topic::getRefreshInterval,
-                Topic::getDescription,
-                Topic::getRowCreateTime,
-                Topic::getRowUpdateTime)
-                .orderByAsc(Topic::getName);
+        lambda.orderByAsc(Topic::getName);
         return this.list(queryWrapper);
     }
 
@@ -66,18 +57,15 @@ public class TopicService extends ServiceImpl<TopicMapper, Topic> {
 
     @TranSave
     public void insertOrUpdate(final Topic newTopic) {
-        final Topic dbTopic = getByName(newTopic.getName());
+        final Topic dbTopic = this.getByName(newTopic.getName());
         if (null == dbTopic) {
             this.save(newTopic);
         } else {
             final UpdateWrapper<Topic> updateWrapper = new UpdateWrapper<>();
             updateWrapper.lambda()
                     .eq(Topic::getId, dbTopic.getId())
-                    .set(Topic::getNumberOfShards, newTopic.getNumberOfShards())
-                    .set(Topic::getNumberOfReplicas, newTopic.getNumberOfReplicas())
-                    .set(Topic::getRefreshInterval, newTopic.getRefreshInterval())
                     .set(Topic::getAliasOfYears, newTopic.getAliasOfYears())
-                    .set(Topic::getMapping, newTopic.getMapping())
+                    .set(Topic::getSource, newTopic.getSource())
                     .set(Topic::getDescription, newTopic.getDescription());
             this.update(updateWrapper);
         }

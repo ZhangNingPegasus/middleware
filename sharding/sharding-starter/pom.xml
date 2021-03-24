@@ -15,6 +15,12 @@
     <dependencies>
         <dependency>
             <groupId>org.wyyt</groupId>
+            <artifactId>apollo-config</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wyyt</groupId>
             <artifactId>tool</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -88,8 +94,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.sijibao.nacos</groupId>
-            <artifactId>nacos-spring-config-ex</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
 

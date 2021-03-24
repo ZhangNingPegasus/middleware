@@ -36,12 +36,7 @@ public final class SettingHandler extends BaseHandler {
                 this.context.getConfig().getContinueOnError().toString(),
                 "当导入Elastic-Search失败时的后续动作, true表示将错误信息记录到数据库日志中并继续后续消费;false表示将持续消费当前失败的消息,直至成功为止, 默认: false"));
         result.add(new SettingVo(KAFKA_BOOTSTRAP_SERVERS, this.context.getKafkaBootstrapServers(), "Kafka集群地址"));
-        result.add(new SettingVo(ACM_DATA_ID, this.context.getConfig().getAcmDataId(), "ACM配置1"));
-        result.add(new SettingVo(ACM_GROUP_ID, this.context.getConfig().getAcmGroupId(), "ACM配置2"));
-        result.add(new SettingVo(ACM_CONFIG_PATH, this.context.getConfig().getAcmConfigPath(), "ACM配置3"));
-        result.add(new SettingVo(ACM_NACOS_LOCAL_SNAPSHOT_PATH, this.context.getConfig().getAcmNacosLocalSnapshotPath(), "ACM配置4"));
-        result.add(new SettingVo(ACM_NACOS_LOG_PATH, this.context.getConfig().getAcmNacosLogPath(), "ACM配置5"));
-
+        result.add(new SettingVo(APOLLO_APP_ID, this.context.getConfig().getApolloAppId(), "Apollo配置"));
 
         if (!ObjectUtils.isEmpty(this.context.getConfig().getInitialCheckpoint())) {
             result.add(new SettingVo(INITIAL_CHECKPOINT,
