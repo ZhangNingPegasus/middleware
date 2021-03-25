@@ -21,6 +21,9 @@ import java.util.Map;
  */
 @Configuration
 public class PropertyConfig implements InitializingBean {
+
+    private final ApolloReader apolloReader;
+
     @Value("${apollo.app-id}")
     private String appId;
     @Getter
@@ -42,10 +45,13 @@ public class PropertyConfig implements InitializingBean {
     @Getter
     private String dbPwd;
 
+    public PropertyConfig(ApolloReader apolloReader) {
+        this.apolloReader = apolloReader;
+    }
+
     @Override
     public void afterPropertiesSet() {
-        final ApolloReader apolloReader = new ApolloReader(this.appId);
-        final Map<String, String> properties = apolloReader.getProperties();
+        final Map<String, String> properties = this.apolloReader.getProperties();
         this.zkServers = properties.get(Names.ZOOKEEPER_SERVERS);
         this.esHost = properties.get(Names.ELASTICSEARCH_HOSTNAMES);
         this.esUid = properties.get(Names.ELASTICSEARCH_USERNAME);

@@ -68,8 +68,8 @@
                 cols: [[
                     {field: 'name', title: '索引名'},
                     {field: 'source', templet: '#colSource', title: '数据源'},
-                    {field: 'count', title: '总共同步数量'},
-                    {field: 'tps', title: '每秒同步数量'},
+                    {field: 'count', title: '总共同步数据(单位: 条)'},
+                    {field: 'tps', title: '每秒同步数据(单位: 条)'},
                     {field: 'second', title: '耗时时长', width: 150}
                 ]],
                 done: function () {

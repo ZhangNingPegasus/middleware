@@ -99,7 +99,7 @@ sharding:
         &lt;!-- 数据库IP地址. 必填项 --&gt;
         &lt;host&gt;192.168.0.197&lt;/host&gt;
         &lt;!-- 数据库端口. 必填项 --&gt;
-        &lt;port&gt;6612&lt;/port&gt;
+        &lt;port&gt;3306&lt;/port&gt;
         &lt;!-- 数据库的真实物理名称. 必填项 --&gt;
         &lt;databaseName&gt;finance_center_main_0&lt;/databaseName&gt;
         &lt;!-- 数据库的账号. 必填项 --&gt;
@@ -114,7 +114,7 @@ sharding:
 
     &lt;datasource name="finance_center_main_1" index="1"&gt;
         &lt;host&gt;192.168.0.197&lt;/host&gt;
-        &lt;port&gt;6612&lt;/port&gt;
+        &lt;port&gt;3306&lt;/port&gt;
         &lt;databaseName&gt;finance_center_main_1&lt;/databaseName&gt;
         &lt;username&gt;root&lt;/username&gt;
         &lt;password&gt;EqkPepuq0FNoCe49w=&lt;/password&gt;
@@ -125,7 +125,7 @@ sharding:
     &lt;!--******当SQL所涉及的数据表在以上数据源中查询不到时, 会自动去isDefault=true(该属性默认为false)的数据源中寻找, 最多只能拥有一个isDefault=true的数据源******--&gt;
     &lt;datasource name="finance_other" isDefault="true"&gt;
         &lt;host&gt;192.168.5.110&lt;/host&gt;
-        &lt;port&gt;6612&lt;/port&gt;
+        &lt;port&gt;3306&lt;/port&gt;
         &lt;databaseName&gt;finance_dev&lt;/databaseName&gt;
         &lt;username&gt;fin&lt;/username&gt;
         &lt;password&gt;TdAvSNMlMQhNY2MG9pzKY=&lt;/password&gt;

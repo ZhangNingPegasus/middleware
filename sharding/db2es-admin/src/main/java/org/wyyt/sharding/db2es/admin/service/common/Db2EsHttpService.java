@@ -1,5 +1,6 @@
 package org.wyyt.sharding.db2es.admin.service.common;
 
+import cn.hutool.core.date.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -43,9 +44,16 @@ public class Db2EsHttpService extends BaseDb2EsService {
                 if (null != topicVo.getTopicOffset().getOffset() && null != topicVo.getTopicOffset().getOffset()) {
                     topicInfoVo.setLag(Math.max(0, topicVo.getTopicOffset().getSize() - topicVo.getTopicOffset().getOffset()));
                 }
+
                 if (null != topicVo.getTopicOffset().getOffsetTimestamp()) {
-                    topicInfoVo.setOffsetDateTime(DateTool.format(new Date(Long.parseLong(topicVo.getTopicOffset().getOffsetTimestamp()))));
+                    final Date date = new Date(Long.parseLong(topicVo.getTopicOffset().getOffsetTimestamp()));
+                    if (DateUtil.year(date) <= 2000) {
+                        topicInfoVo.setOffsetDateTime("");
+                    }else{
+                        topicInfoVo.setOffsetDateTime(DateTool.format(date));
+                    }
                 }
+
                 topicInfoVo.setIsActive(topicVo.getIsActive());
                 topicInfoVo.setErrorMsg(topicVo.getErrorMsg());
                 topicInfoVo.setTps(topicVo.getTps());

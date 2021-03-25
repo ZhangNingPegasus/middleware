@@ -30,7 +30,7 @@
                 <script type="text/html" id="grid-bar">
                     {{#  if(d.inRebuild){ }}
                     <span class="layui-badge layui-bg-orange">
-                       <h3><i>正在重建中</i></h3>
+                       <h3><i>重建中...</i></h3>
                     </span>
                     {{#  } else { }}
 
@@ -99,10 +99,10 @@
                 cols: [[
                     {type: 'numbers', title: '序号', width: 50},
                     {field: 'name', title: '索引名称', width: 300},
-                    {field: 'numberOfShards', title: '主分片数', width: 100},
-                    {field: 'numberOfReplicas', title: '副本分片数', width: 100},
-                    {field: 'aliasOfYears', title: '数据保留年份数', width: 130},
-                    {field: 'refreshInterval', title: '刷盘间隔', width: 100},
+                    {field: 'numberOfShards', title: '主分片数', align: "center", width: 100},
+                    {field: 'numberOfReplicas', title: '副本分片数', align: "center", width: 100},
+                    {field: 'aliasOfYears', title: '数据保留年份数', align: "center", width: 130},
+                    {field: 'refreshInterval', title: '刷盘间隔', align: "center", width: 100},
                     {field: 'description', title: '描述信息'},
                     {field: 'rowUpdateTime', title: '最近一次重建索引时间', templet: '#colRowUpdateTime', width: 170},
                     {fixed: 'right', fixed: 'right', title: '操作', toolbar: '#grid-bar', width: 110}

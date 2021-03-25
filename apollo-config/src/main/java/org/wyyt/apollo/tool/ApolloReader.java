@@ -21,16 +21,18 @@ import java.util.Set;
 public class ApolloReader {
     private final Config config;
 
-    public ApolloReader(final String apolloMeta,
+    public ApolloReader(String apolloMeta,
                         final String appId) {
         final Map<String, String> result = new HashMap<>();
-        if (!StringUtils.isEmpty(apolloMeta)) {
-            System.setProperty("apollo.meta", apolloMeta);
-        } else {
-            if (StringUtils.isEmpty(System.getenv("apollo_meta"))) {
-                System.setProperty("apollo.meta", "http://apolloconfig.dev.wyyt:8640/");
-            }
+
+        if (StringUtils.isEmpty(apolloMeta)) {
+            apolloMeta = System.getenv("apollo_meta");
         }
+        if (StringUtils.isEmpty(apolloMeta)) {
+            apolloMeta = "http://apolloconfig.dev.wyyt:8640/";
+        }
+
+        System.setProperty("apollo.meta", apolloMeta);
         System.setProperty("app.id", appId);
         System.setProperty("apollo.bootstrap.enabled", "true");
         System.setProperty("apollo.bootstrap.eagerLoad.enabled", "true");

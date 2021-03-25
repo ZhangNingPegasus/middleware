@@ -91,8 +91,17 @@ public class RebuildService {
     public final CompletableFuture<Boolean> rebuild(final Topic topic,
                                                     final Map<DataSourceVo, Set<String>> tableSourceMap) throws Exception {
         if (!this.isRunning.compareAndSet(false, true)) {
+            this.isRunning.set(false);
             throw new Db2EsException("同一时刻只能对一个主题进行重建索引");
         }
+
+        final Topic dbTopic = this.topicService.getByName(topic.getName());
+
+        if (null != dbTopic && dbTopic.getSource().equals(topic.getSource())) {
+            this.isRunning.set(false);
+            throw new Db2EsException("索引结构没有发生任何变化, 无需重建");
+        }
+
         this.topic = topic;
         this.terminated.set(false);
         this.isShardsReady.set(false);
@@ -105,7 +114,6 @@ public class RebuildService {
         this.kafkaStatus = new KafkaStatus(topic.getName(), this.terminated);
         this.rebuildStatus.setDbStatus(this.dbStatus);
         this.rebuildStatus.setKafkaStatus(this.kafkaStatus);
-        final Topic dbTopic = this.topicService.getByName(topic.getName());
 
         this.completableFuture = CompletableFuture.supplyAsync(() -> {
             ElasticSearchBulk elasticSearchBulk = null;
@@ -119,7 +127,7 @@ public class RebuildService {
                 this.createDataSource(tableSourceMap);
 
                 long start = allStart;
-                this.rebuildStatus.addMessage(String.format("开始根据新的索引结构，为逻辑表[<b>%s</b>]创建新的索引", topic.getName()));
+                this.rebuildStatus.addMessage(String.format("开始根据新的索引结构, 为逻辑表[<b>%s</b>]创建新的索引, 创建过程中将不会影响到线上的正常使用", topic.getName()));
                 rebuildIndexMap = createRebuildIndex(topic);
                 this.rebuildStatus.setRebuildIndexNames(rebuildIndexMap.values().stream().map(IndexName::toString).collect(Collectors.toSet()));
                 this.rebuildStatus.addProgress(10);

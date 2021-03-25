@@ -80,10 +80,10 @@
                 cols: [[
                     {type: 'numbers', title: '序号', width: 50},
                     {field: 'name', title: '名称', width: 300},
-                    {field: 'numberOfShards', title: '主分片数', width: 100},
-                    {field: 'numberOfReplicas', title: '副本分片数', width: 100},
-                    {field: 'aliasOfYears', title: '数据保留年份数', width: 130},
-                    {field: 'refreshInterval', title: '刷盘间隔', width: 100},
+                    {field: 'numberOfShards', title: '主分片数', align: "center", width: 100},
+                    {field: 'numberOfReplicas', title: '副本分片数', align: "center", width: 100},
+                    {field: 'aliasOfYears', title: '数据保留年份数', align: "center", width: 130},
+                    {field: 'refreshInterval', title: '刷盘间隔', align: "center", width: 100},
                     {field: 'description', title: '描述信息'},
                     {
                         field: 'rowCreateTime',
