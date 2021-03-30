@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.wyyt.ldap.auto.LdapAutoConfig
+org.springframework.boot.env.EnvironmentPostProcessor=\
+org.wyyt.ldap.auto.LdapApplicationContextInitializer

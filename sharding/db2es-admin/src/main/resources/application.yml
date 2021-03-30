@@ -1,8 +1,6 @@
 apollo:
   app-id: bams-db2es
 
-apollo_meta: http://apolloconfig.dev.wyyt:8640/
-
 sharding:
   enabled: false
   work-id: 100
@@ -18,6 +16,7 @@ admin:
     title: DB2ES管理综合平台
     full-name: DB2ES管理综合平台
     short-name: DB2ES管理综合平台
+    login-mode: ldap
 
 server:
   port: ${db2es.admin.port:10088}
@@ -66,6 +65,19 @@ spring:
     settings:
       auto_import: common/spring.ftl as spring
       number_format: '0.##'
+  ldap:
+    base: "DC=sijibao,DC=com"
+    username: "ldap"                                           # 配置管理员账号，用于搜索、匹配用户
+    password: "ijiP9rJ7Oe40AiXq[{ks28Xgeltsc00p"               # 配置管理员密码，用于搜索、匹配用户
+    urls:
+      - "ldap://ldap.sijibao.com:38900"
+    mapping:
+      object-class-attr-name: "user"                           # ldap 用户 objectClass 配置
+      login-id-attr-name: "sAMAccountName"                     # ldap 用户唯一id，用来作为登录的 id
+      name-attr-name: "description"                            # ldap 用户名，用来作为显示名
+      mail-attr-name: "mail"                                   # ldap 邮箱属性
+      phone-number-attr-name: "mobile"                         # ldap 手机属性
+      title-attr-name: "title"                                 # ldap 职位属性
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml

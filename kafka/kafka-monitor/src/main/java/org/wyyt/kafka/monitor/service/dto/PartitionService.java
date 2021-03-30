@@ -2,7 +2,7 @@ package org.wyyt.kafka.monitor.service.dto;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.wyyt.kafka.monitor.common.Constants;
 import org.wyyt.kafka.monitor.config.PropertyConfig;

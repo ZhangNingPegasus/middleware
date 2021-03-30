@@ -7,10 +7,9 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.wyyt.admin.ui.common.Utils;
 import org.wyyt.admin.ui.entity.vo.AdminVo;
-import org.wyyt.admin.ui.service.SysAdminService;
-import org.wyyt.admin.ui.service.SysRoleService;
+import org.wyyt.admin.ui.spi.UserService;
+import org.wyyt.tool.anno.TranSave;
 
 /**
  * The authentication realm for shiro
@@ -24,20 +23,19 @@ import org.wyyt.admin.ui.service.SysRoleService;
  */
 public class AuthRealm extends AuthorizingRealm {
     @Autowired
-    private SysAdminService sysAdminService;
-    @Autowired
-    private SysRoleService sysRoleService;
+    private UserService userService;
 
     @SneakyThrows
     @Override
+    @TranSave
     protected AuthenticationInfo doGetAuthenticationInfo(final AuthenticationToken authenticationToken) throws AuthenticationException {
         final UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
-        final AdminVo adminVo = this.sysAdminService.getByUsernameAndPassword(usernamePasswordToken.getUsername(),
-                Utils.hash(new String(usernamePasswordToken.getPassword())));
-        if (null == adminVo) {
+        final String username = usernamePasswordToken.getUsername();
+        final String password = new String(usernamePasswordToken.getPassword());
+        if (!this.userService.authenticate(username, password)) {
             return null;
         }
-        adminVo.setSysRole(this.sysRoleService.getById(adminVo.getSysRoleId()));
+        final AdminVo adminVo = this.userService.getByUserName(username);
         return new SimpleAuthenticationInfo(adminVo, usernamePasswordToken.getPassword(), usernamePasswordToken.getUsername());
     }
 

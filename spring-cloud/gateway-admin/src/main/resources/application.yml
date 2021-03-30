@@ -13,6 +13,7 @@ admin:
     title: Spring Cloud 智能网关管理平台
     full-name: Spring Cloud 智能网关
     short-name: Spring Cloud 智能网关
+    login-mode: ldap
 
 server:
   port: ${gateway_admin_server_port:81}
@@ -82,6 +83,19 @@ spring:
         max-active: ${redis-max-active}
         max-idle: ${redis-max-idle}
         min-idle: ${redis-min-idle}
+  ldap:
+    base: "DC=sijibao,DC=com"
+    username: "ldap"                                           # 配置管理员账号，用于搜索、匹配用户
+    password: "ijiP9rJ7Oe40AiXq[{ks28Xgeltsc00p"               # 配置管理员密码，用于搜索、匹配用户
+    urls:
+      - "ldap://ldap.sijibao.com:38900"
+    mapping:
+      object-class-attr-name: "user"                           # ldap 用户 objectClass 配置
+      login-id-attr-name: "sAMAccountName"                     # ldap 用户唯一id，用来作为登录的 id
+      name-attr-name: "description"                            # ldap 用户名，用来作为显示名
+      mail-attr-name: "mail"                                   # ldap 邮箱属性
+      phone-number-attr-name: "mobile"                         # ldap 手机属性
+      title-attr-name: "title"                                 # ldap 职位属性
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml

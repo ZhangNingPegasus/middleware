@@ -45,12 +45,6 @@ public class SysAdmin extends BaseDto {
     private String name;
 
     /**
-     * 性别(true: 男性; false:女性)
-     */
-    @TableField(value = "`gender`")
-    private Boolean gender;
-
-    /**
      * 手机号码
      */
     @TableField(value = "`phone_number`")

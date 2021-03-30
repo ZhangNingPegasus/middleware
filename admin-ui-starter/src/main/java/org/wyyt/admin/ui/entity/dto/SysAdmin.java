@@ -23,6 +23,12 @@ public final class SysAdmin extends BaseDto {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 角色类型(1: DB 2: LDAP)
+     */
+    @TableField(value = "login_mode")
+    private Integer loginMode;
+
+    /**
      * 角色id(sys_role表的主键)
      */
     @TableField(value = "`sys_role_id`")

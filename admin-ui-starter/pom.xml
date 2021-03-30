@@ -16,6 +16,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.wyyt</groupId>
+            <artifactId>ldap-starter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>

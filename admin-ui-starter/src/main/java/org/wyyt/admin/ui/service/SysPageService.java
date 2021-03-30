@@ -122,9 +122,10 @@ public class SysPageService {
             return;
         }
         adminVo.setPermissions(getPages(adminVo));
-        adminVo.getPermissions().sort((o1, o2) -> (int) (o1.getOrderNum() - o2.getOrderNum()));
+        if (null != adminVo.getPermissions()) {
+            adminVo.getPermissions().sort((o1, o2) -> (int) (o1.getOrderNum() - o2.getOrderNum()));
+        }
     }
-
 
     private List<PageVo> getPages(final AdminVo adminVo) throws Exception {
         final List<SysPage> allPages = this.listSysPages();

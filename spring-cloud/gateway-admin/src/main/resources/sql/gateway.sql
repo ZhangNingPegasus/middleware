@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `oauth_refresh_token`  (
 CREATE TABLE IF NOT EXISTS `sys_admin`
 (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `login_mode`      INT UNSIGNED NOT NULL COMMENT '角色类型(1:DB 2:LDAP)',
     `sys_role_id`     BIGINT UNSIGNED NOT NULL COMMENT '角色id(sys_role表的主键)',
     `username`        VARCHAR(64)         NOT NULL COMMENT '管理员的登陆用户名',
     `password`        VARCHAR(128)        NOT NULL COMMENT '管理员的登陆密码',
@@ -196,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `t_route`  (
 INSERT IGNORE INTO `sys_admin`(`id`, `sys_role_id`, `username`, `password`, `name`, `phone_number`, `email`, `remark`)VALUES (1, 1, 'admin', 'ebc255e6a0c6711a4366bc99ebafb54f', '超级管理员', '18000000000', 'administrator@sjb.com', '超级管理员');
 
 INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`) VALUES (1, '超级管理员', 1, '超级管理员, 拥有最高权限');
-
+INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`) VALUES (2, '研发人员', 0, '研发人员');
 
 INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (1, '灰度发布', '/gray/tolist', b'1', b'1', b'0', 'layui-icon-release', 0, 1, '动态灰度发布');
 

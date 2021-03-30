@@ -23,6 +23,9 @@ import java.util.List;
 public final class AdminVo extends BaseDto {
     private static final long serialVersionUID = 1L;
 
+    @TableField(value = "login_mode")
+    private Integer loginMode;
+
     @TableField(value = "`sys_role_id`")
     private Long sysRoleId;
 

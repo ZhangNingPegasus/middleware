@@ -12,6 +12,7 @@
         <module>spring-cloud</module>
         <module>sharding</module>
         <module>kafka</module>
+        <module>ldap-starter</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
@@ -42,7 +43,7 @@
         <lombok.version>1.18.18</lombok.version>
         <unirest-java.version>3.11.11</unirest-java.version>
         <feign-httpclient.version>11.1</feign-httpclient.version>
-        <hutool-all.version>5.6.1</hutool-all.version>
+        <hutool-all.version>5.6.2</hutool-all.version>
         <fastjson.version>1.2.75</fastjson.version>
         <json.version>20210307</json.version>
         <jackson-databind.version>2.12.2</jackson-databind.version>
@@ -80,7 +81,7 @@
         <logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
         <apollo-openapi.version>1.8.0</apollo-openapi.version>
         <apollo-client.version>1.8.0</apollo-client.version>
-        <zookeeper.version>3.6.2</zookeeper.version>
+        <zookeeper.version>3.7.0</zookeeper.version>
         <log4j-core.version>2.14.1</log4j-core.version>
         <jjwt.version>0.9.1</jjwt.version>
         <logback-core.version>1.2.3</logback-core.version>

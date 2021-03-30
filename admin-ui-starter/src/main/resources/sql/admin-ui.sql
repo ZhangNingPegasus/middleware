@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `sys_admin`
 (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `login_mode`      INT UNSIGNED NOT NULL COMMENT '角色类型(1:DB 2:LDAP)',
     `sys_role_id`     BIGINT UNSIGNED NOT NULL COMMENT '角色id(sys_role表的主键)',
     `username`        VARCHAR(64)         NOT NULL COMMENT '管理员的登陆用户名',
     `password`        VARCHAR(128)        NOT NULL COMMENT '管理员的登陆密码',
@@ -68,8 +69,7 @@ CREATE TABLE IF NOT EXISTS `sys_role`
     UNIQUE INDEX `idx_sys_role_name` (`name`)
 ) COMMENT ='角色信息';
 INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`) VALUES (1, '超级管理员', 1, '超级管理员, 拥有最高权限');
-
-
+INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`) VALUES (2, '研发人员', 0, '研发人员');
 
 INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`, `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`,
                               `order_num`, `remark`)

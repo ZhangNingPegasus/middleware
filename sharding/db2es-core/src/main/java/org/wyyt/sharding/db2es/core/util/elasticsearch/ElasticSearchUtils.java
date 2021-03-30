@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.DocWriteRequest;
@@ -95,7 +96,7 @@ public final class ElasticSearchUtils {
                                             final Set<String> indexNames) {
         try {
             return get(restHighLevelClient,
-                    String.format(_CAT_SHARDS, org.apache.commons.lang.StringUtils.join(indexNames, ",")), IndexVo.class);
+                    String.format(_CAT_SHARDS, StringUtils.join(indexNames, ",")), IndexVo.class);
         } catch (final Exception exception) {
             return null;
         }
@@ -105,7 +106,7 @@ public final class ElasticSearchUtils {
                                             final Set<String> indexNames) {
         try {
             return get(restHighLevelClient,
-                    String.format(_CAT_ALIASES, org.apache.commons.lang.StringUtils.join(indexNames, ",")), AliasVo.class);
+                    String.format(_CAT_ALIASES, StringUtils.join(indexNames, ",")), AliasVo.class);
         } catch (final Exception exception) {
             return null;
         }

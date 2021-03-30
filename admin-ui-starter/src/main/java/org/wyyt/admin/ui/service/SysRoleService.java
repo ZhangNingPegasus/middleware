@@ -33,6 +33,9 @@ public class SysRoleService {
     }
 
     public SysRole getById(final Long sysRoleId) throws Exception {
+        if (null == sysRoleId) {
+            return null;
+        }
         return crudService.selectOne(SysRole.class, "SELECT * FROM `sys_role` WHERE `id`=?", sysRoleId);
     }
 

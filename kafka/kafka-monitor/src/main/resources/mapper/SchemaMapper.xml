@@ -5,11 +5,11 @@
     <insert id="createTableIfNotExists">
         CREATE TABLE IF NOT EXISTS `sys_admin` (
         `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+        `login_mode` INT UNSIGNED NOT NULL COMMENT '角色类型(1: DB 2: LDAP)',
         `sys_role_id` BIGINT NOT NULL COMMENT '角色id(sys_role表的主键)',
         `username` VARCHAR(64) NOT NULL COMMENT '管理员的登陆用户名',
         `password` VARCHAR(128) NOT NULL COMMENT '管理员的登陆密码',
         `name` VARCHAR(64) NOT NULL COMMENT '管理员姓名',
-        `gender` TINYINT(1) NOT NULL COMMENT '性别(1: 男性; 0:女性)',
         `phone_number` VARCHAR(64) NOT NULL COMMENT '手机号码',
         `email` VARCHAR(128) NOT NULL COMMENT '邮件地址',
         `remark` VARCHAR(256) NOT NULL COMMENT '备注',
@@ -217,12 +217,14 @@
               value="@org.wyyt.admin.ui.common.Constants@DEFAULT_ADMIN_PASSWORD"/>
         <bind name="SYSTEM_ROLE_NAME"
               value="@org.wyyt.admin.ui.common.Constants@SYSTEM_ROLE_NAME"/>
-        INSERT IGNORE INTO `sys_admin`(`id`,`sys_role_id`, `username`, `password`, `name`, `gender`, `phone_number`,
-        `email`, `remark`)VALUES(1, 1, #{DEFAULT_ADMIN_USERNAME}, #{DEFAULT_ADMIN_PASSWORD} , '系统管理员', b'1', '',
+        INSERT IGNORE INTO `sys_admin`(`id`,`sys_role_id`, `username`, `password`, `name`, `phone_number`,
+        `email`, `remark`)VALUES(1, 1, #{DEFAULT_ADMIN_USERNAME}, #{DEFAULT_ADMIN_PASSWORD} , '系统管理员', '',
         'zhangningkid@163.com', '');
 
         INSERT IGNORE INTO `sys_role`(`id`, `name`,`super_admin`, `remark`) VALUES (1, #{SYSTEM_ROLE_NAME},
         b'1','拥有最高权限');
+
+        INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`) VALUES (2, '研发人员', 0, '研发人员');
 
         INSERT IGNORE INTO `sys_page`(`id`, `name`, `url`,
         `is_menu`, `is_default`, `is_blank`, `icon_class`, `parent_id`, `order_num`, `remark`) VALUES (1,'仪表盘',

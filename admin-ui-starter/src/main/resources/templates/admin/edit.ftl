@@ -25,7 +25,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-inline">
-                <input type="text" name="username" lay-verify="required" class="layui-input layui-disabled" autocomplete="off"
+                <input type="text" name="username" lay-verify="required" class="layui-input layui-disabled"
                        value="${admin.username}" readonly>
             </div>
             <div class="layui-form-mid layui-word-aux">不可修改。用于后台登入名</div>
@@ -34,29 +34,49 @@
         <div class="layui-form-item">
             <label class="layui-form-label">姓名</label>
             <div class="layui-input-inline">
-                <input type="text" name="name" lay-verify="required" autocomplete="off" style="width: 740px"
-                       placeholder="请输入姓名" class="layui-input" value="${admin.name}">
+                <#if loginMode=="DB">
+                    <input type="text" name="name" lay-verify="required" class="layui-input" style="width: 740px"
+                           placeholder="请输入姓名" value="${admin.name}" autocomplete="off">
+                <#else>
+                    <input type="text" name="name" lay-verify="required" class="layui-input layui-disabled"
+                           style="width: 740px" value="${admin.name}" readonly>
+                </#if>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">手机</label>
             <div class="layui-input-inline">
-                <input type="text" name="phoneNumber" lay-verify="phone" style="width: 740px" autocomplete="off"
-                       class="layui-input" placeholder="请输入手机号" value="${admin.phoneNumber}">
+                <#if loginMode=="DB">
+                    <input type="text" name="phoneNumber" lay-verify="phone" style="width: 740px" class="layui-input"
+                           placeholder="请输入手机号" value="${admin.phoneNumber}" autocomplete="off">
+                <#else>
+                    <input type="text" name="phoneNumber" lay-verify="phone" style="width: 740px"
+                           class="layui-input layui-disabled" value="${admin.phoneNumber}" readonly>
+                </#if>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">邮箱</label>
             <div class="layui-input-inline">
-                <input type="text" name="email" lay-verify="email" autocomplete="off" style="width: 740px"
-                       class="layui-input" placeholder="请输入邮箱" value="${admin.email}">
+                <#if loginMode=="DB">
+                    <input type="text" name="email" lay-verify="email" style="width: 740px" class="layui-input"
+                           placeholder="请输入邮箱" value="${admin.email}" autocomplete="off">
+                <#else>
+                    <input type="text" name="email" lay-verify="email" style="width: 740px"
+                           class="layui-input layui-disabled" value="${admin.email}" readonly>
+                </#if>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
-                <textarea name="remark" placeholder="请输入备注" class="layui-textarea"
-                          style="resize: none">${admin.remark}</textarea>
+                <#if loginMode=="DB">
+                    <textarea name="remark" placeholder="请输入备注" class="layui-textarea"
+                              style="resize: none">${admin.remark}</textarea>
+                <#else>
+                    <textarea name="remark" class="layui-textarea layui-disabled" style="resize: none"
+                              readonly>${admin.remark}</textarea>
+                </#if>
             </div>
         </div>
 

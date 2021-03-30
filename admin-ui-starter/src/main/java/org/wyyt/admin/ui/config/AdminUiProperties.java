@@ -2,6 +2,7 @@ package org.wyyt.admin.ui.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.wyyt.ldap.entity.LoginMode;
 
 /**
  * Properties of AdminUI
@@ -16,6 +17,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties("admin.ui")
 public class AdminUiProperties {
+    /**
+     * 用户登录模式, 数据库模式:db; ldap模式: ldap
+     */
+    private LoginMode loginMode = LoginMode.DB;
+    ;
     /**
      * 标题
      */

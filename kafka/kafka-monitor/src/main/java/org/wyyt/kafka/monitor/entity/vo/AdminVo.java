@@ -34,9 +34,6 @@ public class AdminVo extends BaseDto {
     @TableField(value = "`name`")
     private String name;
 
-    @TableField(value = "`gender`")
-    private Boolean gender;
-
     @TableField(value = "`phone_number`")
     private String phoneNumber;
 
