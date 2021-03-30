@@ -11,7 +11,7 @@ package org.wyyt.sharding.db2es.core.entity.domain;
  * *****************************************************************
  */
 public final class Common {
-    public static final String ZK_ROOT_PATH = "/db2es";
+    public static final String ZK_ROOT_PATH = "/db2es_v1";
     public static final String LEADER = "leader";
     public static final String ID = "id_";
 
