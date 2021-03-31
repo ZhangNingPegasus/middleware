@@ -37,6 +37,8 @@ public class ARestImpl {
     private final StrategyContextHolder strategyContextHolder;
     @Value("${user.name.test}")
     private String userName;
+    @Value("${server.port}")
+    private String port;
 
     private final PluginAdapter pluginAdapter;
     private final RestTemplate restTemplate;
@@ -63,7 +65,7 @@ public class ARestImpl {
 
     @GetMapping(path = "/test")
     public Result<String> test() {
-        return Result.ok(this.userName);
+        return Result.ok(this.port);
     }
 
     @GetMapping(path = "/test/{value}")

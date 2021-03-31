@@ -96,12 +96,6 @@ public class RebuildService {
         }
 
         final Topic dbTopic = this.topicService.getByName(topic.getName());
-
-        if (null != dbTopic && dbTopic.getSource().equals(topic.getSource())) {
-            this.isRunning.set(false);
-            throw new Db2EsException("索引结构没有发生任何变化, 无需重建");
-        }
-
         this.topic = topic;
         this.terminated.set(false);
         this.isShardsReady.set(false);
