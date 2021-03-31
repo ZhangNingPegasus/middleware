@@ -6,6 +6,7 @@ sharding:
   work-id: 100
   show-sql: false
   apollo:
+    meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
     app-id: ${apollo.app-id}
     data-source-key: datasource
     dimension-key: dimension
