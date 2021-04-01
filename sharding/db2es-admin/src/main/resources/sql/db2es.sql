@@ -110,9 +110,8 @@ CREATE TABLE IF NOT EXISTS `sys_role`
     PRIMARY KEY (`id`),
     UNIQUE INDEX `idx_sys_role_name` (`name`)
 ) COMMENT ='角色信息';
-INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`)
-VALUES (1, '超级管理员', 1, '超级管理员, 拥有最高权限');
-
+INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`) VALUES (1, '超级管理员', 1, '超级管理员, 拥有最高权限');
+INSERT IGNORE INTO `sys_role`(`id`, `name`, `super_admin`, `remark`) VALUES (2, '研发人员', 0, '研发人员');
 
 
 CREATE TABLE IF NOT EXISTS `t_error_log`
