@@ -36,15 +36,15 @@
         <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
         <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
         <spring-cloud-starter-zipkin.version>2.2.7.RELEASE</spring-cloud-starter-zipkin.version>
-        <com.nepxion.discovery.version>6.8.0</com.nepxion.discovery.version>
+        <com.nepxion.discovery.version>6.9.0</com.nepxion.discovery.version>
         <caffeine.version>2.9.0</caffeine.version>
-        <checker-qual.version>3.11.0</checker-qual.version>
+        <checker-qual.version>3.12.0</checker-qual.version>
         <mysql-connector-java.version>8.0.23</mysql-connector-java.version>
-        <lombok.version>1.18.18</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
         <unirest-java.version>3.11.11</unirest-java.version>
         <feign-httpclient.version>11.1</feign-httpclient.version>
         <hutool-all.version>5.6.2</hutool-all.version>
-        <fastjson.version>1.2.75</fastjson.version>
+        <fastjson.version>1.2.76</fastjson.version>
         <json.version>20210307</json.version>
         <jackson-databind.version>2.12.2</jackson-databind.version>
         <jackson-annotations.version>2.12.2</jackson-annotations.version>

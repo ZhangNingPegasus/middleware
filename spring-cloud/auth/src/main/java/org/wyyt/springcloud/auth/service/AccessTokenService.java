@@ -1,5 +1,6 @@
 package org.wyyt.springcloud.auth.service;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +79,7 @@ public class AccessTokenService {
             throw new BusinessException(response);
         }
         final AccessToken result = new AccessToken();
-        result.setAccessToken(map.get(Names.ACCESS_TOKEN).toString());
+        result.setAccessToken(map.get(StrUtil.toUnderlineCase(Names.ACCESS_TOKEN)).toString());
         result.setExpiresTime(Long.parseLong(map.get(Constant.EXPIRES_IN).toString()));  //单位:秒
         this.redisService.set(
                 Constant.getAccessTokenRedisKey(app.getClientId()),

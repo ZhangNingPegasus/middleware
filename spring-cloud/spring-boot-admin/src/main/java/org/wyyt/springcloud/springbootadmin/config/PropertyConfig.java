@@ -2,7 +2,11 @@ package org.wyyt.springcloud.springbootadmin.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.wyyt.tool.rpc.RpcService;
 
 /**
  * the data source configuration
@@ -46,4 +50,11 @@ public class PropertyConfig {
 
     @Value("${gateway_admin_consul_name}")
     private String gatewayAdminConsulName;
+
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
+    public RpcService rpcService() {
+        return new RpcService();
+    }
 }

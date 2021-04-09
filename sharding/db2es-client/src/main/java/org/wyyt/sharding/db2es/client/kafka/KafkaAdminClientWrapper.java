@@ -5,9 +5,9 @@ import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
+import org.wyyt.sharding.db2es.client.common.Context;
 import org.wyyt.sharding.db2es.core.entity.domain.TopicOffset;
 import org.wyyt.sharding.db2es.core.util.kafka.KafkaUtils;
-import org.wyyt.sharding.db2es.client.common.Context;
 
 import java.io.Closeable;
 import java.util.*;

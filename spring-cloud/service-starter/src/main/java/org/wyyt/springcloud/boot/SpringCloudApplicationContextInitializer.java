@@ -4,6 +4,7 @@ import com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitialize
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -33,7 +34,9 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
                                        final SpringApplication springApplication) {
         if (null == configurableEnvironment || null == springApplication) {
             return;
-        } else if (configurableEnvironment.getClass().getName().equals(org.springframework.core.env.StandardEnvironment.class.getName())) {
+        }
+        final WebApplicationType webApplicationType = springApplication.getWebApplicationType();
+        if (null == webApplicationType || WebApplicationType.NONE == webApplicationType) {
             return;
         }
 
@@ -54,8 +57,11 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
                 "spring.cloud.consul.discovery.service-name",
                 "${spring.application.name}");
         this.addDefaultConfig(configurableEnvironment, properties,
-                "spring.cloud.consul.discovery.tags",
-                "group=${spring.application.group},version=${spring.application.version}");
+                "spring.cloud.discovery.metadata.group",
+                "${spring.application.group}");
+        this.addDefaultConfig(configurableEnvironment, properties,
+                "spring.cloud.discovery.metadata.version",
+                "${spring.application.version}");
         this.addDefaultConfig(configurableEnvironment, properties,
                 "spring.cloud.consul.discovery.metadata.group",
                 "${spring.application.group}");
@@ -243,10 +249,6 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
                 false);
 
         // strategy config
-        // 开启和关闭路由策略的控制。一旦关闭，路由策略功能将失效。缺失则默认为true
-        this.addDefaultConfig(configurableEnvironment, properties,
-                "spring.application.strategy.control.enabled",
-                true);
         // 开启和关闭Ribbon默认的ZoneAvoidanceRule负载均衡策略。一旦关闭，则使用RoundRobin简单轮询负载均衡策略。缺失则默认为true
         this.addDefaultConfig(configurableEnvironment, properties,
                 "spring.application.strategy.zone.avoidance.rule.enabled",
