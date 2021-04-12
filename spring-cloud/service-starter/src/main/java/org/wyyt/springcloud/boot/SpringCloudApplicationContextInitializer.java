@@ -284,7 +284,7 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
         // 路由策略的时候，对REST方式调用拦截的时候（支持Feign或者RestTemplate调用），希望把来自外部自定义的Header参数（用于业务系统自定义Header，例如：mobile）传递到服务里，那么配置如下值。如果多个用“;”分隔，不允许出现空格
         this.addDefaultConfig(configurableEnvironment, properties,
                 "spring.application.strategy.business.request.headers",
-                StringUtils.join(Arrays.asList(Names.ACCESS_TOKEN, Names.CLIENT_ID), ";"));
+                StringUtils.join(Arrays.asList(Names.HEADER_ACCESS_TOKEN, Names.HEADER_CLIENT_ID), ";"));
         // 启动和关闭路由策略的时候，对RPC方式的调用拦截。缺失则默认为false
         this.addDefaultConfig(configurableEnvironment, properties,
                 "spring.application.strategy.rpc.intercept.enabled",

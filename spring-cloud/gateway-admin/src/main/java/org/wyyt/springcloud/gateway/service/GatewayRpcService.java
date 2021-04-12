@@ -72,7 +72,7 @@ public class GatewayRpcService {
 
     public void removeClientIdLocalCache(final String clientId) throws Exception {
         final Map<String, Object> params = new HashMap<>();
-        params.put(Names.CLIENT_ID, clientId);
+        params.put(Names.HEADER_CLIENT_ID, clientId);
         this.rpcAll(REMOVE_CLIENT_ID_LOCAL_CACHE, params);
     }
 

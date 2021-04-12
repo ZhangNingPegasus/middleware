@@ -60,7 +60,7 @@ public class Swagger2Config {
     private List<Parameter> setHeaderToken() {
         final ParameterBuilder tokenPar = new ParameterBuilder();
         final List<Parameter> pars = new ArrayList<>();
-        tokenPar.name(Names.ACCESS_TOKEN)
+        tokenPar.name(Names.HEADER_ACCESS_TOKEN)
                 .description("授权码")
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")

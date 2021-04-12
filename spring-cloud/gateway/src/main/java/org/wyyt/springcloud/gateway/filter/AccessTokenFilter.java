@@ -56,9 +56,9 @@ public class AccessTokenFilter implements GlobalFilter {
             return chain.filter(exchange);
         }
 
-        final String accessToken = exchange.getRequest().getHeaders().getFirst(Names.ACCESS_TOKEN);
+        final String accessToken = exchange.getRequest().getHeaders().getFirst(Names.HEADER_ACCESS_TOKEN);
         if (ObjectUtils.isEmpty(accessToken)) {
-            return ResponseTool.unauthorized(exchange, String.format("%s is required", Names.ACCESS_TOKEN));
+            return ResponseTool.unauthorized(exchange, String.format("%s is required", Names.HEADER_ACCESS_TOKEN));
         }
 
         try {
@@ -69,9 +69,9 @@ public class AccessTokenFilter implements GlobalFilter {
 
             final Object redisAccessToken = this.redisService.get(Constant.getAccessTokenRedisKey(clientId));
             if (ObjectUtils.isEmpty(redisAccessToken)) {
-                return ResponseTool.unauthorized(exchange, String.format("%s has expired or canceled", Names.ACCESS_TOKEN));
+                return ResponseTool.unauthorized(exchange, String.format("%s has expired or canceled", Names.HEADER_ACCESS_TOKEN));
             } else if (!redisAccessToken.toString().equals(accessToken)) {
-                return ResponseTool.unauthorized(exchange, String.format("%s has expired", Names.ACCESS_TOKEN));
+                return ResponseTool.unauthorized(exchange, String.format("%s has expired", Names.HEADER_ACCESS_TOKEN));
             }
 
             final App app = this.dataService.getApp(clientId);
@@ -80,7 +80,7 @@ public class AccessTokenFilter implements GlobalFilter {
             }
 
             if (app.getIsAdmin()) {
-                exchange.getRequest().mutate().header(Names.CLIENT_ID, app.getClientId());
+                exchange.getRequest().mutate().header(Names.HEADER_CLIENT_ID, app.getClientId());
                 return chain.filter(exchange);
             }
 
@@ -102,14 +102,14 @@ public class AccessTokenFilter implements GlobalFilter {
                 apiList = this.dataService.getApiList(app.getClientId(), serviceName);
             }
             if (apiList.stream().anyMatch(r -> PATH_MATCH.match(String.format("/**%s/**", r.getPath()), url))) {
-                exchange.getRequest().mutate().header(Names.CLIENT_ID, app.getClientId());
+                exchange.getRequest().mutate().header(Names.HEADER_CLIENT_ID, app.getClientId());
                 return chain.filter(exchange);
             }
             return ResponseTool.unauthorized(exchange, "Access is denied");
         } catch (final SignatureException e) {
-            return ResponseTool.unauthorized(exchange, String.format("%s is illegal", Names.ACCESS_TOKEN));
+            return ResponseTool.unauthorized(exchange, String.format("%s is illegal", Names.HEADER_ACCESS_TOKEN));
         } catch (final ExpiredJwtException e) {
-            return ResponseTool.unauthorized(exchange, String.format("%s is expired", Names.ACCESS_TOKEN));
+            return ResponseTool.unauthorized(exchange, String.format("%s is expired", Names.HEADER_ACCESS_TOKEN));
         }
     }
 }

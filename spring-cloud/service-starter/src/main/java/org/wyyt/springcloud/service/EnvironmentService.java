@@ -48,17 +48,17 @@ public class EnvironmentService {
     private String gatewayUrl;
 
     public String getClientId() {
-        return this.strategyContextHolder.getHeader(Names.CLIENT_ID);
+        return this.strategyContextHolder.getHeader(Names.HEADER_CLIENT_ID);
     }
 
     public AppVo getClient() throws Exception {
-        final String accessToken = this.strategyContextHolder.getHeader(Names.ACCESS_TOKEN);
+        final String accessToken = this.strategyContextHolder.getHeader(Names.HEADER_ACCESS_TOKEN);
         if (ObjectUtils.isEmpty(accessToken)) {
             return null;
         }
 
         final Map<String, String> headerMap = new HashMap<>();
-        headerMap.put(Names.ACCESS_TOKEN, accessToken);
+        headerMap.put(Names.HEADER_ACCESS_TOKEN, accessToken);
 
         final Result<String> result = this.gatewayService.post(
                 this.springCloudConfig.getAuthConsulName(),

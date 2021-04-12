@@ -53,7 +53,7 @@ public class ClientTokenController {
     @ApiOperation(value = "获取应用信息")
     @PostMapping(value = {"/v1/oauth/info"})
     public Result<String> getInfoByAccessToken() {
-        final String accessToken = this.strategyContextHolder.getHeader(Names.ACCESS_TOKEN);
+        final String accessToken = this.strategyContextHolder.getHeader(Names.HEADER_ACCESS_TOKEN);
         if (ObjectUtils.isEmpty(accessToken)) {
             return Result.ok("");
         }
@@ -79,7 +79,7 @@ public class ClientTokenController {
     })
     @PostMapping(value = {"/v1/oauth/token"})
     public Result<AccessToken> clientLoginToken(@RequestParam("clientId") final String clientId,
-                                                @RequestParam("clientSecret") final String clientSecret) throws Exception {
+                                                @RequestParam("clientSecret") final String clientSecret) {
         return Result.ok(this.clientTokenService.getClientCredentialsToken(clientId, clientSecret));
     }
 
@@ -102,13 +102,13 @@ public class ClientTokenController {
 
     @ApiOperation(value = "获取Access Token (接口已过时,请用v1/oauth/token接口代替)")
     @PostMapping(value = {"v1/access_token"})
-    public Result<AccessToken> clientLoginTokenOld(@RequestBody final TokenVo tokenVo) throws Exception {
+    public Result<AccessToken> clientLoginTokenOld(@RequestBody final TokenVo tokenVo) {
         return Result.ok(this.clientTokenService.getClientCredentialsToken(tokenVo.getApiKey(), tokenVo.getSecretKey()));
     }
 
     @ApiOperation(value = "直接通过AppId(Client Id)获取Access Token (接口已过时,请用v1/oauth/token接口代替)")
     @PostMapping(value = "v1/app/access_token")
-    public Result<AccessToken> clientLoginToken(@RequestBody final TokenVo tokenVo) throws Exception {
+    public Result<AccessToken> clientLoginToken(@RequestBody final TokenVo tokenVo) {
         final String clientId = tokenVo.getAppId();
         final App app = this.appService.getByClientId(clientId);
         if (null == app) {
