@@ -64,27 +64,46 @@ public class AccessTokenService {
         if (null == app) {
             return null;
         }
-        final Map<String, Object> params = new HashMap<>();
-        params.put(Names.CLIENT_ID, app.getClientId());
-        params.put(Constant.CLIENT_SECRET, app.getClientSecret());
-        params.put(Constant.GRANT_TYPE, GrantType.CLIENT_CREDENTIALS.getCode());
-        final String response = this.rpcService.post(
-                String.format("http://localhost:%s/%s", this.propertyConfig.getServerPort(), Constant.OAUTH_TOKEN),
-                new HashMap<>(),
-                params);
-        final Map<String, Object> map = JSON.parseObject(response, new TypeReference<Map<String, Object>>() {
-        });
-        if (map.containsKey("error")) {
-            throw new BusinessException(response);
+
+        final String redisKey = Constant.getAccessTokenRedisKey(app.getClientId());
+        final String distributedLockKey = String.format("lock_%s", redisKey);
+
+        try (final RedisService.Lock distributedLock = this.redisService.getDistributedLock(distributedLockKey)) {
+            if (distributedLock.hasLock()) {
+                final Object redisAccessToken = this.redisService.get(redisKey);
+
+                if (null == redisAccessToken) {
+                    final Map<String, Object> params = new HashMap<>();
+                    params.put(Names.CLIENT_ID, app.getClientId());
+                    params.put(Constant.CLIENT_SECRET, app.getClientSecret());
+                    params.put(Constant.GRANT_TYPE, GrantType.CLIENT_CREDENTIALS.getCode());
+                    final String response = this.rpcService.post(
+                            String.format("http://localhost:%s/%s", this.propertyConfig.getServerPort(), Constant.OAUTH_TOKEN),
+                            new HashMap<>(),
+                            params);
+                    final Map<String, Object> map = JSON.parseObject(response, new TypeReference<Map<String, Object>>() {
+                    });
+                    if (map.containsKey("error")) {
+                        throw new BusinessException(response);
+                    }
+                    final AccessToken result = new AccessToken();
+                    result.setAccessToken(map.get(Names.ACCESS_TOKEN).toString());
+                    result.setExpiresTime(Long.parseLong(map.get(Constant.EXPIRES_IN).toString()));  //单位:秒
+                    this.redisService.set(
+                            redisKey,
+                            result.getAccessToken(),
+                            result.getExpiresTime() * 1000);
+                    return result;
+                }
+
+                final AccessToken result = new AccessToken();
+                result.setAccessToken(redisAccessToken.toString());
+                result.setExpiresTime(this.redisService.getExpire(redisKey) / 1000L);
+                return result;
+            } else {
+                throw new BusinessException(String.format("Obtain Lock [%s] with failure", distributedLockKey));
+            }
         }
-        final AccessToken result = new AccessToken();
-        result.setAccessToken(map.get(Names.ACCESS_TOKEN).toString());
-        result.setExpiresTime(Long.parseLong(map.get(Constant.EXPIRES_IN).toString()));  //单位:秒
-        this.redisService.set(
-                Constant.getAccessTokenRedisKey(app.getClientId()),
-                result.getAccessToken(),
-                result.getExpiresTime() * 1000);
-        return result;
     }
 
     public boolean logoutClientCredentialsToken(final String clientId,
