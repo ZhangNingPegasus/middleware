@@ -17,10 +17,15 @@ BASE_PATH=$(pwd)
 CONFIG_DIR=${BASE_PATH}"/config/"
 AGENT_DIR=${BASE_PATH}"/agent/"
 AGENT_JAR=""
+AGENT_JAR_VERSION=""
 for fileName in $(ls ${AGENT_DIR}); do
   if [ ! -d ${fileName} ]; then
     if [ ${fileName##*.} = jar ]; then
       AGENT_JAR=$fileName
+      AGENT_JAR_FROM=`echo "$AGENT_JAR" | awk -F ''-'' '{printf "%d", length($0)-length($NF)}'`
+      AGENT_JAR_TO=`echo "$AGENT_JAR" | awk -F ''.'' '{printf "%d", length($0)-length($NF)}'`
+      AGENT_JAR_SUB_LEN=$((AGENT_JAR_TO - AGENT_JAR_FROM -1))
+      AGENT_JAR_VERSION=${AGENT_JAR:$AGENT_JAR_FROM:$AGENT_JAR_SUB_LEN}
     fi
   fi
 done
@@ -49,7 +54,7 @@ JAVA_OPT="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -XX:-OmitStac
 JAVA_GC="-Xloggc:${LOGS_GC}/gc.log -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCApplicationStoppedTime -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=10M "
 JAVA_MEM_OPT="-server -Xms${Xms} -Xmx${Xmx} -Xmn${Xmn} -XX:NewRatio=1 -Xss256k -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m -XX:MaxDirectMemorySize=512m -XX:+HeapDumpOnOutOfMemoryError "
 JAVA_MEM_OPT="${JAVA_MEM_OPT} -XX:HeapDumpPath=${LOGS_HEAPDUMP}/ "
-JAVA_PARAMETER_OPT="-Dversion=${VERSION} -Dwork.dir=${BASE_PATH}"
+JAVA_PARAMETER_OPT="-Dversion=${VERSION} -Dagent.jar.version=${AGENT_JAR_VERSION} -Dwork.dir=${BASE_PATH}"
 
 STARTUP_LOG="${STARTUP_LOG}application name: ${APPLICATION}\n"
 STARTUP_LOG="${STARTUP_LOG}application jar name: ${APPLICATION_JAR}\n"

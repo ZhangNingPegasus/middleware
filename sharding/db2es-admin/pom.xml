@@ -71,11 +71,6 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder-ex</artifactId>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>

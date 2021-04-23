@@ -6,4 +6,5 @@ import springcloud.service.demo.entity.Student;
 
 @Mapper
 public interface StudentMapper extends BaseMapper<Student> {
+
 }

@@ -69,6 +69,15 @@
                 </includes>
             </resource>
 
+            <!-- 输出java探针到agent目录的资源 -->
+            <resource>
+                <directory>${basedir}/src/agent</directory>
+                <targetPath>agent</targetPath>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+            </resource>
+
             <!-- 输出脚本文件到bin目录的资源 -->
             <resource>
                 <directory>${basedir}/src/bin</directory>
@@ -106,6 +115,7 @@
                     </archive>
                     <!-- 项目启动jar包排除目录 -->
                     <excludes>
+                        <exclude>agent/**</exclude>
                         <exclude>bin/**</exclude>
                         <exclude>config/**</exclude>
                         <exclude>logs/**</exclude>

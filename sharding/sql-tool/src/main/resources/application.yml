@@ -1,33 +1,23 @@
-acm:
-  data-id: scfs.tool
-  group: SIJIBAO_ORDER_CENTER_GROUP
-  acmConfigPath: acmConfig.properties
-  nacosLocalSnapshotPath: /wyyt/etc/acm/db2es/
-  nacosLogPath: /wyyt/logs/sql_tool/
+apollo:
+  app-id: bams-db2es
+
+sharding:
+  enabled: true
+  work-id: 300
+  show-sql: false
+  apollo:
+    meta: ${apollo_meta:http://apolloconfig.dev.wyyt:8640/}
+    app-id: ${apollo.app-id}
+    data-source-key: datasource
+    dimension-key: dimension
+    table-key: table
 
 admin:
   ui:
     title: SQL Tool
     full-name: SQL Tool
     short-name: SQL Tool
-
-sharding:
-  enabled: true
-  work-id: 300
-  show-sql: false
-  acm:
-    datasource:
-      data-id: scfs.xml.datasource.encrypt
-      group: SIJIBAO_ORDER_CENTER_GROUP
-    dimension:
-      data-id: scfs.xml.dimension
-      group: SIJIBAO_ORDER_CENTER_GROUP
-    table:
-      data-id: scfs.xml.table
-      group: SIJIBAO_ORDER_CENTER_GROUP
-    acmConfigPath: acmConfig.properties
-    nacosLocalSnapshotPath: /wyyt/etc/acm/sql_tool
-    nacosLogPath: /wyyt/logs/tomcat/sql_tool/
+    login-mode: ldap
 
 server:
   tomcat:

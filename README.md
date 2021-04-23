@@ -1,4 +1,5 @@
-中间件包括<b>ShardingSphere</b>分库分表的封装、<b>Redis</b>的封装、<b>Kafka</b>的封装、<b>Elastic-Search</b>的封装、<b>db2es-admin</b>的封装、<b>db2es-client</b>等的封装等。
+中间件包括<b>ShardingSphere</b>分库分表的封装、<b>Redis</b>的封装、<b>Kafka</b>的封装、<b>Elastic-Search</b>的封装、<b>db2es-admin</b>的封装、<b>
+db2es-client</b>等的封装等。
 <li>
 sharding-starter分库分表： 内置分库分表算法、SQL语法检测等功能(拦截不合法SQL、审计等功能)
 </li>
@@ -12,6 +13,10 @@ kafka-starter: 对常用的kafka方法进行了封装(同步和异步发送、�
 </li>
 
 <li>
+kafka-monitor: Kafka监控平台
+</li>
+
+<li>
 elasticsearch-starter: 对常用的elastic-search方法进行了封装(分页、搜索、写操作等功能)
 </li>
 
@@ -22,6 +27,8 @@ db2es-admin: 对db2es-client进行管控(重建索引、数据对比、数据修
 <li>
 db2es-client: 以异步的方式，将mysql数据库中的增量数据同步到elastic-search中(高可用、分布式、位点根据时间回溯等功能)
 </li>
+
+
 
 <hr/>
 <h3>sharding-starter 分库分表</h3>
@@ -248,22 +255,13 @@ acm:
   nacosLogPath: /wyyt/logs/sql_tool/
 
 sharding:
-  enabled: true
-  work-id: 300
-  show-sql: false  
-  acm:
-    datasource:
-      data-id: scfs.xml.datasource.encrypt
-      group: SIJIBAO_ORDER_CENTER_GROUP
-    dimension:
-      data-id: scfs.xml.dimension
-      group: SIJIBAO_ORDER_CENTER_GROUP
-    table:
-      data-id: scfs.xml.table
-      group: SIJIBAO_ORDER_CENTER_GROUP
-    acmConfigPath: acmConfig.properties
-    nacosLocalSnapshotPath: /wyyt/etc/acm/sql_tool
-    nacosLogPath: /wyyt/logs/tomcat/springcloud/sql_tool/
+enabled: true work-id: 300 show-sql: false  
+acm:
+datasource:
+data-id: scfs.xml.datasource.encrypt group: SIJIBAO_ORDER_CENTER_GROUP dimension:
+data-id: scfs.xml.dimension group: SIJIBAO_ORDER_CENTER_GROUP table:
+data-id: scfs.xml.table group: SIJIBAO_ORDER_CENTER_GROUP acmConfigPath: acmConfig.properties nacosLocalSnapshotPath:
+/wyyt/etc/acm/sql_tool nacosLogPath: /wyyt/logs/tomcat/springcloud/sql_tool/
 </pre>
 其中, scfs.tool配置如下:
 <pre>
@@ -330,17 +328,9 @@ public void setAndGet() {
     Assert.notNull(this.redisService.get(KEY), "set & get 失败");
 }
 
-//分布式锁
-public void lock() {
-    try (RedisService.Lock lock = this.redisService.getLock(KEY, 10000L, 6000L)) {
-        if (lock.hasLock()) {
-            System.out.println("拿到锁了: " + lock.lockKey() + " " + lock.requestId());
-        } else {
-            System.err.println("没有拿到锁");
-        }
-    }
-    Assert.isNull(this.redisService.get(KEY), "lock失败");
-}
+//分布式锁 public void lock() { try (RedisService.Lock lock = this.redisService.getLock(KEY, 10000L, 6000L)) { if (
+lock.hasLock()) { System.out.println("拿到锁了: " + lock.lockKey() + " " + lock.requestId()); } else { System.err.println("
+没有拿到锁"); } } Assert.isNull(this.redisService.get(KEY), "lock失败"); }
 </pre>
 </li>
 
@@ -388,21 +378,34 @@ public void send() throws Exception {
 }
 
 //同步发送(带事务，当方法体失败时，该消息不会被消费)
-@TranKafka
-public void sendTran() throws Exception {
-    this.kafkaService.send(TOPIC_NAME, "KEY", String.valueOf(System.currentTimeMillis()));
-}
+@TranKafka public void sendTran() throws Exception { this.kafkaService.send(TOPIC_NAME, "KEY", String.valueOf(
+System.currentTimeMillis())); }
 
 //异步发送(带事务)
-@TranKafka
-public void sendTranAsync() {
-    this.kafkaService.sendAsync(TOPIC_NAME, "KEY", String.valueOf(System.currentTimeMillis()), (sendResult, throwable) -> {
-        log.info(sendResult.toString());
-        Assert.isTrue(false, "回调方法中的异常是不会回滚的");
-    });
-    Assert.isTrue(false, "能够正常回滚");
-}
+@TranKafka public void sendTranAsync() { this.kafkaService.sendAsync(TOPIC_NAME, "KEY", String.valueOf(
+System.currentTimeMillis()), (sendResult, throwable) -> { log.info(sendResult.toString()); Assert.isTrue(false, "
+回调方法中的异常是不会回滚的"); }); Assert.isTrue(false, "能够正常回滚"); }
 </pre>
+</li>
+
+<hr/>
+<h3>kafka-monitor</h3>
+<li>
+Apollo配置中心配置: <br/>
+<pre>
+server.port = 9999
+zookeeper.servers = 192.168.6.166:2181,192.168.6.167:2181,192.168.0.197:2181
+db.host = 192.168.0.197
+db.port = 3306
+db.name = kafka_monitor
+db.username = root
+db.password = XXXXX
+retention.days = 3
+topic.blacklist = 
+</pre>
+</li>
+<li>
+sh bin/start.sh
 </li>
 
 
@@ -438,45 +441,24 @@ elasticsearch:
 @Autowired
 private ElasticSearchService elasticSearchService;
 
-//根据主键查询
-public void getById() throws Exception {
-    String response = this.elasticSearchService.getById(INDEX_NAME, PRIMARY_KEY_VALUE, String.class);
-    System.out.println(response);
-}
+//根据主键查询 public void getById() throws Exception { String response = this.elasticSearchService.getById(INDEX_NAME,
+PRIMARY_KEY_VALUE, String.class); System.out.println(response); }
 
-//条件查询
-public void test06_search() throws Exception {
-    SearchRequest searchRequest = new SearchRequest(INDEX_NAME);
-    BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-    boolQueryBuilder.must(QueryBuilders.rangeQuery("id").gte(1).lte(20)); //范围查询。must相当于SQL where字句中的AND; should则相当于OR
-    boolQueryBuilder.must(QueryBuilders.matchQuery("remark", "颚ABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890987654321")); //match查询
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-    searchSourceBuilder.query(boolQueryBuilder);
-    searchSourceBuilder.from(0); //获取的起始位置,可用以分页
-    searchSourceBuilder.size(10);//获取的document记录数,可用于分页
-    searchSourceBuilder.sort("row_create_time", SortOrder.ASC); //排序
-    searchSourceBuilder.fetchSource(new String[]{"id", "name", "remark"}, new String[]{});
-    searchRequest.source(searchSourceBuilder);
-    List<String> response = this.elasticSearchService.select(searchRequest, String.class);
-    for (String s : response) {
-        System.out.println(s);
-    }
-}
+//条件查询 public void test06_search() throws Exception { SearchRequest searchRequest = new SearchRequest(INDEX_NAME);
+BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder(); boolQueryBuilder.must(QueryBuilders.rangeQuery("id").gte(1)
+.lte(20)); //范围查询。must相当于SQL where字句中的AND; should则相当于OR boolQueryBuilder.must(QueryBuilders.matchQuery("remark", "
+颚ABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890987654321")); //match查询 SearchSourceBuilder searchSourceBuilder = new
+SearchSourceBuilder(); searchSourceBuilder.query(boolQueryBuilder); searchSourceBuilder.from(0); //获取的起始位置,可用以分页
+searchSourceBuilder.size(10);//获取的document记录数,可用于分页 searchSourceBuilder.sort("row_create_time", SortOrder.ASC); //排序
+searchSourceBuilder.fetchSource(new String[]{"id", "name", "remark"}, new String[]{}); searchRequest.source(
+searchSourceBuilder); List<String> response = this.elasticSearchService.select(searchRequest, String.class); for (String
+s : response) { System.out.println(s); } }
 
-//分页查询
-public void page() throws IOException {
-    SearchRequest searchRequest = new SearchRequest(INDEX_NAME);
-    BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-    boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("id", "1")); //match查询
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-    searchSourceBuilder.query(boolQueryBuilder);
-    searchRequest.source(searchSourceBuilder);
-    IPage<TestEntity> page = this.elasticSearchService.page(
-            searchRequest,
-            TestEntity.class,
-            new Page<>(1, 10));
-    System.out.println(page.getRecords());
-}
+//分页查询 public void page() throws IOException { SearchRequest searchRequest = new SearchRequest(INDEX_NAME);
+BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder(); boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("id", "
+1")); //match查询 SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder(); searchSourceBuilder.query(
+boolQueryBuilder); searchRequest.source(searchSourceBuilder); IPage<TestEntity> page = this.elasticSearchService.page(
+searchRequest, TestEntity.class, new Page<>(1, 10)); System.out.println(page.getRecords()); }
 
 </pre>
 </li>

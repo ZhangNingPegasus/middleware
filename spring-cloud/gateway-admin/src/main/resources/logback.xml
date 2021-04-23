@@ -39,8 +39,6 @@
 
     <property name="FILE_LOG_PATTERN"
               value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
-    <property name="REAL_TIME_LOG_FOLDER" value="logs"/>
-    <property name="REAL_TIME_LOG_NAME" value="app"/>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>
@@ -53,9 +51,9 @@
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
-        <file>${REAL_TIME_LOG_FOLDER}/${REAL_TIME_LOG_NAME}.log</file>
+        <file>${LOG_PATH}/${LOG_NAME}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${REAL_TIME_LOG_FOLDER}/${REAL_TIME_LOG_NAME}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/${LOG_NAME}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
             <maxHistory>${MAX_HISTORY}</maxHistory>
         </rollingPolicy>
@@ -67,32 +65,8 @@
         <appender-ref ref="file"/>
     </appender>
 
-    <appender name="elkLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <append>true</append>
-        <file>${LOG_PATH}/${LOG_NAME}.log</file>
-        <encoder class="net.logstash.logback.encoder.ex.LogstashEncoderEx">
-            <includeCallerData>true</includeCallerData>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/${LOG_NAME}.%d{yyyy-MM-dd-HH}.%i.log.gz
-            </fileNamePattern>
-            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
-            <maxHistory>${MAX_HISTORY}</maxHistory>
-        </rollingPolicy>
-    </appender>
-
-    <appender name="async_elkLog" class="ch.qos.logback.classic.AsyncAppender">
-        <discardingThreshold>0</discardingThreshold>
-        <queueSize>512</queueSize>
-        <appender-ref ref="elkLog"/>
-    </appender>
-
     <root level="INFO">
         <appender-ref ref="console"/>
         <appender-ref ref="async_file"/>
-        <appender-ref ref="async_elkLog"/>
     </root>
 </configuration>

@@ -1,17 +1,13 @@
 package org.wyyt.sharding.sqltool.config;
 
-import com.sijibao.nacos.spring.util.NacosNativeUtils;
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.wyyt.tool.db.CrudService;
+import org.wyyt.apollo.tool.ApolloReader;
+import org.wyyt.sharding.sqltool.constants.Names;
 
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * the entity of configuration information in application.yml
@@ -24,70 +20,46 @@ import java.util.Properties;
  * *****************************************************************
  */
 @Configuration
-@Data
 public class PropertyConfig implements InitializingBean {
-    public static String SERVER_PORT_NAME = "sql.tool.port";
-    public static String DB_HOST_NAME = "db.host";
-    public static String DB_PORT_NAME = "db.port";
-    public static String DB_UID_NAME = "db.username";
-    public static String DB_PWD_NAME = "encrypt.db.password";
-    public static String DB_NAME = "db.dbName";
 
-    @Value("${acm.data-id}")
-    private String dataId;
+    private final ApolloReader apolloReader;
 
-    @Value("${acm.group}")
-    private String groupId;
-
-    @Value("${acm.acmConfigPath}")
-    private String configPath;
-
-    @Value("${acm.nacosLocalSnapshotPath}")
-    private String snapshotPath;
-
-    @Value("${acm.nacosLogPath}")
-    private String logPath;
-
-    private Integer serverPort;
+    @Value("${apollo.app-id}")
+    private String appId;
+    @Getter
+    private String zkServers;
+    @Getter
+    private String esHost;
+    @Getter
+    private String esUid;
+    @Getter
+    private String esPwd;
+    @Getter
     private String dbHost;
+    @Getter
     private String dbPort;
-    private String dbUid;
-    private String dbPwd;
+    @Getter
     private String dbName;
+    @Getter
+    private String dbUid;
+    @Getter
+    private String dbPwd;
 
-    @Bean
-    public TomcatServletWebServerFactory servletContainer() {
-        return new TomcatServletWebServerFactory(this.serverPort);
-    }
-
-    @Bean
-    @Primary
-    @ConditionalOnMissingBean
-    public CrudService crudService() {
-        return new CrudService(
-                this.dbHost,
-                this.dbPort,
-                this.dbName,
-                this.dbUid,
-                this.dbPwd,
-                10,
-                20
-        );
+    public PropertyConfig(ApolloReader apolloReader) {
+        this.apolloReader = apolloReader;
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        NacosNativeUtils.loadAcmInfo(this.dataId,
-                this.groupId,
-                this.configPath,
-                this.snapshotPath,
-                this.logPath);
-        final Properties acmProperties = NacosNativeUtils.getConfig();
-        this.serverPort = Integer.parseInt(acmProperties.getProperty(SERVER_PORT_NAME, "10086"));
-        this.dbHost = acmProperties.getProperty(DB_HOST_NAME, "");
-        this.dbPort = acmProperties.getProperty(DB_PORT_NAME, "3306");
-        this.dbUid = acmProperties.getProperty(DB_UID_NAME, "");
-        this.dbPwd = acmProperties.getProperty(DB_PWD_NAME, "");
-        this.dbName = acmProperties.getProperty(DB_NAME, "");
+    public void afterPropertiesSet() {
+        final Map<String, String> properties = this.apolloReader.getProperties();
+        this.zkServers = properties.get(Names.ZOOKEEPER_SERVERS);
+        this.esHost = properties.get(Names.ELASTICSEARCH_HOSTNAMES);
+        this.esUid = properties.get(Names.ELASTICSEARCH_USERNAME);
+        this.esPwd = properties.get(Names.ELASTICSEARCH_PASSWORD);
+        this.dbHost = properties.get(Names.DATABASE_HOST);
+        this.dbPort = properties.get(Names.DATABASE_PORT);
+        this.dbName = properties.get(Names.DATABASE_NAME);
+        this.dbUid = properties.get(Names.DATABASE_USERNAME);
+        this.dbPwd = properties.get(Names.DATABASE_PASSWORD);
     }
 }

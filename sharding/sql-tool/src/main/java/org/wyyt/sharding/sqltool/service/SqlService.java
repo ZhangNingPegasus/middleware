@@ -5,8 +5,6 @@ import com.alibaba.druid.sql.ast.SQLStatement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.wyyt.sharding.anno.TranRead;
-import org.wyyt.sharding.anno.TranSave;
 import org.wyyt.sharding.context.DbContext;
 import org.wyyt.sharding.entity.FactSql;
 import org.wyyt.sharding.exception.ShardingException;
@@ -17,6 +15,8 @@ import org.wyyt.sharding.sqltool.entity.dto.SysSql;
 import org.wyyt.sharding.sqltool.entity.vo.AdminVo;
 import org.wyyt.sharding.sqltool.entity.vo.DataTableVo;
 import org.wyyt.sharding.sqltool.mapper.DbMapper;
+import org.wyyt.tool.anno.TranRead;
+import org.wyyt.tool.anno.TranSave;
 import org.wyyt.tool.exception.ExceptionTool;
 import org.wyyt.tool.sql.SqlTool;
 

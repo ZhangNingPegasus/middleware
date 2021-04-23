@@ -1,6 +1,7 @@
 package org.wyyt.springcloud.boot;
 
 import com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer;
+import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
@@ -51,8 +52,11 @@ public class SpringCloudApplicationContextInitializer implements EnvironmentPost
         }
 
         final Properties properties = new Properties();
-
         // common config
+        final String agentJarVersion = System.getProperty("agent.jar.version");
+        if (!ObjectUtils.isEmpty(agentJarVersion)) {
+            System.setProperty(DiscoveryConstant.SPRING_APPLICATION_DISCOVERY_AGENT_VERSION, agentJarVersion);
+        }
         this.addDefaultConfig(configurableEnvironment, properties,
                 "spring.cloud.consul.discovery.service-name",
                 "${spring.application.name}");

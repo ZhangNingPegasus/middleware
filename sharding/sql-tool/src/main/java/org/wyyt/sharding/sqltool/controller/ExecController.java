@@ -113,8 +113,7 @@ public final class ExecController {
         } else {
             result.add(String.format("下列%s个数据表的结构与其他大多数的表结构不一致, 请检查修正\n%s", diffTableList.size(), StringUtils.join(diffTableList, ", ")));
         }
-
-        final List<String> diffIndexList = this.shardingService.diffIndexs(table);
+        final List<String> diffIndexList = this.shardingService.diffIndexes(table);
         if (diffIndexList.isEmpty()) {
             result.add("检查通过");
         } else {

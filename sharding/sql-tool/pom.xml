@@ -15,12 +15,24 @@
     <dependencies>
         <dependency>
             <groupId>org.wyyt</groupId>
+            <artifactId>apollo-config</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wyyt</groupId>
             <artifactId>admin-ui-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.wyyt</groupId>
+            <groupId>org.wyyt.sharding</groupId>
             <artifactId>sharding-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -48,11 +60,6 @@
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder-ex</artifactId>
         </dependency>
     </dependencies>
 
