@@ -23,10 +23,6 @@ spring:
     name: d
     group: sample-group
     version: 2.0
-    strategy:
-      scan:
-        # RestController类的扫描路径
-        packages: springcloud.service.demo
   cloud:
     consul:
       host: ${consul_host}

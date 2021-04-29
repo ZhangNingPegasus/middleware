@@ -22,9 +22,9 @@ for fileName in $(ls ${AGENT_DIR}); do
   if [ ! -d ${fileName} ]; then
     if [ ${fileName##*.} = jar ]; then
       AGENT_JAR=$fileName
-      AGENT_JAR_FROM=`echo "$AGENT_JAR" | awk -F ''-'' '{printf "%d", length($0)-length($NF)}'`
-      AGENT_JAR_TO=`echo "$AGENT_JAR" | awk -F ''.'' '{printf "%d", length($0)-length($NF)}'`
-      AGENT_JAR_SUB_LEN=$((AGENT_JAR_TO - AGENT_JAR_FROM -1))
+      AGENT_JAR_FROM=$(echo "$AGENT_JAR" | awk -F ''-'' '{printf "%d", length($0)-length($NF)}')
+      AGENT_JAR_TO=$(echo "$AGENT_JAR" | awk -F ''.'' '{printf "%d", length($0)-length($NF)}')
+      AGENT_JAR_SUB_LEN=$((AGENT_JAR_TO - AGENT_JAR_FROM - 1))
       AGENT_JAR_VERSION=${AGENT_JAR:$AGENT_JAR_FROM:$AGENT_JAR_SUB_LEN}
     fi
   fi
@@ -45,9 +45,7 @@ fi
 JAVA_AGENT=""
 if [ -f "${AGENT_DIR}${AGENT_JAR}" ]; then
   JAVA_AGENT="-javaagent:${AGENT_DIR}${AGENT_JAR} "
-  JAVA_AGENT="${JAVA_AGENT} -Dthread.scan.packages=\"reactor.core.scheduler;org.springframework.aop.interceptor;com.netflix.hystrix;${THREAD_PACKAGES}\""
-  JAVA_AGENT="${JAVA_AGENT} -Dthread.request.decorator.enabled=true "
-  JAVA_AGENT="${JAVA_AGENT} -Dthread.mdc.enabled=true "
+  JAVA_AGENT="${JAVA_AGENT} -Dthread.scan.packages=\"${THREAD_PACKAGES}\""
 fi
 
 JAVA_OPT="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -XX:-OmitStackTraceInFastThrow "

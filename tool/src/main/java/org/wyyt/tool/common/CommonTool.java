@@ -95,7 +95,7 @@ public final class CommonTool {
         return convertSize(Math.round(toDouble(number)));
     }
 
-    public static Map<String, Object> queryParamstoMap(final String queryParams) {
+    public static Map<String, Object> queryParamsToMap(final String queryParams) {
         final Map<String, Object> result = new HashMap<>();
         if (ObjectUtils.isEmpty(queryParams)) {
             return result;
@@ -117,21 +117,21 @@ public final class CommonTool {
         return result;
     }
 
-    public static Map<String, Object> queryParamstoMap(final byte[] queryParamsByte) {
+    public static Map<String, Object> queryParamsToMap(final byte[] queryParamsByte) {
         String queryParams = "";
         if (null != queryParamsByte) {
             queryParams = new String(queryParamsByte);
         }
-        return queryParamstoMap(queryParams);
+        return queryParamsToMap(queryParams);
     }
 
-    public static Map<String, Object> queryParamstoMap(final Object queryParamsObject) {
+    public static Map<String, Object> queryParamsToMap(final Object queryParamsObject) {
         if (null == queryParamsObject) {
             return new HashMap<>();
         } else if (queryParamsObject instanceof byte[]) {
-            return queryParamstoMap((byte[]) queryParamsObject);
+            return queryParamsToMap((byte[]) queryParamsObject);
         } else if (queryParamsObject instanceof String) {
-            return queryParamstoMap((String) queryParamsObject);
+            return queryParamsToMap((String) queryParamsObject);
         }
         throw new RuntimeException(String.format("%s type not supported", queryParamsObject.getClass()));
     }

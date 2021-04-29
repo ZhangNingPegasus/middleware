@@ -53,7 +53,7 @@ public class AuthFilter implements WebFilter {
 
                             try {
                                 final Object queryParamsObject = exchange.getAttributeOrDefault(Constant.CACHED_REQUEST_BODY_OBJECT_KEY, null);
-                                if (SignTool.checkSign(sign, CommonTool.queryParamstoMap(queryParamsObject), Constant.API_KEY, Constant.API_IV)) {
+                                if (SignTool.checkSign(sign, CommonTool.queryParamsToMap(queryParamsObject), Constant.API_KEY, Constant.API_IV)) {
                                     return chain.filter(exchange);
                                 }
                                 return ResponseTool.unauthorized(exchange);
