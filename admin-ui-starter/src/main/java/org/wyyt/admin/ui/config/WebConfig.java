@@ -1,11 +1,12 @@
 package org.wyyt.admin.ui.config;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import javax.servlet.Filter;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,11 +24,12 @@ import org.wyyt.admin.ui.converter.CustomDateConverter;
 import org.wyyt.admin.ui.interceptor.LoginInterceptor;
 import org.wyyt.admin.ui.resolver.LoginArgumentResolver;
 
-import javax.servlet.Filter;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 /**
  * The configuration of SpringMVC
@@ -59,6 +61,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         });
         objectMapper.registerModule(module);
         converter.setObjectMapper(objectMapper);
+        converters.add(0, converter);
     }
 
     @Bean
